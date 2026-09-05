@@ -149,6 +149,13 @@ if (decision.allowed && await gate.commit(decision, input)) {   // INCR, returns
 counter is keyed on the user's local day, so a budget resets at the user's midnight,
 not at UTC.
 
+## Stores
+
+`MemoryStore` keeps values in process memory and is useful for a single instance. `RedisStore`
+shares values across instances. `SqliteStore` persists values in a SQLite database without
+adding a package dependency. `SqliteStore` requires Node.js 22.5 or newer; the SQLite module
+is loaded only when the store is constructed so the package can still be used on Node.js 20.
+
 ## Fail open, on purpose
 
 When a store-backed check throws (Redis is down), the default lets the candidate
