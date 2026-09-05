@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "quiet-hours/wall-clock",
   "description": "now is in 2031; the outcome only holds when the implementation used the supplied instant, not the wall clock.",

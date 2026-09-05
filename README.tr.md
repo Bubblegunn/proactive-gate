@@ -342,6 +342,54 @@ if (decision.allowed && await gate.commit(decision, input)) {   // INCR, returns
 `RedisStore`, `INCR` kullanır ve günün TTL'sini ilk artırmada ekler. Sayaç kullanıcının yerel
 gününe göre anahtarlanır, bu yüzden bütçe UTC'de değil kullanıcının gece yarısında sıfırlanır.
 
+## Taşıma iki kez ilettiğinde tek mesaj
+
+Mesaj taşımaları en az bir kez iletir. `200` yanıtını yeterince hızlı alamayan bir
+webhook yeniden gönderilir, bir kuyruk aynı olayı iki işçiye verir, zaman aşımından
+sonraki bir deneme ilki çoktan başarılı olmuşken gelir. Kullanıcı aynı mesajı iki kez
+görür ve bunu bozuk bir asistan diye okur.
+
+`dedupe` bunun için, ve istemediğiniz sürece kapalıdır:
+
+```ts
+const gate = createGate({ checks: defaultChecks({ dedupe: true }), store });
+
+await gate.evaluate({
+  user,
+  candidate: { id: crypto.randomUUID(), type: "shipping", dedupeKey: "order:42:shipped" },
+});
+```
+
+Anahtar sizin, çünkü iki denemeyi aynı olay yapan şeyi yalnızca siz bilirsiniz. Onu
+olaydan türetin, `order:42:shipped` gibi; her deneme için yeni üretilen bir kimlikten
+ya da mesaj metninden değil, çünkü metin genellikle bir zaman damgası taşır ve her
+denemede farklı olur. `dedupeKey` yoksa kontrol bunu söyleyerek kenara çekilir, bir
+anahtar uydurup sessizce hiçbir şey yapmaz.
+
+Elle yazılmış sürümlerin genellikle yanlış yaptığı üç nokta var.
+
+**Talep atomiktir ve commit anında olur.** Aynı olayı tutan iki işçi, henüz hiçbir şey
+kaydedilmeden değerlendirir; yalnızca okuyan bir kontrol onları ayıramaz. `dedupe`
+evaluate'te okur, commit'te bütçelerin kullandığı artırmayla talep eder ve yalnızca ilk
+artırmayı alan gönderebilir. Önce oku sonra yaz biçiminde bir talep ikisini de geçirir
+ve şartname bunu uygunsuz sayar.
+
+**Bastırılan bir kopya mesaj hakkı harcamaz.** `dedupe` bütçelerden önce tüketir, bu
+yüzden yarışı kaybettiğinde kapı orada durur ve sayaç hiç artmaz. Bu sıralamanın bedeli
+de gerçek: `dedupe`'u geçip ardından tükenmiş bir bütçeye takılan bir olay, pencerenin
+kalanı için anahtarını yakmış olur.
+
+**Pencere ilk talepten itibaren sabittir, kaymaz.** Arka arkaya gelen kopyalar bitiş
+zamanını ileri itmez; buradaki her mağaza, bir anahtar yeniden artırıldığında ilk
+bitiş zamanını korur.
+
+Varsayılan pencere 24 saat, ve bu bizim seçtiğimiz bir sayı değil, yaygın yeniden
+deneme ufku: Stripe bir idempotency anahtarını ["en az 24 saatlik olduktan
+sonra"](https://docs.stripe.com/api/idempotent_requests) siliyor, Nylas da webhook
+[tekilleştirmesi](https://developer.nylas.com/docs/cookbook/agent-accounts/prevent-duplicate-replies/)
+için aynı rakamı güvenli varsayılan olarak veriyor. `windowSeconds` değerini kendi
+taşımanızın yeniden deneme ufkundan seçin.
+
 ## Bilerek açık başarısız olur
 
 Depoya bağlı bir kontrol hata fırlattığında (Redis düştü), varsayılan adayı geçirir ve ize

@@ -27,6 +27,7 @@ export const KNOWN_CHECKS: Record<string, Factory> = {
   trustRamp: (o) => checks.trustRamp({ ...opt(num(o, "days"), "days"), ...opt(prio(o, "minPriority"), "minPriority") }),
   dismissalCooldown: (o) => checks.dismissalCooldown({ ...opt(num(o, "dismissals"), "dismissals"), ...opt(num(o, "withinDays"), "withinDays"), ...opt(num(o, "silenceDays"), "silenceDays") }),
   adaptiveTiming: () => checks.adaptiveTiming(),
+  dedupe: (o) => checks.dedupe({ ...opt(num(o, "windowSeconds"), "windowSeconds") }),
   dailyBudget: (o) => checks.dailyBudget(budgetOptions(o)),
   weeklyBudget: (o) => checks.weeklyBudget(budgetOptions(o)),
   monthlyBudget: (o) => checks.monthlyBudget(budgetOptions(o)),

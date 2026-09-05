@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "quiet-hours/istanbul",
   "description": "Quiet hours cross midnight in the user's zone; the priority floor bypasses them.",

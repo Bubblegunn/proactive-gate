@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "policy/unknown-check-is-an-error",
   "description": "The runner never sees this fixture's expectation matter; it documents that compile errors are for the schema, not the runtime. A minimal valid policy passes.",

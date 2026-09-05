@@ -526,6 +526,58 @@ class OnlyWhen(BaseCheck):
         return None
 
 
+def dedupe_key_for(user_id: str, key: str) -> str:
+    return f"dedupe:{user_id}:{key}"
+
+
+def _human_window(seconds: int) -> str:
+    if seconds % DAY_SECONDS == 0:
+        return f"{seconds // DAY_SECONDS}d"
+    if seconds % 3600 == 0:
+        return f"{seconds // 3600}h"
+    if seconds % 60 == 0:
+        return f"{seconds // 60}m"
+    return f"{seconds}s"
+
+
+class Dedupe(BaseCheck):
+    """One delivery per event per window, claimed atomically at commit time.
+
+    Transports deliver at least once, so the same event arrives twice, and two
+    workers can hold it at the same moment. Both then evaluate against a store
+    where nothing is recorded, so reading cannot separate them: the claim has to
+    be atomic and it has to happen at commit. See spec clauses 5.5 to 5.8.
+
+    The window is the caller's; the 24-hour default is the common retry horizon,
+    the same figure Stripe prunes an idempotency key after and Nylas gives as the
+    safe default for webhook deduplication.
+    """
+
+    id = "dedupe"
+
+    def __init__(self, window_seconds: int = DAY_SECONDS) -> None:
+        self.window_seconds = window_seconds
+        self.label = _human_window(window_seconds)
+
+    def _key(self, ctx: Context) -> str | None:
+        key = getattr(ctx.candidate, "dedupe_key", None)
+        return dedupe_key_for(ctx.user.id, key) if key else None
+
+    def keys(self, ctx: Context) -> Sequence[str]:
+        key = self._key(ctx)
+        return (key,) if key else ()
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        key = self._key(ctx)
+        if key is None:
+            return skip("no dedupeKey on the candidate; deduplication cannot be evaluated")
+        return PASS if values.get(key) is None else reject(f"already delivered within the last {self.label}")
+
+    def consume_plan(self, ctx: Context) -> ConsumePlan | None:
+        key = self._key(ctx)
+        return None if key is None else ConsumePlan(key, self.window_seconds, 1)
+
+
 def default_checks(
     kill_switch: Callable[[], bool] | bool = False,
     modes: Sequence[str] = ("normal",),
@@ -555,8 +607,8 @@ def default_checks(
 
 __all__ = [
     "AdaptiveTiming", "AllowedWindow", "BaseCheck", "BoundedDeferral", "Budget", "Check", "Consent", "Consumer",
-    "DailyBudget", "DismissalCooldown", "Enabled", "Intensity", "KillSwitch", "Mode", "MonthlyBudget", "Mute",
+    "DailyBudget", "Dedupe", "DismissalCooldown", "Enabled", "Intensity", "KillSwitch", "Mode", "MonthlyBudget", "Mute",
     "OnlyWhen", "QuietHours", "RateLimit", "RecentInteraction", "RequiresConsent", "Snooze", "TrustRamp",
     "UtilityFloor", "WeeklyBudget", "WindowBudget", "budget_key", "default_checks", "dismissal_key",
-    "monthly_budget_key", "weekly_budget_key",
+    "dedupe_key_for", "monthly_budget_key", "weekly_budget_key",
 ]

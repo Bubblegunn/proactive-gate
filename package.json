@@ -1,6 +1,6 @@
 {
   "name": "proactive-gate",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks as code or JSON, a conformance spec, presets for platform and legal limits, adapters for AI SDK, Mastra, LangChain and OpenAI Agents, and a Python sibling.",
   "type": "module",
   "main": "./dist/src/index.js",
@@ -43,7 +43,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js test/release.test.mjs test/examples.test.mjs test/naive.test.mjs",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js dist/test/dedupe.test.js test/release.test.mjs test/examples.test.mjs test/naive.test.mjs",
     "lint": "tsc -p tsconfig.json --noEmit",
     "spec-lint": "node test/spec-lint.mjs",
     "conformance": "npm run build && node dist/src/cli.js replay --fixtures spec/fixtures",

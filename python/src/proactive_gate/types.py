@@ -135,6 +135,7 @@ class Candidate:
     busy: bool | None = None
     p_accept: float | None = None
     p_need: float | None = None
+    dedupe_key: str | None = None
     payload: Any = None
 
     @staticmethod
@@ -148,6 +149,7 @@ class Candidate:
             busy=data.get("busy"),
             p_accept=data.get("pAccept"),
             p_need=data.get("pNeed"),
+            dedupe_key=data.get("dedupeKey"),
             payload=data.get("payload"),
         )
 

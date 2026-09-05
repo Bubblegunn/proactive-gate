@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "quiet-hours/dst-new-york",
   "description": "On 2026-03-08 New York springs forward at 02:00; 06:30Z is 01:30 EST, 07:30Z is 03:30 EDT.",

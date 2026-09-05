@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.3 (unreleased)
+
+`dedupe`: one delivery per event per window, for transports that deliver at least once. A webhook resent because it did not get its `200` quickly enough, or the same event handed to two workers, produced two messages; `dedupe` claims `candidate.dedupeKey` atomically at commit with the increment the budgets use, so both attempts pass the check and exactly one commit wins. Off unless asked for, with `defaultChecks({ dedupe: true })` or a policy entry. Without a `dedupeKey` it skips rather than guessing an identity, because a deduplication keyed on something unique per attempt silently does nothing.
+
+It consumes before the budgets, so a suppressed duplicate does not spend one of the user's messages for the day. The cost of that ordering is stated rather than hidden: an event that clears `dedupe` and is then refused by an exhausted budget has claimed its key for the rest of the window. The window is fixed from the first claim, not sliding.
+
+The 24-hour default is the common retry horizon rather than a number of ours: Stripe prunes an idempotency key after 24 hours, and Nylas gives the same figure as the safe default for webhook deduplication. Both are linked from the README.
+
+Spec 1.2.0 adds clauses 5.5 to 5.8 and two shared fixtures, so the Python package is held to the same behaviour rather than trusted; the race is a language-side test because a fixture cannot express concurrency. Verified by mutation: a read-then-write claim fails the race test in TypeScript and the fixtures in Python.
+
+`dist/test/dedupe.test.js` was missing from the test script when it was written, so the seven new tests would not have run in CI. Added.
+
+The Python gate now selects commit-time consumers by the presence of `consume_plan` rather than by a list of classes, matching the TypeScript side, so a new consumer is honoured without being registered in two places.
+
 ## 0.2.2 (2026-09-05)
 
 Quiet hours can differ by day. A single window applies every day, which cannot express a working week that is not Monday to Friday: a Friday and Saturday weekend, a Friday evening to Saturday evening silence, and a public holiday all had to be written as a custom check. `quietHours` now takes a schedule as well as a window, resolving a date before a weekday before a default, where `null` at any level means the day has no quiet hours. A window still belongs to the day it opens on, so one that crosses midnight silences the next morning and the reason names the day it came from. The single-window form is unchanged and is still the default; a schedule whose every day resolves to the same window behaves identically to that window, asserted minute by minute in a zone with a 45-minute offset. Spec 1.1.0 adds clauses 6.4 to 6.7 and three fixtures, so the Python sibling is held to the same behaviour; breaking the carry in either implementation fails them.

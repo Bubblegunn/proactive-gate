@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "presets/cn-minor-mode",
   "description": "cnMinorMode restricts minors to 06:00 to 22:00 China time and one message a day; adults pass.",

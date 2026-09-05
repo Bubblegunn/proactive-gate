@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.0.0",
   "name": "ordering/kill-switch",
   "description": "A kill switch that is on stops everything before consent is even read.",

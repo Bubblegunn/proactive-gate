@@ -1,8 +1,8 @@
 {
   "spec_version": "1.2.0",
-  "since": "1.0.0",
-  "name": "adaptive-timing/placeholder",
-  "description": "A JSON policy cannot carry a next-good-moment function; the placeholder passes and keeps the trace shape.",
+  "since": "1.2.0",
+  "name": "dedupe/no-key-skips",
+  "description": "With no dedupeKey on the candidate the check skips rather than guessing an identity.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
@@ -10,16 +10,13 @@
         "id": "consent"
       },
       {
-        "id": "adaptiveTiming"
-      },
-      {
-        "id": "dailyBudget"
+        "id": "dedupe"
       }
     ]
   },
   "tests": [
     {
-      "description": "passes",
+      "description": "a candidate with no dedupeKey is delivered; the check stands aside in the trace",
       "input": {
         "user": {
           "id": "u1",
@@ -28,10 +25,6 @@
           "mode": "normal",
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
           "createdAt": "2026-01-01T00:00:00Z"
         },
         "candidate": {
@@ -39,18 +32,16 @@
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
-            "push",
-            "feed"
+            "push"
           ]
         },
-        "now": "2026-09-04T09:00:00Z"
+        "now": "2026-09-05T12:00:00Z"
       },
       "expect": {
         "allowed": true,
         "trace": [
           "consent",
-          "adaptiveTiming",
-          "dailyBudget"
+          "dedupe"
         ]
       }
     }

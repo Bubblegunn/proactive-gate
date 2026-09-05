@@ -1,8 +1,8 @@
 {
   "spec_version": "1.2.0",
-  "since": "1.0.0",
-  "name": "utility/bounded-deferral",
-  "description": "boundedDeferral moves deliverAt by t* = min(bound, lambda * c / (2 * staleness)) when the candidate is busy.",
+  "since": "1.2.0",
+  "name": "dedupe/already-delivered",
+  "description": "A key claimed inside the window rejects the second attempt at the same event.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
@@ -10,17 +10,17 @@
         "id": "consent"
       },
       {
-        "id": "boundedDeferral",
-        "lambda": 0.02,
-        "interruptCost": 1,
-        "staleness": 0.0001,
-        "boundSeconds": 240
+        "id": "dedupe",
+        "windowSeconds": 3600
       }
     ]
   },
+  "store_seed": {
+    "dedupe:u1:order-42-shipped": "1"
+  },
   "tests": [
     {
-      "description": "busy: t* = 0.02 / 0.0002 = 100 s",
+      "description": "the same event arriving again is refused",
       "input": {
         "user": {
           "id": "u1",
@@ -29,35 +29,31 @@
           "mode": "normal",
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
           "createdAt": "2026-01-01T00:00:00Z"
         },
         "candidate": {
-          "id": "c1",
+          "id": "c2",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
-            "push",
-            "feed"
+            "push"
           ],
-          "busy": true
+          "dedupeKey": "order-42-shipped"
         },
-        "now": "2026-09-04T09:00:00Z"
+        "now": "2026-09-05T12:00:00Z"
       },
       "expect": {
-        "allowed": true,
-        "deliverAt": "2026-09-04T09:01:40.000Z",
+        "allowed": false,
+        "rejectedBy": "dedupe",
         "trace": [
           "consent",
-          "boundedDeferral"
-        ]
+          "dedupe"
+        ],
+        "reason_pattern": "already delivered"
       }
     },
     {
-      "description": "not busy: unchanged",
+      "description": "a different event on the same user is unaffected",
       "input": {
         "user": {
           "id": "u1",
@@ -66,28 +62,24 @@
           "mode": "normal",
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
           "createdAt": "2026-01-01T00:00:00Z"
         },
         "candidate": {
-          "id": "c1",
+          "id": "c3",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
-            "push",
-            "feed"
-          ]
+            "push"
+          ],
+          "dedupeKey": "order-43-shipped"
         },
-        "now": "2026-09-04T09:00:00Z"
+        "now": "2026-09-05T12:00:00Z"
       },
       "expect": {
         "allowed": true,
         "trace": [
           "consent",
-          "boundedDeferral"
+          "dedupe"
         ]
       }
     }

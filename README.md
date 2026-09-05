@@ -375,6 +375,56 @@ if (decision.allowed && await gate.commit(decision, input)) {   // INCR, returns
 counter is keyed on the user's local day, so a budget resets at the user's midnight,
 not at UTC.
 
+## One message per event, when the transport delivers twice
+
+Message transports deliver at least once. A webhook that does not get its `200`
+quickly enough is sent again; a queue hands the same event to two workers; a retry
+after a timeout arrives after the first attempt already succeeded. The user sees the
+same message twice and reads it as a broken assistant.
+
+`dedupe` is the check for it, and it is off unless you ask for it:
+
+```ts
+const gate = createGate({ checks: defaultChecks({ dedupe: true }), store });
+
+await gate.evaluate({
+  user,
+  candidate: { id: crypto.randomUUID(), type: "shipping", dedupeKey: "order:42:shipped" },
+});
+```
+
+The key is yours because only you know what makes two attempts the same event.
+Derive it from the event, `order:42:shipped`, not from a fresh identifier per attempt
+and not from the message text, which usually carries a timestamp and so differs on
+every retry. Without a `dedupeKey` the check skips and says so, rather than guessing a
+key and silently doing nothing.
+
+Three things about it are worth stating, because they are what a hand-rolled version
+usually gets wrong.
+
+**The claim is atomic and happens at commit.** Two workers holding the same event both
+evaluate before either has recorded anything, so a check that only reads cannot tell
+them apart. `dedupe` reads at evaluate and claims at commit with the same increment the
+budgets use; only the caller that receives the first increment may send. A
+read-then-write claim lets both through, and the spec calls that non-conforming.
+
+**A suppressed duplicate does not cost a message.** `dedupe` consumes before the
+budgets, so when it loses the race the gate stops there and the counter is never
+incremented. The cost of that ordering, which is real: an event that clears `dedupe`
+and is then refused by an exhausted budget has claimed its key for the rest of the
+window.
+
+**The window is fixed from the first claim, not sliding.** A stream of duplicates does
+not push the expiry further out; every store here keeps the original expiry when a key
+is incremented again.
+
+The default window is 24 hours, which is the common retry horizon rather than a number
+of ours: Stripe prunes an idempotency key ["after they're at least 24 hours
+old"](https://docs.stripe.com/api/idempotent_requests), and Nylas gives the same figure
+as the safe default for [webhook
+deduplication](https://developer.nylas.com/docs/cookbook/agent-accounts/prevent-duplicate-replies/).
+Set `windowSeconds` from your own transport's retry horizon.
+
 ## Stores
 
 `MemoryStore` keeps values in process memory and is useful for a single instance. `RedisStore`

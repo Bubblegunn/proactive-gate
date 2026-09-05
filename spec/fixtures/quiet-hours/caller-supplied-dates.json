@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.1.0",
   "name": "quiet-hours/caller-supplied-dates",
   "description": "A calendar date the caller supplies beats the weekday and the default, in both directions. There is no bundled holiday calendar.",

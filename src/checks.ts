@@ -363,6 +363,65 @@ export function monthlyBudget(options: BudgetOptions = {}): BudgetCheck {
   return budget({ id: "monthlyBudget", label: "monthly budget", defaultLimit: 60, keyFor: ({ user, now }) => monthlyBudgetKey(user.id, now, user.timezone), ttlSeconds: 32 * DAY_SECONDS }, options);
 }
 
+export const dedupeKeyFor = (userId: string, key: string) => `dedupe:${userId}:${key}`;
+
+const humanWindow = (seconds: number): string => {
+  if (seconds % DAY_SECONDS === 0) return `${seconds / DAY_SECONDS}d`;
+  if (seconds % 3600 === 0) return `${seconds / 3600}h`;
+  if (seconds % 60 === 0) return `${seconds / 60}m`;
+  return `${seconds}s`;
+};
+
+/**
+ * One delivery per event per window, claimed atomically at commit time.
+ *
+ * Message transports deliver at least once. A webhook that does not get its 200
+ * quickly enough arrives again, and two workers can pick up the same event at the
+ * same moment. Both attempts then evaluate against a store where nothing has been
+ * recorded yet, so a check that only reads cannot separate them: it has to claim.
+ * `consume()` claims with an atomic increment, the same primitive the budgets use,
+ * and only the caller that gets the first increment may send.
+ *
+ * Order matters and is the reason this check consumes before the budgets: when it
+ * loses the race the gate stops there, so the duplicate never spends one of the
+ * user's messages for the day. The cost of that ordering, stated rather than hidden:
+ * the key is claimed before a later budget check runs, so an event that clears
+ * dedupe and is then refused by an exhausted budget has burnt its key for the rest
+ * of the window.
+ *
+ * The window is fixed from the first claim rather than sliding; every store here
+ * keeps the original expiry when a key is incremented again.
+ *
+ * `candidate.dedupeKey` is the caller's, because only the caller knows what makes
+ * two attempts the same event. Without it the check skips rather than guessing: a
+ * dedupe keyed on something unique per attempt silently does nothing, which is
+ * worse than not running.
+ *
+ * The 24-hour default is the common convention for how long a retry may arrive:
+ * Stripe prunes an idempotency key "after they're at least 24 hours old"
+ * (https://docs.stripe.com/api/idempotent_requests), and Nylas gives the same
+ * figure as the safe default for webhook deduplication
+ * (https://developer.nylas.com/docs/cookbook/agent-accounts/prevent-duplicate-replies/).
+ * Pick your own from your transport's retry horizon.
+ */
+export function dedupe(options: { windowSeconds?: number } = {}): Check {
+  const windowSeconds = options.windowSeconds ?? DAY_SECONDS;
+  const label = humanWindow(windowSeconds);
+  return {
+    id: "dedupe",
+    async run({ user, candidate, store }) {
+      if (!candidate.dedupeKey) return skip("no dedupeKey on the candidate; deduplication cannot be evaluated");
+      const seen = await store.get(dedupeKeyFor(user.id, candidate.dedupeKey));
+      return seen === null ? pass : reject(`already delivered within the last ${label}`);
+    },
+    async consume({ user, candidate, store }) {
+      if (!candidate.dedupeKey) return true;
+      const claims = await store.incr(dedupeKeyFor(user.id, candidate.dedupeKey), windowSeconds);
+      return claims === 1;
+    },
+  };
+}
+
 /* ------------------------------------------------------------------------ */
 /* Optional, caller-fed checks. Off by default; the package ships no model.  */
 /* ------------------------------------------------------------------------ */
@@ -519,6 +578,11 @@ export function defaultChecks(options: {
   dailyLimit?: number;
   weeklyLimit?: number;
   quietHoursFloor?: Priority;
+  /**
+   * Add `dedupe` before the budgets. Off by default because it adds an entry to
+   * every trace; on, it costs nothing until a candidate carries a `dedupeKey`.
+   */
+  dedupe?: boolean | { windowSeconds?: number };
 } = {}): Check[] {
   return [
     killSwitch(options.killSwitch ?? (() => false)),
@@ -532,6 +596,7 @@ export function defaultChecks(options: {
     trustRamp(),
     dismissalCooldown(),
     adaptiveTiming(),
+    ...(options.dedupe ? [dedupe(typeof options.dedupe === "object" ? options.dedupe : {})] : []),
     ...(options.weeklyLimit === undefined ? [] : [weeklyBudget({ limit: options.weeklyLimit })]),
     dailyBudget({ limit: options.dailyLimit ?? 5 }),
   ];

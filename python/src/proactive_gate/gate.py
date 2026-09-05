@@ -202,7 +202,9 @@ def _elapsed(started: float) -> float:
 
 
 def _consumers(checks: Iterable[Check]) -> list[Check]:
-    return [c for c in checks if isinstance(c, (Budget, OnlyWhen)) and hasattr(c, "consume_plan")]
+    """Any check that offers a commit-time plan. Duck-typed, as the TypeScript side is:
+    a new consumer must not have to be added to a class list to be honoured."""
+    return [c for c in checks if hasattr(c, "consume_plan")]
 
 
 def _plan(check: Check, ctx: Context) -> ConsumePlan | None:

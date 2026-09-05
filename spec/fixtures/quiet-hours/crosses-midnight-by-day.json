@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.1.0",
   "name": "quiet-hours/crosses-midnight-by-day",
   "description": "A window belongs to the day it opens on, so Friday 18:00 to 02:00 silences Saturday morning. Saturday has no window of its own, so the carry is the only thing that can explain the silence.",

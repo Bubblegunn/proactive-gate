@@ -32,6 +32,7 @@ KNOWN_CHECKS: dict[str, Factory] = {
     "trustRamp": lambda o: c.TrustRamp(o.get("days", 7), o.get("minPriority", "high")),
     "dismissalCooldown": lambda o: c.DismissalCooldown(o.get("dismissals", 3), o.get("withinDays", 30), o.get("silenceDays", 7)),
     "adaptiveTiming": lambda o: c.AdaptiveTiming(),
+    "dedupe": lambda o: c.Dedupe(int(o.get("windowSeconds", 86400))),
     "dailyBudget": _budget(c.DailyBudget),
     "weeklyBudget": _budget(c.WeeklyBudget),
     "monthlyBudget": _budget(c.MonthlyBudget),

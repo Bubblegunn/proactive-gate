@@ -9,3 +9,6 @@ __pycache__/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+
+# uv writes this when the Python package is run locally; the library pins nothing.
+python/uv.lock

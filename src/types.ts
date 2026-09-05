@@ -93,6 +93,16 @@ export interface Candidate {
   pAccept?: number;
   /** Caller-estimated probability the user needs it; utilityFloor reads it, default 1. */
   pNeed?: number;
+  /**
+   * Identity of the underlying event, not of this attempt. `dedupe` claims it once
+   * per window, so a webhook redelivered by an at-least-once transport, or the same
+   * event picked up by two workers, produces one message rather than two.
+   *
+   * Derive it from what makes the event the same event: `order:42:shipped`, not a
+   * fresh UUID per attempt and not the message text, which usually carries a
+   * timestamp and so differs on every retry.
+   */
+  dedupeKey?: string;
   /** Free-form payload; the gate never reads it. */
   payload?: unknown;
 }

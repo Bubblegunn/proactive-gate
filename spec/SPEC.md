@@ -76,6 +76,24 @@ without incrementing.
 
 5.4 `commit` on a decision that is not allowed MUST return false without touching the store.
 
+5.5 `dedupe` keys as `dedupe:<userId>:<candidate.dedupeKey>`. With no `dedupeKey` on the
+candidate it MUST skip, not pass silently: a deduplication keyed on something unique per
+attempt does nothing, and an implementation that guessed a key would hide that.
+
+5.6 `dedupe` MUST NOT claim at evaluate. It reads the key at evaluate and rejects when the key
+is present; it claims at commit with the same atomic increment the budgets use, and only the
+caller receiving the first increment may deliver. Two callers evaluating the same event
+concurrently therefore both pass the check and exactly one commit succeeds. A read-then-write
+claim is non-conforming.
+
+5.7 Where `dedupe` and a budget are both present, `dedupe` MUST consume first, so a suppressed
+duplicate does not spend a budget unit. The consequence, which implementations MUST NOT hide:
+an event that clears `dedupe` and is then refused by an exhausted budget has claimed its key
+for the remainder of the window.
+
+5.8 The deduplication window is fixed from the first claim, not sliding. Incrementing an
+existing key MUST NOT extend its expiry.
+
 ## 6. Clock and time zones
 
 6.1 `now` is an instant. Local day, minutes and ISO week are derived from `now` in the user's

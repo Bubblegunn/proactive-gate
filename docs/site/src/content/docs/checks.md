@@ -61,3 +61,28 @@ A check is an object with an `id` and a `run` function over the context (user, c
 `now`, resolved priority, store, surfaces still on the table). Mark it `nonRejecting: true`
 when it may only move timing; the gate then ignores a reject from it and says so in the
 trace. Give it a `consume(ctx)` method and it becomes a budget the gate consumes at commit.
+
+## Deduplication
+
+`dedupe` is the check for a transport that delivers at least once. It is off unless you
+ask for it, with `defaultChecks({ dedupe: true })` or a `{ "id": "dedupe" }` entry in a
+policy.
+
+```ts
+await gate.evaluate({
+  user,
+  candidate: { id: crypto.randomUUID(), type: "shipping", dedupeKey: "order:42:shipped" },
+});
+```
+
+The key is the caller's, because only the caller knows what makes two attempts the same
+event. Without one the check skips rather than guessing.
+
+It claims at commit, not at evaluate, with the atomic increment the budgets use, so two
+workers holding the same event both pass the check and exactly one commit succeeds. It
+consumes before the budgets, so a suppressed duplicate does not spend one of the user's
+messages; the cost is that an event refused by an exhausted budget afterwards has still
+claimed its key. The window is fixed from the first claim rather than sliding, and
+defaults to 24 hours, the retry horizon Stripe and Nylas both use.
+
+Spec clauses 5.5 to 5.8 hold both implementations to this.

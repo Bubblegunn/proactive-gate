@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.1.0",
+  "spec_version": "1.2.0",
   "since": "1.1.0",
   "name": "quiet-hours/weekday-schedule",
   "description": "A Friday and Saturday weekend in Asia/Dubai (UTC+4, no daylight saving). A date beats a weekday beats the default, and null means the day has no quiet hours.",
