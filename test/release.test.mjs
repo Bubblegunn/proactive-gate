@@ -68,6 +68,7 @@ test("dry run prints the plan and changes nothing", () => {
     assert.match(r.stdout, /CITATION\.cff: version 0\.2\.0/);
     assert.match(r.stdout, /action\.yml: version input default 0\.2\.0/);
     assert.match(r.stdout, /README\.md: Bubblegunn\/fixture-pkg@v0\.2\.0/);
+    assert.match(r.stdout, /move v0 to v0\.2\.0 and force-push it/);
     assert.equal(f.git("status", "--porcelain"), "");
     assert.equal(f.read("package.json").includes('"0.1.0"'), true);
   } finally {
@@ -95,10 +96,13 @@ test("a release dates the entry, bumps every version, commits, tags and pushes",
     assert.equal(f.git("log", "-1", "--format=%s"), "chore(release): 0.2.0");
     assert.match(f.git("log", "-1", "--format=%b"), /For the customer:/);
     assert.equal(f.git("rev-parse", "HEAD"), f.git("rev-parse", "origin/main"));
-    const originTags = execFileSync("git", ["tag", "--list"], { cwd: f.origin, encoding: "utf8" }).trim();
-    assert.equal(originTags, "v0.2.0");
+    const originTags = execFileSync("git", ["tag", "--list"], { cwd: f.origin, encoding: "utf8" }).trim().split("\n").sort();
+    assert.deepEqual(originTags, ["v0", "v0.2.0"]);
+    const originRev = (ref) => execFileSync("git", ["rev-parse", `${ref}^{commit}`], { cwd: f.origin, encoding: "utf8" }).trim();
+    assert.equal(originRev("v0"), f.git("rev-parse", "HEAD"), "the major tag on origin points at the release commit");
+    assert.equal(originRev("v0"), originRev("v0.2.0"));
     assert.match(f.git("tag", "-l", "-n99", "v0.2.0"), /Something new/);
-    assert.match(r.stdout, /v0\.2\.0 pushed\. Watch the release workflow: https:\/\/github\.com\/Bubblegunn\/fixture-pkg\/actions\/workflows\/release\.yml/);
+    assert.match(r.stdout, /v0\.2\.0 pushed and v0 moved to it\. Watch the release workflow: https:\/\/github\.com\/Bubblegunn\/fixture-pkg\/actions\/workflows\/release\.yml/);
   } finally {
     rmSync(f.base, { recursive: true, force: true });
   }

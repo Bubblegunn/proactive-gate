@@ -6,6 +6,7 @@
 - Policy as data: `createGate({ policy })`, `compilePolicy`, `--policy policy.json`, `examples/policy.json`.
 - Outcome model: `defer` with `retryAt`, shadow mode, `nearLimit` notes on budgets, `hooks` (before, after, error, finally), a decision `id` and an idempotent `commit`.
 - Optional checks `utilityFloor` and `boundedDeferral`, fed by the caller's own model.
+- One command releases a version: `npm run release -- X.Y.Z` dates the CHANGELOG entry, sets the version in `package.json`, `CITATION.cff` and `python/pyproject.toml`, tags, pushes, and moves the `v0` major tag. The release workflow starts on full version tags only, so the moving tag cannot start a second publish.
 - Fourteen presets with sources under `proactive-gate/presets`, built from `allowedWindow`, `requiresConsent`, `monthlyBudget`, `rateLimit`, `recentInteraction` and `windowBudget`.
 - Adapters on subpaths for the Vercel AI SDK, Mastra, LangChain and OpenAI Agents, and a Claude Code `PreToolUse` hook (`proactive-gate hook`).
 - A Python sibling in `python/` (sync and async gates, Memory, SQLite and Redis stores) that passes the same fixtures.

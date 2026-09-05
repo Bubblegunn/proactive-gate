@@ -99,7 +99,8 @@ const pinned = new RegExp(`Bubblegunn/${name}@v\\d+\\.\\d+\\.\\d+`);
 const pinnedAll = new RegExp(pinned.source, "g");
 for (const f of readmes) if (pinned.test(read(f))) plan.push(`${f}: Bubblegunn/${name}@${tag}`);
 if (pkg.scripts?.["release:prepare"]) plan.push("npm run release:prepare");
-plan.push("npm test", `commit "chore(release): ${target}"`, `tag ${tag} (annotated, message = the CHANGELOG entry)`, "git push origin main --follow-tags");
+const major = `v${target.split(".")[0]}`;
+plan.push("npm test", `commit "chore(release): ${target}"`, `tag ${tag} (annotated, message = the CHANGELOG entry)`, "git push origin main --follow-tags", `move ${major} to ${tag} and force-push it (the moving tag Actions users pin)`);
 
 console.log(`release ${name} ${current} -> ${target}${dryRun ? " (dry run)" : ""}`);
 for (const p of plan) console.log(`  - ${p}`);
@@ -155,10 +156,14 @@ try {
   sh("git", ["commit", "--quiet", "-F", join(dir, "commit.txt")]);
   sh("git", ["tag", "-a", tag, "-F", join(dir, "tag.txt")]);
   sh("git", ["push", "origin", "main", "--follow-tags"]);
+  // The major tag moves from here, not from the workflow: release tags are admin-only by
+  // ruleset, and the person running this command is the admin. A workflow token could not.
+  sh("git", ["tag", "--force", major, "HEAD"], { stdio: "ignore" });
+  sh("git", ["push", "--force", "origin", `refs/tags/${major}`]);
 } finally {
   rmSync(dir, { recursive: true, force: true });
 }
 const repo = String(pkg.repository?.url ?? pkg.repository ?? "")
   .replace(/^git\+/, "")
   .replace(/\.git$/, "");
-console.log(`\n${tag} pushed. Watch the release workflow: ${repo}/actions/workflows/release.yml`);
+console.log(`\n${tag} pushed and ${major} moved to it. Watch the release workflow: ${repo}/actions/workflows/release.yml`);

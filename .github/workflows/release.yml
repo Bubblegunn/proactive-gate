@@ -1,7 +1,7 @@
 name: release
 on:
   push:
-    tags: ["v*"]
+    tags: ["v*.*.*"] # release tags only; the moving major tag (v0) must not start a publish
 permissions:
   contents: read
 jobs:
