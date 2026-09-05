@@ -6,6 +6,7 @@ permissions:
   contents: read
 jobs:
   publish:
+    # npm. The Python package is built and published by the two jobs below.
     runs-on: ubuntu-latest
     permissions:
       id-token: write # npm trusted publishing (OIDC); provenance is attached automatically
@@ -29,3 +30,37 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --upgrade pip build && pip install -e ".[dev]"
+      - run: python -m mypy --strict src/proactive_gate tests && python -m pytest -q
+      - run: python -m build
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: python-dist
+          path: python/dist/
+          if-no-files-found: error
+  publish-pypi:
+    # PyPI trusted publishing (OIDC). Needs the "pypi" environment and a trusted publisher on PyPI
+    # for Bubblegunn/proactive-gate, workflow release.yml, environment pypi.
+    needs: build-python
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: python-dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2

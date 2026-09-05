@@ -174,9 +174,9 @@ class Gate:  evaluate(input) -> Decision; commit(decision, input) -> bool; recor
 class AsyncGate: same, async
 def compile_policy(policy: Mapping[str, Any]) -> list[Check]
 ```
-- [ ] Conformance test parametrised over `../spec/fixtures/**/*.json`, skips from `spec/skip/python.txt`.
-- [ ] Implement until conformance is green; mypy strict clean.
-- [ ] Commit `feat(python): proactive-gate for Python, same fixtures, sync and async gates`.
+- [x] Conformance test parametrised over `../spec/fixtures/**/*.json`, skips from `spec/skip/python.txt`.
+- [x] Implement until conformance is green; mypy strict clean.
+- [x] Commit `feat(python): proactive-gate for Python, same fixtures, sync and async gates`.
 
 ### Task 9: Docs site and Pages
 
