@@ -19,6 +19,8 @@ dist/src/gate.d.ts
 dist/src/gate.js
 dist/src/index.d.ts
 dist/src/index.js
+dist/src/init.d.ts
+dist/src/init.js
 dist/src/policy.d.ts
 dist/src/policy.js
 dist/src/presets.d.ts
