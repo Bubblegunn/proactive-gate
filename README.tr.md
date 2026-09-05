@@ -81,11 +81,36 @@ olurdu.
 | 5 | `snooze()` | `user.snoozedUntil` gelecekteyse | genel duraklatma |
 | 6 | `mute()` | `candidate.type`, `user.mutedTypes` içindeyse | tür bazlı susturma |
 | 7 | `intensity()` | öncelik, kullanıcının yoğunluk tabanının altındaysa | low yalnızca high duyar, normal normal ve üstünü, high her şeyi |
-| 8 | `quietHours({ priorityFloor })` | kullanıcının yerel sessiz penceresi içindeyse | IANA saat dilimi, pencere gece yarısını geçebilir, taban ve üstünde atlanır |
+| 8 | `quietHours({ priorityFloor })` | kullanıcının yerel sessiz penceresi içindeyse | IANA saat dilimi, pencere gece yarısını geçebilir, taban ve üstünde atlanır; her gün tek pencere ya da [güne göre bir çizelge](#güne-göre-değişen-sessiz-saatler) |
 | 9 | `trustRamp({ days, minPriority })` | kullanıcı `days` günden yeniyse ve öncelik tabanın altındaysa | sistem, kullanıcı en az bağışlayıcıyken en az kalibredir |
 | 10 | `dismissalCooldown({ dismissals, withinDays, silenceDays })` | kullanıcı o türü pencere içinde `dismissals` kez reddettiyse | `gate.record(user, candidate, "dismissed")` ile beslenir; her yeni ret sessizliği yeniden başlatır |
 | 11 | `adaptiveTiming({ nextGoodMoment, surfacesFor })` | asla | reddetmez: `deliverAt` değerini taşır ya da yüzeyleri daraltır; `nonRejecting` işaretli bir kontrol istese de reddedemez |
 | 12 | `dailyBudget({ limit, bypassPriority })` | kullanıcının yerel gün sayacı sınırdaysa | `evaluate` okur, `commit` atomik artırır ve yine de reddedebilir |
+
+### Güne göre değişen sessiz saatler
+
+Çalışma haftası her yerde pazartesiden cumaya değildir ve tatil günü zaten hafta içi
+değildir. `quietHours` tek bir pencerenin yanında bir çizelge de alır:
+
+```ts
+quietHours: {
+  default: { start: "22:00", end: "08:00" },
+  days: { fri: { start: "00:00", end: "23:59" }, sat: { start: "00:00", end: "23:59" }, sun: null },
+  dates: { "2026-12-25": { start: "00:00", end: "23:59" } },
+}
+```
+
+Tarih haftanın gününü, o da varsayılanı yener; `null` o günün sessiz saati yok demektir ve
+varsayılanın içinden bir iş günü böyle oyulur. Bir pencere açıldığı güne aittir, yani gece
+yarısını geçen bir pencere ertesi sabahı susturur ve gerekçe hangi günden geldiğini söyler.
+
+Bunun bilerek yapmadığı iki şey var. Gömülü bir tatil takvimi yok: hangi tarihleri
+tuttuğunuz size aittir, gömülü olan ise kimse fark etmeden bayatlar. Ve tek bir satır 24
+saatten fazlasını anlatamaz, yani cuma akşamından cumartesi akşamına uzanan bir sessizlik
+iki satırdır: `fri: 18:00 to 00:00` ve `sat: 00:00 to 20:00`.
+
+Tek pencere geçmek eskisi gibi çalışır ve yaygın durum olmayı sürdürür; her günü aynı
+pencereye çıkan bir çizelge, o pencereyle birebir aynı davranır.
 
 Sıra bir tasarım kararıdır ve görünür olmalıdır. Rıza her şeyden önce gelmelidir. Sessiz
 saatler bütçeden önce gelmelidir, yoksa reddedilen bir aday hiç yapmadığı bir teslimi
@@ -227,22 +252,24 @@ işyerinde sürekli ulaşılabilir olmaları beklendiği için katılmayı redde
 seçmediği bir sessizliğin bir bedeli var ve o bedel bu kütüphanenin yazdığı hiçbir izde
 görünmüyor.
 
-## Benimsemeden önce bilmeniz gereken iki sınır
+## Benimsemeden önce bilmeniz gereken bir sınır
 
-İkisi de hata değil ve ikisi de testle sabitlendi, böylece ileride değişecekse bilerek değişir.
+Hata değil ve testle sabitlendi, böylece ileride değişecekse bilerek değişir.
 
-**Hafta, ISO haftasıdır; haftalık bütçe pazartesi yenilenir.** Çalışma haftası pazardan
-perşembeye uzanan yerlerde bu yenilenme haftanın birinci gününe denk gelir: pazar günü
-bütçesini harcayan bir kullanıcı pazartesi sabahı bütçesini geri alır ve önünde hâlâ dört
-iş günü vardır. Anahtarı değiştirmek deponuzdaki bütün sayaçları kaydıracağı için bunu
-sessizce değiştirmek yerine yazıyoruz. ISO haftası sizin kullanıcılarınız için yanlışsa
-kendi bütçe kontrolünüzü istediğiniz anahtarla yazabilirsiniz.
-
-**Sessiz saatler tek bir penceredir ve haftanın her günü aynıdır.** Kullanıcıda tek bir
-`start` ve tek bir `end` vardır; cuma penceresi, Şabat penceresi veya resmî tatil
-tanımlanamaz. Haftanın günü hiç okunmaz. Böyle bir kurala ihtiyacınız varsa kendi
-kontrolünüzü yazın: `id` ve `run` taşıyan bir nesnedir, istediğiniz sırada dizilir ve izde
-yerleşik kontrollerin yanında görünür.
+**Hafta, ISO haftasıdır; haftalık bütçe pazartesi yenilenir.** Pazartesi, çoğu insan için
+haftanın başladığı gün değildir: en kalabalık yirmi ülkeden CLDR'ye göre yedisinde
+pazartesi, on birinde pazar, ikisinde cumartesi başlar; bunu kendiniz
+`new Intl.Locale("und-EG").getWeekInfo().firstDay` ile okuyabilirsiniz. Çalışma haftası
+pazardan perşembeye uzanan yerlerde ISO yenilenmesi haftanın birinci gününe denk gelir:
+pazar günü bütçesini harcayan bir kullanıcı pazartesi sabahı bütçesini geri alır ve önünde
+hâlâ dört iş günü vardır. Anahtar yine de ISO, iki nedenle. Deponuzdaki sayaç bu anahtarla
+tutuluyor ve anahtarı taşımak her kullanıcıyı haftanın ortasında sessizce sıfırlar. Ayrıca
+sayacın döndüğü gün, kullanıcının korunduğu gün değildir: sessiz saatler kullanıcının kendi
+haftalık gününü zaten okuyor, cuma ya da Şabat penceresi dahil, ve bildirimin ne zaman
+verilebileceğine onlar karar veriyor. Bütçe yalnız kaç tane olacağına karar verir. ISO
+haftası sizin kullanıcılarınız için yanlışsa kendi bütçe kontrolünüzü istediğiniz anahtarla
+yazın: `id` ve `run` taşıyan bir nesnedir, istediğiniz sırada dizilir ve izde yerleşik
+kontrollerin yanında görünür.
 
 ## Hazır paketler: platform kotaları ve yasal sınırlar, kaynaklarıyla
 

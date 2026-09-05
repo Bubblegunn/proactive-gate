@@ -11,8 +11,9 @@ Python 3.11 or newer, no runtime dependencies; add `[redis]` for the Redis store
 unreleased state, install from the repository instead: `pip install "proactive-gate @
 git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`.
 
-The published 0.2.1 was uploaded from a local build with a token, so unlike the npm package it
-carries no build provenance.
+The package is published from the release workflow through PyPI trusted publishing, so each
+file carries a publish attestation naming the repository and the workflow that built it.
+Releases before 0.2.2 were uploaded from a local build with a token and carry none.
 
 ```python
 from datetime import datetime, timezone

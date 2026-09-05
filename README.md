@@ -139,21 +139,23 @@ consumed in check order at commit, so when a weekly check passes and the daily o
 refuses, that weekly unit is spent without a delivery. It only happens when two commits
 race after a shared evaluate.
 
-### Two limits you should know before you adopt this
+### One limit you should know before you adopt this
 
-Neither is a bug, and both are pinned by tests so a future change has to be deliberate.
+It is not a bug, and it is pinned by tests so a future change has to be deliberate.
 
-**The week is the ISO week, so the weekly budget refills on Monday.** Where the working
-week runs Sunday to Thursday, that refill lands one day in: a user who spends the budget on
-Sunday has it back on Monday, with four working days still to run. Changing the key would
-move every counter already in your store, so it is documented rather than quietly altered.
-Pass your own budget check keyed how you like if the ISO week is wrong for your users.
-
-**Quiet hours are a single window, the same on every day of the week.** A user carries one
-`start` and one `end`, so a Friday window, a Shabbat window or a public holiday cannot be
-expressed. The day of the week is never read. If you need one, write a check: it is an
-object with an `id` and a `run`, it composes in the order you choose, and the trace will
-show it firing beside the built-in ones.
+**The week is the ISO week, so the weekly budget refills on Monday.** Monday is not where
+the week starts for most people: of the twenty most populous countries, CLDR gives Monday
+to seven, Sunday to eleven and Saturday to two, which you can read yourself with
+`new Intl.Locale("und-EG").getWeekInfo().firstDay`. Where the working week runs Sunday to
+Thursday, an ISO refill lands one day in: a user who spends the budget on Sunday has it back
+on Monday with four working days still to run. The key is ISO anyway, for two reasons. A
+counter already in your store is keyed by it, and moving the key silently resets every user
+mid-week. And the day the counter turns over is not the day the user is protected on: quiet
+hours already read the user's own weekday, including a Friday or a Shabbat window, and they
+are what decides when a notification is allowed. The budget only decides how many. If the ISO
+week is wrong for your users, pass your own budget check keyed how you like; it is an object
+with an `id` and a `run`, it composes in the order you choose, and the trace will show it
+firing beside the built-in ones.
 
 Order is a design decision and it should be visible. Consent has to come before
 everything. Quiet hours have to come before the budget, or a rejected candidate
@@ -551,8 +553,10 @@ pip install proactive-gate
 ```
 
 To run an unreleased state, install from the repository instead: `pip install "proactive-gate @
-git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`. The published release was
-uploaded from a local build with a token, so unlike the npm package it carries no build provenance.
+git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`. The Python package is published by
+the same workflow as the npm one, so it carries PyPI publish attestations naming the repository
+and the workflow that built each file. Releases before 0.2.2 were uploaded from a local build with
+a token and carry none.
 
 ```python
 from proactive_gate import Gate
