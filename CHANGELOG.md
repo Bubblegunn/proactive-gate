@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.5 (unreleased)
+## 0.2.5 (2026-09-05)
 
 Documentation only; no behaviour changed.
 
