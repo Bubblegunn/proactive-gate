@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.4 (unreleased)
+## 0.2.4 (2026-09-05)
 
 The conformance suite is an artifact rather than a folder in this package. `spec/` now ships in the
 npm tarball, so `node_modules/proactive-gate/spec/fixtures` exists after an install, and it is
