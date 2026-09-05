@@ -17,6 +17,11 @@ keywords:
   - "specification"
   - "llm-agents"
 repository-code: "https://github.com/Bubblegunn/proactive-gate"
+doi: "10.5281/zenodo.22393512"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22393512"
+    description: "Concept DOI: always resolves to the newest archived version."
 license: MIT
 type: software
 abstract: "Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, JSON policies, fourteen presets with sources, adapters for the Vercel AI SDK, Mastra, LangChain and OpenAI Agents, a Python sibling that runs the same fixtures, and a replay CLI."

@@ -463,6 +463,18 @@ başına bir anahtar ve sessiz saati aşan bir öncelik tabanı verir. Horvitz'i
 çalışmaları iki isteğe bağlı kontrolü sağladı. Bu paket o fikirleri izli tek bir listeye
 koyar ve onların dışarıda bıraktığı parçayı ekler: gönderim anında tüketilen bütçe.
 
+## Atıf
+
+Her sürüm Zenodo'da bir DOI ile arşivleniyor, böylece bir makale ya da rapor tam olarak
+çalıştırdığı koda işaret edebiliyor.
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22393512.svg)](https://doi.org/10.5281/zenodo.22393512)
+
+Bu **kavram** DOI'si: her zaman en yeni sürüme çözümlenir. Çalıştırdığınız sürümün kendisini
+atıflamak için o sayfayı açıp yan çubuktan sürümü seçin ve orada yazan DOI'yi kullanın.
+Depodaki `CITATION.cff` aynı tanımlayıcıyı taşıyor, bu yüzden GitHub'ın "Cite this repository"
+düğmesi elle kopyalama olmadan doğru BibTeX ve APA üretiyor.
+
 ## Geliştirme
 
 ```

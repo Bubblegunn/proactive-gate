@@ -9,6 +9,7 @@ English | [Türkçe](README.tr.md)
   <img src="https://img.shields.io/bundlephobia/minzip/proactive-gate?style=flat-square&color=111111" alt="minzipped size">
   <img src="https://img.shields.io/github/stars/Bubblegunn/proactive-gate?style=flat-square&color=111111" alt="stars">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT">
+  <a href="https://doi.org/10.5281/zenodo.22393512"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.22393512-111111?style=flat-square" alt="DOI"></a>
 </p>
 
 Decide whether a proactive AI agent may reach a user right now, and log why not.
@@ -720,6 +721,18 @@ before. [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) wrote `
 [@edwardsong08](https://github.com/edwardsong08) wrote the weekly budget
 ([#9](https://github.com/Bubblegunn/proactive-gate/pull/9)). Both shipped in 0.1.2 and are in
 every release since, including the one you install today.
+
+## Cite this
+
+Every release is archived on Zenodo with a DOI, so a paper or a report can point at the
+exact code it ran.
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22393512.svg)](https://doi.org/10.5281/zenodo.22393512)
+
+That is the **concept** DOI: it always resolves to the newest version. To cite the exact
+version you ran, open that page, pick the version in the sidebar, and use the DOI shown
+there. `CITATION.cff` in this repository carries the same identifier, so GitHub's "Cite this
+repository" button produces correct BibTeX and APA without any copying by hand.
 
 ## Development
 
