@@ -16,5 +16,5 @@ jobs:
           persist-credentials: true # the script pushes the metrics branch with the job token
       - run: sh scripts/record-metrics.sh
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.METRICS_TOKEN || secrets.GITHUB_TOKEN }} # METRICS_TOKEN (optional) unlocks the traffic columns
           NPM_PACKAGE: ${{ github.event.repository.name }}
