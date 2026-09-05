@@ -1,0 +1,95 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "utility/bounded-deferral",
+  "description": "boundedDeferral moves deliverAt by t* = min(bound, lambda * c / (2 * staleness)) when the candidate is busy.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "boundedDeferral",
+        "lambda": 0.02,
+        "interruptCost": 1,
+        "staleness": 0.0001,
+        "boundSeconds": 240
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "busy: t* = 0.02 / 0.0002 = 100 s",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ],
+          "busy": true
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "deliverAt": "2026-09-04T09:01:40.000Z",
+        "trace": [
+          "consent",
+          "boundedDeferral"
+        ]
+      }
+    },
+    {
+      "description": "not busy: unchanged",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "boundedDeferral"
+        ]
+      }
+    }
+  ]
+}
