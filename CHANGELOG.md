@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (unreleased)
+## 0.2.0 (2026-09-05)
 
 The optional checks now name their sources and their limits: the package ships no model, no cost and no probability, the rules come from Horvitz's attention-sensitive alerting and bounded deferral, and the field figure cited is Iqbal and Horvitz (CHI 2007), roughly 11 to 16 minutes to return to a suspended task. The widely repeated "23 minutes 15 seconds" is not from a peer-reviewed paper and is not used.
 
