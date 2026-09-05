@@ -2,6 +2,8 @@
 
 ## 0.2.0 (unreleased)
 
+The optional checks now name their sources and their limits: the package ships no model, no cost and no probability, the rules come from Horvitz's attention-sensitive alerting and bounded deferral, and the field figure cited is Iqbal and Horvitz (CHI 2007), roughly 11 to 16 minutes to return to a suspended task. The widely repeated "23 minutes 15 seconds" is not from a peer-reviewed paper and is not used.
+
 Property tests over the check order and the store contract, generated from a seeded PRNG rather than written case by case: the trace is always a prefix of the declared order with every check reporting once, a non-rejecting check cannot stop a decision however it misbehaves, racing deliveries commit exactly `min(racers, limit)` units, a replayed decision spends one, and `MemoryStore` and `SqliteStore` answer the same random operation sequence identically. Verified against a mutant: rewriting `consume` as read-then-write fails the race property.
 
 `proactive-gate init` writes a readable policy with the ten default checks, appends a named preset before the budget, and prints that preset's sources next to the lines that wire the gate into AI SDK, Mastra, LangChain, OpenAI Agents or none of them. `--list` names the fourteen presets and the four frameworks, and the command refuses to overwrite an existing policy without `--force`. A test compiles the policy every preset produces.

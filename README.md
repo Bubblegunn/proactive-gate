@@ -213,6 +213,15 @@ Both ship off. They read numbers the caller puts on the candidate.
   `candidate.busy` is true it moves `deliverAt` to `now + t*`, with
   `t* = min(bound, lambda * interruptCost / (2 * staleness))`; the defaults give 116 seconds.
 
+Neither check ships a model, a cost or a probability. `costFalseAlarm`, `costMissedHelp`,
+`interruptCost` and `staleness` are yours to measure, and the package has no opinion about
+what an interruption costs your users. The rules come from Eric Horvitz's work on
+attention-sensitive alerting and bounded deferral; the field measurement people usually
+reach for is [Iqbal and Horvitz, "Disruption and recovery of computing tasks", CHI
+2007](https://erichorvitz.com/CHI_2007_Iqbal_Horvitz.pdf), which logged real users and put
+the return to a suspended task in the region of 11 to 16 minutes. The widely repeated "23
+minutes 15 seconds" figure is not from a peer-reviewed paper and is not used here.
+
 ## Presets: platform quotas and legal limits, with sources
 
 ```ts
