@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2 (unreleased)
+
+`publish-pypi` is skipped until the repository variable `PYPI_TRUSTED_PUBLISHER` is `true`. No trusted publisher exists on PyPI for this project, so the OIDC exchange returned `invalid-publisher` and every tagged release went red for a credential that cannot be created from CI. The job is gated rather than ignored: `build-python` still runs mypy strict, the tests, `python -m build` and `twine check` on every release, and the run prints what to configure at pypi.org and the `gh variable set` that turns publishing on. The README told readers to `pip install proactive-gate`, which does not exist; both READMEs now install from the repository, which is what `python/README.md` already said.
+
 ## 0.2.1 (2026-09-05)
 
 The utility floor's threshold was attributed to "PRISM". No system of that name appears in Horvitz, Jacobs and Hovel, "Attention-Sensitive Alerting", UAI 1999, nor on Horvitz's publication index; the system in that paper is named Priorities. Corrected in the source, both READMEs, the documentation site and the generated API page. The mathematics is unchanged and is now stated directly: alerting costs `(1 - p) * cFA`, silence costs `p * cFN`, so the threshold is the classical Bayes decision boundary.

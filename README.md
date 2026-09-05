@@ -468,8 +468,10 @@ preset) still refuses. Both are part of `npm run examples` and of the test suite
 
 ## Python
 
+Not on PyPI yet, so install it from the repository:
+
 ```
-pip install proactive-gate
+pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
 ```
 
 ```python

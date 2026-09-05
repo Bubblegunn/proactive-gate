@@ -81,9 +81,36 @@ jobs:
           name: python-dist
           path: python/dist/
           if-no-files-found: error
+      - name: Say what publishing to PyPI would need
+        if: vars.PYPI_TRUSTED_PUBLISHER != 'true'
+        working-directory: .
+        run: |
+          {
+            echo "### The Python package was built and checked, and not published"
+            echo
+            echo "\`publish-pypi\` is skipped because the repository variable \`PYPI_TRUSTED_PUBLISHER\` is not \`true\`."
+            echo "The wheel and the source distribution above passed \`twine check\`, so the package itself is fine."
+            echo
+            echo "To publish from the next tag, create the trusted publisher at <https://pypi.org/manage/account/publishing/>:"
+            echo
+            echo "| field | value |"
+            echo "| --- | --- |"
+            echo "| PyPI project name | \`proactive-gate\` |"
+            echo "| Owner | \`Bubblegunn\` |"
+            echo "| Repository name | \`proactive-gate\` |"
+            echo "| Workflow name | \`release.yml\` |"
+            echo "| Environment name | \`pypi\` |"
+            echo
+            echo "Then: \`gh variable set PYPI_TRUSTED_PUBLISHER --body true -R Bubblegunn/proactive-gate\`"
+          } >> "$GITHUB_STEP_SUMMARY"
   publish-pypi:
-    # PyPI trusted publishing (OIDC). Needs the "pypi" environment and a trusted publisher on PyPI
-    # for Bubblegunn/proactive-gate, workflow release.yml, environment pypi.
+    # PyPI trusted publishing (OIDC). Skipped until a trusted publisher exists on PyPI for
+    # Bubblegunn/proactive-gate, workflow release.yml, environment pypi. Without one the OIDC
+    # exchange returns "invalid-publisher", which is a failure nobody in CI can fix, so the job
+    # is gated on a repository variable rather than left to go red on every tag. build-python
+    # still runs and still checks the distribution. The condition is on the job, not a step:
+    # a skipped job reads as not attempted, where a green step inside a red job reads as passed.
+    if: vars.PYPI_TRUSTED_PUBLISHER == 'true'
     needs: build-python
     runs-on: ubuntu-latest
     environment: pypi

@@ -305,8 +305,10 @@ kurmak gerekmez. Her biri kapının gerekçesiyle reddeder ve onayda bütçeyi t
 
 ## Python
 
+Paket henüz PyPI'da değil, depodan kurulur:
+
 ```
-pip install proactive-gate
+pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
 ```
 
 `python/` sapan bir port değil, bir kardeştir: `spec/fixtures` altındaki her senaryoyu senkron

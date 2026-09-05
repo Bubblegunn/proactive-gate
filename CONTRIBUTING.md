@@ -42,8 +42,27 @@ Maintainers only. One command; the workflow does the rest.
 
 1. Write the `## X.Y.Z (unreleased)` entry in `CHANGELOG.md` and merge it.
 2. On a clean, green `main`: `npm run release -- X.Y.Z` (or `patch`, `minor`, `major`; add `--dry-run` to see the plan). It dates the entry, sets the version in `package.json`, `CITATION.cff` and `python/pyproject.toml`, runs the tests, commits, tags `vX.Y.Z`, pushes, and then moves the major tag (`v0` today) to the release and force-pushes it, so anyone pinning a major follows the newest release in it. The major tag moves from this command and not from the workflow because release tags are admin-only by ruleset; a workflow token could not move it.
-3. Watch the `release` workflow: it publishes to npm with provenance, builds and publishes the Python package to PyPI through the `pypi` environment, creates the GitHub release from the CHANGELOG entry, and installs the published version from the registry on three operating systems.
+3. Watch the `release` workflow: it publishes to npm with provenance, builds and checks the Python package, creates the GitHub release from the CHANGELOG entry, and installs the published version from the registry on three operating systems.
 
 CI runs `scripts/release-gate.mjs` on every push: the version must agree across those files and `npm pack` may ship only the paths in `scripts/pack-allowlist.txt` (regenerate with `node scripts/release-gate.mjs --update` when the package layout changes on purpose).
 
-Both publishes use trusted publishing and hold no token. Before the first tagged release the maintainer configures the trusted publisher on npmjs.com (package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`, "Allow npm publish" ticked) and on pypi.org (project `proactive-gate`, owner `Bubblegunn`, repository `proactive-gate`, workflow `release.yml`, environment `pypi`).
+Publishing uses trusted publishing and holds no token. The npm publisher is configured on npmjs.com (package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`, "Allow npm publish" ticked).
+
+### Publishing the Python package
+
+`publish-pypi` is skipped until the repository variable `PYPI_TRUSTED_PUBLISHER` is `true`, so a
+release does not go red for a credential nobody in CI can supply. `build-python` still runs on every
+release: mypy strict, the tests, `python -m build` and `twine check`. To turn publishing on, create the
+trusted publisher at <https://pypi.org/manage/account/publishing/>:
+
+| field | value |
+| --- | --- |
+| PyPI project name | `proactive-gate` |
+| Owner | `Bubblegunn` |
+| Repository name | `proactive-gate` |
+| Workflow name | `release.yml` |
+| Environment name | `pypi` |
+
+Then `gh variable set PYPI_TRUSTED_PUBLISHER --body true -R Bubblegunn/proactive-gate`. Until that
+happens the Python package installs from the repository, which is what `python/README.md` says. Every
+release prints the same instruction in its job summary.
