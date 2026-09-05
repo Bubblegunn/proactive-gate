@@ -182,7 +182,10 @@ bir birim tüketmez.
 
 - `utilityFloor({ costFalseAlarm, costMissedHelp })` yalnızca `candidate.pAccept` değeri
   `tau = cFA / (cFA + pNeed * cFN)` eşiğini geçtiğinde konuşur (`pNeed` varsayılanı 1);
-  `pAccept` yoksa atlar. Bu, Horvitz'in beklenen fayda kuralı ve PRISM eşiğidir.
+  `pAccept` yoksa atlar. Bu eşik klasik Bayes karar sınırıdır: konuşmanın maliyeti
+  `(1 - p) * cFA`, susmanın maliyeti `p * cFN`, hangisi küçükse o seçilir. Uyarı alanındaki
+  karşılığı [Horvitz, Jacobs ve Hovel, "Attention-Sensitive Alerting", UAI
+  1999](https://arxiv.org/abs/1301.6707); o makaledeki sistemin adı Priorities.
 - `boundedDeferral({ lambda, interruptCost, staleness, boundSeconds })` asla reddetmez.
   `candidate.busy` doğruysa `deliverAt` değerini `now + t*` yapar;
   `t* = min(bound, lambda * interruptCost / (2 * staleness))`, varsayılanlar 116 saniye verir.

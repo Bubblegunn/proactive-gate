@@ -208,7 +208,10 @@ Both ship off. They read numbers the caller puts on the candidate.
 
 - `utilityFloor({ costFalseAlarm, costMissedHelp })` acts only when `candidate.pAccept` clears
   `tau = cFA / (cFA + pNeed * cFN)` (`pNeed` defaults to 1) and skips when there is no
-  `pAccept`. This is Horvitz's expected-utility rule with the PRISM threshold.
+  `pAccept`. That threshold is the classical Bayes decision boundary: alerting costs
+  `(1 - p) * cFA`, silence costs `p * cFN`, so you alert when the first is the smaller.
+  The alerting application is [Horvitz, Jacobs and Hovel, "Attention-Sensitive Alerting",
+  UAI 1999](https://arxiv.org/abs/1301.6707), whose system is named Priorities.
 - `boundedDeferral({ lambda, interruptCost, staleness, boundSeconds })` never rejects. When
   `candidate.busy` is true it moves `deliverAt` to `now + t*`, with
   `t* = min(bound, lambda * interruptCost / (2 * staleness))`; the defaults give 116 seconds.

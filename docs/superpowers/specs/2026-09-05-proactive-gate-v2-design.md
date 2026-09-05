@@ -1,7 +1,13 @@
 # proactive-gate v2 design (spec, policy as data, outcome model, presets, adapters, Python sibling, docs site)
 
+
+> Corrected 2026-09-05: this document originally named the threshold "PRISM". The system in
+> Horvitz, Jacobs and Hovel, *Attention-Sensitive Alerting*, UAI 1999 is named **Priorities**;
+> no system called PRISM appears in that paper. The mathematics was and remains correct.
+
+
 Date: 2026-09-05. Status: approved by the maintainer in conversation; this file is the written form.
-Source of the priorities: the 2026-09-05 research report (Horvitz and PRISM formulas, platform and
+Source of the priorities: the 2026-09-05 research report (Horvitz's alerting formulas, platform and
 regulatory presets, adapter surfaces, conformance-suite precedents in OpenFeature, Unleash, JSON Schema).
 
 ## 1. Goal
@@ -119,7 +125,7 @@ docs/superpowers/      specs and plans
 ## 6. Optional caller-fed checks (off by default, not in `defaultChecks`)
 
 - `utilityFloor({ costFalseAlarm, costMissedHelp })`. Reads `candidate.pAccept` and
-  `candidate.pNeed` (new optional numeric fields). Threshold from PRISM:
+  `candidate.pNeed` (new optional numeric fields). Threshold from the expected-utility rule:
   `tau = costFalseAlarm / (costFalseAlarm + pNeed * costMissedHelp)`. Rejects when
   `pAccept < tau` with reason `pAccept 0.41 < tau 0.55`. Skips when `pAccept` is missing.
   `pNeed` defaults to 1. The package ships no model; both probabilities come from the caller.

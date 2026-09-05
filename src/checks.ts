@@ -287,8 +287,13 @@ export function monthlyBudget(options: BudgetOptions = {}): BudgetCheck {
 /* ------------------------------------------------------------------------ */
 
 /**
- * Horvitz's expected-utility rule with the PRISM threshold: act only when the
- * caller's estimate of acceptance clears tau = cFA / (cFA + pNeed * cFN).
+ * Expected-utility alerting: act only when the caller's estimate of acceptance
+ * clears tau = cFA / (cFA + pNeed * cFN). That threshold is the classical Bayes
+ * decision boundary between the cost of alerting when the user did not want it,
+ * (1 - p) * cFA, and the cost of staying silent when they did, p * cFN.
+ * The alerting application is Horvitz, Jacobs and Hovel, "Attention-Sensitive
+ * Alerting", UAI 1999 (https://arxiv.org/abs/1301.6707); the system in that
+ * paper is named Priorities.
  * `candidate.pAccept` and `candidate.pNeed` come from the caller's own model.
  */
 export function utilityFloor(options: { costFalseAlarm: number; costMissedHelp: number }): Check {
