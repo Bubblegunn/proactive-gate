@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.2 (unreleased)
+## 0.2.2 (2026-09-05)
 
 Quiet hours can differ by day. A single window applies every day, which cannot express a working week that is not Monday to Friday: a Friday and Saturday weekend, a Friday evening to Saturday evening silence, and a public holiday all had to be written as a custom check. `quietHours` now takes a schedule as well as a window, resolving a date before a weekday before a default, where `null` at any level means the day has no quiet hours. A window still belongs to the day it opens on, so one that crosses midnight silences the next morning and the reason names the day it came from. The single-window form is unchanged and is still the default; a schedule whose every day resolves to the same window behaves identically to that window, asserted minute by minute in a zone with a 45-minute offset. Spec 1.1.0 adds clauses 6.4 to 6.7 and three fixtures, so the Python sibling is held to the same behaviour; breaking the carry in either implementation fails them.
 
