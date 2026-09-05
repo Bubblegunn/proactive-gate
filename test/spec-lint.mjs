@@ -3,8 +3,9 @@
 // It is not a full JSON Schema validator: it checks the shape the schemas describe.
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("..", import.meta.url).pathname;
+const root = fileURLToPath(new URL("..", import.meta.url));
 const specVersion = (await readFile(join(root, "spec/SPEC_VERSION"), "utf8")).trim();
 const OUTCOMES = new Set(["pass", "reject", "adjust", "skip", "defer"]);
 const PRIORITIES = new Set(["low", "normal", "high", "critical"]);

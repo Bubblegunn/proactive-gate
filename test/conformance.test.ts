@@ -1,9 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { loadFixtures, readSkips, runFixture } from "../src/conformance.js";
 
-const root = new URL("../../", import.meta.url).pathname; // dist/test -> repo root
+const root = fileURLToPath(new URL("../../", import.meta.url)); // dist/test -> repo root, a filesystem path on every OS
 const fixtures = await loadFixtures(`${root}spec/fixtures`);
 const skips = await readSkips(`${root}spec/skip/ts.txt`);
 const specVersion = (await readFile(`${root}spec/SPEC_VERSION`, "utf8")).trim();
