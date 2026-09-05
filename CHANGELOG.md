@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1 (unreleased)
+
+The utility floor's threshold was attributed to "PRISM". No system of that name appears in Horvitz, Jacobs and Hovel, "Attention-Sensitive Alerting", UAI 1999, nor on Horvitz's publication index; the system in that paper is named Priorities. Corrected in the source, both READMEs, the documentation site and the generated API page. The mathematics is unchanged and is now stated directly: alerting costs `(1 - p) * cFA`, silence costs `p * cFN`, so the threshold is the classical Bayes decision boundary.
+
+Every default now says whether it was measured or chosen. One was measured: `lambda = 1/43` comes from the field study in Achlioptas and Horvitz, "Principles of Bounded Deferral", 113 employees over three business days between 10am and 4pm, 4,803 busy situations, mean 43.12 s with a standard deviation of 51.79 s. The same paper's two-subject analysis gives 11 s for one person and 101 s for the other, so the spread between two people exceeds the default. `staleness` and `boundSeconds` are labelled as scale choices, since only their ratio reaches `t*`. The seven-day trust ramp and the three-in-thirty cooldown are labelled as ours, with no study behind them. The daily budget of five is ours in a direction Pielot and Rello support, citing a median of 63.5 notifications a day.
+
+Two citations added: Okoshi, Tsubouchi and Tokuda (*Pervasive and Mobile Computing* 50:1-24, 2018), a Yahoo! JAPAN deployment of more than 680,000 users where deferring to an interruptible moment cut response time by 49.7 percent, as evidence for the direction only; and Pielot and Rello (MobileHCI 2017) as the counterweight, where a day without notifications left 15 of 30 participants afraid of missing something urgent and three approached recruits declining outright because their workplace expected them to be reachable. A gate that suppresses is not free and the README says so.
+
+Two design limits documented and pinned by tests: the weekly budget uses the ISO week, so it refills on Monday, one day into a Sunday-to-Thursday working week; and quiet hours are a single window applied to every day, so a Friday, Shabbat or holiday rule cannot be expressed without a custom check.
+
+No new preset. Canada's CASL and Australia's Spam Act carry no time-of-day rule; the Brazilian window comes from a bill, not a law, and covers telemarketing calls; and India's regulation makes time bands a preference the subscriber registers rather than a fixed statutory window, with secondary sources disagreeing about whether it starts at 09:00 or 10:00. The README now says that a regulatory preset binds a message only when the message is itself commercial.
+
 ## 0.2.0 (2026-09-05)
 
 The optional checks now name their sources and their limits: the package ships no model, no cost and no probability, the rules come from Horvitz's attention-sensitive alerting and bounded deferral, and the field figure cited is Iqbal and Horvitz (CHI 2007), roughly 11 to 16 minutes to return to a suspended task. The widely repeated "23 minutes 15 seconds" is not from a peer-reviewed paper and is not used.

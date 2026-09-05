@@ -313,6 +313,25 @@ Each preset carries `sources` (the pages the numbers come from) and a `note` on 
 out. Reviewable defaults, not legal advice: several official sources disagree with each other,
 and the note says which value was chosen and why.
 
+**Read the scope before you reach for a legal preset.** Every instrument above regulates
+*commercial* communication. `usTcpa`, `euEprivacy`, `krNetworkAct50` and `jpAntiSpamLaw` are
+marketing rules, so they bind your message only when the message itself is commercial. A
+reminder your user asked for is not advertising, and pulling in a marketing preset for it
+imports a restriction the law never placed on you, which is its own kind of wrong answer.
+Use them when the candidate is promotional; when it is not, the platform quotas and your own
+quiet hours are the honest constraints.
+
+That scope test is also why some jurisdictions people ask for are missing. Canada's CASL and
+Australia's Spam Act 2003 set consent, identification and unsubscribe duties, and neither
+carries a time-of-day rule at all. The Brazilian window quoted around the web comes from bill
+PLS 48/2018, a proposal rather than enacted law, and it covers telemarketing calls. India is
+the interesting one: the widely repeated "9am to 9pm" is not what the primary text says. The
+Telecom Commercial Communications Customer Preference Regulations make time bands a
+*preference the subscriber registers* with their access provider, alongside content category
+and day type, not a fixed statutory quiet window, and the secondary sources that quote a
+window disagree with each other about whether it starts at 09:00 or 10:00. A preset built on
+that would encode a number no primary source states, so there is none.
+
 ## The budget is enforced at commit, not at evaluate
 
 Two instances can both evaluate a candidate for the same user, both see four of

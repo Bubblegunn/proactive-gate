@@ -272,6 +272,24 @@ Her paket `sources` (sayıların geldiği sayfalar) ve neyi dışarıda bırakt�
 `note` taşır. Gözden geçirilebilir varsayılanlar, hukuki tavsiye değil: birkaç resmi kaynak
 birbiriyle çelişir ve not hangi değerin neden seçildiğini söyler.
 
+**Yasal bir pakete uzanmadan önce kapsamını okuyun.** Yukarıdaki bütün düzenlemeler *ticari*
+iletişimi düzenler. `usTcpa`, `euEprivacy`, `krNetworkAct50` ve `jpAntiSpamLaw` birer pazarlama
+kuralıdır; yani mesajınızı ancak mesajın kendisi ticari olduğunda bağlar. Kullanıcının kendi
+istediği bir hatırlatma reklam değildir ve onun için pazarlama paketi kullanmak, yasanın size
+hiç koymadığı bir kısıtı kendi elinizle içeri almak olur. Aday promosyon niteliğindeyse
+kullanın; değilse dürüst sınırlar platform kotaları ve kendi sessiz saatlerinizdir.
+
+Bazı ülkelerin neden burada olmadığı da aynı kapsam sınavıyla açıklanır. Kanada'nın CASL'i ve
+Avustralya'nın 2003 tarihli Spam Act'i rıza, gönderen kimliği ve abonelikten çıkma
+yükümlülükleri getirir; ikisinde de saat kısıtı yoktur. İnternette dolaşan Brezilya penceresi
+PLS 48/2018 sayılı kanun *teklifinden* gelir, yürürlükteki bir kanundan değil, ve
+telefonla pazarlama aramalarını kapsar. Hindistan ilginç olanı: sıkça tekrarlanan "09.00-21.00"
+birincil metinde yazmaz. TRAI düzenlemesi zaman bantlarını, içerik kategorisi ve gün tipiyle
+birlikte, abonenin operatörüne *kaydettirdiği bir tercih* yapar; sabit bir yasal sessizlik
+penceresi değildir. Üstelik pencereyi aktaran ikincil kaynaklar başlangıcın 09.00 mı 10.00 mı
+olduğunda birbiriyle çelişir. Bunun üzerine kurulacak bir paket, hiçbir birincil kaynağın
+yazmadığı bir sayıyı kodlardı; o yüzden yok.
+
 ## Adaptörler
 
 | alt yol | framework | kapı nerede durur |
