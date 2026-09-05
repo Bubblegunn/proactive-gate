@@ -146,6 +146,20 @@ test("daily budget: evaluate reads, commit consumes atomically and refuses the s
   assert.equal((await gate.inspect(user(), noon)).budgetUsed, 5);
 });
 
+test("weekly budget: resets on the user's local ISO week and commits atomically", async () => {
+  const store = new MemoryStore();
+  const gate = createGate({ store, checks: [checks.weeklyBudget({ limit: 2 })] });
+  const input = { user: user(), candidate: candidate(), now: new Date("2026-09-04T09:00:00Z") };
+  const first = await gate.evaluate(input);
+  const second = await gate.evaluate(input);
+  assert.equal(await gate.commit(first, input), true);
+  assert.equal(await gate.commit(second, input), true);
+  assert.equal((await gate.evaluate(input)).rejectedBy, "weeklyBudget");
+
+  const nextWeek = await gate.evaluate({ ...input, now: new Date("2026-09-07T09:00:00Z") });
+  assert.equal(nextWeek.allowed, true);
+});
+
 test("adaptive timing never rejects; it defers and can narrow surfaces", async () => {
   const later = new Date("2026-09-04T15:00:00Z");
   const gate = createGate({

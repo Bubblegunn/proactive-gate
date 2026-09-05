@@ -1,4 +1,4 @@
-import { budgetKey, dismissalKey, DAY_SECONDS } from "./checks.js";
+import { budgetKey, dismissalKey, weeklyBudgetKey, DAY_SECONDS } from "./checks.js";
 import { MemoryStore } from "./stores.js";
 import type {
   Candidate,
@@ -42,7 +42,7 @@ export function createGate(options: GateOptions): Gate {
   const store = new PrefixedStore(options.store ?? new MemoryStore(), options.keyPrefix ?? "pg:");
   const onStoreError = options.onStoreError ?? "open";
   const checks = [...options.checks];
-  const budgetCheck = checks.find((c) => c.id === "dailyBudget") as (Check & { limit?: number }) | undefined;
+  const budgetChecks = checks.filter((c) => c.id === "dailyBudget" || c.id === "weeklyBudget") as Array<Check & { limit?: number }>;
 
   const evaluate = async (input: EvaluateInput): Promise<Decision> => {
     const now = input.now ?? new Date();
@@ -99,12 +99,18 @@ export function createGate(options: GateOptions): Gate {
 
   const commit = async (decision: Decision, input: EvaluateInput): Promise<boolean> => {
     if (!decision.allowed) return false;
-    if (!budgetCheck) return true;
+    if (!budgetChecks.length) return true;
     const now = input.now ?? new Date();
-    const limit = readLimit(budgetCheck);
     try {
-      const used = await store.incr(budgetKey(input.user.id, now, input.user.timezone), 2 * DAY_SECONDS);
-      return limit === undefined || used <= limit;
+      for (const check of budgetChecks) {
+        const key = check.id === "weeklyBudget"
+          ? weeklyBudgetKey(input.user.id, now, input.user.timezone)
+          : budgetKey(input.user.id, now, input.user.timezone);
+        const used = await store.incr(key, check.id === "weeklyBudget" ? 8 * DAY_SECONDS : 2 * DAY_SECONDS);
+        const limit = readLimit(check);
+        if (limit !== undefined && used > limit) return false;
+      }
+      return true;
     } catch {
       return onStoreError === "open";
     }

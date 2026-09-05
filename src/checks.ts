@@ -235,11 +235,40 @@ export function dailyBudget(options: { limit?: number; bypassPriority?: Priority
 export const budgetKey = (userId: string, now: Date, timezone?: string) =>
   `budget:${userId}:${timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10)}`;
 
+const isoWeekKey = (day: string): string => {
+  const date = new Date(`${day}T00:00:00Z`);
+  const weekday = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - weekday);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+};
+
+export const weeklyBudgetKey = (userId: string, now: Date, timezone?: string) => {
+  const day = timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10);
+  return `weeklyBudget:${userId}:${isoWeekKey(day)}`;
+};
+
+export function weeklyBudget(options: { limit?: number; bypassPriority?: Priority } = {}): BudgetCheck {
+  const limit = options.limit ?? 20;
+  return {
+    id: "weeklyBudget",
+    limit,
+    async run({ user, now, store, priority }) {
+      if (options.bypassPriority && atLeast(priority, options.bypassPriority)) return pass;
+      const key = weeklyBudgetKey(user.id, now, user.timezone);
+      const used = Number((await store.get(key)) ?? 0);
+      return used < limit ? pass : reject(`weekly budget of ${limit} used (${used})`);
+    },
+  };
+}
+
 /** The LILA order, as a starting point. Replace, reorder, or drop checks freely. */
 export function defaultChecks(options: {
   killSwitch?: () => boolean | Promise<boolean>;
   modes?: string[];
   dailyLimit?: number;
+  weeklyLimit?: number;
   quietHoursFloor?: Priority;
 } = {}): Check[] {
   return [
@@ -254,6 +283,7 @@ export function defaultChecks(options: {
     trustRamp(),
     dismissalCooldown(),
     adaptiveTiming(),
+    ...(options.weeklyLimit === undefined ? [] : [weeklyBudget({ limit: options.weeklyLimit })]),
     dailyBudget({ limit: options.dailyLimit ?? 5 }),
   ];
 }
