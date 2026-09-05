@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, cite it as below."
 title: "proactive-gate"
-version: "0.1.1"
+version: "0.2.0"
 date-released: "2026-09-05"
 authors:
   - family-names: "Genc"
@@ -9,4 +9,4 @@ authors:
 repository-code: "https://github.com/Bubblegunn/proactive-gate"
 license: MIT
 type: software
-abstract: "Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, a replay CLI."
+abstract: "Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, JSON policies, fourteen presets with sources, adapters for the Vercel AI SDK, Mastra, LangChain and OpenAI Agents, a Python sibling that runs the same fixtures, and a replay CLI."
