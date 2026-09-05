@@ -38,7 +38,9 @@ if (has(".claude-plugin/plugin.json")) {
   if (v !== version) problems.push(`.claude-plugin/plugin.json version is ${v}, package.json is ${version}`);
 }
 
-const packed = JSON.parse(execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }));
+const packed = JSON.parse(
+  execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], shell: process.platform === "win32" }),
+);
 const files = packed[0].files.map((f) => f.path).sort();
 const allowlistPath = "scripts/pack-allowlist.txt";
 if (process.argv.includes("--update")) {

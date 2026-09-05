@@ -23,8 +23,10 @@ const fail = (message) => {
   process.exit(1);
 };
 const git = (...a) => execFileSync("git", a, { cwd: root, encoding: "utf8" }).trim();
+// npm and gh are .cmd shims on Windows, which spawnSync can only start through a shell.
+const viaShell = process.platform === "win32";
 const sh = (cmd, a, opts = {}) => {
-  const r = spawnSync(cmd, a, { cwd: root, stdio: "inherit", ...opts });
+  const r = spawnSync(cmd, a, { cwd: root, stdio: "inherit", shell: viaShell, ...opts });
   if (r.status !== 0) fail(`${cmd} ${a.join(" ")} failed`);
 };
 const read = (f) => readFileSync(join(root, f), "utf8");
@@ -66,6 +68,7 @@ if (process.env.RELEASE_SKIP_CI_CHECK !== "1") {
   const r = spawnSync("gh", ["run", "list", "--branch", "main", "--workflow", "ci", "--limit", "1", "--json", "conclusion,headSha,status"], {
     cwd: root,
     encoding: "utf8",
+    shell: viaShell,
   });
   if (r.status !== 0) fail(`gh run list failed (is gh installed and logged in?)\n${r.stderr}`);
   const [run] = JSON.parse(r.stdout || "[]");
