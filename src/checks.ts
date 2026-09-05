@@ -4,6 +4,7 @@ import type { Check, CheckContext, CheckOutcome, Priority, Surface } from "./typ
 const pass: CheckOutcome = { kind: "pass" };
 const reject = (reason: string): CheckOutcome => ({ kind: "reject", reason });
 const skip = (reason: string): CheckOutcome => ({ kind: "skip", reason });
+const defer = (reason: string, retryAt: Date): CheckOutcome => ({ kind: "defer", reason, retryAt });
 
 const atLeast = (priority: Priority, floor: Priority) => PRIORITY_RANK[priority] >= PRIORITY_RANK[floor];
 
@@ -42,6 +43,8 @@ export function inWindow(minutes: number, start: number, end: number): boolean {
   if (start === end) return false;
   return start < end ? minutes >= start && minutes < end : minutes >= start || minutes < end;
 }
+
+const localDay = (now: Date, timezone?: string) => (timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10));
 
 /* ------------------------------------------------------------------------ */
 /* The checks, in the order LILA runs them. Compose your own order freely.  */
@@ -84,13 +87,15 @@ export function mode(options: { allow: string[] }): Check {
   };
 }
 
-/** A global pause until an instant. */
-export function snooze(): Check {
+/** A global pause until an instant. With `defer: true` the decision carries the instant as `retryAt` instead of rejecting. */
+export function snooze(options: { defer?: boolean } = {}): Check {
   return {
     id: "snooze",
     run: ({ user, now }) => {
       const until = toDate(user.snoozedUntil);
-      return until && until > now ? reject(`snoozed until ${until.toISOString()}`) : pass;
+      if (!until || until <= now) return pass;
+      const reason = `snoozed until ${until.toISOString()}`;
+      return options.defer ? defer(reason, until) : reject(reason);
     },
   };
 }
@@ -209,31 +214,45 @@ export function adaptiveTiming(options: {
   };
 }
 
-/**
- * At most `limit` deliveries per user per local day. The check reads the
- * counter; gate.commit() increments it atomically and can still refuse when
- * two instances race, which is the only race-safe place to enforce a cap.
- */
+/* ------------------------------------------------------------------------ */
+/* Budgets. The check reads the counter; gate.commit() calls consume(),      */
+/* which increments atomically and can still refuse when two instances race. */
+/* ------------------------------------------------------------------------ */
+
 export interface BudgetCheck extends Check {
   limit: number;
+  consume(ctx: CheckContext): Promise<boolean>;
 }
 
-export function dailyBudget(options: { limit?: number; bypassPriority?: Priority } = {}): BudgetCheck {
-  const limit = options.limit ?? 5;
+export interface BudgetOptions {
+  limit?: number;
+  bypassPriority?: Priority;
+  /** Fraction of the limit at which a pass carries a nearLimit note. Default 0.8. */
+  nearLimit?: number;
+}
+
+function budget(spec: { id: string; label: string; defaultLimit: number; keyFor: (ctx: CheckContext) => string; ttlSeconds: number }, options: BudgetOptions): BudgetCheck {
+  const limit = options.limit ?? spec.defaultLimit;
+  const nearAt = Math.max(1, Math.ceil(limit * (options.nearLimit ?? 0.8)));
+  const bypass = (priority: Priority) => options.bypassPriority !== undefined && atLeast(priority, options.bypassPriority);
   return {
-    id: "dailyBudget",
+    id: spec.id,
     limit,
-    async run({ user, now, store, priority }) {
-      if (options.bypassPriority && atLeast(priority, options.bypassPriority)) return pass;
-      const key = budgetKey(user.id, now, user.timezone);
-      const used = Number((await store.get(key)) ?? 0);
-      return used < limit ? pass : reject(`daily budget of ${limit} used (${used})`);
+    async run(ctx) {
+      if (bypass(ctx.priority)) return pass;
+      const used = Number((await ctx.store.get(spec.keyFor(ctx))) ?? 0);
+      if (used >= limit) return reject(`${spec.label} of ${limit} used (${used})`);
+      return used >= nearAt ? { kind: "pass", reason: `${used} of ${limit} used`, nearLimit: { used, limit } } : pass;
+    },
+    async consume(ctx) {
+      if (bypass(ctx.priority)) return true;
+      const used = await ctx.store.incr(spec.keyFor(ctx), spec.ttlSeconds);
+      return used <= limit;
     },
   };
 }
 
-export const budgetKey = (userId: string, now: Date, timezone?: string) =>
-  `budget:${userId}:${timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10)}`;
+export const budgetKey = (userId: string, now: Date, timezone?: string) => `budget:${userId}:${localDay(now, timezone)}`;
 
 const isoWeekKey = (day: string): string => {
   const date = new Date(`${day}T00:00:00Z`);
@@ -244,23 +263,148 @@ const isoWeekKey = (day: string): string => {
   return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
 };
 
-export const weeklyBudgetKey = (userId: string, now: Date, timezone?: string) => {
-  const day = timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10);
-  return `weeklyBudget:${userId}:${isoWeekKey(day)}`;
-};
+export const weeklyBudgetKey = (userId: string, now: Date, timezone?: string) => `weeklyBudget:${userId}:${isoWeekKey(localDay(now, timezone))}`;
 
-export function weeklyBudget(options: { limit?: number; bypassPriority?: Priority } = {}): BudgetCheck {
-  const limit = options.limit ?? 20;
+export const monthlyBudgetKey = (userId: string, now: Date, timezone?: string) => `monthlyBudget:${userId}:${localDay(now, timezone).slice(0, 7)}`;
+
+/** At most `limit` deliveries per user per local day. */
+export function dailyBudget(options: BudgetOptions = {}): BudgetCheck {
+  return budget({ id: "dailyBudget", label: "daily budget", defaultLimit: 5, keyFor: ({ user, now }) => budgetKey(user.id, now, user.timezone), ttlSeconds: 2 * DAY_SECONDS }, options);
+}
+
+/** At most `limit` deliveries per user per local ISO week. */
+export function weeklyBudget(options: BudgetOptions = {}): BudgetCheck {
+  return budget({ id: "weeklyBudget", label: "weekly budget", defaultLimit: 20, keyFor: ({ user, now }) => weeklyBudgetKey(user.id, now, user.timezone), ttlSeconds: 8 * DAY_SECONDS }, options);
+}
+
+/** At most `limit` deliveries per user per local calendar month. */
+export function monthlyBudget(options: BudgetOptions = {}): BudgetCheck {
+  return budget({ id: "monthlyBudget", label: "monthly budget", defaultLimit: 60, keyFor: ({ user, now }) => monthlyBudgetKey(user.id, now, user.timezone), ttlSeconds: 32 * DAY_SECONDS }, options);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Optional, caller-fed checks. Off by default; the package ships no model.  */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Horvitz's expected-utility rule with the PRISM threshold: act only when the
+ * caller's estimate of acceptance clears tau = cFA / (cFA + pNeed * cFN).
+ * `candidate.pAccept` and `candidate.pNeed` come from the caller's own model.
+ */
+export function utilityFloor(options: { costFalseAlarm: number; costMissedHelp: number }): Check {
+  const { costFalseAlarm: cFA, costMissedHelp: cFN } = options;
   return {
-    id: "weeklyBudget",
-    limit,
-    async run({ user, now, store, priority }) {
-      if (options.bypassPriority && atLeast(priority, options.bypassPriority)) return pass;
-      const key = weeklyBudgetKey(user.id, now, user.timezone);
-      const used = Number((await store.get(key)) ?? 0);
-      return used < limit ? pass : reject(`weekly budget of ${limit} used (${used})`);
+    id: "utilityFloor",
+    run: ({ candidate }) => {
+      if (typeof candidate.pAccept !== "number") return skip("no pAccept on the candidate; utility floor cannot be evaluated");
+      const pNeed = typeof candidate.pNeed === "number" ? candidate.pNeed : 1;
+      const tau = cFA / (cFA + pNeed * cFN);
+      return candidate.pAccept >= tau ? pass : reject(`pAccept ${round3(candidate.pAccept)} < tau ${round3(tau)}`);
     },
   };
+}
+
+const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
+/**
+ * Bounded deferral (Horvitz): when the user is busy, wait t* = min(bound,
+ * lambda * interruptCost / (2 * staleness)), the optimum of a quadratic
+ * staleness loss against the cost of interrupting a busy person, with the
+ * user becoming free at rate lambda. Never rejects; only moves deliverAt.
+ */
+export function boundedDeferral(options: {
+  lambda?: number;
+  interruptCost?: number;
+  staleness?: number;
+  boundSeconds?: number;
+  isBusy?: (ctx: CheckContext) => boolean;
+} = {}): Check {
+  const lambda = options.lambda ?? 1 / 43;
+  const cost = options.interruptCost ?? 1;
+  const staleness = options.staleness ?? 0.0001;
+  const bound = options.boundSeconds ?? 240;
+  const tStar = Math.min(bound, (lambda * cost) / (2 * staleness));
+  return {
+    id: "boundedDeferral",
+    nonRejecting: true,
+    run: (ctx) => {
+      const busy = options.isBusy ? options.isBusy(ctx) : ctx.candidate.busy === true;
+      if (!busy) return pass;
+      const at = new Date(ctx.now.getTime() + Math.round(tStar * 1000));
+      return { kind: "adjust", reason: `user busy; deliver at ${at.toISOString()} (t* ${Math.round(tStar)} s)`, deliverAt: at };
+    },
+  };
+}
+
+/* ------------------------------------------------------------------------ */
+/* Primitives the presets compose.                                           */
+/* ------------------------------------------------------------------------ */
+
+const zoneOf = (ctx: CheckContext, timezone: string) => (timezone === "user" ? ctx.user.timezone : timezone);
+
+/** Deliveries only inside [start, end) local time in a fixed zone or the user's. */
+export function allowedWindow(options: { start: string; end: string; timezone: string; priorityFloor?: Priority; id?: string }): Check {
+  const start = parseHHMM(options.start);
+  const end = parseHHMM(options.end);
+  return {
+    id: options.id ?? "allowedWindow",
+    run: (ctx) => {
+      const zone = zoneOf(ctx, options.timezone);
+      if (!zone) return skip("no timezone on the user; window cannot be evaluated");
+      if (options.priorityFloor && atLeast(ctx.priority, options.priorityFloor)) return pass;
+      const { minutes } = localClock(ctx.now, zone);
+      return inWindow(minutes, start, end) ? pass : reject(`outside the allowed window ${options.start} to ${options.end} ${zone}`);
+    },
+  };
+}
+
+/** Requires `user.consents[name]`, always or only inside a local-time window. */
+export function requiresConsent(options: { name: string; when?: { start: string; end: string; timezone: string }; id?: string }): Check {
+  const when = options.when ? { start: parseHHMM(options.when.start), end: parseHHMM(options.when.end), timezone: options.when.timezone } : null;
+  return {
+    id: options.id ?? `consent:${options.name}`,
+    run: (ctx) => {
+      if (when) {
+        const zone = zoneOf(ctx, when.timezone);
+        if (!zone) return skip("no timezone on the user; consent window cannot be evaluated");
+        if (!inWindow(localClock(ctx.now, zone).minutes, when.start, when.end)) return pass;
+      }
+      return ctx.user.consents?.[options.name] ? pass : reject(`consent "${options.name}" is missing${when ? ` (required ${options.when!.start} to ${options.when!.end})` : ""}`);
+    },
+  };
+}
+
+/** Fixed-window rate limit keyed by user or by candidate.channel; consumed at commit. */
+export function rateLimit(options: { limit: number; perSeconds: number; keyBy?: "user" | "channel"; id?: string }): BudgetCheck {
+  const keyBy = options.keyBy ?? "user";
+  const keyFor = (ctx: CheckContext) => {
+    const scope = keyBy === "channel" ? ctx.candidate.channel ?? ctx.user.id : ctx.user.id;
+    return `rate:${keyBy}:${scope}:${options.perSeconds}:${Math.floor(ctx.now.getTime() / 1000 / options.perSeconds)}`;
+  };
+  const id = options.id ?? `rate:${options.limit}/${options.perSeconds}s`;
+  return budget({ id, label: `rate limit ${options.limit} per ${options.perSeconds} s`, defaultLimit: options.limit, keyFor, ttlSeconds: options.perSeconds * 2 }, { limit: options.limit, nearLimit: 1 });
+}
+
+/** The user wrote to the assistant within the last `withinHours`. */
+export function recentInteraction(options: { withinHours: number }): Check {
+  return {
+    id: "recentInteraction",
+    run: ({ user, now }) => {
+      const last = toDate(user.lastInboundAt);
+      if (!last) return reject("no inbound message from the user on record");
+      const age = (now.getTime() - last.getTime()) / 3600000;
+      return age <= options.withinHours ? pass : reject(`last inbound message ${Math.floor(age)} h ago, window is ${options.withinHours} h`);
+    },
+  };
+}
+
+/** At most `limit` deliveries in the `withinHours` window that opened with the user's last inbound message. */
+export function windowBudget(options: { limit: number; withinHours: number }): BudgetCheck {
+  const keyFor = ({ user }: CheckContext) => {
+    const last = toDate(user.lastInboundAt);
+    return `windowBudget:${user.id}:${last ? Math.floor(last.getTime() / 1000) : "none"}`;
+  };
+  return budget({ id: "windowBudget", label: `window budget`, defaultLimit: options.limit, keyFor, ttlSeconds: options.withinHours * 3600 }, { limit: options.limit, nearLimit: 1 });
 }
 
 /** The LILA order, as a starting point. Replace, reorder, or drop checks freely. */
