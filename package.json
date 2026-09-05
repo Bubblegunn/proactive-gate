@@ -40,6 +40,7 @@
     "README.md",
     "LICENSE"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js",
@@ -69,7 +70,13 @@
     "mastra",
     "ai-sdk",
     "openai-agents",
-    "claude-code"
+    "claude-code",
+    "guardrails",
+    "agent-guardrails",
+    "notification-budget",
+    "proactive-ai",
+    "python",
+    "conformance"
   ],
   "author": "Efe Genc",
   "license": "MIT",
@@ -77,7 +84,14 @@
     "type": "git",
     "url": "git+https://github.com/Bubblegunn/proactive-gate.git"
   },
-  "homepage": "https://github.com/Bubblegunn/proactive-gate#readme",
+  "homepage": "https://bubblegunn.github.io/proactive-gate/",
+  "bugs": {
+    "url": "https://github.com/Bubblegunn/proactive-gate/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@types/node": "^26.4.1",
