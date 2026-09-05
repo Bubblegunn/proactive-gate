@@ -3,15 +3,16 @@ title: Python
 description: The Python sibling, held to the same fixtures.
 ---
 
-Until the first PyPI release, install from the repository:
-
 ```
-pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
+pip install proactive-gate
 ```
 
-Python 3.11 or newer, no runtime dependencies; add `[redis]` for the Redis store. The PyPI
-name `proactive-gate` is reserved for this package and the release workflow publishes there on
-the next tag.
+Python 3.11 or newer, no runtime dependencies; add `[redis]` for the Redis store. To run an
+unreleased state, install from the repository instead: `pip install "proactive-gate @
+git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`.
+
+The published 0.2.1 was uploaded from a local build with a token, so unlike the npm package it
+carries no build provenance.
 
 ```python
 from datetime import datetime, timezone

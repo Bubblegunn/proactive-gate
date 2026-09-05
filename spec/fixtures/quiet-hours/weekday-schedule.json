@@ -1,0 +1,262 @@
+{
+  "spec_version": "1.1.0",
+  "since": "1.1.0",
+  "name": "quiet-hours/weekday-schedule",
+  "description": "A Friday and Saturday weekend in Asia/Dubai (UTC+4, no daylight saving). A date beats a weekday beats the default, and null means the day has no quiet hours.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "Friday 14:00 local is the weekend here, rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Dubai",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sat": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sun": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T10:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "trace": [
+          "consent",
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
+      }
+    },
+    {
+      "description": "Saturday 14:00 local rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Dubai",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sat": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sun": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T10:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "trace": [
+          "consent",
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
+      }
+    },
+    {
+      "description": "Sunday 23:00 local is a working night, sun is null so the default does not apply",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Dubai",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sat": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sun": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-06T19:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "Monday 23:00 local falls back to the default and rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Dubai",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sat": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sun": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-07T19:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "trace": [
+          "consent",
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
+      }
+    },
+    {
+      "description": "Monday 14:00 local passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Dubai",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sat": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "sun": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-07T10:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}

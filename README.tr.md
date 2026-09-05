@@ -305,11 +305,13 @@ kurmak gerekmez. Her biri kapının gerekçesiyle reddeder ve onayda bütçeyi t
 
 ## Python
 
-Paket henüz PyPI'da değil, depodan kurulur:
+```
+pip install proactive-gate
+```
 
-```
-pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
-```
+Yayınlanmamış bir durumu denemek için depodan kurulur: `pip install "proactive-gate @
+git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`. Yayınlanan sürüm yerel bir
+derlemeden token ile yüklendi; npm paketinin aksine derleme kanıtı taşımıyor.
 
 `python/` sapan bir port değil, bir kardeştir: `spec/fixtures` altındaki her senaryoyu senkron
 `Gate` ve `AsyncGate` (Redis, `redis.asyncio` üzerinden) ile geçer; mypy strict, CI'da Python

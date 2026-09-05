@@ -1,8 +1,8 @@
 {
   "spec_version": "1.1.0",
-  "since": "1.0.0",
-  "name": "utility/floor",
-  "description": "utilityFloor rejects when pAccept is below tau = cFA / (cFA + pNeed * cFN).",
+  "since": "1.1.0",
+  "name": "quiet-hours/crosses-midnight-by-day",
+  "description": "A window belongs to the day it opens on, so Friday 18:00 to 02:00 silences Saturday morning. Saturday has no window of its own, so the carry is the only thing that can explain the silence.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
@@ -10,15 +10,13 @@
         "id": "consent"
       },
       {
-        "id": "utilityFloor",
-        "costFalseAlarm": 1,
-        "costMissedHelp": 2
+        "id": "quietHours"
       }
     ]
   },
   "tests": [
     {
-      "description": "pAccept 0.41, pNeed 0.4: tau 0.556, rejected",
+      "description": "Friday 19:00 local rejects",
       "input": {
         "user": {
           "id": "u1",
@@ -28,120 +26,13 @@
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
           "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z"
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ],
-          "pAccept": 0.41,
-          "pNeed": 0.4
-        },
-        "now": "2026-09-04T09:00:00Z"
-      },
-      "expect": {
-        "allowed": false,
-        "rejectedBy": "utilityFloor",
-        "trace": [
-          "consent",
-          "utilityFloor"
-        ],
-        "reason_pattern": "pAccept 0.41 < tau 0.556"
-      }
-    },
-    {
-      "description": "pAccept 0.6 clears it",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z"
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ],
-          "pAccept": 0.6,
-          "pNeed": 0.4
-        },
-        "now": "2026-09-04T09:00:00Z"
-      },
-      "expect": {
-        "allowed": true,
-        "trace": [
-          "consent",
-          "utilityFloor"
-        ]
-      }
-    },
-    {
-      "description": "pNeed defaults to 1: tau 0.333, pAccept 0.4 passes",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z"
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ],
-          "pAccept": 0.4
-        },
-        "now": "2026-09-04T09:00:00Z"
-      },
-      "expect": {
-        "allowed": true,
-        "trace": [
-          "consent",
-          "utilityFloor"
-        ]
-      }
-    },
-    {
-      "description": "no pAccept: the check skips",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
+            "default": null,
+            "days": {
+              "fri": {
+                "start": "18:00",
+                "end": "02:00"
+              }
+            }
           },
           "createdAt": "2026-01-01T00:00:00Z"
         },
@@ -154,13 +45,175 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T09:00:00Z"
+        "now": "2026-09-04T16:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "trace": [
+          "consent",
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
+      }
+    },
+    {
+      "description": "Saturday 01:30 local rejects, carried from Friday",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": null,
+            "days": {
+              "fri": {
+                "start": "18:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T22:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "trace": [
+          "consent",
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
+      }
+    },
+    {
+      "description": "Saturday 02:30 local is past the end, passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": null,
+            "days": {
+              "fri": {
+                "start": "18:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T23:30:00Z"
       },
       "expect": {
         "allowed": true,
         "trace": [
           "consent",
-          "utilityFloor"
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "Sunday 01:30 local passes: Saturday had no window to carry",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": null,
+            "days": {
+              "fri": {
+                "start": "18:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T22:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "Friday 15:00 local is before the window, passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": null,
+            "days": {
+              "fri": {
+                "start": "18:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
         ]
       }
     }

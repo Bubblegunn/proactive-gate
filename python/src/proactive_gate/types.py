@@ -45,9 +45,44 @@ def epoch_ms(value: datetime) -> int:
 
 
 @dataclass(frozen=True, slots=True)
-class QuietHours:
+class QuietWindow:
     start: str
     end: str
+
+
+@dataclass(frozen=True, slots=True)
+class QuietSchedule:
+    """Quiet hours resolved per day: a date beats a weekday beats the default.
+
+    ``None`` at any level means the day has no quiet hours, which is how a working
+    day is carved out of a default. There is no bundled holiday calendar; the dates
+    a caller observes are the caller's to supply.
+    """
+
+    default: QuietWindow | None = None
+    days: Mapping[str, QuietWindow | None] = field(default_factory=dict)
+    dates: Mapping[str, QuietWindow | None] = field(default_factory=dict)
+
+
+# The single-window form every caller had before schedules existed.
+QuietHours = QuietWindow
+
+
+def _window(value: Any) -> QuietWindow | None:
+    return QuietWindow(str(value["start"]), str(value["end"])) if value else None
+
+
+def parse_quiet_hours(value: Any) -> QuietWindow | QuietSchedule | None:
+    """A window, or a schedule; the two forms are told apart by the ``start`` key."""
+    if not value:
+        return None
+    if "start" in value:
+        return _window(value)
+    return QuietSchedule(
+        default=_window(value.get("default")),
+        days={k: _window(v) for k, v in (value.get("days") or {}).items()},
+        dates={k: _window(v) for k, v in (value.get("dates") or {}).items()},
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,7 +95,7 @@ class UserState:
     muted_types: tuple[str, ...] = ()
     intensity: Intensity | None = None
     timezone: str | None = None
-    quiet_hours: QuietHours | None = None
+    quiet_hours: QuietWindow | QuietSchedule | None = None
     created_at: datetime | None = None
     surfaces: tuple[str, ...] | None = None
     consents: Mapping[str, bool] = field(default_factory=dict)
@@ -80,7 +115,7 @@ class UserState:
             muted_types=tuple(data.get("mutedTypes") or ()),
             intensity=data.get("intensity"),
             timezone=data.get("timezone"),
-            quiet_hours=QuietHours(str(qh["start"]), str(qh["end"])) if qh else None,
+            quiet_hours=parse_quiet_hours(qh),
             created_at=to_datetime(data.get("createdAt")),
             surfaces=tuple(data["surfaces"]) if data.get("surfaces") is not None else None,
             consents=dict(data.get("consents") or {}),

@@ -1,8 +1,8 @@
 {
   "spec_version": "1.1.0",
-  "since": "1.0.0",
-  "name": "presets/cn-minor-mode",
-  "description": "cnMinorMode restricts minors to 06:00 to 22:00 China time and one message a day; adults pass.",
+  "since": "1.1.0",
+  "name": "quiet-hours/caller-supplied-dates",
+  "description": "A calendar date the caller supplies beats the weekday and the default, in both directions. There is no bundled holiday calendar.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
@@ -10,13 +10,13 @@
         "id": "consent"
       },
       {
-        "preset": "cnMinorMode"
+        "id": "quietHours"
       }
     ]
   },
   "tests": [
     {
-      "description": "minor at 23:00 CST rejects",
+      "description": "noon on a date marked quiet all day rejects",
       "input": {
         "user": {
           "id": "u1",
@@ -26,11 +26,19 @@
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
           "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "dates": {
+              "2026-09-04": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "2026-09-07": null
+            }
           },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
+          "createdAt": "2026-01-01T00:00:00Z"
         },
         "candidate": {
           "id": "c1",
@@ -41,95 +49,19 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T15:00:00Z"
+        "now": "2026-09-04T09:00:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "window:minor",
         "trace": [
           "consent",
-          "window:minor"
-        ]
-      }
-    },
-    {
-      "description": "adult at 23:00 CST passes both",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "minor": false
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ]
-        },
-        "now": "2026-09-04T15:00:00Z"
-      },
-      "expect": {
-        "allowed": true,
-        "trace": [
-          "consent",
-          "window:minor",
-          "dailyBudget"
-        ]
-      }
-    },
-    {
-      "description": "minor at noon CST: first message allowed and consumed",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Europe/Istanbul",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
-        },
-        "candidate": {
-          "id": "c2",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ]
-        },
-        "now": "2026-09-04T04:00:00Z"
-      },
-      "commit": true,
-      "expect": {
-        "allowed": true,
-        "trace": [
-          "consent",
-          "window:minor",
-          "dailyBudget"
+          "quietHours"
         ],
-        "commit": true
+        "rejectedBy": "quietHours"
       }
     },
     {
-      "description": "minor at noon CST: second message rejected",
+      "description": "noon the next day is back to the default and passes",
       "input": {
         "user": {
           "id": "u1",
@@ -139,14 +71,22 @@
           "intensity": "normal",
           "timezone": "Europe/Istanbul",
           "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "dates": {
+              "2026-09-04": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "2026-09-07": null
+            }
           },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
+          "createdAt": "2026-01-01T00:00:00Z"
         },
         "candidate": {
-          "id": "c3",
+          "id": "c1",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
@@ -154,16 +94,103 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T04:00:00Z"
+        "now": "2026-09-05T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "23:30 on a date set to null passes, the default does not apply",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "dates": {
+              "2026-09-04": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "2026-09-07": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-07T20:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "23:30 the following night falls back to the default and rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "default": {
+              "start": "22:00",
+              "end": "08:00"
+            },
+            "dates": {
+              "2026-09-04": {
+                "start": "00:00",
+                "end": "23:59"
+              },
+              "2026-09-07": null
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-08T20:30:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "dailyBudget",
         "trace": [
           "consent",
-          "window:minor",
-          "dailyBudget"
-        ]
+          "quietHours"
+        ],
+        "rejectedBy": "quietHours"
       }
     }
   ]

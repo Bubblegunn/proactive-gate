@@ -26,7 +26,15 @@ Then a fixture under `spec/fixtures/<area>/<name>.json` with a pass and a reject
 
 ## Adding a preset
 
-A preset is an ordered list of existing checks plus its sources and a note on what it leaves out. Add it to `src/presets.ts` and `python/src/proactive_gate/presets.py` with the same name, a fixture under `spec/fixtures/presets/`, and a row in the README table. Cite the page the numbers come from; when official sources disagree, pick the stricter documented value and say so in the note.
+A preset is an ordered list of existing checks plus its sources and a note on what it leaves out. Add it to `src/presets.ts` and `python/src/proactive_gate/presets.py` with the same name, a fixture under `spec/fixtures/presets/`, and a row in the README table.
+
+A preset is the most natural outside contribution here, and the bar is the sourcing rather than the code:
+
+- Every restriction cites a primary source: the instrument, the article or section, and a URL. A secondary source describing a rule is not enough on its own, and where secondary sources disagree about a number, that disagreement is the reason to leave the number out rather than pick one.
+- Two fixtures come with it, one allowing and one rejecting, under `spec/fixtures/presets/`, so both implementations are held to it.
+- A regulatory preset binds a message only when the message is itself commercial. Most of these instruments regulate marketing, not the kind of assistant message this library gates, and the note must say which the preset is. Naming a preset after a law it does not actually implement would be the worst thing in this repository.
+
+When official sources disagree, pick the stricter documented value and say so in the note.
 
 ## Pull requests
 
@@ -52,17 +60,18 @@ Publishing uses trusted publishing and holds no token. The npm publisher is conf
 
 `publish-pypi` is skipped until the repository variable `PYPI_TRUSTED_PUBLISHER` is `true`, so a
 release does not go red for a credential nobody in CI can supply. `build-python` still runs on every
-release: mypy strict, the tests, `python -m build` and `twine check`. To turn publishing on, create the
-trusted publisher at <https://pypi.org/manage/account/publishing/>:
+release: mypy strict, the tests, `python -m build` and `twine check`.
 
-| field | value |
-| --- | --- |
-| PyPI project name | `proactive-gate` |
-| Owner | `Bubblegunn` |
-| Repository name | `proactive-gate` |
-| Workflow name | `release.yml` |
-| Environment name | `pypi` |
+0.2.1 is on PyPI, uploaded from a local build with a one-off token because a trusted publisher
+cannot be configured for a project that does not exist yet. That release therefore carries no build
+provenance, which the READMEs say; the npm package's provenance is unaffected. To move publishing
+into the workflow, do these three in this order:
 
-Then `gh variable set PYPI_TRUSTED_PUBLISHER --body true -R Bubblegunn/proactive-gate`. Until that
-happens the Python package installs from the repository, which is what `python/README.md` says. Every
-release prints the same instruction in its job summary.
+1. Add the trusted publisher on the existing project at
+   <https://pypi.org/manage/project/proactive-gate/settings/publishing/>, with owner `Bubblegunn`,
+   repository `proactive-gate`, workflow `release.yml`, environment `pypi`.
+2. `gh variable set PYPI_TRUSTED_PUBLISHER --body true -R Bubblegunn/proactive-gate`.
+3. Revoke the bootstrap token on PyPI.
+
+The order matters: revoking the token before the publisher exists would leave no way to publish at
+all. Every release prints the same instruction in its job summary.

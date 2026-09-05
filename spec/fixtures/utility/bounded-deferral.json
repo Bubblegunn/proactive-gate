@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.0.0",
+  "spec_version": "1.1.0",
   "since": "1.0.0",
   "name": "utility/bounded-deferral",
   "description": "boundedDeferral moves deliverAt by t* = min(bound, lambda * c / (2 * staleness)) when the candidate is busy.",

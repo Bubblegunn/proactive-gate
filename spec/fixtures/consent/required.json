@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.0.0",
+  "spec_version": "1.1.0",
   "since": "1.0.0",
   "name": "consent/required",
   "description": "Consent is the first thing about the person that is checked.",

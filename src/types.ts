@@ -6,6 +6,27 @@ export const PRIORITY_RANK: Record<Priority, number> = { low: 0, normal: 1, high
 /** Where a delivery may land. Free-form so callers can add their own. */
 export type Surface = "feed" | "push" | "chat" | "voice" | "email" | (string & {});
 
+/** A quiet window in local time, "HH:MM" to "HH:MM". `start` after `end` crosses midnight. */
+export type QuietWindow = { start: string; end: string };
+
+/** Weekday keys for a quiet-hours schedule, Sunday first to match `Date#getUTCDay`. */
+export type Weekday = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+
+/**
+ * Quiet hours that differ by day. A working week is not Monday to Friday everywhere,
+ * and a holiday is not a weekday at all, so the window is resolved per day: a calendar
+ * date first, then the weekday, then the default. `null` at any level means the day has
+ * no quiet hours.
+ *
+ * There is no bundled holiday calendar and there will not be one: the dates a caller
+ * observes are the caller's to supply, and a bundled calendar goes stale silently.
+ */
+export type QuietSchedule = {
+  default?: QuietWindow | null;
+  days?: Partial<Record<Weekday, QuietWindow | null>>;
+  dates?: Record<string, QuietWindow | null>;
+};
+
 /** Everything the gate knows about the person it might interrupt. */
 export interface UserState {
   id: string;
@@ -23,8 +44,25 @@ export interface UserState {
   intensity?: "low" | "normal" | "high";
   /** IANA time zone, required for quiet hours. */
   timezone?: string;
-  /** Quiet hours in local time, "HH:MM". May cross midnight. */
-  quietHours?: { start: string; end: string } | null;
+  /**
+   * Quiet hours in local time, "HH:MM". May cross midnight.
+   *
+   * One window applies every day. A schedule gives a window per weekday, and per
+   * calendar date for the days a weekday cannot express, such as a public holiday:
+   *
+   * ```ts
+   * quietHours: {
+   *   default: { start: "22:00", end: "08:00" },
+   *   days: { fri: { start: "18:00", end: "00:00" }, sat: { start: "00:00", end: "20:00" } },
+   *   dates: { "2026-12-25": { start: "00:00", end: "23:59" } },
+   * }
+   * ```
+   *
+   * `null` for a weekday or a date means no quiet hours that day, which is how you
+   * carve a working day out of a default. A date beats a weekday, a weekday beats
+   * the default. Dates are the user's local calendar dates, "YYYY-MM-DD".
+   */
+  quietHours?: QuietWindow | QuietSchedule | null;
   /** When the user joined. Drives the trust ramp. */
   createdAt?: Date | string;
   /** Surfaces the user allows, in preference order. Defaults to the candidate's surfaces. */

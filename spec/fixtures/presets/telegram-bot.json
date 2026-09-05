@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.0.0",
+  "spec_version": "1.1.0",
   "since": "1.0.0",
   "name": "presets/telegram-bot",
   "description": "telegramBot limits one message a second and twenty a minute per channel.",

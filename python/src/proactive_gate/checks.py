@@ -10,7 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from datetime import datetime, timedelta
 from typing import Protocol, runtime_checkable
 
-from .clock import DAY_SECONDS, in_window, iso_week_key, local_clock, local_day, parse_hhmm
+from .clock import DAY_SECONDS, day_before, in_window, iso_week_key, local_clock, local_day, parse_hhmm, weekday_of
 from .types import (
     PASS,
     ConsumePlan,
@@ -18,6 +18,8 @@ from .types import (
     NearLimit,
     Outcome,
     Priority,
+    QuietSchedule,
+    QuietWindow,
     at_least,
     defer,
     epoch_ms,
@@ -150,6 +152,39 @@ class Intensity(BaseCheck):
         return reject(f'priority {ctx.priority} is below the "{level}" intensity floor ({floor})')
 
 
+def window_for(quiet: QuietWindow | QuietSchedule, day: str) -> QuietWindow | None:
+    """The window in force on one local date: a date beats a weekday beats the default."""
+    if isinstance(quiet, QuietWindow):
+        return quiet
+    if day in quiet.dates:
+        return quiet.dates[day]
+    weekday = weekday_of(day)
+    if weekday in quiet.days:
+        return quiet.days[weekday]
+    return quiet.default
+
+
+def quiet_at(quiet: QuietWindow | QuietSchedule, day: str, minutes: int) -> tuple[QuietWindow, str] | None:
+    """The window silencing ``minutes`` on ``day``, and the day it opened on.
+
+    A window that crosses midnight belongs to the day it opens on, so a time can be
+    quiet because of yesterday. With one window every day this reduces exactly to
+    ``in_window``, which is why the single-window form behaves as it did.
+    """
+    today = window_for(quiet, day)
+    if today is not None:
+        start, end = parse_hhmm(today.start), parse_hhmm(today.end)
+        if start != end and (start <= minutes < end if start < end else minutes >= start):
+            return today, day
+    previous = day_before(day)
+    yesterday = window_for(quiet, previous)
+    if yesterday is not None:
+        start, end = parse_hhmm(yesterday.start), parse_hhmm(yesterday.end)
+        if start > end and minutes < end:
+            return yesterday, previous
+    return None
+
+
 class QuietHours(BaseCheck):
     id = "quietHours"
 
@@ -162,12 +197,17 @@ class QuietHours(BaseCheck):
             return PASS
         if not ctx.user.timezone:
             return skip("quiet hours set but no timezone on the user; cannot evaluate")
-        minutes, _ = local_clock(ctx.now, ctx.user.timezone)
-        if not in_window(minutes, parse_hhmm(qh.start), parse_hhmm(qh.end)):
+        minutes, day = local_clock(ctx.now, ctx.user.timezone)
+        hit = quiet_at(qh, day, minutes)
+        if hit is None:
             return PASS
         if at_least(ctx.priority, self.floor):
             return PASS
-        return reject(f"quiet hours {qh.start} to {qh.end} {ctx.user.timezone}; priority {ctx.priority} is below the floor ({self.floor})")
+        window, from_day = hit
+        # Name the day the window opened on when it was not today: the reason is
+        # yesterday's setting, and a reader checking today's would not find it.
+        whose = "" if from_day == day else f" ({weekday_of(from_day)} {from_day})"
+        return reject(f"quiet hours {window.start} to {window.end}{whose} {ctx.user.timezone}; priority {ctx.priority} is below the floor ({self.floor})")
 
 
 class TrustRamp(BaseCheck):

@@ -100,11 +100,36 @@ something returned false".
 | 5 | `snooze()` | `user.snoozedUntil` is in the future | global pause |
 | 6 | `mute()` | `candidate.type` is in `user.mutedTypes` | per-type mute |
 | 7 | `intensity()` | priority is below the user's intensity floor | low hears only high, normal hears normal and up, high hears everything |
-| 8 | `quietHours({ priorityFloor })` | inside the user's local quiet window | IANA time zone, window may cross midnight, bypassed at or above the floor |
+| 8 | `quietHours({ priorityFloor })` | inside the user's local quiet window | IANA time zone, window may cross midnight, bypassed at or above the floor; one window every day or [a schedule per day](#quiet-hours-that-differ-by-day) |
 | 9 | `trustRamp({ days, minPriority })` | user is newer than `days` and priority is below the floor | the system is least calibrated exactly when the user is least forgiving |
 | 10 | `dismissalCooldown({ dismissals, withinDays, silenceDays })` | the user dismissed that type `dismissals` times in the window | fed by `gate.record(user, candidate, "dismissed")`; every further dismissal restarts the silence |
 | 11 | `adaptiveTiming({ nextGoodMoment, surfacesFor })` | never | non-rejecting: moves `deliverAt` or narrows surfaces; a check marked `nonRejecting` cannot reject even if it tries |
 | 12 | `dailyBudget({ limit, bypassPriority })` | the user's local-day counter is at the limit | `evaluate` reads, `commit` increments atomically and can still refuse |
+
+### Quiet hours that differ by day
+
+A working week is not Monday to Friday everywhere, and a holiday is not a weekday at all.
+`quietHours` takes a schedule as well as a single window:
+
+```ts
+quietHours: {
+  default: { start: "22:00", end: "08:00" },
+  days: { fri: { start: "00:00", end: "23:59" }, sat: { start: "00:00", end: "23:59" }, sun: null },
+  dates: { "2026-12-25": { start: "00:00", end: "23:59" } },
+}
+```
+
+A date beats a weekday beats the default, and `null` means the day has no quiet hours, which is
+how a working day is carved out of a default. A window belongs to the day it opens on, so one
+that crosses midnight silences the next morning and the reason names the day it came from.
+
+Two things this deliberately does not do. There is no bundled holiday calendar: the dates you
+observe are yours to supply, and a bundled one goes stale without anyone noticing. And one row
+cannot express more than 24 hours, so a Friday evening to Saturday evening silence is two rows,
+`fri: 18:00 to 00:00` and `sat: 00:00 to 20:00`.
+
+Passing a single window is unchanged and remains the common case; a schedule whose every day
+resolves to the same window behaves identically to that window.
 
 `weeklyBudget({ limit, bypassPriority })` is the same shape keyed on the user's local ISO
 week; `defaultChecks({ weeklyLimit })` places it just before the daily one. Budgets are
@@ -468,11 +493,13 @@ preset) still refuses. Both are part of `npm run examples` and of the test suite
 
 ## Python
 
-Not on PyPI yet, so install it from the repository:
+```
+pip install proactive-gate
+```
 
-```
-pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
-```
+To run an unreleased state, install from the repository instead: `pip install "proactive-gate @
+git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`. The published release was
+uploaded from a local build with a token, so unlike the npm package it carries no build provenance.
 
 ```python
 from proactive_gate import Gate

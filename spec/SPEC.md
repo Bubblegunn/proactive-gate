@@ -17,7 +17,7 @@ the caller in fixtures and MAY default to the current instant in library use.
 
 1.2 A user has at least `id` and `consent`. Optional fields: `proactiveEnabled`, `mode`,
 `snoozedUntil`, `mutedTypes`, `intensity` (low, normal, high), `timezone` (IANA), `quietHours`
-(`start`, `end` as `HH:MM`, may cross midnight), `createdAt`, `surfaces`, `consents` (map of
+(a window, or a schedule; see 6.3), `createdAt`, `surfaces`, `consents` (map of
 name to boolean), `lastInboundAt`, `minor`, `existingCustomer`.
 
 1.3 A candidate has at least `id` and `type`. Optional: `priority` (low, normal, high,
@@ -85,6 +85,25 @@ IANA zone; without a zone, UTC.
 `now` is honoured.
 
 6.3 Quiet hours use `[start, end)` and may cross midnight; `start == end` is an empty window.
+
+6.4 `quietHours` is either a window (`start`, `end` as `HH:MM`) or a schedule (since 1.1.0) with
+optional `default` (a window or null), `days` (a map of `sun` to `sat` to a window or null) and
+`dates` (a map of `YYYY-MM-DD` in the user's zone to a window or null). A window applies on every
+day; a schedule resolves one window per local date, and an implementation MUST resolve it as
+`dates[date]`, else `days[weekday(date)]`, else `default`, else none, where a present key whose
+value is null means the day has no quiet hours.
+
+6.5 A window belongs to the day it opens on. An implementation MUST treat a local time as quiet
+when the window resolved for that local date contains it, or when the window resolved for the
+previous local date crosses midnight and the time is before its `end`. The day resolved for the
+current date takes precedence when both apply. A schedule whose every day resolves to the same
+window MUST behave identically to that window given directly.
+
+6.6 The weekday of a local date MUST be derived from the local calendar date, not from an
+instant, so that a zone with an offset that is not a whole hour and a daylight-saving transition
+cannot change it.
+
+6.7 An implementation MUST NOT ship a calendar of holidays. `dates` is supplied by the caller.
 
 ## 7. Policy document
 

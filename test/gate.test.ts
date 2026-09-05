@@ -446,3 +446,115 @@ test("boundedDeferral: a busy candidate is delivered at now + t*, capped at the 
   assert.equal(free.deliverAt, undefined);
   assert.equal(free.trace[0]!.outcome, "pass");
 });
+
+test("quiet hours by weekday: a Friday and Saturday weekend, and a working day carved out of the default", async () => {
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "critical" })] });
+  // Dubai, UTC+4, no daylight saving. The weekend is Friday and Saturday, so the
+  // quiet window is the whole of both and the ordinary night window on other days.
+  const dubai = user({
+    timezone: "Asia/Dubai",
+    quietHours: {
+      default: { start: "22:00", end: "08:00" },
+      days: { fri: { start: "00:00", end: "23:59" }, sat: { start: "00:00", end: "23:59" }, sun: null },
+    },
+  });
+  const at = (iso: string) => gate.evaluate({ user: dubai, candidate: candidate(), now: new Date(iso) });
+
+  // 2026-09-04 is a Friday. 10:00Z is 14:00 in Dubai, the middle of the working day
+  // everywhere the week runs Monday to Friday, and the weekend here.
+  const friday = await at("2026-09-04T10:00:00Z");
+  assert.equal(friday.rejectedBy, "quietHours");
+  const saturday = await at("2026-09-05T10:00:00Z");
+  assert.equal(saturday.rejectedBy, "quietHours");
+  // Sunday is explicitly null: a working day, so the 22:00 default does not apply either.
+  const sundayNight = await at("2026-09-06T19:00:00Z"); // 23:00 Sunday in Dubai
+  assert.equal(sundayNight.allowed, true);
+  // Monday falls back to the default and is quiet at 23:00.
+  const mondayNight = await at("2026-09-07T19:00:00Z");
+  assert.equal(mondayNight.rejectedBy, "quietHours");
+});
+
+test("quiet hours across midnight: Friday evening to Saturday evening, attributed to the day that opened it", async () => {
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "critical" })] });
+  // A window longer than a day is two rows: Friday 18:00 to midnight, then Saturday
+  // midnight to 20:00. One row cannot express more than 24 hours.
+  const observant = user({
+    timezone: "Europe/Istanbul",
+    quietHours: {
+      default: null,
+      days: { fri: { start: "18:00", end: "00:00" }, sat: { start: "00:00", end: "20:00" } },
+    },
+  });
+  const at = (iso: string) => gate.evaluate({ user: observant, candidate: candidate(), now: new Date(iso) });
+
+  const fridayAfternoon = await at("2026-09-04T12:00:00Z"); // 15:00 Friday
+  assert.equal(fridayAfternoon.allowed, true);
+  const fridayEvening = await at("2026-09-04T16:00:00Z"); // 19:00 Friday
+  assert.equal(fridayEvening.rejectedBy, "quietHours");
+  // 01:00 Saturday is covered twice, by Friday's window crossing midnight and by
+  // Saturday's own. The day being asked about wins, because that is the row a reader
+  // would look at, and the two rows describe the same silence either way.
+  const saturdayNight = await at("2026-09-04T22:00:00Z");
+  assert.equal(saturdayNight.rejectedBy, "quietHours");
+  assert.match(saturdayNight.reason!, /00:00 to 20:00 Europe\/Istanbul/);
+  const saturdayEvening = await at("2026-09-05T17:30:00Z"); // 20:30 Saturday
+  assert.equal(saturdayEvening.allowed, true);
+  const sunday = await at("2026-09-06T09:00:00Z");
+  assert.equal(sunday.allowed, true);
+});
+
+test("quiet hours by date: a caller-supplied holiday beats the weekday, and is not a bundled calendar", async () => {
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "critical" })] });
+  const withHoliday = user({
+    timezone: "Europe/Istanbul",
+    quietHours: {
+      default: { start: "22:00", end: "08:00" },
+      dates: { "2026-09-04": { start: "00:00", end: "23:59" }, "2026-09-07": null },
+    },
+  });
+  const at = (iso: string) => gate.evaluate({ user: withHoliday, candidate: candidate(), now: new Date(iso) });
+
+  const onTheDay = await at("2026-09-04T09:00:00Z"); // noon, a date marked quiet all day
+  assert.equal(onTheDay.rejectedBy, "quietHours");
+  const dayAfter = await at("2026-09-05T09:00:00Z"); // noon, back to the default
+  assert.equal(dayAfter.allowed, true);
+  // A date set to null overrides the default the other way: awake through the night.
+  const nightOff = await at("2026-09-07T20:30:00Z"); // 23:30 on the excepted date
+  assert.equal(nightOff.allowed, true);
+});
+
+test("quiet hours: a schedule with only a default is the single window, in a zone with a 45-minute offset", async () => {
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "critical" })] });
+  // Kathmandu is UTC+05:45. The two forms must agree at every minute of a day, which
+  // is the property that keeps the existing configuration behaving as it did.
+  const plain = user({ timezone: "Asia/Kathmandu", quietHours: { start: "22:00", end: "08:00" } });
+  const schedule = user({ timezone: "Asia/Kathmandu", quietHours: { default: { start: "22:00", end: "08:00" } } });
+  for (let minute = 0; minute < 24 * 60; minute += 15) {
+    const now = new Date(Date.UTC(2026, 8, 4, 0, 0) + minute * 60_000);
+    const a = await gate.evaluate({ user: plain, candidate: candidate(), now });
+    const b = await gate.evaluate({ user: schedule, candidate: candidate(), now });
+    assert.equal(b.allowed, a.allowed, `disagreed at ${now.toISOString()}`);
+    assert.equal(b.reason ?? null, a.reason ?? null, `reason differed at ${now.toISOString()}`);
+  }
+});
+
+test("quiet hours: a window that crosses midnight silences the next morning, and says which day it came from", async () => {
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "critical" })] });
+  // Only Friday carries a window, and it runs into Saturday. Saturday has none of its
+  // own, so the carry is the only thing that can explain the silence, and the reason
+  // has to say so: a reader checking Saturday's row would otherwise find nothing.
+  const fridayOnly = user({
+    timezone: "Europe/Istanbul",
+    quietHours: { default: null, days: { fri: { start: "18:00", end: "02:00" } } },
+  });
+  const at = (iso: string) => gate.evaluate({ user: fridayOnly, candidate: candidate(), now: new Date(iso) });
+
+  const saturdayEarly = await at("2026-09-04T22:30:00Z"); // 01:30 Saturday
+  assert.equal(saturdayEarly.rejectedBy, "quietHours");
+  assert.match(saturdayEarly.reason!, /18:00 to 02:00 \(fri 2026-09-04\) Europe\/Istanbul/);
+  const saturdayLater = await at("2026-09-04T23:30:00Z"); // 02:30 Saturday, past the end
+  assert.equal(saturdayLater.allowed, true);
+  // The carry does not leak into a day whose predecessor had no window.
+  const sundayEarly = await at("2026-09-05T22:30:00Z"); // 01:30 Sunday, Saturday had none
+  assert.equal(sundayEarly.allowed, true);
+});

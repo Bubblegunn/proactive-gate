@@ -1,5 +1,5 @@
 import { PRIORITY_RANK } from "./types.js";
-import type { Check, CheckContext, CheckOutcome, Priority, Surface } from "./types.js";
+import type { Check, CheckContext, CheckOutcome, Priority, QuietSchedule, QuietWindow, Surface, Weekday } from "./types.js";
 
 const pass: CheckOutcome = { kind: "pass" };
 const reject = (reason: string): CheckOutcome => ({ kind: "reject", reason });
@@ -45,6 +45,62 @@ export function inWindow(minutes: number, start: number, end: number): boolean {
 }
 
 const localDay = (now: Date, timezone?: string) => (timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10));
+
+const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+
+/**
+ * The weekday of a local calendar date, and the date before it.
+ *
+ * Both are pure calendar arithmetic on the "YYYY-MM-DD" that `localClock` already
+ * resolved through Intl, never arithmetic on an instant. That is what keeps zones
+ * with a 45-minute offset (Kathmandu, Chatham, Eucla) and every daylight-saving
+ * transition out of this: the offset was applied before we got here.
+ */
+export function weekdayOf(day: string): Weekday {
+  const [y, m, d] = day.split("-").map(Number) as [number, number, number];
+  return WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]!;
+}
+
+export function dayBefore(day: string): string {
+  const [y, m, d] = day.split("-").map(Number) as [number, number, number];
+  return new Date(Date.UTC(y, m - 1, d - 1)).toISOString().slice(0, 10);
+}
+
+const isSchedule = (q: QuietWindow | QuietSchedule): q is QuietSchedule => !("start" in q);
+
+/** The window in force on one local date: a date beats a weekday beats the default. */
+export function windowFor(quiet: QuietWindow | QuietSchedule, day: string): QuietWindow | null {
+  if (!isSchedule(quiet)) return quiet;
+  const byDate = quiet.dates?.[day];
+  if (byDate !== undefined) return byDate;
+  const byDay = quiet.days?.[weekdayOf(day)];
+  if (byDay !== undefined) return byDay;
+  return quiet.default ?? null;
+}
+
+/**
+ * Whether a local time is inside quiet hours, and which day's window says so.
+ *
+ * A window that crosses midnight belongs to the day it opens on, so a time can be
+ * quiet because of yesterday: Friday 18:00 to 00:00 silences Saturday 00:00 too.
+ * With one window every day this reduces exactly to `inWindow`, which is why the
+ * single-window form keeps behaving as it did.
+ */
+export function quietAt(quiet: QuietWindow | QuietSchedule, day: string, minutes: number): { window: QuietWindow; day: string } | null {
+  const today = windowFor(quiet, day);
+  if (today) {
+    const start = parseHHMM(today.start);
+    const end = parseHHMM(today.end);
+    if (start !== end && (start < end ? minutes >= start && minutes < end : minutes >= start)) return { window: today, day };
+  }
+  const yesterday = windowFor(quiet, dayBefore(day));
+  if (yesterday) {
+    const start = parseHHMM(yesterday.start);
+    const end = parseHHMM(yesterday.end);
+    if (start > end && minutes < end) return { window: yesterday, day: dayBefore(day) };
+  }
+  return null;
+}
 
 /* ------------------------------------------------------------------------ */
 /* The checks, in the order LILA runs them. Compose your own order freely.  */
@@ -131,12 +187,14 @@ export function quietHours(options: { priorityFloor?: Priority } = {}): Check {
     run: ({ user, now, priority }) => {
       if (!user.quietHours) return pass;
       if (!user.timezone) return skip("quiet hours set but no timezone on the user; cannot evaluate");
-      const { minutes } = localClock(now, user.timezone);
-      const start = parseHHMM(user.quietHours.start);
-      const end = parseHHMM(user.quietHours.end);
-      if (!inWindow(minutes, start, end)) return pass;
+      const { minutes, day } = localClock(now, user.timezone);
+      const hit = quietAt(user.quietHours, day, minutes);
+      if (!hit) return pass;
       if (atLeast(priority, floor)) return pass;
-      return reject(`quiet hours ${user.quietHours.start} to ${user.quietHours.end} ${user.timezone}; priority ${priority} is below the floor (${floor})`);
+      // Name the day the window came from: when it crossed midnight the reason is
+      // yesterday's setting, and a reader looking at today's would not find it.
+      const whose = hit.day === day ? "" : ` (${weekdayOf(hit.day)} ${hit.day})`;
+      return reject(`quiet hours ${hit.window.start} to ${hit.window.end}${whose} ${user.timezone}; priority ${priority} is below the floor (${floor})`);
     },
   };
 }

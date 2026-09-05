@@ -91,7 +91,7 @@ jobs:
             echo "\`publish-pypi\` is skipped because the repository variable \`PYPI_TRUSTED_PUBLISHER\` is not \`true\`."
             echo "The wheel and the source distribution above passed \`twine check\`, so the package itself is fine."
             echo
-            echo "To publish from the next tag, create the trusted publisher at <https://pypi.org/manage/account/publishing/>:"
+            echo "To publish from the next tag, add the trusted publisher at <https://pypi.org/manage/project/proactive-gate/settings/publishing/>:"
             echo
             echo "| field | value |"
             echo "| --- | --- |"

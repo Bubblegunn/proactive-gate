@@ -1,7 +1,7 @@
 """Local-time arithmetic with the standard library only."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
 DAY_SECONDS = 24 * 60 * 60
@@ -38,3 +38,19 @@ def local_day(now: datetime, tz: str | None) -> str:
 def iso_week_key(day: str) -> str:
     year, week, _ = datetime.strptime(day, "%Y-%m-%d").isocalendar()
     return f"{year}-W{week:02d}"
+
+
+WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
+
+
+def weekday_of(day: str) -> str:
+    """The weekday of a local calendar date, ``"mon"`` to ``"sun"``.
+
+    Calendar arithmetic on the date ``local_clock`` already resolved, never arithmetic
+    on an instant, so a 45-minute offset or a daylight-saving change cannot reach it.
+    """
+    return WEEKDAYS[date.fromisoformat(day).weekday()]
+
+
+def day_before(day: str) -> str:
+    return (date.fromisoformat(day) - timedelta(days=1)).isoformat()
