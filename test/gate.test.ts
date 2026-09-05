@@ -205,3 +205,22 @@ test("replay summarises a day of candidates and consumes the budget in order", a
   assert.match(text, /quietHours/);
   assert.match(text, /consent/);
 });
+
+test("a custom check is an ordinary object: it runs in order, reads the context, and shows in the trace", async () => {
+  const weekendsOnlyHigh = {
+    id: "weekendFloor",
+    run: ({ now, priority }: { now: Date; priority: string }) => {
+      const day = now.getUTCDay();
+      if ((day === 0 || day === 6) && priority !== "high" && priority !== "critical") return { kind: "reject" as const, reason: "weekend: only high priority" };
+      return { kind: "pass" as const };
+    },
+  };
+  const gate = createGate({ checks: [checks.consent(), weekendsOnlyHigh, checks.dailyBudget({ limit: 5 })] });
+  const saturday = new Date("2026-09-05T10:00:00Z");
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: saturday });
+  assert.equal(d.rejectedBy, "weekendFloor");
+  assert.deepEqual(d.trace.map((t) => `${t.id}:${t.outcome}`), ["consent:pass", "weekendFloor:reject"]);
+  const monday = await gate.evaluate({ user: user(), candidate: candidate(), now: new Date("2026-09-07T10:00:00Z") });
+  assert.equal(monday.allowed, true);
+  assert.equal(monday.trace.length, 3);
+});

@@ -1,6 +1,6 @@
 {
   "name": "proactive-gate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks: kill switch, consent, quiet hours, trust ramp, dismissal cooldown, daily budget.",
   "type": "module",
   "main": "./dist/src/index.js",

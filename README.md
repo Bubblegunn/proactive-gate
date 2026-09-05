@@ -1,5 +1,7 @@
 # proactive-gate
 
+English | [Türkçe](README.tr.md)
+
 Decide whether a proactive AI agent may reach a user right now, and log why not.
 
 A proactive assistant has two halves. The generating half decides what is worth
@@ -28,7 +30,9 @@ if (decision.allowed && (await gate.commit(decision, { user, candidate }))) {
 
 Zero dependencies. TypeScript. Node 20 or newer. Framework-agnostic: the gate sits
 between "the model produced something" and "the user's phone buzzed", whichever
-model or framework produced it.
+model or framework produced it. Examples: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
+[`examples/mastra.ts`](examples/mastra.ts), and a replayable policy in
+[`examples/policy.js`](examples/policy.js).
 
 ## What a decision looks like
 
@@ -53,6 +57,8 @@ model or framework produced it.
   evaluatedAt: 2026-09-04T03:00:00.000Z
 }
 ```
+
+<p align="center"><img src="assets/trace.png" width="900" alt="A real decision trace: eight checks ran, quiet hours rejected, each with its reason and cost"></p>
 
 With one gate and a logged reason, "why was the user not told about this" has an
 answer. With checks scattered through a pipeline, the honest answer is "somewhere,
@@ -91,6 +97,31 @@ const gate = createGate({
   ],
 });
 ```
+
+### Writing your own check
+
+A check is an object with an `id` and a `run` function. It receives the user, the
+candidate, the clock, the resolved priority, the store and the surfaces still on the
+table, and returns `pass`, `reject` with a reason, `adjust`, or `skip`. It appears in the
+trace like every built-in one.
+
+```ts
+const weekendFloor = {
+  id: "weekendFloor",
+  run: ({ now, priority }) => {
+    const day = now.getUTCDay();
+    if ((day === 0 || day === 6) && priority !== "high" && priority !== "critical") {
+      return { kind: "reject", reason: "weekend: only high priority" };
+    }
+    return { kind: "pass" };
+  },
+};
+const gate = createGate({ checks: [checks.consent(), weekendFloor, checks.dailyBudget({ limit: 5 })] });
+```
+
+Mark a check `nonRejecting: true` when it may only move timing or narrow surfaces; the
+gate then ignores a reject from it and says so in the trace, so a bug in a timing model
+cannot silence a user.
 
 ## The budget is enforced at commit, not at evaluate
 
