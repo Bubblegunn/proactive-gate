@@ -24,6 +24,8 @@ function rng(seed: number) {
 }
 
 const RUNS = 200;
+/** node:sqlite arrived in 22.5; the store comparison is skipped below that, as in gate.test.ts. */
+const sqliteAvailable = Number(process.versions.node.split(".")[0]) >= 22;
 const PRIORITIES: Priority[] = ["low", "normal", "high", "critical"];
 const ZONES = ["Europe/Istanbul", "Asia/Tokyo", "America/Los_Angeles", "America/New_York", "Pacific/Apia"];
 const TYPES = ["reminder", "insight", "alert", "follow_up"];
@@ -166,7 +168,7 @@ test("replaying the same decision never spends a second unit", async () => {
   }
 });
 
-test("MemoryStore and SqliteStore answer a random operation sequence identically", async () => {
+test("MemoryStore and SqliteStore answer a random operation sequence identically", { skip: !sqliteAvailable }, async () => {
   {
     for (let seed = 1; seed <= 40; seed++) {
       const r = rng(seed + 50_000);
