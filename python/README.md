@@ -9,12 +9,17 @@ This is the Python sibling of the TypeScript package. Both implement the same be
 contract in [`spec/`](https://github.com/Bubblegunn/proactive-gate/tree/main/spec) and run
 the same fixtures, so a policy written for one behaves the same in the other.
 
+Until the first PyPI release, install from the repository:
+
 ```
-pip install proactive-gate
+git clone https://github.com/Bubblegunn/proactive-gate
+pip install ./proactive-gate/python
 ```
 
-Python 3.11 or newer, no runtime dependencies. `pip install "proactive-gate[redis]"` adds the
-Redis store.
+or, without cloning, `pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`.
+Python 3.11 or newer, no runtime dependencies. Add `[redis]` (`pip install "./proactive-gate/python[redis]"`)
+for the Redis store. The PyPI name `proactive-gate` is reserved for this package; the
+release workflow publishes there on the next tag.
 
 ## Use
 
