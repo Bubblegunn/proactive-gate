@@ -3,7 +3,7 @@ export type { Gate } from "./gate.js";
 export { MemoryStore, RedisStore, SqliteStore } from "./stores.js";
 export type { RedisLike } from "./stores.js";
 export * as checks from "./checks.js";
-export { defaultChecks, localClock, inWindow, budgetKey, dismissalKey } from "./checks.js";
+export { defaultChecks, localClock, inWindow, budgetKey, weeklyBudgetKey, dismissalKey } from "./checks.js";
 export { PRIORITY_RANK } from "./types.js";
 export type {
   Candidate,

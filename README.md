@@ -90,6 +90,12 @@ something returned false".
 | 11 | `adaptiveTiming({ nextGoodMoment, surfacesFor })` | never | non-rejecting: moves `deliverAt` or narrows surfaces; a check marked `nonRejecting` cannot reject even if it tries |
 | 12 | `dailyBudget({ limit, bypassPriority })` | the user's local-day counter is at the limit | `evaluate` reads, `commit` increments atomically and can still refuse |
 
+`weeklyBudget({ limit, bypassPriority })` is the same shape keyed on the user's local ISO
+week; `defaultChecks({ weeklyLimit })` places it just before the daily one. Budgets are
+consumed in check order at commit, so when a weekly check passes and the daily one then
+refuses, that weekly unit is spent without a delivery. It only happens when two commits
+race after a shared evaluate.
+
 Order is a design decision and it should be visible. Consent has to come before
 everything. Quiet hours have to come before the budget, or a rejected candidate
 consumes a delivery it never made. Reorder freely; the trace will show what you did.
