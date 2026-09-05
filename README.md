@@ -40,8 +40,8 @@ if (decision.allowed && (await gate.commit(decision, { user, candidate }))) {
 Zero dependencies. TypeScript. Node 20 or newer. Framework-agnostic: the gate sits
 between "the model produced something" and "the user's phone buzzed", whichever
 model or framework produced it. Examples: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
-[`examples/mastra.ts`](examples/mastra.ts), and a replayable policy in
-[`examples/policy.js`](examples/policy.js).
+[`examples/mastra.ts`](examples/mastra.ts), [`examples/langgraph.ts`](examples/langgraph.ts), and a
+replayable policy in [`examples/policy.js`](examples/policy.js). API reference: [`docs/api`](docs/api/README.md).
 
 ## What a decision looks like
 
@@ -181,6 +181,50 @@ dailyBudget         1  daily budget of 5 used (5)
 `--policy examples/policy.js` loads your own gate; `--json` prints one full decision
 per line for a notebook. Replay a week of real candidates against a proposed policy
 and you know its allow rate and its silence reasons before a single user does.
+
+## Compared with hand-rolled checks and feature flags
+
+Most products start with a few `if` statements next to the send call and grow from there.
+The difference is not the checks, which anyone can write, but four properties that are hard
+to keep once the checks are scattered:
+
+- The order is one list in one place, so "consent before everything" is a fact you can read
+  rather than a convention you hope each caller followed.
+- Every rejection names the check and the reason, so "why was the user not told" has an
+  answer in the log instead of "something returned false somewhere".
+- The budget is consumed by an atomic increment at send time, so two instances cannot both
+  send the sixth message; scattered checks read a counter and race.
+- A policy can be replayed over a day of real candidates before it ships, and a non-rejecting
+  check cannot reject even if a bug makes it try.
+
+A feature-flag system does a different job better: rolling a behaviour out to a percentage
+of users, per-tenant overrides, and an audit trail of who flipped what. Use flags to decide
+whether the gate runs at all, and the gate to decide whether this message reaches this
+person now.
+
+## Integrations
+
+| framework | example | where the gate sits |
+|---|---|---|
+| Vercel AI SDK | [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts) | after `generateText`, before the push |
+| Mastra | [`examples/mastra.ts`](examples/mastra.ts) | after `agent.generate`, before the send |
+| LangGraph | [`examples/langgraph.ts`](examples/langgraph.ts) | inside the `notify` node, before the tool call |
+
+The pattern is the same everywhere: the model decides whether there is something to say,
+`gate.evaluate` decides whether it may be said now, and `gate.commit` runs right before the
+message leaves.
+
+## Performance
+
+`npm run bench` runs `gate.evaluate()` ten thousand times with the default twelve checks and
+`MemoryStore`. On 5 September 2026:
+
+```
+evaluate() x 10,000, twelve checks, MemoryStore: median 48.7 µs, p95 91.1 µs (v24.13.0, Apple M4 Max)
+```
+
+With `RedisStore` the two store-backed checks add one round trip each; the gate itself is
+not where the time goes.
 
 ## Learning from what happened
 

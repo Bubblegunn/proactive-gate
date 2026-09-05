@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.1 (unreleased)
+## 0.1.2 (unreleased)
+
+A LangGraph example, a comparison with hand-rolled checks and feature flags, a benchmark (`npm run bench`) with the measured line in the README, and a generated API reference under `docs/api`.
+
+## 0.1.1 (2026-09-05)
 
 Mastra example, a real decision trace in the README, a "Writing your own check" section with a test, Turkish README, contributing guide, issue templates, roadmap, and a provenance release workflow.
 
