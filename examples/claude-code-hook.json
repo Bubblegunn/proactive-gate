@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "send_message",
+        "hooks": [
+          { "type": "command", "command": "npx proactive-gate hook --policy policy.json --tool send_message" }
+        ]
+      }
+    ]
+  }
+}

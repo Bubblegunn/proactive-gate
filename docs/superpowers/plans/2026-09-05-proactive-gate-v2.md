@@ -52,11 +52,11 @@
 
 **Interfaces:** Produces the fixture file shape from spec section 3 and the policy shape from section 4. `test/spec-lint.mjs` exits non-zero on the first invalid file and prints `path: message`.
 
-- [ ] Write `spec/SPEC.md` with numbered requirements (sections 1 to 8 from the spec).
-- [ ] Write both JSON Schemas (draft 2020-12, `additionalProperties: false` on fixture and test objects; policy entries allow extra option keys).
-- [ ] Write `test/spec-lint.mjs`: walks `spec/fixtures/**/*.json` and `examples/*.json`, validates required keys, types, enums (`outcome` kinds, priorities), `spec_version === SPEC_VERSION`, `trace` is an array of strings, `now` ends with `Z`. Print `ok N fixtures, M policies`.
-- [ ] Run `node test/spec-lint.mjs` (expects `ok 0 fixtures` until Task 2).
-- [ ] Add the CI job and commit: `feat(spec): behaviour contract, fixture and policy schemas, spec-lint`.
+- [x] Write `spec/SPEC.md` with numbered requirements (sections 1 to 8 from the spec).
+- [x] Write both JSON Schemas (draft 2020-12, `additionalProperties: false` on fixture and test objects; policy entries allow extra option keys).
+- [x] Write `test/spec-lint.mjs`: walks `spec/fixtures/**/*.json` and `examples/*.json`, validates required keys, types, enums (`outcome` kinds, priorities), `spec_version === SPEC_VERSION`, `trace` is an array of strings, `now` ends with `Z`. Print `ok N fixtures, M policies`.
+- [x] Run `node test/spec-lint.mjs` (expects `ok 0 fixtures` until Task 2).
+- [x] Add the CI job and commit: `feat(spec): behaviour contract, fixture and policy schemas, spec-lint`.
 
 ### Task 2: Fixtures and the TypeScript conformance runner
 
@@ -73,10 +73,10 @@ export async function readSkips(file: string): Promise<Set<string>>
 ```
 The runner seeds a `MemoryStore` through the gate's key prefix (seed keys are prefixed with the policy's `keyPrefix ?? "pg:"`), runs tests in order, compares normative fields, and reads `store_after` back through the same prefix.
 
-- [ ] Write `test/conformance.test.ts`: one `test()` per fixture, `t.skip` for names in `spec/skip/ts.txt`, `assert.deepEqual(failures, [])`.
-- [ ] Write the first fixtures (ordering short-circuit, consent, mode, quiet hours incl. `America/New_York` 2026-03-08 and `Pacific/Apia`, the wall-clock fixture in 2031, trust ramp, cooldown with seeded stamps, daily and weekly budget with `commit` and `store_after`, adaptive timing placeholder).
-- [ ] Implement `src/conformance.ts` and `compilePolicy` stub usage (Task 3 provides the real one; until then the runner uses `defaultChecks` for `{ preset }`-free policies by mapping ids through a temporary table that Task 3 replaces).
-- [ ] `npm test` green, `node test/spec-lint.mjs` green; commit `feat(spec): fixtures and the TypeScript conformance runner`.
+- [x] Write `test/conformance.test.ts`: one `test()` per fixture, `t.skip` for names in `spec/skip/ts.txt`, `assert.deepEqual(failures, [])`.
+- [x] Write the first fixtures (ordering short-circuit, consent, mode, quiet hours incl. `America/New_York` 2026-03-08 and `Pacific/Apia`, the wall-clock fixture in 2031, trust ramp, cooldown with seeded stamps, daily and weekly budget with `commit` and `store_after`, adaptive timing placeholder).
+- [x] Implement `src/conformance.ts` and `compilePolicy` stub usage (Task 3 provides the real one; until then the runner uses `defaultChecks` for `{ preset }`-free policies by mapping ids through a temporary table that Task 3 replaces).
+- [x] `npm test` green, `node test/spec-lint.mjs` green; commit `feat(spec): fixtures and the TypeScript conformance runner`.
 
 ### Task 3: Policy as data
 
@@ -91,9 +91,9 @@ export function compilePolicy(policy: Policy): GateOptions
 ```
 `createGate` accepts `GateOptions | { policy: Policy; store?: Store; onDecision?; hooks? }`.
 
-- [ ] Tests: compiles the example policy to thirteen checks in order; unknown id throws naming known ids; `{ preset: "usTcpa" }` expands (after Task 6, until then the test uses a registered test preset); `specVersion` "2.0.0" throws; `shadow: true` sets `check.shadow`.
-- [ ] Implement, make `examples/policy.json` mirror `examples/policy.js` minus functions; `npm run examples` also runs the JSON policy.
-- [ ] Commit `feat(policy): JSON policies compiled by compilePolicy and accepted by createGate and the CLI`.
+- [x] Tests: compiles the example policy to thirteen checks in order; unknown id throws naming known ids; `{ preset: "usTcpa" }` expands (after Task 6, until then the test uses a registered test preset); `specVersion` "2.0.0" throws; `shadow: true` sets `check.shadow`.
+- [x] Implement, make `examples/policy.json` mirror `examples/policy.js` minus functions; `npm run examples` also runs the JSON policy.
+- [x] Commit `feat(policy): JSON policies compiled by compilePolicy and accepted by createGate and the CLI`.
 
 ### Task 4: Outcome model
 
@@ -109,10 +109,10 @@ interface GateHooks { before?(ctx: CheckContext, check: Check): void | Promise<v
 ```
 `decision.id = \`${userId}:${candidateId}:${evaluatedAt.toISOString()}\``; `commit` stores `commit:<id>` = "1"/"0" with 2-day TTL and returns the stored result on repeat.
 
-- [ ] Tests: defer decision (`allowed false`, `deferredBy`, `retryAt`); shadow reject continues and lists `shadowed`; nearLimit appears at 4 of 5; hooks called in order with ms; a throwing hook does not change the decision; commit twice consumes once; commit on deferred returns false; replay summary counts deferred.
-- [ ] Fixtures: `shadow/reject-continues.json`, `defer/snooze-as-defer.json` (a JSON policy entry `{ "id": "snooze", "defer": true }` makes snooze defer with `retryAt = snoozedUntil`), `budget/near-limit.json`.
-- [ ] Implement; write `examples/otel.ts` with a local `Tracer { startSpan(name): { setAttribute, end } }` interface.
-- [ ] Commit `feat(gate): defer, shadow mode, near-limit counters, hooks, idempotent commit`.
+- [x] Tests: defer decision (`allowed false`, `deferredBy`, `retryAt`); shadow reject continues and lists `shadowed`; nearLimit appears at 4 of 5; hooks called in order with ms; a throwing hook does not change the decision; commit twice consumes once; commit on deferred returns false; replay summary counts deferred.
+- [x] Fixtures: `shadow/reject-continues.json`, `defer/snooze-as-defer.json` (a JSON policy entry `{ "id": "snooze", "defer": true }` makes snooze defer with `retryAt = snoozedUntil`), `budget/near-limit.json`.
+- [x] Implement; write `examples/otel.ts` with a local `Tracer { startSpan(name): { setAttribute, end } }` interface.
+- [x] Commit `feat(gate): defer, shadow mode, near-limit counters, hooks, idempotent commit`.
 
 ### Task 5: Optional checks
 
@@ -125,9 +125,9 @@ export function boundedDeferral(o?: { lambda?: number; interruptCost?: number; s
 ```
 tau = cFA / (cFA + pNeed * cFN); t* = min(bound, lambda * c / (2 * staleness)).
 
-- [ ] Tests: pAccept 0.41 with cFA 1, cFN 2, pNeed 0.4 gives tau 0.5556 and rejects with reason `pAccept 0.41 < tau 0.556`; pAccept 0.6 passes; missing pAccept skips; busy candidate gets deliverAt now + t*; not busy passes; defaults produce t* = 240 capped.
-- [ ] Fixtures `utility/floor.json`, `utility/bounded-deferral.json`.
-- [ ] Commit `feat(checks): optional utilityFloor and boundedDeferral, caller-fed`.
+- [x] Tests: pAccept 0.41 with cFA 1, cFN 2, pNeed 0.4 gives tau 0.5556 and rejects with reason `pAccept 0.41 < tau 0.556`; pAccept 0.6 passes; missing pAccept skips; busy candidate gets deliverAt now + t*; not busy passes; defaults produce t* = 240 capped.
+- [x] Fixtures `utility/floor.json`, `utility/bounded-deferral.json`.
+- [x] Commit `feat(checks): optional utilityFloor and boundedDeferral, caller-fed`.
 
 ### Task 6: Primitives and presets
 
@@ -146,9 +146,9 @@ export const presets: Record<string, Preset>   // lineMessagingApi, wechatSubscr
 ```
 `rateLimit` and `windowBudget` consume at commit like the budgets: `gate.ts` treats any check with a `consume(ctx): Promise<boolean>` method as a budget and calls it in order.
 
-- [ ] Tests per preset: the check ids in order, the source list is non-empty, one allow and one reject case each (e.g. usTcpa rejects at 21:30 America/Chicago; kakaoBrandMessage rejects 21:00 Asia/Seoul; krNetworkAct50 rejects 23:00 without `night` consent and passes with it; cnMinorMode rejects 23:00 for a minor and passes for an adult).
-- [ ] Fixtures for four presets.
-- [ ] Commit `feat(presets): fourteen platform and regulatory presets with sources`.
+- [x] Tests per preset: the check ids in order, the source list is non-empty, one allow and one reject case each (e.g. usTcpa rejects at 21:30 America/Chicago; kakaoBrandMessage rejects 21:00 Asia/Seoul; krNetworkAct50 rejects 23:00 without `night` consent and passes with it; cnMinorMode rejects 23:00 for a minor and passes for an adult).
+- [x] Fixtures for four presets.
+- [x] Commit `feat(presets): fourteen platform and regulatory presets with sources`.
 
 ### Task 7: Adapters and the hook
 
@@ -156,8 +156,8 @@ export const presets: Record<string, Preset>   // lineMessagingApi, wechatSubscr
 
 **Interfaces:** per spec section 8. `toInput` is `(x) => EvaluateInput`.
 
-- [ ] Tests: each adapter denies with the gate's reason and allows otherwise; hook prints the PreToolUse JSON for a matching tool and nothing for others (spawn `dist/src/cli.js hook --policy examples/policy.json` with stdin).
-- [ ] Commit `feat(adapters): ai-sdk, mastra, langchain, openai-agents subpaths and a Claude Code PreToolUse hook`.
+- [x] Tests: each adapter denies with the gate's reason and allows otherwise; hook prints the PreToolUse JSON for a matching tool and nothing for others (spawn `dist/src/cli.js hook --policy examples/policy.json` with stdin).
+- [x] Commit `feat(adapters): ai-sdk, mastra, langchain, openai-agents subpaths and a Claude Code PreToolUse hook`.
 
 ### Task 8: Python sibling
 

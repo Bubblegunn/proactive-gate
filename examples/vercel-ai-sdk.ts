@@ -1,53 +1,44 @@
 /**
- * A background agent that decides, once an hour, whether it has something worth
- * saying, then asks the gate whether it may say it now. The gate is the only
- * place that knows about consent, quiet hours, the trust ramp and the budget.
+ * Vercel AI SDK: the send tool needs approval, and the gate answers every
+ * approval request. The model never learns the rules; it only sees "denied:
+ * rejected by quietHours (...)" and can plan around it.
  *
- * Run with: npx tsx examples/vercel-ai-sdk.ts   (needs `ai` and a provider key)
+ * Run with: npx tsx examples/vercel-ai-sdk.ts   (needs `ai`, a provider key)
  */
-import { generateText } from "ai";
+import { generateText, tool } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { z } from "zod";
 import { createGate, defaultChecks, MemoryStore } from "proactive-gate";
+import { gateToolApproval } from "proactive-gate/ai-sdk";
 
-const gate = createGate({
-  store: new MemoryStore(), // RedisStore(client) in production
-  checks: defaultChecks({ dailyLimit: 3, quietHoursFloor: "high" }),
-  onDecision: (d) => console.log(d.allowed ? `allow ${d.candidateId} -> ${d.surfaces.join(",")}` : `reject ${d.candidateId}: ${d.rejectedBy} (${d.reason})`),
+const gate = createGate({ store: new MemoryStore(), checks: defaultChecks({ dailyLimit: 3, quietHoursFloor: "high" }) });
+
+const user = { id: "ayse", consent: true, timezone: "Europe/Istanbul", quietHours: { start: "22:00", end: "08:00" }, createdAt: "2026-06-01T00:00:00Z" };
+
+const sendMessage = tool({
+  description: "Send a proactive message to the user",
+  inputSchema: z.object({ type: z.string(), priority: z.enum(["low", "normal", "high", "critical"]).default("normal"), text: z.string() }),
+  needsApproval: true,
+  execute: async ({ text }) => ({ sent: true, text }),
 });
 
-const user = {
-  id: "ayse",
-  consent: true,
-  proactiveEnabled: true,
-  mode: "normal",
-  intensity: "normal" as const,
-  timezone: "Europe/Istanbul",
-  quietHours: { start: "22:00", end: "08:00" },
-  createdAt: "2026-06-01T00:00:00Z",
-};
+// The approval step: the gate decides, and commit consumes the budget when it says yes.
+const approve = gateToolApproval({
+  gate,
+  toInput: (call: { toolCallId?: string; input?: { type?: string; priority?: "low" | "normal" | "high" | "critical" } }) => ({
+    user,
+    candidate: { id: call.toolCallId ?? "call", type: call.input?.type ?? "reminder", ...(call.input?.priority ? { priority: call.input.priority } : {}), surfaces: ["push"] },
+  }),
+});
 
-async function tick() {
-  const { text } = await generateText({
-    model: openai("gpt-4o-mini"),
-    prompt: "You are a calendar assistant. In one sentence, is there anything the user should be told right now? Answer NONE if not.",
-  });
-  if (text.trim() === "NONE") return;
+const result = await generateText({
+  model: openai("gpt-5"),
+  tools: { sendMessage },
+  prompt: "Remind Ayse about tomorrow's appointment if that is worth an interruption right now.",
+});
 
-  const candidate = { id: crypto.randomUUID(), type: "insight", priority: "normal" as const, surfaces: ["push", "feed"], payload: text };
-  const decision = await gate.evaluate({ user, candidate });
-  if (!decision.allowed) return; // the reason is already logged by onDecision
-  if (decision.deliverAt) return schedule(decision.deliverAt, candidate);
-
-  // Consume one unit of the daily budget right before sending. If another
-  // instance got there first, this returns false and nothing is sent.
-  if (await gate.commit(decision, { user, candidate })) await send(decision.surfaces, text);
+for (const call of result.toolCalls) {
+  const { approved, reason } = await approve(call);
+  console.log(approved ? `approved ${call.toolCallId}` : `denied ${call.toolCallId}: ${reason}`);
+  // Continue the loop with the approval response; see the AI SDK tool-approval docs.
 }
-
-async function send(surfaces: string[], text: string) {
-  console.log(`send on ${surfaces[0]}: ${text}`);
-}
-function schedule(at: Date, candidate: unknown) {
-  console.log(`deferred to ${at.toISOString()}`, candidate);
-}
-
-await tick();
