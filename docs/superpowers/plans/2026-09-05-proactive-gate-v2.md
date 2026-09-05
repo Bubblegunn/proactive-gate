@@ -189,9 +189,9 @@ def compile_policy(policy: Mapping[str, Any]) -> list[Check]
 
 ### Task 10: Documentation sweep
 
-- [ ] README sections (policy, outcome model, optional checks, presets, adapters, Python, spec, site, lineage paragraph); README.tr.md; llms.txt; docs/api regenerated with `npx typedoc` if available; CHANGELOG `## 0.2.0 (unreleased)`.
-- [ ] ai-slop-linter pass on README.
-- [ ] Commit `docs: v2 sections`.
+- [x] README sections (policy, outcome model, optional checks, presets, adapters, Python, spec, site, lineage paragraph); README.tr.md; llms.txt; docs/api regenerated with `npx typedoc` if available; CHANGELOG `## 0.2.0 (unreleased)`.
+- [x] ai-slop-linter pass on README.
+- [x] Commit `docs: v2 sections`.
 
 ## Self-review
 

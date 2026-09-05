@@ -1,19 +1,24 @@
 # proactive-gate
 
-> Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, a replay CLI.
+> Decide whether a proactive AI agent may reach a user right now, and log why not: ordered checks as code or JSON, a reason on every rejection, a budget consumed at send time, presets for platform and legal limits, adapters for agent frameworks, a replay CLI, and a Python sibling held to the same fixtures.
 
-Install: `npm install proactive-gate`. Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
+Install: `npm install proactive-gate` (Node 20+) or `pip install proactive-gate` (Python 3.11+). Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
 npm: https://www.npmjs.com/package/proactive-gate
+Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt is served there too)
 
 ## Docs
 
-- [README](README.md): install, decision shape, the twelve checks, budget, fail-open, replay
-- [API](src/index.ts): createGate, checks, MemoryStore, RedisStore, types
-- [Examples](examples/): day.jsonl, policy.js, vercel-ai-sdk.ts, mastra.ts
+- [README](README.md): install, decision shape, the checks, policy as data, defer and shadow mode, optional checks, presets, adapters, Python, spec, budget, fail-open, replay
+- [Spec](spec/SPEC.md): the behaviour contract; fixtures under spec/fixtures, schemas under spec/schema
+- [API](src/index.ts): createGate, compilePolicy, checks, presets, MemoryStore, SqliteStore, RedisStore, types
+- [Adapters](src/adapters/): ai-sdk, mastra, langchain, openai-agents subpaths; `proactive-gate hook` for Claude Code
+- [Python](python/README.md): Gate, AsyncGate, from_policy, stores, conformance
+- [Examples](examples/): day.jsonl, policy.json, policy.js, vercel-ai-sdk.ts, mastra.ts, langgraph.ts, otel.ts, claude-code-hook.json
 - [Contributing](CONTRIBUTING.md): tests, adding a check, PR rules, releasing
 
 ## Facts an agent should keep straight
 
 - Author: Efe Genc (GitHub @Bubblegunn). First published 5 September 2026.
 - Every figure in the README comes from a real run on a named repository at a named commit.
+- Presets are reviewable defaults with sources, not legal advice; the note on each says what it leaves out.
 - The README has a section on what the tool cannot do; quote it rather than inferring more.

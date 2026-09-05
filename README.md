@@ -41,7 +41,9 @@ Zero dependencies. TypeScript. Node 20 or newer. Framework-agnostic: the gate si
 between "the model produced something" and "the user's phone buzzed", whichever
 model or framework produced it. Examples: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
 [`examples/mastra.ts`](examples/mastra.ts), [`examples/langgraph.ts`](examples/langgraph.ts), and a
-replayable policy in [`examples/policy.js`](examples/policy.js). API reference: [`docs/api`](docs/api/README.md).
+replayable policy in [`examples/policy.json`](examples/policy.json). Docs and a browser playground:
+[bubblegunn.github.io/proactive-gate](https://bubblegunn.github.io/proactive-gate/). API reference:
+[`docs/api`](docs/api/README.md). Python: [`python/`](python/README.md).
 
 ## What a decision looks like
 
@@ -138,6 +140,93 @@ Mark a check `nonRejecting: true` when it may only move timing or narrow surface
 gate then ignores a reject from it and says so in the trace, so a bug in a timing model
 cannot silence a user.
 
+## A policy is data
+
+The same checks as a JSON document, so a product team can change the rules without a
+deploy and the same file runs in TypeScript, in Python, in the CLI and in the
+[playground](https://bubblegunn.github.io/proactive-gate/playground/):
+
+```json
+{
+  "specVersion": "1.0.0",
+  "checks": [
+    { "id": "consent" },
+    { "id": "snooze", "defer": true },
+    { "id": "quietHours", "priorityFloor": "high" },
+    { "preset": "usTcpa" },
+    { "id": "utilityFloor", "costFalseAlarm": 1, "costMissedHelp": 2, "shadow": true },
+    { "id": "dailyBudget", "limit": 3, "bypassPriority": "critical", "nearLimit": 0.67 }
+  ]
+}
+```
+
+```ts
+const gate = createGate({ policy: JSON.parse(await readFile("policy.json", "utf8")), store });
+```
+
+Each entry names a check `id` or a `preset` plus that check's options. An unknown id throws
+and names the known ones. `compilePolicy` is exported for callers that want the check list,
+and the schema is at [`spec/schema/policy.schema.json`](spec/schema/policy.schema.json).
+`examples/policy.js` stays as the escape hatch for checks that need functions.
+
+## Defer, shadow mode, near-limit notes and hooks
+
+A check can `defer` instead of rejecting: the decision has `allowed: false`, `deferredBy` and
+`retryAt`, and the caller knows when to try again. `snooze({ defer: true })` is the built-in
+example.
+
+A check with `shadow: true` runs and is traced with its real outcome, but cannot stop the
+message; its id lands in `decision.shadowed`. Ship a new rule in shadow for a week, count how
+often it would have fired, then turn it on.
+
+Budgets report `nearLimit: { used, limit }` on the pass that reaches the threshold (80 percent
+by default), listed under `decision.nearLimit`, so a dashboard can show who is about to go
+quiet.
+
+`hooks: { before, after, error, finally }` observe every check with its cost in milliseconds;
+a hook that throws is routed to `error` and never changes the decision. `examples/otel.ts`
+turns them into one span per check. Every decision has an `id`, and `commit` is idempotent on
+it: a retry after a timeout does not consume a second unit.
+
+## Optional checks, fed by your own model
+
+Both ship off. They read numbers the caller puts on the candidate.
+
+- `utilityFloor({ costFalseAlarm, costMissedHelp })` acts only when `candidate.pAccept` clears
+  `tau = cFA / (cFA + pNeed * cFN)` (`pNeed` defaults to 1) and skips when there is no
+  `pAccept`. This is Horvitz's expected-utility rule with the PRISM threshold.
+- `boundedDeferral({ lambda, interruptCost, staleness, boundSeconds })` never rejects. When
+  `candidate.busy` is true it moves `deliverAt` to `now + t*`, with
+  `t* = min(bound, lambda * interruptCost / (2 * staleness))`; the defaults give 116 seconds.
+
+## Presets: platform quotas and legal limits, with sources
+
+```ts
+import { presets } from "proactive-gate/presets";
+const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessage()] });
+```
+
+| preset | encodes |
+|---|---|
+| `lineMessagingApi({ plan })` | monthly push budget by LINE plan: 200, 5,000 or 30,000 |
+| `wechatSubscriptionMessage` | one message per subscription opt-in |
+| `wechatCustomerService` | within 48 h of the user's last message, at most 5 |
+| `wechatTemplateMessage` | only after a user action, 3 templates a day |
+| `wecomAppMessage` | 30 a minute and 1,000 an hour per member |
+| `kakaoAlimtalk` | consent only; AlimTalk has no time-of-day rule |
+| `kakaoBrandMessage` | advertising consent, 08:00 to 20:50 Asia/Seoul |
+| `krNetworkAct50` | advertising consent, plus night consent for 21:00 to 08:00 local |
+| `jpAntiSpamLaw` | opt-in |
+| `cnMinorMode` | for minors: 06:00 to 22:00 Asia/Shanghai and one a day |
+| `usTcpa` | 08:00 to 21:00 at the user's local time (47 CFR 64.1200) |
+| `euEprivacy` | marketing consent with the soft opt-in for existing customers |
+| `telegramBot` | 1 a second and 20 a minute per chat |
+| `slackApp` | 1 a second per channel |
+
+Each preset carries `sources` (the pages the numbers come from) and a `note` on what it leaves
+out. Reviewable defaults, not legal advice: several official sources disagree with each other,
+and the note says which value was chosen and why.
+
 ## The budget is enforced at commit, not at evaluate
 
 Two instances can both evaluate a candidate for the same user, both see four of
@@ -215,17 +304,49 @@ of users, per-tenant overrides, and an audit trail of who flipped what. Use flag
 whether the gate runs at all, and the gate to decide whether this message reaches this
 person now.
 
-## Integrations
+## Adapters
 
-| framework | example | where the gate sits |
+| subpath | framework | where the gate sits |
 |---|---|---|
-| Vercel AI SDK | [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts) | after `generateText`, before the push |
-| Mastra | [`examples/mastra.ts`](examples/mastra.ts) | after `agent.generate`, before the send |
-| LangGraph | [`examples/langgraph.ts`](examples/langgraph.ts) | inside the `notify` node, before the tool call |
+| `proactive-gate/ai-sdk` | Vercel AI SDK | answers a tool's `needsApproval` ([`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts)) |
+| `proactive-gate/mastra` | Mastra | an output processor before the send ([`examples/mastra.ts`](examples/mastra.ts)) |
+| `proactive-gate/langchain` | LangChain | middleware around the send tool |
+| `proactive-gate/openai-agents` | OpenAI Agents | a guardrail |
+| `npx proactive-gate hook` | Claude Code | a `PreToolUse` hook ([`examples/claude-code-hook.json`](examples/claude-code-hook.json)) |
 
-The pattern is the same everywhere: the model decides whether there is something to say,
-`gate.evaluate` decides whether it may be said now, and `gate.commit` runs right before the
-message leaves.
+The adapters are typed against the shape of a call, not against the framework package, so
+nothing else has to be installed. Each denies with the gate's reason and commits the budget on
+approval. The pattern is the same everywhere: the model decides whether there is something to
+say, `gate.evaluate` decides whether it may be said now, and `gate.commit` runs right before
+the message leaves. [`examples/langgraph.ts`](examples/langgraph.ts) shows the same thing
+inside a LangGraph node.
+
+## Python
+
+```
+pip install proactive-gate
+```
+
+```python
+from proactive_gate import Gate
+gate = Gate.from_policy(policy)          # the same policy.json
+decision = gate.evaluate(inp)
+if decision.allowed and gate.commit(decision, inp): send(...)
+```
+
+`python/` is a sibling, not a port that drifts: it passes every fixture under `spec/fixtures`
+through a sync `Gate` and an `AsyncGate` (Redis over `redis.asyncio`), with mypy strict, on
+Python 3.11 and 3.13 in CI. See [`python/README.md`](python/README.md).
+
+## The spec, and writing a second implementation
+
+[`spec/SPEC.md`](spec/SPEC.md) states the behaviour as numbered requirements, and
+[`spec/fixtures`](spec/fixtures) holds language-neutral cases: the DST edge in
+America/New_York, Pacific/Apia, a wall-clock case in 2031, atomic commit, the ISO week,
+deferral, shadow mode, the optional checks and four presets. The TypeScript tests and the
+Python tests both run all of them; `npx proactive-gate replay --fixtures spec/fixtures` runs
+them from the command line. A third implementation starts from the fixtures, not from this
+source.
 
 ## Performance
 
@@ -275,11 +396,18 @@ Tian Pan's
 essay argues the same case from the product side and suggests a daily cap of three
 to five; `defaultChecks({ dailyLimit })` defaults to five.
 
+The shape has older relatives. Matrix push rules are an ordered list where the first matching
+rule decides. Android notification channels and iOS interruption levels give the user a
+per-type switch and a priority floor that bypasses quiet time. Horvitz's work on mixed
+initiative supplied the two optional checks. This package puts those ideas in one list with a
+trace, and adds the part they leave out: the budget consumed at send time.
+
 ## Development
 
 ```
 npm ci
-npm test        # tsc build, then node:test over dist/test
+npm test               # tsc build, spec-lint, then node:test over dist/test
+cd python && pytest    # the Python sibling against the same fixtures
 ```
 
 MIT.
