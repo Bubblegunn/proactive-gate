@@ -69,7 +69,10 @@ replayable policy in [`examples/policy.json`](examples/policy.json). Docs and a 
 }
 ```
 
-<p align="center"><img src="assets/trace.png" width="900" alt="A real decision trace: eight checks ran, quiet hours rejected, each with its reason and cost"></p>
+<p align="center"><img src="docs/assets/trace.svg" width="900" alt="Two real decision traces side by side: candidate a1 rejected by quietHours after eight checks, candidate a5 allowed after thirteen, each check with its outcome, reason and cost"></p>
+
+The figure is drawn from the replay's `--json` output by `node scripts/trace-svg.mjs`, every
+line verbatim; the left decision is the one printed above.
 
 With one gate and a logged reason, "why was the user not told about this" has an
 answer. With checks scattered through a pipeline, the honest answer is "somewhere,

@@ -61,7 +61,10 @@ Sıfır bağımlılık. TypeScript. Node 20 ya da üstü. Framework'ten bağıms
 }
 ```
 
-<p align="center"><img src="assets/trace.png" width="900" alt="Gerçek bir karar izi: sekiz kontrol çalıştı, sessiz saatler reddetti, her biri gerekçesi ve maliyetiyle"></p>
+<p align="center"><img src="docs/assets/trace.svg" width="900" alt="Yan yana iki gerçek karar izi: a1 adayı sekiz kontrolden sonra sessiz saatlerde reddedildi, a5 adayı on üç kontrolden sonra geçti; her kontrol sonucu, gerekçesi ve maliyetiyle"></p>
+
+Şekil, replay komutunun `--json` çıktısından `node scripts/trace-svg.mjs` ile çizilir; her satır
+olduğu gibi alınmıştır.
 
 Tek kapı ve kayıtlı bir gerekçe ile "kullanıcıya bu neden söylenmedi" sorusunun bir cevabı
 olur. Kontroller bir boru hattına dağılmışken dürüst cevap "bir yerde bir şey false döndü"
