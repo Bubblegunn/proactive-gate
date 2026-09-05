@@ -1,0 +1,38 @@
+name: Bug report
+description: Something behaves differently from what the README says
+labels: [bug]
+body:
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Command, options, and the smallest input that shows it. A fixture like the ones in the tests is ideal.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "0.1.2"
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version and OS
+      placeholder: "24.4.0, macOS 15"
+    validations:
+      required: true
