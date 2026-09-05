@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.2.5 (unreleased)
+
+Documentation only; no behaviour changed.
+
+**The README said quiet hours are a single window, the same on every day of the week. That stopped
+being true when the per-day schedule landed, and the feature was never documented anywhere.** A
+reader following the README would have written their own check for a Friday or a Shabbat window
+that the package already supports. Both READMEs now describe it.
+
+The ISO-week limit is stated with the measurement behind it instead of asserted. Of the twenty most
+populous countries, CLDR gives Monday to seven, Sunday to eleven and Saturday to two, which anyone
+can read with `new Intl.Locale("und-EG").getWeekInfo().firstDay`. The key stays ISO for two reasons
+now written down: a counter already in a store is keyed by it, so moving the key silently resets
+every user mid-week, and the day a counter turns over is not the day a user is protected on, since
+quiet hours already read the user's own weekday.
+
+The Python package no longer describes itself as unverifiable. Three files still said it was
+uploaded by hand with a token and carried no build provenance, and that trusted publishing was not
+configured. That stopped being true at 0.2.2. PyPI's integrity endpoint returns a publish
+attestation for both 0.2.4 files naming `Bubblegunn/proactive-gate` and `release.yml`. Releases
+before 0.2.2 still carry none, and the text says so.
+
+Every release is now archived on Zenodo. `CITATION.cff` carries the concept DOI
+`10.5281/zenodo.22393512` in the top-level `doi` key, which is the field GitHub's citation button
+renders into BibTeX, and both READMEs gained a Cite section.
+
+The README changes above were committed in `c79d4e0`, whose message describes only the Python
+change: two agents were editing this repository at once and one `git add -A` swept the other's
+work. Noted here because the history cannot say it.
+
 ## 0.2.4 (2026-09-05)
 
 The conformance suite is an artifact rather than a folder in this package. `spec/` now ships in the
