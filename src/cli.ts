@@ -1,34 +1,55 @@
 #!/usr/bin/env node
 /**
- * proactive-gate replay <events.jsonl> [--policy <module>] [--json]
+ * proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
+ * proactive-gate replay --fixtures <dir>
+ * proactive-gate hook --policy <file> [--tool <name>]
  *
- * Replays candidate messages through a gate and prints why each one was or
+ * replay feeds candidate messages through a gate and prints why each one was or
  * was not allowed. Each JSONL line is an EvaluateInput: { user, candidate, now? }.
- * The policy module must export `gate` (a Gate) or default-export one; without
- * --policy the default check order runs against an in-memory store.
+ * A policy is a JSON document (spec/schema/policy.schema.json) or an ES module
+ * that exports `gate`; without --policy the default check order runs against an
+ * in-memory store. --fixtures runs the conformance suite instead.
+ *
+ * hook reads a Claude Code PreToolUse event on stdin and prints a permission
+ * decision for the matching tool.
  */
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { createGate } from "./gate.js";
 import { defaultChecks } from "./checks.js";
+import { loadFixtures, readSkips, runFixture } from "./conformance.js";
 import type { Gate } from "./gate.js";
-import type { Decision, EvaluateInput } from "./types.js";
+import type { Decision, EvaluateInput, Policy } from "./types.js";
 
-const HELP = `usage: proactive-gate replay <events.jsonl> [--policy <module.js>] [--json] [--commit]
+const HELP = `usage: proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
+       proactive-gate replay --fixtures <dir> [--skip <file>]
+       proactive-gate hook --policy <file> [--tool <name>]
 
-Replays candidates through a gate and reports what was allowed and why not.
+replay reports what was allowed and why not.
 
-  --policy <module>  ES module exporting \`gate\` (or default) built with createGate()
+  --policy <file>    policy.json (spec/schema/policy.schema.json) or an ES module
+                     exporting \`gate\` (or default) built with createGate()
   --json             one Decision per line instead of the summary table
-  --commit           also call gate.commit() for allowed decisions, so the daily
-                     budget is consumed in order, as it would be in production
+  --commit           also call gate.commit() for allowed decisions, so budgets are
+                     consumed in order, as they would be in production
+  --fixtures <dir>   run the conformance fixtures under <dir> and report failures
+  --skip <file>      fixture names to skip, one per line (default spec/skip/ts.txt)
+
+hook reads a PreToolUse event (JSON) on stdin; when tool_name matches --tool
+(default send_message) it evaluates tool_input.gate = { user, candidate, now? }
+and prints a permissionDecision. Other tools print nothing.
+
   -h, --help         this text
 
-Each line of the file is {"user": {...}, "candidate": {...}, "now": "ISO date"}.`;
+Each line of an events file is {"user": {...}, "candidate": {...}, "now": "ISO date"}.`;
 
 export async function loadPolicy(path?: string): Promise<Gate> {
   if (!path) return createGate({ checks: defaultChecks() });
+  if (path.endsWith(".json")) {
+    const policy = JSON.parse(await readFile(path, "utf8")) as Policy;
+    return createGate({ policy });
+  }
   const mod = await import(pathToFileURL(resolve(path)).href);
   const gate = mod.gate ?? mod.default;
   if (!gate || typeof gate.evaluate !== "function") throw new Error(`${path} must export a gate created with createGate()`);
@@ -51,8 +72,8 @@ export async function replay(lines: string[], gate: Gate, commit: boolean): Prom
       const ok = await gate.commit(decision, input);
       if (!ok) {
         decision.allowed = false;
-        decision.rejectedBy = "dailyBudget";
-        decision.reason = "daily budget exhausted at commit";
+        decision.rejectedBy = "commit";
+        decision.reason = "a budget was exhausted at commit";
       }
     }
     decisions.push(decision);
@@ -62,21 +83,24 @@ export async function replay(lines: string[], gate: Gate, commit: boolean): Prom
 
 export function summarize(decisions: Decision[]): string {
   const allowed = decisions.filter((d) => d.allowed).length;
+  const deferred = decisions.filter((d) => d.deferredBy).length;
   const byCheck = new Map<string, number>();
   const sample = new Map<string, string>();
   for (const d of decisions) {
-    if (d.allowed || !d.rejectedBy) continue;
-    byCheck.set(d.rejectedBy, (byCheck.get(d.rejectedBy) ?? 0) + 1);
-    if (!sample.has(d.rejectedBy) && d.reason) sample.set(d.rejectedBy, d.reason);
+    const by = d.rejectedBy ?? d.deferredBy;
+    if (d.allowed || !by) continue;
+    byCheck.set(by, (byCheck.get(by) ?? 0) + 1);
+    if (!sample.has(by) && d.reason) sample.set(by, d.reason);
   }
-  const deferred = decisions.filter((d) => d.allowed && d.deliverAt).length;
+  const later = decisions.filter((d) => d.allowed && d.deliverAt).length;
+  const shadowed = decisions.reduce((n, d) => n + d.shadowed.length, 0);
   const lines = [
-    `${decisions.length} candidates  ·  ${allowed} allowed (${pct(allowed, decisions.length)})  ·  ${decisions.length - allowed} rejected${deferred ? `  ·  ${deferred} deferred to a later moment` : ""}`,
+    `${decisions.length} candidates  ·  ${allowed} allowed (${pct(allowed, decisions.length)})  ·  ${decisions.length - allowed - deferred} rejected${deferred ? `  ·  ${deferred} deferred` : ""}${later ? `  ·  ${later} moved to a later moment` : ""}${shadowed ? `  ·  ${shadowed} shadow rejections` : ""}`,
     "",
   ];
   if (byCheck.size) {
     const w = Math.max(...[...byCheck.keys()].map((k) => k.length), 5);
-    lines.push(`${"check".padEnd(w)}  ${"rejected".padStart(8)}  example`);
+    lines.push(`${"check".padEnd(w)}  ${"stopped".padStart(8)}  example`);
     lines.push("-".repeat(w + 2 + 8 + 2 + 40));
     for (const [id, n] of [...byCheck.entries()].sort((a, b) => b[1] - a[1])) {
       lines.push(`${id.padEnd(w)}  ${String(n).padStart(8)}  ${sample.get(id) ?? ""}`);
@@ -89,19 +113,89 @@ export function summarize(decisions: Decision[]): string {
 
 const pct = (n: number, total: number) => (total ? `${((100 * n) / total).toFixed(1)}%` : "0%");
 
+const argValue = (argv: string[], flag: string): string | undefined => {
+  const i = argv.indexOf(flag);
+  return i >= 0 ? argv[i + 1] : undefined;
+};
+
+async function runFixtures(dir: string, skipFile: string | undefined): Promise<number> {
+  const fixtures = await loadFixtures(dir);
+  const skips = await readSkips(skipFile ?? resolve(dir, "..", "skip", "ts.txt"));
+  let failed = 0;
+  let skipped = 0;
+  for (const fixture of fixtures) {
+    const reason = skips.get(fixture.name);
+    if (reason !== undefined) {
+      skipped++;
+      console.log(`skip  ${fixture.name}  (${reason})`);
+      continue;
+    }
+    const failures = await runFixture(fixture);
+    if (failures.length) {
+      failed++;
+      console.log(`FAIL  ${fixture.name}`);
+      for (const f of failures) console.log(`      ${f}`);
+    } else {
+      console.log(`ok    ${fixture.name}`);
+    }
+  }
+  console.log(`${fixtures.length - failed - skipped} passed, ${failed} failed, ${skipped} skipped`);
+  return failed ? 1 : 0;
+}
+
+interface PreToolUseEvent {
+  tool_name?: string;
+  tool_input?: { gate?: { user: EvaluateInput["user"]; candidate: EvaluateInput["candidate"]; now?: string } };
+}
+
+/** Turns a PreToolUse event into the hook output Claude Code expects, or null when the tool does not match. */
+export async function hookDecision(event: PreToolUseEvent, gate: Gate, tool: string): Promise<string | null> {
+  if (event.tool_name !== tool) return null;
+  const payload = event.tool_input?.gate;
+  const out = (permissionDecision: "allow" | "deny", permissionDecisionReason: string) =>
+    JSON.stringify({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision, permissionDecisionReason } });
+  if (!payload?.user || !payload.candidate) return out("deny", "tool_input.gate must carry { user, candidate } for proactive-gate to decide");
+  const decision = await gate.evaluate({ user: payload.user, candidate: payload.candidate, ...(payload.now ? { now: new Date(payload.now) } : {}) });
+  if (decision.allowed) {
+    const ok = await gate.commit(decision, { user: payload.user, candidate: payload.candidate, ...(decision.evaluatedAt ? { now: decision.evaluatedAt } : {}) });
+    return ok ? out("allow", `proactive-gate: allowed on ${decision.surfaces.join(",")}${decision.deliverAt ? `, deliver at ${decision.deliverAt.toISOString()}` : ""}`) : out("deny", "proactive-gate: a budget was exhausted at commit");
+  }
+  if (decision.deferredBy) return out("deny", `proactive-gate: deferred by ${decision.deferredBy} until ${decision.retryAt?.toISOString()} (${decision.reason})`);
+  return out("deny", `proactive-gate: rejected by ${decision.rejectedBy} (${decision.reason})`);
+}
+
+async function readStdin(): Promise<string> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) chunks.push(chunk as Buffer);
+  return Buffer.concat(chunks).toString("utf8");
+}
+
 async function main(argv: string[]) {
   if (argv.length === 0 || argv.includes("-h") || argv.includes("--help")) {
     console.log(HELP);
     return;
   }
   const [command, file] = argv;
-  if (command !== "replay" || !file) {
+  if (command === "hook") {
+    const gate = await loadPolicy(argValue(argv, "--policy"));
+    const event = JSON.parse((await readStdin()) || "{}") as PreToolUseEvent;
+    const output = await hookDecision(event, gate, argValue(argv, "--tool") ?? "send_message");
+    if (output) console.log(output);
+    return;
+  }
+  if (command !== "replay") {
     console.error(HELP);
     process.exit(2);
   }
-  const policyIndex = argv.indexOf("--policy");
-  const policy = policyIndex >= 0 ? argv[policyIndex + 1] : undefined;
-  const gate = await loadPolicy(policy);
+  const fixtures = argValue(argv, "--fixtures");
+  if (fixtures) {
+    process.exit(await runFixtures(fixtures, argValue(argv, "--skip")));
+  }
+  if (!file || file.startsWith("--")) {
+    console.error(HELP);
+    process.exit(2);
+  }
+  const gate = await loadPolicy(argValue(argv, "--policy"));
   const text = await readFile(file, "utf8");
   const decisions = await replay(text.split("\n"), gate, argv.includes("--commit"));
   if (argv.includes("--json")) {

@@ -1,9 +1,12 @@
 export { createGate } from "./gate.js";
-export type { Gate } from "./gate.js";
+export type { Gate, PolicyGateOptions } from "./gate.js";
+export { compilePolicy, KNOWN_CHECKS } from "./policy.js";
+export { presets } from "./presets.js";
+export type { Preset } from "./presets.js";
 export { MemoryStore, RedisStore, SqliteStore } from "./stores.js";
 export type { RedisLike } from "./stores.js";
 export * as checks from "./checks.js";
-export { defaultChecks, localClock, inWindow, budgetKey, weeklyBudgetKey, dismissalKey } from "./checks.js";
+export { defaultChecks, localClock, inWindow, budgetKey, weeklyBudgetKey, monthlyBudgetKey, dismissalKey } from "./checks.js";
 export { PRIORITY_RANK } from "./types.js";
 export type {
   Candidate,
@@ -12,8 +15,11 @@ export type {
   CheckOutcome,
   Decision,
   EvaluateInput,
+  GateHooks,
   GateOptions,
   OutcomeEvent,
+  Policy,
+  PolicyEntry,
   Priority,
   Store,
   Surface,

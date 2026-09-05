@@ -1,13 +1,17 @@
-import { budgetKey, dismissalKey, weeklyBudgetKey, DAY_SECONDS } from "./checks.js";
+import { budgetKey, dismissalKey, DAY_SECONDS } from "./checks.js";
+import { compilePolicy } from "./policy.js";
 import { MemoryStore } from "./stores.js";
 import type {
   Candidate,
   Check,
   CheckContext,
+  CheckOutcome,
   Decision,
   EvaluateInput,
+  GateHooks,
   GateOptions,
   OutcomeEvent,
+  Policy,
   Store,
   Surface,
   TraceEntry,
@@ -26,9 +30,10 @@ export interface Gate {
   /** Run every check in order. Never throws for a check failure; see the trace. */
   evaluate(input: EvaluateInput): Promise<Decision>;
   /**
-   * Call right before you actually send. Atomically consumes one unit of the
-   * user's daily budget when a dailyBudget check is configured, and returns
-   * false if the budget was exhausted by a concurrent delivery in the meantime.
+   * Call right before you actually send. Consumes one unit of every budget-like
+   * check, in order, and returns false if a unit was taken by a concurrent
+   * delivery in the meantime. Idempotent on decision.id: a second call returns
+   * the first result without consuming again.
    */
   commit(decision: Decision, input: EvaluateInput): Promise<boolean>;
   /** Tell the gate what happened after delivery, so cooldowns can learn. */
@@ -38,41 +43,75 @@ export interface Gate {
   readonly checks: readonly Check[];
 }
 
-export function createGate(options: GateOptions): Gate {
-  const store = new PrefixedStore(options.store ?? new MemoryStore(), options.keyPrefix ?? "pg:");
-  const onStoreError = options.onStoreError ?? "open";
-  const checks = [...options.checks];
-  const budgetChecks = checks.filter((c) => c.id === "dailyBudget" || c.id === "weeklyBudget") as Array<Check & { limit?: number }>;
+/** createGate accepts explicit checks or a JSON policy (see spec/schema/policy.schema.json). */
+export interface PolicyGateOptions {
+  policy: Policy;
+  store?: Store;
+  onDecision?: (decision: Decision) => void;
+  hooks?: GateHooks;
+}
+
+const COMMIT_TTL = 2 * DAY_SECONDS;
+
+export function createGate(options: GateOptions | PolicyGateOptions): Gate {
+  if ("policy" in options && "checks" in options) throw new Error("createGate takes either checks or policy, not both");
+  const resolved: GateOptions = "policy" in options
+    ? { ...compilePolicy(options.policy), ...(options.store ? { store: options.store } : {}), ...(options.onDecision ? { onDecision: options.onDecision } : {}), ...(options.hooks ? { hooks: options.hooks } : {}) }
+    : options;
+  const store = new PrefixedStore(resolved.store ?? new MemoryStore(), resolved.keyPrefix ?? "pg:");
+  const onStoreError = resolved.onStoreError ?? "open";
+  const hooks = resolved.hooks ?? {};
+  const checks = [...resolved.checks];
+  let sequence = 0;
+  const consumers = checks.filter((c): c is Check & { consume: NonNullable<Check["consume"]> } => typeof c.consume === "function");
+
+  const callHook = async <K extends keyof GateHooks>(name: K, ctx: CheckContext | null, check: Check | null, ...rest: unknown[]) => {
+    const hook = hooks[name] as ((...args: unknown[]) => void | Promise<void>) | undefined;
+    if (!hook) return;
+    try {
+      await hook(...(ctx ? [ctx, check, ...rest] : rest));
+    } catch (error) {
+      if (name !== "error" && ctx && check) await callHook("error", ctx, check, error);
+    }
+  };
 
   const evaluate = async (input: EvaluateInput): Promise<Decision> => {
     const now = input.now ?? new Date();
     const priority = input.candidate.priority ?? "normal";
     const trace: TraceEntry[] = [];
+    const shadowed: string[] = [];
+    const nearLimit: Decision["nearLimit"] = [];
     let surfaces: Surface[] = pickSurfaces(input.user, input.candidate);
     let deliverAt: Date | undefined;
 
-    const finish = (partial: Partial<Decision>): Decision => {
+    const finish = async (partial: Partial<Decision>): Promise<Decision> => {
       const decision: Decision = {
+        id: `${input.user.id}:${input.candidate.id}:${now.toISOString()}#${++sequence}`,
         allowed: false,
         userId: input.user.id,
         candidateId: input.candidate.id,
         surfaces: [],
+        shadowed,
+        nearLimit,
         trace,
         evaluatedAt: now,
         ...partial,
       };
-      options.onDecision?.(decision);
+      resolved.onDecision?.(decision);
+      await callHook("finally", null, null, decision);
       return decision;
     };
 
     for (const check of checks) {
       const ctx: CheckContext = { user: input.user, candidate: input.candidate, now, priority, store, surfaces };
+      await callHook("before", ctx, check);
       const started = performance.now();
-      let outcome;
+      let outcome: CheckOutcome;
       try {
         outcome = await check.run(ctx);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
+        await callHook("error", ctx, check, error);
         if (onStoreError === "closed") {
           trace.push({ id: check.id, outcome: "reject", reason: `check threw (${message}); failing closed`, ms: elapsed(started) });
           return finish({ rejectedBy: check.id, reason: `check "${check.id}" failed and the gate fails closed: ${message}` });
@@ -80,15 +119,25 @@ export function createGate(options: GateOptions): Gate {
         trace.push({ id: check.id, outcome: "skip", reason: `check threw (${message}); failing open`, ms: elapsed(started) });
         continue;
       }
-      if (check.nonRejecting && outcome.kind === "reject") {
-        // A non-rejecting check that tries to reject is a bug in the check, not a decision about the user.
-        trace.push({ id: check.id, outcome: "skip", reason: `non-rejecting check returned reject (${outcome.reason}); ignored`, ms: elapsed(started) });
+      const ms = elapsed(started);
+      await callHook("after", ctx, check, outcome, ms);
+      if (check.nonRejecting && (outcome.kind === "reject" || outcome.kind === "defer")) {
+        // A non-rejecting check that tries to stop evaluation is a bug in the check, not a decision about the user.
+        trace.push({ id: check.id, outcome: "skip", reason: `non-rejecting check returned ${outcome.kind} (${outcome.reason}); ignored`, ms });
         continue;
       }
-      trace.push({ id: check.id, outcome: outcome.kind, ...(("reason" in outcome && outcome.reason) ? { reason: outcome.reason } : {}), ms: elapsed(started) });
-      if (outcome.kind === "reject") {
-        return finish({ rejectedBy: check.id, reason: outcome.reason });
+      const stops = outcome.kind === "reject" || outcome.kind === "defer";
+      const entry: TraceEntry = { id: check.id, outcome: outcome.kind, ms };
+      if ("reason" in outcome && outcome.reason) entry.reason = outcome.reason;
+      if (stops && check.shadow) entry.shadow = true;
+      trace.push(entry);
+      if (outcome.kind === "pass" && outcome.nearLimit) nearLimit.push({ check: check.id, ...outcome.nearLimit });
+      if (stops && check.shadow) {
+        shadowed.push(check.id);
+        continue;
       }
+      if (outcome.kind === "reject") return finish({ rejectedBy: check.id, reason: outcome.reason });
+      if (outcome.kind === "defer") return finish({ deferredBy: check.id, retryAt: outcome.retryAt, reason: outcome.reason });
       if (outcome.kind === "adjust") {
         if (outcome.deliverAt) deliverAt = outcome.deliverAt;
         if (outcome.surfaces) surfaces = outcome.surfaces;
@@ -99,18 +148,20 @@ export function createGate(options: GateOptions): Gate {
 
   const commit = async (decision: Decision, input: EvaluateInput): Promise<boolean> => {
     if (!decision.allowed) return false;
-    if (!budgetChecks.length) return true;
-    const now = input.now ?? new Date();
+    if (!consumers.length) return true;
+    const now = input.now ?? decision.evaluatedAt;
+    const priority = input.candidate.priority ?? "normal";
+    const marker = `commit:${decision.id}`;
     try {
-      for (const check of budgetChecks) {
-        const key = check.id === "weeklyBudget"
-          ? weeklyBudgetKey(input.user.id, now, input.user.timezone)
-          : budgetKey(input.user.id, now, input.user.timezone);
-        const used = await store.incr(key, check.id === "weeklyBudget" ? 8 * DAY_SECONDS : 2 * DAY_SECONDS);
-        const limit = readLimit(check);
-        if (limit !== undefined && used > limit) return false;
+      const seen = await store.get(marker);
+      if (seen !== null) return seen === "1";
+      let ok = true;
+      for (const check of consumers) {
+        const ctx: CheckContext = { user: input.user, candidate: input.candidate, now, priority, store, surfaces: decision.surfaces };
+        if (!(await check.consume(ctx))) { ok = false; break; }
       }
-      return true;
+      await store.set(marker, ok ? "1" : "0", COMMIT_TTL);
+      return ok;
     } catch {
       return onStoreError === "open";
     }
@@ -147,8 +198,3 @@ function pickSurfaces(user: UserState, candidate: Candidate): Surface[] {
 }
 
 const elapsed = (started: number) => Math.round((performance.now() - started) * 1000) / 1000;
-
-/** dailyBudget() closes over its limit; expose it through a well-known property for commit(). */
-function readLimit(check: Check & { limit?: number }): number | undefined {
-  return typeof check.limit === "number" ? check.limit : undefined;
-}

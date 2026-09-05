@@ -1,8 +1,5 @@
-import { createRequire } from "node:module";
 import type { DatabaseSync } from "node:sqlite";
 import type { Store } from "./types.js";
-
-const require = createRequire(import.meta.url);
 
 /** In-process store. Correct for one instance, wrong the moment you scale out. */
 export class MemoryStore implements Store {
@@ -91,12 +88,11 @@ export class SqliteStore implements Store {
   private readonly clock: () => number;
 
   constructor(path: string, clock: () => number = () => Date.now()) {
-    let DatabaseSync: typeof import("node:sqlite").DatabaseSync;
-    try {
-      ({ DatabaseSync } = require("node:sqlite"));
-    } catch {
-      throw new Error("SqliteStore requires Node.js 22.5 or newer.");
-    }
+    // Resolved lazily so the module also loads where node:sqlite does not exist (older Node, a browser bundle).
+    const loader = (globalThis as { process?: { getBuiltinModule?: (id: string) => unknown } }).process?.getBuiltinModule;
+    const mod = loader ? (loader("node:sqlite") as { DatabaseSync?: typeof import("node:sqlite").DatabaseSync } | undefined) : undefined;
+    const DatabaseSync = mod?.DatabaseSync;
+    if (!DatabaseSync) throw new Error("SqliteStore requires Node.js 22.5 or newer.");
     this.database = new DatabaseSync(path);
     this.clock = clock;
     this.database.exec(

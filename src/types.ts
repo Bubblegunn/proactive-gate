@@ -29,6 +29,14 @@ export interface UserState {
   createdAt?: Date | string;
   /** Surfaces the user allows, in preference order. Defaults to the candidate's surfaces. */
   surfaces?: Surface[];
+  /** Named consents a preset can require, e.g. { ad: true, night: false }. */
+  consents?: Record<string, boolean>;
+  /** Last message the user sent to the assistant; drives inbound-window presets. */
+  lastInboundAt?: Date | string | null;
+  /** True when the user is a minor under the applicable rules. */
+  minor?: boolean;
+  /** True when a soft opt-in for existing customers applies. */
+  existingCustomer?: boolean;
 }
 
 /** The thing the agent wants to say. */
@@ -39,6 +47,14 @@ export interface Candidate {
   priority?: Priority;
   /** Surfaces this candidate can be delivered on, in preference order. */
   surfaces?: Surface[];
+  /** Channel or chat the message goes to; rate limits keyed by channel read it. */
+  channel?: string;
+  /** The caller's own signal that the user is busy right now; boundedDeferral reads it. */
+  busy?: boolean;
+  /** Caller-estimated probability the user accepts this message; utilityFloor reads it. */
+  pAccept?: number;
+  /** Caller-estimated probability the user needs it; utilityFloor reads it, default 1. */
+  pNeed?: number;
   /** Free-form payload; the gate never reads it. */
   payload?: unknown;
 }
@@ -52,10 +68,11 @@ export interface EvaluateInput {
 
 /** What a single check may say. */
 export type CheckOutcome =
-  | { kind: "pass" }
+  | { kind: "pass"; reason?: string; nearLimit?: { used: number; limit: number } }
   | { kind: "reject"; reason: string }
   | { kind: "adjust"; reason: string; deliverAt?: Date; surfaces?: Surface[] }
-  | { kind: "skip"; reason: string };
+  | { kind: "skip"; reason: string }
+  | { kind: "defer"; reason: string; retryAt: Date };
 
 export interface CheckContext {
   user: UserState;
@@ -71,7 +88,15 @@ export interface Check {
   id: string;
   /** True when the check can never reject; it only adjusts timing or surfaces. */
   nonRejecting?: boolean;
+  /** True to record what the check would have done without letting it stop evaluation. */
+  shadow?: boolean;
   run(ctx: CheckContext): Promise<CheckOutcome> | CheckOutcome;
+  /**
+   * Budget-like checks consume one unit at commit time. Return false when the
+   * unit was not available (a concurrent delivery took it). The gate calls
+   * consume() in check order, once per decision.
+   */
+  consume?(ctx: CheckContext): Promise<boolean>;
 }
 
 export interface TraceEntry {
@@ -79,20 +104,32 @@ export interface TraceEntry {
   outcome: CheckOutcome["kind"];
   reason?: string;
   ms: number;
+  /** Present when the check ran in shadow mode and would have stopped evaluation. */
+  shadow?: boolean;
 }
 
 export interface Decision {
+  /** Unique per evaluation: userId, candidateId, the instant and a sequence number. commit() is idempotent on it. */
+  id: string;
   allowed: boolean;
   userId: string;
   candidateId: string;
-  /** Surfaces to route to when allowed. Empty when rejected. */
+  /** Surfaces to route to when allowed. Empty when rejected or deferred. */
   surfaces: Surface[];
   /** Set when a non-rejecting check asked for a later delivery. */
   deliverAt?: Date;
   /** The check that rejected, when rejected. */
   rejectedBy?: string;
-  /** Human-readable reason, when rejected. */
+  /** The check that deferred, when deferred. */
+  deferredBy?: string;
+  /** When to evaluate again, when deferred. */
+  retryAt?: Date;
+  /** Human-readable reason, when rejected or deferred. */
   reason?: string;
+  /** Checks in shadow mode that would have rejected or deferred. */
+  shadowed: string[];
+  /** Budget checks that passed close to their limit. */
+  nearLimit: Array<{ check: string; used: number; limit: number }>;
   /** Every check that ran, in order, with what it said. */
   trace: TraceEntry[];
   evaluatedAt: Date;
@@ -114,6 +151,14 @@ export interface Store {
   del(key: string): Promise<void>;
 }
 
+/** Observation points. Hooks never change a decision; a throwing hook is reported to `error` and ignored. */
+export interface GateHooks {
+  before?(ctx: CheckContext, check: Check): void | Promise<void>;
+  after?(ctx: CheckContext, check: Check, outcome: CheckOutcome, ms: number): void | Promise<void>;
+  error?(ctx: CheckContext, check: Check, error: unknown): void | Promise<void>;
+  finally?(decision: Decision): void | Promise<void>;
+}
+
 export interface GateOptions {
   checks: Check[];
   store?: Store;
@@ -127,4 +172,18 @@ export interface GateOptions {
   onDecision?: (decision: Decision) => void;
   /** Key prefix for everything the gate writes to the store. */
   keyPrefix?: string;
+  /** Observation hooks, e.g. one OpenTelemetry span per check. */
+  hooks?: GateHooks;
 }
+
+/** A policy document: the same checks as data. See spec/schema/policy.schema.json. */
+export interface Policy {
+  specVersion: string;
+  onStoreError?: "open" | "closed";
+  keyPrefix?: string;
+  checks: PolicyEntry[];
+}
+
+export type PolicyEntry =
+  | ({ id: string; shadow?: boolean } & Record<string, unknown>)
+  | ({ preset: string; shadow?: boolean } & Record<string, unknown>);

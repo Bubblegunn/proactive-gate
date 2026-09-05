@@ -1,0 +1,50 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "policy/unknown-check-is-an-error",
+  "description": "The runner never sees this fixture's expectation matter; it documents that compile errors are for the schema, not the runtime. A minimal valid policy passes.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "consent only",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent"
+        ]
+      }
+    }
+  ]
+}

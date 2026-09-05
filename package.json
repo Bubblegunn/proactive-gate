@@ -1,7 +1,7 @@
 {
   "name": "proactive-gate",
-  "version": "0.1.2",
-  "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks: kill switch, consent, quiet hours, trust ramp, dismissal cooldown, daily budget.",
+  "version": "0.2.0",
+  "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks as code or JSON, a conformance spec, presets for platform and legal limits, adapters for AI SDK, Mastra, LangChain and OpenAI Agents, and a Python sibling.",
   "type": "module",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
@@ -9,22 +9,45 @@
     ".": {
       "types": "./dist/src/index.d.ts",
       "import": "./dist/src/index.js"
-    }
+    },
+    "./presets": {
+      "types": "./dist/src/presets.d.ts",
+      "import": "./dist/src/presets.js"
+    },
+    "./ai-sdk": {
+      "types": "./dist/src/adapters/ai-sdk.d.ts",
+      "import": "./dist/src/adapters/ai-sdk.js"
+    },
+    "./mastra": {
+      "types": "./dist/src/adapters/mastra.d.ts",
+      "import": "./dist/src/adapters/mastra.js"
+    },
+    "./langchain": {
+      "types": "./dist/src/adapters/langchain.d.ts",
+      "import": "./dist/src/adapters/langchain.js"
+    },
+    "./openai-agents": {
+      "types": "./dist/src/adapters/openai-agents.d.ts",
+      "import": "./dist/src/adapters/openai-agents.js"
+    },
+    "./package.json": "./package.json"
   },
   "bin": {
     "proactive-gate": "dist/src/cli.js"
   },
   "files": [
-    "dist",
+    "dist/src",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node --test dist/test/gate.test.js",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js",
     "lint": "tsc -p tsconfig.json --noEmit",
+    "spec-lint": "node test/spec-lint.mjs",
+    "conformance": "npm run build && node dist/src/cli.js replay --fixtures spec/fixtures",
     "prepublishOnly": "npm test",
-    "examples": "npm run build && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.js --commit",
+    "examples": "npm run build && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.js --commit && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.json --commit",
     "bench": "npm run build && node bench/evaluate.mjs"
   },
   "engines": {
@@ -39,7 +62,14 @@
     "quiet-hours",
     "consent",
     "budget",
-    "llm"
+    "llm",
+    "policy",
+    "presets",
+    "langchain",
+    "mastra",
+    "ai-sdk",
+    "openai-agents",
+    "claude-code"
   ],
   "author": "Efe Genc",
   "license": "MIT",

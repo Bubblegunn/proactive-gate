@@ -279,3 +279,132 @@ test("a custom check is an ordinary object: it runs in order, reads the context,
   assert.equal(monday.allowed, true);
   assert.equal(monday.trace.length, 3);
 });
+
+/* ---------------------------------------------------------------- v2: policy as data */
+
+import { readFileSync } from "node:fs";
+import { compilePolicy } from "../src/index.js";
+import type { Policy } from "../src/index.js";
+
+const examplePolicy = (): Policy => JSON.parse(readFileSync(new URL("../../examples/policy.json", import.meta.url), "utf8")) as Policy;
+
+test("policy: the example JSON compiles to thirteen checks in the written order", () => {
+  const compiled = compilePolicy(examplePolicy());
+  assert.equal(compiled.checks.length, 13);
+  assert.deepEqual(compiled.checks.map((c) => c.id), ["killSwitch", "consent", "enabled", "mode", "snooze", "mute", "intensity", "quietHours", "trustRamp", "dismissalCooldown", "adaptiveTiming", "utilityFloor", "dailyBudget"]);
+  assert.equal(compiled.onStoreError, "open");
+});
+
+test("policy: an unknown id throws and names the known ids", () => {
+  assert.throws(() => compilePolicy({ specVersion: "1.0.0", checks: [{ id: "nope" }] }), /unknown check "nope"; known checks: killSwitch, consent/);
+});
+
+test("policy: a preset entry expands to its checks and an unknown preset names the known ones", () => {
+  const compiled = compilePolicy({ specVersion: "1.0.0", checks: [{ preset: "usTcpa" }] });
+  assert.ok(compiled.checks.length >= 1);
+  assert.throws(() => compilePolicy({ specVersion: "1.0.0", checks: [{ preset: "nope" }] }), /unknown preset "nope"; known presets: lineMessagingApi/);
+});
+
+test("policy: specVersion 2.0.0 is refused, shadow marks the check", () => {
+  assert.throws(() => compilePolicy({ specVersion: "2.0.0", checks: [{ id: "consent" }] }), /specVersion 2.0.0 is not supported/);
+  const compiled = compilePolicy({ specVersion: "1.0.0", checks: [{ id: "consent", shadow: true }, { id: "mute" }] });
+  assert.equal(compiled.checks[0]!.shadow, true);
+  assert.equal(compiled.checks[1]!.shadow, undefined);
+  assert.throws(() => createGate({ policy: examplePolicy(), checks: [] } as never), /either checks or policy/);
+});
+
+/* ---------------------------------------------------------------- v2: outcome model */
+
+test("defer: snooze with defer:true stops with deferredBy and retryAt, and commit on a deferred decision is false", async () => {
+  const until = "2026-09-04T12:00:00Z";
+  const gate = createGate({ checks: [checks.consent(), checks.snooze({ defer: true }), checks.dailyBudget({ limit: 5 })] });
+  const input = { user: user({ snoozedUntil: until }), candidate: candidate(), now: noon };
+  const d = await gate.evaluate(input);
+  assert.equal(d.allowed, false);
+  assert.equal(d.deferredBy, "snooze");
+  assert.equal(d.rejectedBy, undefined);
+  assert.equal(d.retryAt?.toISOString(), new Date(until).toISOString());
+  assert.deepEqual(d.trace.map((t) => `${t.id}:${t.outcome}`), ["consent:pass", "snooze:defer"]);
+  assert.equal(await gate.commit(d, input), false);
+  assert.match(summarize([d]), /1 deferred/);
+});
+
+test("shadow: a shadowed reject is recorded, listed in shadowed, and evaluation continues", async () => {
+  const gate = createGate({ checks: [checks.consent(), { ...checks.mute(), shadow: true }, checks.dailyBudget({ limit: 5 })] });
+  const d = await gate.evaluate({ user: user({ mutedTypes: ["reminder"] }), candidate: candidate(), now: noon });
+  assert.equal(d.allowed, true);
+  assert.deepEqual(d.shadowed, ["mute"]);
+  const entry = d.trace.find((t) => t.id === "mute")!;
+  assert.equal(entry.outcome, "reject");
+  assert.equal(entry.shadow, true);
+  assert.equal(d.trace.length, 3);
+});
+
+test("nearLimit: a daily budget of five reports 4 of 5 on the pass that reaches the threshold", async () => {
+  const store = new MemoryStore();
+  const gate = createGate({ checks: [checks.consent(), checks.dailyBudget({ limit: 5 })], store });
+  const input = { user: user(), candidate: candidate(), now: noon };
+  for (let i = 0; i < 4; i += 1) await gate.commit(await gate.evaluate({ ...input, candidate: candidate({ id: `c${i}` }) }), input);
+  const d = await gate.evaluate(input);
+  assert.equal(d.allowed, true);
+  assert.deepEqual(d.nearLimit, [{ check: "dailyBudget", used: 4, limit: 5 }]);
+});
+
+test("hooks: before, after (with ms), finally run in order; a throwing hook reaches error and does not change the decision", async () => {
+  const calls: string[] = [];
+  const gate = createGate({
+    checks: [checks.consent(), checks.mute()],
+    hooks: {
+      before: (_ctx, check) => { calls.push(`before:${check.id}`); },
+      after: (_ctx, check, outcome, ms) => { calls.push(`after:${check.id}:${outcome.kind}`); assert.equal(typeof ms, "number"); if (check.id === "mute") throw new Error("boom"); },
+      error: (_ctx, check, error) => { calls.push(`error:${check.id}:${(error as Error).message}`); },
+      finally: (decision) => { calls.push(`finally:${decision.allowed}`); },
+    },
+  });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(d.allowed, true);
+  assert.deepEqual(calls, ["before:consent", "after:consent:pass", "before:mute", "after:mute:pass", "error:mute:boom", "finally:true"]);
+});
+
+test("commit is idempotent on decision.id: the second call returns the first result without consuming again", async () => {
+  const store = new MemoryStore();
+  const gate = createGate({ checks: [checks.dailyBudget({ limit: 5 })], store });
+  const input = { user: user(), candidate: candidate(), now: noon };
+  const d = await gate.evaluate(input);
+  assert.equal(await gate.commit(d, input), true);
+  assert.equal(await gate.commit(d, input), true);
+  assert.equal((await gate.inspect(user(), noon)).budgetUsed, 1);
+  assert.match(d.id, /^u1:c1:2026-09-04T09:00:00\.000Z/);
+});
+
+/* ---------------------------------------------------------------- v2: optional checks */
+
+test("utilityFloor: tau = cFA / (cFA + pNeed * cFN); below rejects, above passes, missing pAccept skips", async () => {
+  const gate = createGate({ checks: [checks.utilityFloor({ costFalseAlarm: 1, costMissedHelp: 2 })] });
+  const low = await gate.evaluate({ user: user(), candidate: candidate({ pAccept: 0.41, pNeed: 0.4 }), now: noon });
+  assert.equal(low.rejectedBy, "utilityFloor");
+  assert.equal(low.reason, "pAccept 0.41 < tau 0.556");
+  const high = await gate.evaluate({ user: user(), candidate: candidate({ pAccept: 0.6, pNeed: 0.4 }), now: noon });
+  assert.equal(high.allowed, true);
+  const none = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(none.allowed, true);
+  assert.equal(none.trace[0]!.outcome, "skip");
+});
+
+test("boundedDeferral: a busy candidate is delivered at now + t*, capped at the bound; not busy passes untouched", async () => {
+  const gate = createGate({ checks: [checks.boundedDeferral({ lambda: 1 / 43, interruptCost: 1, staleness: 0.0001 })] });
+  const busy = await gate.evaluate({ user: user(), candidate: candidate({ busy: true }), now: noon });
+  assert.equal(busy.allowed, true);
+  assert.equal(busy.trace[0]!.outcome, "adjust");
+  const tStar = Math.min(240, (1 / 43) / (2 * 0.0001)); // 116.28 s, under the 240 s bound
+  assert.equal(busy.deliverAt?.getTime(), noon.getTime() + Math.round(tStar * 1000));
+  const defaults = createGate({ checks: [checks.boundedDeferral()] });
+  const d = await defaults.evaluate({ user: user(), candidate: candidate({ busy: true }), now: noon });
+  assert.equal(d.deliverAt?.getTime(), busy.deliverAt?.getTime()); // the explicit values above are the defaults
+  const capped = createGate({ checks: [checks.boundedDeferral({ lambda: 1 })] }); // 5000 s, so the 240 s bound wins
+  const c = await capped.evaluate({ user: user(), candidate: candidate({ busy: true }), now: noon });
+  assert.equal(c.deliverAt?.getTime(), noon.getTime() + 240 * 1000);
+  const free = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(free.deliverAt, undefined);
+  assert.equal(free.trace[0]!.outcome, "pass");
+});
