@@ -1,0 +1,31 @@
+---
+title: proactive-gate
+description: Decide whether a proactive AI agent may reach a user right now, and log why not.
+template: splash
+hero:
+  tagline: One gate, an ordered list of checks, and a reason for every rejection. TypeScript and Python, held to the same fixtures.
+  actions:
+    - text: Start
+      link: /proactive-gate/start/
+      icon: right-arrow
+    - text: Try a policy in the browser
+      link: /proactive-gate/playground/
+      variant: minimal
+---
+
+import { Card, CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid stagger>
+  <Card title="Order is visible" icon="list-format">
+    Consent before everything, quiet hours before the budget. The order is one list in one place and the trace shows it ran that way.
+  </Card>
+  <Card title="Budgets at commit" icon="approve-check">
+    `evaluate` reads, `commit` increments atomically right before you send. Two instances cannot both send the sixth message.
+  </Card>
+  <Card title="Policy as data" icon="document">
+    A JSON document names the checks and their options. The same file runs in TypeScript, in Python, in the CLI and in this site's playground.
+  </Card>
+  <Card title="Presets with sources" icon="information">
+    LINE, WeChat, Kakao, Korea's Network Act, US TCPA, EU ePrivacy, Telegram, Slack: fourteen presets, each next to the page it came from.
+  </Card>
+</CardGrid>

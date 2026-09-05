@@ -1,0 +1,83 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<StarlightPage frontmatter={{ title: "Playground", description: "Run a JSON policy against an input in the browser. Nothing leaves the page." }}>
+  <p>
+    The real package, bundled for the browser with an in-memory store. Edit the policy or the
+    input and press Run; the trace shows every check that ran and highlights the one that stopped
+    the message.
+  </p>
+  <div class="pg">
+    <label>Policy <textarea id="policy" rows="22" spellcheck="false"></textarea></label>
+    <label>Input <textarea id="input" rows="22" spellcheck="false"></textarea></label>
+  </div>
+  <p><button id="run" class="run">Run</button> <span id="status"></span></p>
+  <div id="out" hidden>
+    <p id="summary"></p>
+    <table>
+      <thead><tr><th>#</th><th>check</th><th>outcome</th><th>reason</th><th>ms</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <p id="error" class="error" hidden></p>
+
+  <script is:inline define:vars={{ base }}>
+    const $ = (id) => document.getElementById(id);
+    const policy = {
+      specVersion: "1.0.0",
+      checks: [
+        { id: "consent" },
+        { id: "mode", allow: ["normal", "commute"] },
+        { id: "snooze", defer: true },
+        { id: "quietHours", priorityFloor: "high" },
+        { id: "trustRamp", days: 7, minPriority: "high" },
+        { preset: "usTcpa" },
+        { id: "utilityFloor", costFalseAlarm: 1, costMissedHelp: 2, shadow: true },
+        { id: "dailyBudget", limit: 3, bypassPriority: "critical", nearLimit: 0.67 },
+      ],
+    };
+    const input = {
+      user: { id: "ayse", consent: true, mode: "normal", timezone: "Europe/Istanbul", quietHours: { start: "22:00", end: "08:00" }, createdAt: "2026-01-01T00:00:00Z" },
+      candidate: { id: "a1", type: "reminder", priority: "normal", surfaces: ["push", "feed"], pAccept: 0.41, pNeed: 0.4 },
+      now: "2026-09-04T20:30:00Z",
+    };
+    $("policy").value = JSON.stringify(policy, null, 2);
+    $("input").value = JSON.stringify(input, null, 2);
+    let mod;
+    async function run() {
+      $("error").hidden = true;
+      $("status").textContent = "running";
+      try {
+        mod ??= await import(`${base}/playground/gate.js`);
+        const p = JSON.parse($("policy").value);
+        const i = JSON.parse($("input").value);
+        const gate = mod.createGate({ policy: p, store: new mod.MemoryStore() });
+        const d = await gate.evaluate({ user: i.user, candidate: i.candidate, now: i.now ? new Date(i.now) : undefined });
+        const verdict = d.allowed ? `allowed on ${d.surfaces.join(", ")}` : d.deferredBy ? `deferred by ${d.deferredBy} until ${d.retryAt.toISOString()}` : `rejected by ${d.rejectedBy}`;
+        $("summary").textContent = `${verdict}${d.reason ? `: ${d.reason}` : ""}${d.shadowed.length ? ` (shadowed: ${d.shadowed.join(", ")})` : ""}`;
+        $("rows").innerHTML = d.trace.map((t, n) => `<tr class="${t.id === (d.rejectedBy ?? d.deferredBy) ? "stop" : ""}${t.shadow ? " shadow" : ""}"><td>${n + 1}</td><td><code>${t.id}</code></td><td>${t.outcome}${t.shadow ? " (shadow)" : ""}</td><td>${t.reason ?? ""}</td><td>${t.ms}</td></tr>`).join("");
+        $("out").hidden = false;
+        $("status").textContent = "";
+      } catch (e) {
+        $("status").textContent = "";
+        $("error").textContent = e && e.message ? e.message : String(e);
+        $("error").hidden = false;
+      }
+    }
+    $("run").addEventListener("click", run);
+    run();
+  </script>
+
+  <style>
+    .pg { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 72rem) { .pg { grid-template-columns: 1fr; } }
+    .pg label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
+    .pg textarea { font-family: var(--__sl-font-mono); font-size: 0.8rem; line-height: 1.4; padding: 0.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.25rem; background: var(--sl-color-black); color: var(--sl-color-white); }
+    .run { font: inherit; font-weight: 600; padding: 0.4rem 1rem; border: 1px solid var(--sl-color-accent); background: var(--sl-color-accent); color: var(--sl-color-black); border-radius: 0.25rem; cursor: pointer; }
+    tr.stop td { background: color-mix(in srgb, var(--sl-color-red) 18%, transparent); }
+    tr.shadow td { opacity: 0.75; }
+    .error { color: var(--sl-color-red); }
+  </style>
+</StarlightPage>

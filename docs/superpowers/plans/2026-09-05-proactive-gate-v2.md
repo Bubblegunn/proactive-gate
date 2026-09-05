@@ -182,10 +182,10 @@ def compile_policy(policy: Mapping[str, Any]) -> list[Check]
 
 **Files:** Create `docs/site/{package.json,astro.config.mjs,src/content/docs/*.md,src/pages/playground.astro,scripts/bundle.mjs}`, `.github/workflows/pages.yml`. Modify `src/stores.ts` (lazy `node:sqlite`), `README.md` (site link), `llms.txt`.
 
-- [ ] `scripts/bundle.mjs` runs esbuild on `../../src/index.ts` (platform browser, format esm, external `node:*`) into `public/playground/gate.js`.
-- [ ] Playground page: two textareas (policy JSON, input JSON), a Run button, trace table, first reject highlighted.
-- [ ] Local `npm run build` in `docs/site` passes; Pages workflow SHA-pinned and zizmor clean.
-- [ ] Commit `docs(site): Starlight docs with a browser playground`.
+- [x] `scripts/bundle.mjs` runs esbuild on `../../src/index.ts` (platform browser, format esm, external `node:*`) into `public/playground/gate.js`.
+- [x] Playground page: two textareas (policy JSON, input JSON), a Run button, trace table, first reject highlighted.
+- [x] Local `npm run build` in `docs/site` passes; Pages workflow SHA-pinned and zizmor clean.
+- [x] Commit `docs(site): Starlight docs with a browser playground`.
 
 ### Task 10: Documentation sweep
 
