@@ -132,7 +132,8 @@ Passing a single window is unchanged and remains the common case; a schedule who
 resolves to the same window behaves identically to that window.
 
 `weeklyBudget({ limit, bypassPriority })` is the same shape keyed on the user's local ISO
-week; `defaultChecks({ weeklyLimit })` places it just before the daily one. Budgets are
+week; `defaultChecks({ weeklyLimit })` places it just before the daily one. It was contributed by
+[@edwardsong08](https://github.com/edwardsong08) in [#9](https://github.com/Bubblegunn/proactive-gate/pull/9). Budgets are
 consumed in check order at commit, so when a weekly check passes and the daily one then
 refuses, that weekly unit is spent without a delivery. It only happens when two commits
 race after a shared evaluate.
@@ -378,7 +379,8 @@ not at UTC.
 
 `MemoryStore` keeps values in process memory and is useful for a single instance. `RedisStore`
 shares values across instances. `SqliteStore` persists values in a SQLite database without
-adding a package dependency. `SqliteStore` requires Node.js 22.5 or newer; the SQLite module
+adding a package dependency. It was contributed by
+[@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) in [#3](https://github.com/Bubblegunn/proactive-gate/pull/3). `SqliteStore` requires Node.js 22.5 or newer; the SQLite module
 is loaded only when the store is constructed so the package can still be used on Node.js 20. On Node 22 the module prints an ExperimentalWarning on first use; it is stable from Node 24.
 
 ## Fail open, on purpose
@@ -596,6 +598,15 @@ rule decides. Android notification channels and iOS interruption levels give the
 per-type switch and a priority floor that bypasses quiet time. Horvitz's work on mixed
 initiative supplied the two optional checks. This package puts those ideas in one list with a
 trace, and adds the part they leave out: the budget consumed at send time.
+
+## Thanks
+
+Two people sent pull requests on the day this was published, neither of whom I had spoken to
+before. [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) wrote `SqliteStore`
+([#3](https://github.com/Bubblegunn/proactive-gate/pull/3)) and
+[@edwardsong08](https://github.com/edwardsong08) wrote the weekly budget
+([#9](https://github.com/Bubblegunn/proactive-gate/pull/9)). Both shipped in 0.1.2 and are in
+every release since, including the one you install today.
 
 ## Development
 
