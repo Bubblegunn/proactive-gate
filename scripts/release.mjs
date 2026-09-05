@@ -109,9 +109,12 @@ if (dryRun) process.exit(0);
 // Apply.
 const replaceIn = (f, from, to, label) => {
   const before = read(f);
+  // A file already carrying the target value is normal: the repository sets the version
+  // when the entry is written. Only a pattern that matches nothing is a mistake.
+  const matched = typeof from === "string" ? before.includes(from) : from.test(before);
+  if (!matched) fail(`${f}: nothing matched for ${label}`);
   const after = before.replace(from, to);
-  if (after === before) fail(`${f}: nothing matched for ${label}`);
-  writeFileSync(join(root, f), after);
+  if (after !== before) writeFileSync(join(root, f), after);
 };
 replaceIn("CHANGELOG.md", headingLine, `## ${target} (${today})`, "the entry heading");
 sh("npm", ["version", target, "--no-git-tag-version", "--allow-same-version"], { stdio: "ignore" });

@@ -126,3 +126,34 @@ test("refuses a dirty tree, a version the CHANGELOG does not name, and a lower v
     rmSync(f.base, { recursive: true, force: true });
   }
 });
+
+test("a file already carrying the target version is not a failure", () => {
+  // Every repository writes the version into package.json and CITATION.cff when the
+  // changelog entry is written, so the release finds them already correct. Treating an
+  // unchanged file as "nothing matched" aborted the release after the changelog was
+  // already dated, which is how the first real release of this package failed.
+  const f = fixture();
+  const already = 'cff-version: 1.2.0\ntitle: "fixture-pkg"\nversion: "0.2.0"\ndate-released: "2026-01-01"\n';
+  writeFileSync(join(f.repo, "CITATION.cff"), already);
+  writeFileSync(join(f.repo, ".claude-plugin", "plugin.json"), '{\n  "name": "fixture-pkg",\n  "version": "0.2.0",\n  "keywords": ["a", "b"]\n}\n');
+  f.git("commit", "--quiet", "-am", "versions already at the target");
+  f.git("push", "--quiet", "origin", "main");
+
+  const r = run(f.repo, "0.2.0");
+  assert.equal(r.status, 0, r.stderr + r.stdout);
+  assert.match(f.read("CITATION.cff"), /^version: "0\.2\.0"$/m);
+  assert.match(f.read("CITATION.cff"), new RegExp(`^date-released: "${new Date().toISOString().slice(0, 10)}"$`, "m"));
+  assert.match(f.read("CHANGELOG.md"), /^## 0\.2\.0 \(\d{4}-\d{2}-\d{2}\)$/m);
+  assert.equal(execFileSync("git", ["tag", "--list"], { cwd: f.repo, encoding: "utf8" }).trim().split("\n").sort().join(","), "v0,v0.2.0");
+});
+
+test("a pattern that truly matches nothing still fails", () => {
+  const f = fixture();
+  writeFileSync(join(f.repo, "CITATION.cff"), 'cff-version: 1.2.0\ntitle: "fixture-pkg"\n');
+  f.git("commit", "--quiet", "-am", "citation without a version line");
+  f.git("push", "--quiet", "origin", "main");
+
+  const r = run(f.repo, "0.2.0");
+  assert.notEqual(r.status, 0);
+  assert.match(r.stdout + r.stderr, /CITATION\.cff: nothing matched for version/);
+});
