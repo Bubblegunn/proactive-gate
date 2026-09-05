@@ -20,6 +20,12 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false # a release builds from a clean install; nothing cached can reach it
+      - name: The tag must name the version in package.json
+        run: |
+          v=$(node -p "require('./package.json').version")
+          if [ "v$v" != "$TAG" ]; then echo "tag $TAG does not match package.json version $v; run npm run release instead of tagging by hand"; exit 1; fi
+        env:
+          TAG: ${{ github.ref_name }}
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm publish --access public
@@ -30,6 +36,31 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  smoke:
+    # The published package, installed from the registry on three operating systems, reports the released version.
+    needs: publish
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: npx the released version from the registry
+        shell: bash
+        run: |
+          v="${TAG#v}"
+          for i in 1 2 3 4 5 6; do
+            out=$(npx --yes "$PKG@$v" --version 2>&1) && break
+            echo "attempt $i: $out"; sleep 20
+          done
+          echo "$out"
+          case "$out" in *"$v"*) echo "smoke ok: $PKG@$v" ;; *) echo "expected version $v in the output"; exit 1 ;; esac
+        env:
+          TAG: ${{ github.ref_name }}
+          PKG: ${{ github.event.repository.name }}
   build-python:
     runs-on: ubuntu-latest
     defaults:
@@ -44,7 +75,7 @@ jobs:
           python-version: "3.13"
       - run: python -m pip install --upgrade pip build && pip install -e ".[dev]"
       - run: python -m mypy --strict src/proactive_gate tests && python -m pytest -q
-      - run: python -m build
+      - run: python -m build && python -m pip install twine && python -m twine check dist/*
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: python-dist

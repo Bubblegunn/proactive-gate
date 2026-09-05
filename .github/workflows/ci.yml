@@ -81,12 +81,26 @@ jobs:
       - run: python -m pip install --upgrade pip && pip install -e ".[dev]"
       - run: python -m mypy --strict src/proactive_gate tests
       - run: python -m pytest -q
+  release-gate:
+    # The version the package states is the version every other file states, and npm pack ships only allowlisted paths.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build --if-present
+      - run: node scripts/release-gate.mjs
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
-    needs: [test, package, spec-lint, python]
+    needs: [test, package, spec-lint, python, release-gate]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  python: ${{ needs.python.result }}"
-          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.python.result }}" = success
+          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success

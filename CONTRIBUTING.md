@@ -38,10 +38,12 @@ A preset is an ordered list of existing checks plus its sources and a note on wh
 
 ## Releasing
 
-Maintainers only.
+Maintainers only. One command; the workflow does the rest.
 
-1. Bump `version` in `package.json` and add a `CHANGELOG.md` entry.
-2. Commit, then `git tag vX.Y.Z && git push origin main --tags`.
-3. The `release` workflow runs the tests and publishes to npm with provenance, so every published tarball is linked to the exact commit and workflow run that built it. The same run builds `python/dist` and publishes it to PyPI through the `pypi` environment.
+1. Write the `## X.Y.Z (unreleased)` entry in `CHANGELOG.md` and merge it.
+2. On a clean, green `main`: `npm run release -- X.Y.Z` (or `patch`, `minor`, `major`; add `--dry-run` to see the plan). It dates the entry, sets the version in `package.json`, `CITATION.cff` and `python/pyproject.toml`, runs the tests, commits, tags `vX.Y.Z` and pushes.
+3. Watch the `release` workflow: it publishes to npm with provenance, builds and publishes the Python package to PyPI through the `pypi` environment, creates the GitHub release from the CHANGELOG entry, and installs the published version from the registry on three operating systems.
 
-Both publishes use trusted publishing and hold no token. Before the first tagged release the maintainer configures the trusted publisher on npmjs.com (package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`) and on pypi.org (project `proactive-gate`, owner `Bubblegunn`, repository `proactive-gate`, workflow `release.yml`, environment `pypi`). Keep `version` in `package.json` and `python/pyproject.toml` equal.
+CI runs `scripts/release-gate.mjs` on every push: the version must agree across those files and `npm pack` may ship only the paths in `scripts/pack-allowlist.txt` (regenerate with `node scripts/release-gate.mjs --update` when the package layout changes on purpose).
+
+Both publishes use trusted publishing and hold no token. Before the first tagged release the maintainer configures the trusted publisher on npmjs.com (package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`, "Allow npm publish" ticked) and on pypi.org (project `proactive-gate`, owner `Bubblegunn`, repository `proactive-gate`, workflow `release.yml`, environment `pypi`).

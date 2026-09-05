@@ -16,6 +16,7 @@
 import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
+import { createRequire } from "node:module";
 import { createGate } from "./gate.js";
 import { defaultChecks } from "./checks.js";
 import { loadFixtures, readSkips, runFixture } from "./conformance.js";
@@ -41,6 +42,7 @@ hook reads a PreToolUse event (JSON) on stdin; when tool_name matches --tool
 and prints a permissionDecision. Other tools print nothing.
 
   -h, --help         this text
+  --version          print the version
 
 Each line of an events file is {"user": {...}, "candidate": {...}, "now": "ISO date"}.`;
 
@@ -170,7 +172,13 @@ async function readStdin(): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
+const VERSION = createRequire(import.meta.url)("../../package.json").version as string;
+
 async function main(argv: string[]) {
+  if (argv.includes("--version")) {
+    console.log(VERSION);
+    return;
+  }
   if (argv.length === 0 || argv.includes("-h") || argv.includes("--help")) {
     console.log(HELP);
     return;
