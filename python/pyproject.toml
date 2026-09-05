@@ -18,6 +18,9 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Framework :: AsyncIO",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Communications",
   "Typing :: Typed",
 ]
 dependencies = []
@@ -27,7 +30,9 @@ redis = ["redis>=5"]
 dev = ["pytest>=8", "mypy>=1.11", "redis>=5"]
 
 [project.urls]
-Homepage = "https://github.com/Bubblegunn/proactive-gate"
+Homepage = "https://bubblegunn.github.io/proactive-gate/"
+Repository = "https://github.com/Bubblegunn/proactive-gate"
+Issues = "https://github.com/Bubblegunn/proactive-gate/issues"
 Specification = "https://github.com/Bubblegunn/proactive-gate/tree/main/spec"
 Changelog = "https://github.com/Bubblegunn/proactive-gate/blob/main/CHANGELOG.md"
 
