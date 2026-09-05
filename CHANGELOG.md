@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.3 (unreleased)
+## 0.2.3 (2026-09-05)
 
 `dedupe`: one delivery per event per window, for transports that deliver at least once. A webhook resent because it did not get its `200` quickly enough, or the same event handed to two workers, produced two messages; `dedupe` claims `candidate.dedupeKey` atomically at commit with the increment the budgets use, so both attempts pass the check and exactly one commit wins. Off unless asked for, with `defaultChecks({ dedupe: true })` or a policy entry. Without a `dedupeKey` it skips rather than guessing an identity, because a deduplication keyed on something unique per attempt silently does nothing.
 
