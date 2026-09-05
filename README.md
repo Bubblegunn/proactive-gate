@@ -37,6 +37,17 @@ if (decision.allowed && (await gate.commit(decision, { user, candidate }))) {
 }
 ```
 
+Or start from a policy file and the wiring for your framework, in one command:
+
+```
+npx proactive-gate init --preset usTcpa --framework mastra
+```
+
+That writes `proactive-gate.policy.json` with the ten checks in order, appends the
+preset you named, and prints the preset's own source next to the few lines that plug
+the gate into that framework. `npx proactive-gate init --list` shows the fourteen
+platform and legal presets and the four frameworks.
+
 Zero dependencies. TypeScript. Node 20 or newer. Framework-agnostic: the gate sits
 between "the model produced something" and "the user's phone buzzed", whichever
 model or framework produced it. Examples: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),

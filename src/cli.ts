@@ -13,19 +13,31 @@
  * hook reads a Claude Code PreToolUse event on stdin and prints a permission
  * decision for the matching tool.
  */
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { createRequire } from "node:module";
 import { createGate } from "./gate.js";
 import { defaultChecks } from "./checks.js";
 import { loadFixtures, readSkips, runFixture } from "./conformance.js";
+import { FRAMEWORKS, listText, plan } from "./init.js";
+import type { Framework } from "./init.js";
 import type { Gate } from "./gate.js";
 import type { Decision, EvaluateInput, Policy } from "./types.js";
 
-const HELP = `usage: proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
+const HELP = `usage: proactive-gate init [--preset <name>] [--framework <name>] [--out <file>]
+       proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
        proactive-gate replay --fixtures <dir> [--skip <file>]
        proactive-gate hook --policy <file> [--tool <name>]
+
+init writes a policy you can read and edit, and prints the lines that wire it in.
+
+  --preset <name>    a platform or legal preset to append (see --list)
+  --framework <name> ${FRAMEWORKS.join(", ")} (default none)
+  --out <file>       where to write (default proactive-gate.policy.json)
+  --force            overwrite an existing file
+  --list             print the presets and frameworks and exit
 
 replay reports what was allowed and why not.
 
@@ -184,6 +196,27 @@ async function main(argv: string[]) {
     return;
   }
   const [command, file] = argv;
+  if (command === "init") {
+    if (argv.includes("--list")) {
+      console.log(listText());
+      return;
+    }
+    const out = argValue(argv, "--out") ?? "proactive-gate.policy.json";
+    const presetName = argValue(argv, "--preset");
+    const frameworkName = argValue(argv, "--framework");
+    const { policy, message } = plan({
+      ...(presetName === undefined ? {} : { preset: presetName }),
+      ...(frameworkName === undefined ? {} : { framework: frameworkName as Framework }),
+      out,
+    });
+    if (!argv.includes("--force") && existsSync(out)) {
+      console.error(`${out} already exists; pass --force to overwrite it`);
+      process.exit(1);
+    }
+    await writeFile(out, policy);
+    console.log(message);
+    return;
+  }
   if (command === "hook") {
     const gate = await loadPolicy(argValue(argv, "--policy"));
     const event = JSON.parse((await readStdin()) || "{}") as PreToolUseEvent;

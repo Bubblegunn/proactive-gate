@@ -2,6 +2,8 @@
 
 ## 0.2.0 (unreleased)
 
+`proactive-gate init` writes a readable policy with the ten default checks, appends a named preset before the budget, and prints that preset's sources next to the lines that wire the gate into AI SDK, Mastra, LangChain, OpenAI Agents or none of them. `--list` names the fourteen presets and the four frameworks, and the command refuses to overwrite an existing policy without `--force`. A test compiles the policy every preset produces.
+
 `npm run bench:compare` replays a committed day of 21 candidates for 7 users through an honest hand-rolled policy of five `if` statements and through a gate built from the same fixture, and prints the six disagreements with the reason for each. `test/naive.test.mjs` pins the three shortcuts that policy takes: a fixed UTC offset sends half an hour into quiet hours the day New York leaves daylight time, a UTC-day budget key silences a Tokyo user for nine hours and pays a Los Angeles user twice, and a read-then-write counter lets two deliveries in flight both take the last slot while the counter still reads its limit afterwards.
 
 - A behaviour contract in `spec/`: numbered requirements, fixture and policy JSON Schemas, 27 fixtures any language can run, `spec-lint` in CI, and `replay --fixtures`.
