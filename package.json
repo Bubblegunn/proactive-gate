@@ -43,7 +43,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js test/release.test.mjs test/examples.test.mjs test/naive.test.mjs",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js test/release.test.mjs test/examples.test.mjs test/naive.test.mjs",
     "lint": "tsc -p tsconfig.json --noEmit",
     "spec-lint": "node test/spec-lint.mjs",
     "conformance": "npm run build && node dist/src/cli.js replay --fixtures spec/fixtures",

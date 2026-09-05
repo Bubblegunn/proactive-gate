@@ -392,6 +392,27 @@ if decision.allowed and gate.commit(decision, inp): send(...)
 through a sync `Gate` and an `AsyncGate` (Redis over `redis.asyncio`), with mypy strict, on
 Python 3.11 and 3.13 in CI. See [`python/README.md`](python/README.md).
 
+## Properties, not just examples
+
+`test/properties.test.ts` generates gates, users and candidates from a seeded
+32-bit PRNG and asserts what has to hold for all of them, rather than for the
+cases someone thought of:
+
+- The trace is always a prefix of the declared check order. Nothing is skipped,
+  nothing is reordered, every check reports exactly once, and a stopped decision
+  ends on the check that stopped it with a reason attached.
+- A check marked `nonRejecting` cannot stop a decision even when it returns a
+  rejection on purpose.
+- However many deliveries race, `commit()` hands out exactly `min(racers, limit)`
+  units, and replaying one decision any number of times spends one.
+- `MemoryStore` and `SqliteStore` answer the same random sequence of `get`, `set`,
+  `incr`, `del` and clock movement identically, TTLs included.
+
+The generator is forty lines because the package has no dependencies; a property
+library would shrink failures better. Each assertion prints its seed, so a failure
+reproduces exactly. The race property was checked against a mutant: rewriting
+`consume` as read-then-write, the shortcut in `bench/naive.mjs`, makes it fail.
+
 ## The spec, and writing a second implementation
 
 [`spec/SPEC.md`](spec/SPEC.md) states the behaviour as numbered requirements, and
