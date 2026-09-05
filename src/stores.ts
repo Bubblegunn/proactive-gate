@@ -1,4 +1,8 @@
+import { createRequire } from "node:module";
+import type { DatabaseSync } from "node:sqlite";
 import type { Store } from "./types.js";
+
+const require = createRequire(import.meta.url);
 
 /** In-process store. Correct for one instance, wrong the moment you scale out. */
 export class MemoryStore implements Store {
@@ -79,5 +83,68 @@ export class RedisStore implements Store {
 
   async del(key: string): Promise<void> {
     await this.client.del(key);
+  }
+}
+
+export class SqliteStore implements Store {
+  private readonly database: DatabaseSync;
+  private readonly clock: () => number;
+
+  constructor(path: string, clock: () => number = () => Date.now()) {
+    let DatabaseSync: typeof import("node:sqlite").DatabaseSync;
+    try {
+      ({ DatabaseSync } = require("node:sqlite"));
+    } catch {
+      throw new Error("SqliteStore requires Node.js 22.5 or newer.");
+    }
+    this.database = new DatabaseSync(path);
+    this.clock = clock;
+    this.database.exec(
+      "CREATE TABLE IF NOT EXISTS proactive_gate_store (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL, expires_at INTEGER)",
+    );
+  }
+
+  private live(key: string): { value: string; expiresAt: number | null } | undefined {
+    const row = this.database.prepare("SELECT value, expires_at FROM proactive_gate_store WHERE key = ?").get(key) as
+      | { value: string; expires_at: number | null }
+      | undefined;
+    if (!row) return undefined;
+    if (row.expires_at !== null && row.expires_at <= this.clock()) {
+      this.database.prepare("DELETE FROM proactive_gate_store WHERE key = ?").run(key);
+      return undefined;
+    }
+    return { value: row.value, expiresAt: row.expires_at };
+  }
+
+  async get(key: string): Promise<string | null> {
+    return this.live(key)?.value ?? null;
+  }
+
+  async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+    const expiresAt = ttlSeconds ? this.clock() + ttlSeconds * 1000 : null;
+    this.database
+      .prepare(
+        "INSERT INTO proactive_gate_store (key, value, expires_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, expires_at = excluded.expires_at",
+      )
+      .run(key, value, expiresAt);
+  }
+
+  async incr(key: string, ttlSeconds?: number): Promise<number> {
+    const now = this.clock();
+    const expiresAt = ttlSeconds ? now + ttlSeconds * 1000 : null;
+    const row = this.database
+      .prepare(
+        "INSERT INTO proactive_gate_store (key, value, expires_at) VALUES (?, '1', ?) ON CONFLICT(key) DO UPDATE SET value = CASE WHEN proactive_gate_store.expires_at IS NOT NULL AND proactive_gate_store.expires_at <= ? THEN '1' ELSE CAST(CAST(proactive_gate_store.value AS INTEGER) + 1 AS TEXT) END, expires_at = CASE WHEN proactive_gate_store.expires_at IS NOT NULL AND proactive_gate_store.expires_at <= ? THEN excluded.expires_at ELSE proactive_gate_store.expires_at END RETURNING value",
+      )
+      .get(key, expiresAt, now, now) as { value: string };
+    return Number(row.value);
+  }
+
+  async del(key: string): Promise<void> {
+    this.database.prepare("DELETE FROM proactive_gate_store WHERE key = ?").run(key);
+  }
+
+  close(): void {
+    this.database.close();
   }
 }

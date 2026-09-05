@@ -1,0 +1,12 @@
+changelog:
+  exclude:
+    authors: [dependabot, github-actions]
+  categories:
+    - title: Breaking
+      labels: [breaking]
+    - title: Added
+      labels: [enhancement, feature]
+    - title: Fixed
+      labels: [bug]
+    - title: Everything else
+      labels: ["*"]

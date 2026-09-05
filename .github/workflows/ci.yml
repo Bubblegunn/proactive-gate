@@ -3,19 +3,59 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         node: [20, 22, 24]
+        include:
+          - os: windows-latest
+            node: 24
+          - os: macos-latest
+            node: 24
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
+          cache: npm
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm test
       - run: npm run examples
+  package:
+    # The tarball people install, checked before a tag exists: exports, types, bin, and a real install.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npx publint --strict
+      - run: npx attw --pack . --ignore-rules cjs-resolves-to-esm # ESM only, by design
+      - name: Install the packed tarball in an empty project and run it
+        run: sh scripts/smoke-tarball.sh
+  ci-ok:
+    # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
+    if: always()
+    needs: [test, package]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success

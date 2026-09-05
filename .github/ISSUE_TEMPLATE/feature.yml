@@ -1,0 +1,16 @@
+name: Feature request
+description: A check, store, option or integration you want
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The situation this would handle
+      description: What you are trying to do and what the library does today.
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: What it could look like
+      description: An API sketch or a command line is enough. Say if you want to build it.

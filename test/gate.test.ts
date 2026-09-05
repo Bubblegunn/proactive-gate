@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createGate, MemoryStore, defaultChecks, checks, localClock, inWindow } from "../src/index.js";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createGate, MemoryStore, SqliteStore, defaultChecks, checks, localClock, inWindow } from "../src/index.js";
 import type { Candidate, Store, UserState } from "../src/index.js";
 import { replay, summarize } from "../src/cli.js";
 
@@ -158,6 +161,44 @@ test("weekly budget: resets on the user's local ISO week and commits atomically"
 
   const nextWeek = await gate.evaluate({ ...input, now: new Date("2026-09-07T09:00:00Z") });
   assert.equal(nextWeek.allowed, true);
+});
+
+const sqliteAvailable = Number(process.versions.node.split(".")[0]) >= 22;
+
+test("sqlite store supports get, set, increment, delete and expiration", { skip: !sqliteAvailable }, async () => {
+  let now = 1_000_000;
+  const store = new SqliteStore(":memory:", () => now);
+  assert.equal(await store.get("missing"), null);
+  await store.set("key", "value");
+  assert.equal(await store.get("key"), "value");
+  assert.equal(await store.incr("counter"), 1);
+  assert.equal(await store.incr("counter", 10), 2);
+  assert.equal(await store.get("counter"), "2");
+  await store.set("temporary", "value", 5);
+  assert.equal(await store.get("temporary"), "value");
+  now += 5000;
+  assert.equal(await store.get("temporary"), null);
+  await store.del("key");
+  assert.equal(await store.get("key"), null);
+  store.close();
+});
+
+test("sqlite store preserves values across database connections", { skip: !sqliteAvailable }, async () => {
+  const directory = mkdtempSync(join(tmpdir(), "proactive-gate-"));
+  const path = join(directory, "store.sqlite");
+  try {
+    const first = new SqliteStore(path);
+    await first.set("key", "value");
+    assert.equal(await first.incr("counter"), 1);
+    first.close();
+
+    const second = new SqliteStore(path);
+    assert.equal(await second.get("key"), "value");
+    assert.equal(await second.get("counter"), "1");
+    second.close();
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test("adaptive timing never rejects; it defers and can narrow surfaces", async () => {
