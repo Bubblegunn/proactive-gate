@@ -3,12 +3,15 @@ title: Python
 description: The Python sibling, held to the same fixtures.
 ---
 
+Until the first PyPI release, install from the repository:
+
 ```
-pip install proactive-gate
+pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"
 ```
 
-Python 3.11 or newer, no runtime dependencies. `pip install "proactive-gate[redis]"` adds the
-Redis store.
+Python 3.11 or newer, no runtime dependencies; add `[redis]` for the Redis store. The PyPI
+name `proactive-gate` is reserved for this package and the release workflow publishes there on
+the next tag.
 
 ```python
 from datetime import datetime, timezone

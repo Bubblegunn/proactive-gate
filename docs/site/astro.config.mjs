@@ -19,6 +19,7 @@ export default defineConfig({
         { label: "Policy as data", slug: "policy" },
         { label: "Presets", slug: "presets" },
         { label: "Adapters", slug: "adapters" },
+        { label: "Integrations", slug: "integrations" },
         { label: "Python", slug: "python" },
         { label: "Spec and conformance", slug: "spec" },
         { label: "Playground", link: "/playground/" },
