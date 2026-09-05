@@ -302,6 +302,40 @@ to keep once the checks are scattered:
 - A policy can be replayed over a day of real candidates before it ships, and a non-rejecting
   check cannot reject even if a bug makes it try.
 
+Those are claims, so the repository runs them. `npm run bench:compare` replays a
+committed day of 21 candidates for 7 users through `bench/naive.mjs`, an honest
+hand-rolled policy of five `if` statements, and through a gate built from
+`bench/fixtures/policy.json`:
+
+```
+gate:        11 sent, 10 stopped
+hand-rolled: 13 sent, 8 stopped
+
+6 disagreements, and none of them is a matter of taste:
+  a5  a critical alert: the gate lets priority bypass the cap, the cap in the if statements does not
+  b1  a two-day-old account: the gate holds normal messages back for a week, the if statements never knew
+  c1  the user pressed snooze: the gate defers to when it ends, the if statements have no snooze
+  e1  three dismissals of this type: the gate is silent for a week, the if statements do not track outcomes
+  f4  01:00 in Tokyo, a new local day: the gate resets the cap, the UTC-day key stays on yesterday for nine more hours
+  g4  18:00 in Los Angeles, still the same local day: the UTC-day key already rolled, so the cap pays out twice
+```
+
+The hand-rolled policy is not a straw man. It checks consent, enabled, mute, quiet
+hours and a daily cap, which is what actually gets written, and it takes the three
+shortcuts that actually get taken: a fixed UTC offset per zone, the cap keyed by the
+UTC calendar day, and the cap read then written. `test/naive.test.mjs` pins each one
+against a real instant:
+
+- The clocks change. At `2026-11-01T12:30:00Z` New York has left daylight time, so it is
+  07:30 there and inside quiet hours; an offset captured in the summer computes 08:00 and
+  sends. That is twice a year, for every zone that observes it.
+- The day boundary is local. The same UTC-day key silences the Tokyo user for the nine
+  hours between local midnight and 09:00, and hands the Los Angeles user a second full
+  budget at 17:00 while it is still their afternoon.
+- Two deliveries are in flight. Read, compare, write lets both take the last slot, and the
+  counter still reads 2 afterwards, so nothing looks wrong. `commit()` takes the unit with
+  an atomic increment and returns `false` to the loser.
+
 A feature-flag system does a different job better: rolling a behaviour out to a percentage
 of users, per-tenant overrides, and an audit trail of who flipped what. Use flags to decide
 whether the gate runs at all, and the gate to decide whether this message reaches this

@@ -2,6 +2,8 @@
 
 ## 0.2.0 (unreleased)
 
+`npm run bench:compare` replays a committed day of 21 candidates for 7 users through an honest hand-rolled policy of five `if` statements and through a gate built from the same fixture, and prints the six disagreements with the reason for each. `test/naive.test.mjs` pins the three shortcuts that policy takes: a fixed UTC offset sends half an hour into quiet hours the day New York leaves daylight time, a UTC-day budget key silences a Tokyo user for nine hours and pays a Los Angeles user twice, and a read-then-write counter lets two deliveries in flight both take the last slot while the counter still reads its limit afterwards.
+
 - A behaviour contract in `spec/`: numbered requirements, fixture and policy JSON Schemas, 27 fixtures any language can run, `spec-lint` in CI, and `replay --fixtures`.
 - Policy as data: `createGate({ policy })`, `compilePolicy`, `--policy policy.json`, `examples/policy.json`.
 - Outcome model: `defer` with `retryAt`, shadow mode, `nearLimit` notes on budgets, `hooks` (before, after, error, finally), a decision `id` and an idempotent `commit`.

@@ -1,0 +1,16 @@
+{
+  "specVersion": "1.0.0",
+  "onStoreError": "open",
+  "checks": [
+    { "id": "consent" },
+    { "id": "enabled" },
+    { "id": "mode", "allow": ["normal", "commute"] },
+    { "id": "snooze", "defer": true },
+    { "id": "mute" },
+    { "id": "intensity" },
+    { "id": "quietHours", "priorityFloor": "high" },
+    { "id": "trustRamp", "days": 7, "minPriority": "high" },
+    { "id": "dismissalCooldown", "dismissals": 3, "withinDays": 30, "silenceDays": 7 },
+    { "id": "dailyBudget", "limit": 2, "bypassPriority": "critical" }
+  ]
+}
