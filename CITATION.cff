@@ -6,6 +6,15 @@ date-released: "2026-09-05"
 authors:
   - family-names: "Genc"
     given-names: "Efe"
+keywords:
+  - "proactive-agents"
+  - "notification-policy"
+  - "interruptibility"
+  - "human-in-the-loop"
+  - "rate-limiting"
+  - "conformance-testing"
+  - "specification"
+  - "llm-agents"
 repository-code: "https://github.com/Bubblegunn/proactive-gate"
 license: MIT
 type: software
