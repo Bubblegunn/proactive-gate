@@ -22,7 +22,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm publish --access public
-      - run: gh release create "$TAG" --verify-tag --generate-notes
+      - name: Release notes are the CHANGELOG entry, then the generated list of pull requests
+        run: |
+          awk '/^## /{n++} n==1' CHANGELOG.md > notes.md
+          gh release create "$TAG" --verify-tag --generate-notes --notes-file notes.md
         env:
           TAG: ${{ github.ref_name }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
