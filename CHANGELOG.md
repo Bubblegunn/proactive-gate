@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1 (unreleased)
+## 0.2.1 (2026-09-05)
 
 The utility floor's threshold was attributed to "PRISM". No system of that name appears in Horvitz, Jacobs and Hovel, "Attention-Sensitive Alerting", UAI 1999, nor on Horvitz's publication index; the system in that paper is named Priorities. Corrected in the source, both READMEs, the documentation site and the generated API page. The mathematics is unchanged and is now stated directly: alerting costs `(1 - p) * cFA`, silence costs `p * cFN`, so the threshold is the classical Bayes decision boundary.
 
