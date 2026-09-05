@@ -1,0 +1,58 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "adaptive-timing/placeholder",
+  "description": "A JSON policy cannot carry a next-good-moment function; the placeholder passes and keeps the trace shape.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "adaptiveTiming"
+      },
+      {
+        "id": "dailyBudget"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "adaptiveTiming",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

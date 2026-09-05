@@ -1,0 +1,134 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "budget/weekly-iso-week",
+  "description": "The weekly counter is keyed on the local ISO week.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "weeklyBudget",
+        "limit": 2
+      }
+    ]
+  },
+  "store_seed": {
+    "weeklyBudget:u1:2026-W36": "1"
+  },
+  "tests": [
+    {
+      "description": "Friday 4 Sep 2026 is week 36",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ],
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u1:2026-W36": "2"
+        }
+      }
+    },
+    {
+      "description": "week 36 is full",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "Monday 7 Sep is week 37",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-07T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    }
+  ]
+}

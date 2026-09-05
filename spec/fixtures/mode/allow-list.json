@@ -1,0 +1,139 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "mode/allow-list",
+  "description": "Only listed operating modes receive proactive messages; an undefined mode passes.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "mode",
+        "allow": [
+          "normal",
+          "commute"
+        ]
+      },
+      {
+        "id": "mute"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "focus mode rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "focus",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "mode",
+        "trace": [
+          "consent",
+          "mode"
+        ],
+        "reason_pattern": "focus"
+      }
+    },
+    {
+      "description": "commute passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "commute",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "mode",
+          "mute"
+        ]
+      }
+    },
+    {
+      "description": "muted type rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "mutedTypes": [
+            "reminder"
+          ]
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "mute",
+        "trace": [
+          "consent",
+          "mode",
+          "mute"
+        ]
+      }
+    }
+  ]
+}

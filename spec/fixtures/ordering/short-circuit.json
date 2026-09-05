@@ -1,0 +1,235 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "ordering/short-circuit",
+  "description": "Checks run in policy order and stop at the first rejection.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "killSwitch"
+      },
+      {
+        "id": "consent"
+      },
+      {
+        "id": "enabled"
+      },
+      {
+        "id": "mode",
+        "allow": [
+          "normal"
+        ]
+      },
+      {
+        "id": "snooze"
+      },
+      {
+        "id": "mute"
+      },
+      {
+        "id": "intensity"
+      },
+      {
+        "id": "quietHours",
+        "priorityFloor": "critical"
+      },
+      {
+        "id": "trustRamp"
+      },
+      {
+        "id": "dismissalCooldown"
+      },
+      {
+        "id": "adaptiveTiming"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 5
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "everything passes; the trace lists all twelve",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "adaptiveTiming",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "consent rejects before quiet hours gets a chance",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": false,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T20:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent",
+        "trace": [
+          "killSwitch",
+          "consent"
+        ]
+      }
+    },
+    {
+      "description": "surfaces are the candidate's filtered by the user's",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "surfaces": [
+            "feed"
+          ]
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "adaptiveTiming",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "critical priority passes quiet hours",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "critical",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T20:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "adaptiveTiming",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}
