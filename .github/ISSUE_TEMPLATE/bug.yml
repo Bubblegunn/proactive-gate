@@ -26,13 +26,13 @@ body:
     id: version
     attributes:
       label: Package version
-      placeholder: "0.1.2"
+      placeholder: "0.2.0 (npm) or 0.2.0 (PyPI)"
     validations:
       required: true
   - type: input
     id: node
     attributes:
-      label: Node version and OS
-      placeholder: "24.4.0, macOS 15"
+      label: Runtime and OS
+      placeholder: "Node 24.4.0 or Python 3.13, macOS 15"
     validations:
       required: true

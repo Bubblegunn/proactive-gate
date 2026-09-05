@@ -6,14 +6,27 @@ proactive-gate decides whether a proactive AI agent may reach a user right now, 
 
 ```
 npm ci
-npm test        # tsc build, then node:test over dist/test/gate.test.js
+npm test               # tsc build, spec-lint, then node:test over dist/test
+cd python
+pip install -e ".[dev]"
+python -m mypy --strict src/proactive_gate tests && pytest
 ```
 
-Node 20 or newer and git are required. Note that Node 20's test runner does not expand glob patterns, so test files are named explicitly in `package.json`.
+Node 20 or newer, Python 3.11 or newer, and git. Node 20's test runner does not expand glob patterns, so test files are named explicitly in `package.json`.
 
-## Adding to the tool
+## Two implementations, one contract
 
-To add a check: create a factory in `src/checks.ts` returning `{ id, run(ctx) }` (set `nonRejecting: true` if it may only adjust), add it to `defaultChecks()` only if it belongs in the default order, document it in the README table, and add a test in `test/gate.test.ts` that shows both the pass and the reject reason.
+`spec/SPEC.md` and the fixtures under `spec/fixtures` are the authority; the TypeScript and Python packages are both held to them in CI. A behaviour change therefore lands in three places: a fixture (or a new expectation in an existing one), the TypeScript check, and the Python check. If you can only do one language, open the pull request with the fixture and your language and say so; the other half is a small follow-up.
+
+## Adding a check
+
+TypeScript: a factory in `src/checks.ts` returning `{ id, run(ctx) }` (set `nonRejecting: true` if it may only adjust; add `consume(ctx)` if it is a budget), registered in `KNOWN_CHECKS` in `src/policy.ts` so JSON policies can name it.
+Python: a class in `python/src/proactive_gate/checks.py` with `keys(ctx)` and `run(ctx, values)`, registered in `KNOWN_CHECKS` in `policy.py`.
+Then a fixture under `spec/fixtures/<area>/<name>.json` with a pass and a reject case, a row in the README table, and `defaultChecks()` only if it belongs in the default order.
+
+## Adding a preset
+
+A preset is an ordered list of existing checks plus its sources and a note on what it leaves out. Add it to `src/presets.ts` and `python/src/proactive_gate/presets.py` with the same name, a fixture under `spec/fixtures/presets/`, and a row in the README table. Cite the page the numbers come from; when official sources disagree, pick the stricter documented value and say so in the note.
 
 ## Pull requests
 
@@ -29,6 +42,6 @@ Maintainers only.
 
 1. Bump `version` in `package.json` and add a `CHANGELOG.md` entry.
 2. Commit, then `git tag vX.Y.Z && git push origin main --tags`.
-3. The `release` workflow runs the tests and publishes to npm with provenance (`npm publish --provenance`), so every published tarball is linked to the exact commit and workflow run that built it.
+3. The `release` workflow runs the tests and publishes to npm with provenance, so every published tarball is linked to the exact commit and workflow run that built it. The same run builds `python/dist` and publishes it to PyPI through the `pypi` environment.
 
-The workflow uses npm trusted publishing and holds no token. Before the first tagged release, the maintainer configures the trusted publisher on npmjs.com: package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`.
+Both publishes use trusted publishing and hold no token. Before the first tagged release the maintainer configures the trusted publisher on npmjs.com (package settings, Trusted publishing, GitHub Actions, repository `Bubblegunn/proactive-gate`, workflow `release.yml`) and on pypi.org (project `proactive-gate`, owner `Bubblegunn`, repository `proactive-gate`, workflow `release.yml`, environment `pypi`). Keep `version` in `package.json` and `python/pyproject.toml` equal.
