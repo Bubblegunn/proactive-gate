@@ -218,12 +218,56 @@ Both ship off. They read numbers the caller puts on the candidate.
 
 Neither check ships a model, a cost or a probability. `costFalseAlarm`, `costMissedHelp`,
 `interruptCost` and `staleness` are yours to measure, and the package has no opinion about
-what an interruption costs your users. The rules come from Eric Horvitz's work on
-attention-sensitive alerting and bounded deferral; the field measurement people usually
-reach for is [Iqbal and Horvitz, "Disruption and recovery of computing tasks", CHI
+what an interruption costs your users. The field measurement people usually reach for is
+[Iqbal and Horvitz, "Disruption and recovery of computing tasks", CHI
 2007](https://erichorvitz.com/CHI_2007_Iqbal_Horvitz.pdf), which logged real users and put
 the return to a suspended task in the region of 11 to 16 minutes. The widely repeated "23
 minutes 15 seconds" figure is not from a peer-reviewed paper and is not used here.
+
+`boundedDeferral` implements the derivation in [Achlioptas and Horvitz, "Principles of
+Bounded Deferral for Balancing Information Awareness with
+Interruption"](http://erichorvitz.com/Bounded_Deferral.pdf): expected cost is stationary
+where `f'(t0) = lambda * c`, so a quadratic staleness `f(t) = s * t²` gives
+`t* = lambda * c / (2 * s)`.
+
+## Which defaults are measured and which are ours
+
+Every default here is either taken from a study, which is then named, or chosen by
+judgement, which is then admitted. There is one of the first kind.
+
+| default | where it comes from |
+|---|---|
+| `lambda = 1/43` in `boundedDeferral` | Measured. Achlioptas and Horvitz above: 113 Microsoft employees (42 program managers, 25 developers, 19 testers, 10 administrators, 9 managers, 4 in sales and marketing, 4 research scientists), three sequential business days between 10am and 4pm, 4,803 busy situations, mean busy session 43.12 s, standard deviation 51.79 s |
+| `staleness = 0.0001`, `boundSeconds = 240` | Scale choices. Only the ratio `interruptCost / staleness` changes `t*`, so this pair is one way to write "a few minutes". Nothing fixes either number |
+| `trustRamp` 7 days | Ours. No study sets it |
+| `dismissalCooldown` 3 in 30 days buying 7 days | Ours. A dismissal is the clearest signal a user gives, so the shape is defensible; the three numbers are not from anywhere |
+| `dailyBudget` 5 | Ours, in a supported direction. Pielot and Rello (below) cite an in-situ log study where participants received a median of 63.5 notifications a day, so a handful sits far below the ambient load. Nothing in that work says five |
+
+The spread inside the one measured number is worth more than the number. The same paper's
+two-subject analysis puts the mean time to a lower-cost state after an alert at 11 seconds
+for one person and 101 seconds for the other, so the variation between two people is larger
+than the default itself. Measure your own users before you trust it.
+
+### Deferring is supported; silence is not free
+
+The strongest evidence that deferral works at all is [Okoshi, Tsubouchi and Tokuda,
+"Real-world large-scale study on adaptive notification scheduling on smartphones",
+*Pervasive and Mobile Computing* 50:1-24
+(2018)](https://keio.elsevierpure.com/en/publications/real-world-large-scale-study-on-adaptive-notification-scheduling-/):
+the Yahoo! JAPAN Android app, more than 680,000 users over three weeks, where holding a
+notification until an interruptible moment was detected cut response time by 49.7 percent
+against immediate delivery. That supports the direction. It says nothing about any window,
+budget or cooldown in this package.
+
+The counterweight belongs here too, because a gate that suppresses is not free. In [Pielot
+and Rello, "Productive, Anxious, Lonely: 24 Hours Without Push Notifications", MobileHCI
+2017](https://arxiv.org/abs/1612.02314), 30 volunteers switched notifications off for a day.
+They were less distracted, and they also worried about missing information, checked their
+phones more often, and felt less connected to the people around them. Fifteen of the thirty
+agreed they were afraid of missing something urgent. Three people approached for the study
+refused outright, because their workplace expected them to be reachable. A silence your user
+did not choose costs them something, and that cost does not appear in any trace this library
+prints.
 
 ## Presets: platform quotas and legal limits, with sources
 

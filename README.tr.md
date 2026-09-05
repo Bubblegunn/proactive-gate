@@ -189,6 +189,43 @@ bir birim tüketmez.
 - `boundedDeferral({ lambda, interruptCost, staleness, boundSeconds })` asla reddetmez.
   `candidate.busy` doğruysa `deliverAt` değerini `now + t*` yapar;
   `t* = min(bound, lambda * interruptCost / (2 * staleness))`, varsayılanlar 116 saniye verir.
+  Türetim [Achlioptas ve Horvitz, "Principles of Bounded
+  Deferral"](http://erichorvitz.com/Bounded_Deferral.pdf) makalesinden.
+
+## Hangi varsayılan ölçüldü, hangisi bizim tercihimiz
+
+Buradaki her varsayılan ya bir çalışmadan geliyor ve kaynağı yazılıyor, ya da bir kanaat ve
+bunu söylüyoruz. Birinci türden tek bir tane var.
+
+| varsayılan | nereden geliyor |
+|---|---|
+| `boundedDeferral` içindeki `lambda = 1/43` | Ölçüm. Yukarıdaki makale: 113 çalışan, üç ardışık iş günü, 10.00 ile 16.00 arası, 4.803 meşgul durum, ortalama meşguliyet süresi 43,12 saniye, standart sapma 51,79 saniye |
+| `staleness = 0.0001`, `boundSeconds = 240` | Ölçek tercihi. `t*` yalnızca `interruptCost / staleness` oranına bağlı; bu çift "birkaç dakika" demenin bir yolu, iki sayıyı da sabitleyen bir bulgu yok |
+| `trustRamp` 7 gün | Bizim. Hiçbir çalışma bu sayıyı vermiyor |
+| `dismissalCooldown` 30 günde 3 kapatma, 7 gün sessizlik | Bizim. Kapatma, kullanıcının verdiği en net sinyal olduğu için biçim savunulabilir; üç sayı bize ait |
+| `dailyBudget` 5 | Bizim, ama yönü destekli. Pielot ve Rello'nun aktardığı yerinde günlük kayıt çalışmasında katılımcılar günde ortanca 63,5 bildirim alıyor; bir avuç mesaj bunun çok altında. O çalışma "beş" demiyor |
+
+Ölçülen tek sayının içindeki dağılım, sayının kendisinden değerli: aynı makalenin iki kişilik
+çözümlemesinde uyarı sonrası düşük maliyetli duruma geçiş ortalaması birinde 11, diğerinde
+101 saniye. İki kişi arasındaki fark varsayılanın kendisinden büyük.
+
+### Ertelemenin dayanağı var, susmanın bedeli de var
+
+Ertelemenin işe yaradığına dair en güçlü kanıt [Okoshi, Tsubouchi ve Tokuda, *Pervasive and
+Mobile Computing* 50:1-24
+(2018)](https://keio.elsevierpure.com/en/publications/real-world-large-scale-study-on-adaptive-notification-scheduling-/):
+Yahoo! JAPAN Android uygulaması, 680.000'den fazla kullanıcı, üç hafta; bildirimi uygun ana
+kadar bekletmek yanıt süresini yüzde 49,7 kısaltmış. Bu, yönü destekler; bu paketteki
+hiçbir pencereyi, bütçeyi veya bekleme süresini desteklemez.
+
+Karşı ağırlık da burada durmalı, çünkü susturan bir kapı bedelsiz değil. [Pielot ve Rello,
+MobileHCI 2017](https://arxiv.org/abs/1612.02314) çalışmasında 30 gönüllü bir gün boyunca
+bildirimleri kapatmış. Daha az dağılmışlar, ama aynı zamanda bir şeyi kaçırmaktan
+endişelenmiş, telefonlarına daha sık bakmış ve çevrelerinden kopuk hissetmişler. Otuz kişiden
+on beşi acil bir şeyi kaçırmaktan korktuğunu söylemiş. Çalışma için görüşülen üç kişi,
+işyerinde sürekli ulaşılabilir olmaları beklendiği için katılmayı reddetmiş. Kullanıcının
+seçmediği bir sessizliğin bir bedeli var ve o bedel bu kütüphanenin yazdığı hiçbir izde
+görünmüyor.
 
 ## Hazır paketler: platform kotaları ve yasal sınırlar, kaynaklarıyla
 

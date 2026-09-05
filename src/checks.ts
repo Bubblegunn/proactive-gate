@@ -145,6 +145,9 @@ export function quietHours(options: { priorityFloor?: Priority } = {}): Check {
  * For the first `days` after sign-up the user hears from the system only at
  * or above `minPriority`. A proactive assistant is least calibrated exactly
  * when the user is least forgiving.
+ *
+ * Seven days is a judgement, not a finding. No study sets this number, and
+ * none of the literature the package cites speaks to it.
  */
 export function trustRamp(options: { days?: number; minPriority?: Priority } = {}): Check {
   const days = options.days ?? 7;
@@ -165,6 +168,10 @@ export function trustRamp(options: { days?: number; minPriority?: Priority } = {
  * When the user has dismissed `dismissals` candidates of a type within
  * `withinDays`, that type stays silent for `silenceDays`. Fed by
  * gate.record(userId, candidate, "dismissed").
+ *
+ * Three in thirty buying seven days is a judgement, not a finding. The shape
+ * is defensible, since a dismissal is the clearest signal a user gives; the
+ * three numbers are ours and no study sets them.
  */
 export function dismissalCooldown(options: { dismissals?: number; withinDays?: number; silenceDays?: number } = {}): Check {
   const n = options.dismissals ?? 3;
@@ -267,12 +274,28 @@ export const weeklyBudgetKey = (userId: string, now: Date, timezone?: string) =>
 
 export const monthlyBudgetKey = (userId: string, now: Date, timezone?: string) => `monthlyBudget:${userId}:${localDay(now, timezone).slice(0, 7)}`;
 
-/** At most `limit` deliveries per user per local day. */
+/**
+ * At most `limit` deliveries per user per local day.
+ *
+ * Five is a judgement, not a finding. The direction has support: Pielot and
+ * Rello, "Productive, Anxious, Lonely: 24 Hours Without Push Notifications",
+ * MobileHCI 2017 (https://arxiv.org/abs/1612.02314), cite an in-situ log study
+ * (Pielot, Church and de Oliveira, MobileHCI 2014) in which participants
+ * received a median of 63.5 notifications a day, so a handful is far below the
+ * ambient load. Nothing in that work says five.
+ */
 export function dailyBudget(options: BudgetOptions = {}): BudgetCheck {
   return budget({ id: "dailyBudget", label: "daily budget", defaultLimit: 5, keyFor: ({ user, now }) => budgetKey(user.id, now, user.timezone), ttlSeconds: 2 * DAY_SECONDS }, options);
 }
 
-/** At most `limit` deliveries per user per local ISO week. */
+/**
+ * At most `limit` deliveries per user per local ISO week.
+ *
+ * The week is the ISO week, so the counter resets on Monday morning in the
+ * user's zone. For a Sunday-to-Thursday working week that reset lands
+ * mid-week. Documented rather than fixed; changing it would move every
+ * existing key.
+ */
 export function weeklyBudget(options: BudgetOptions = {}): BudgetCheck {
   return budget({ id: "weeklyBudget", label: "weekly budget", defaultLimit: 20, keyFor: ({ user, now }) => weeklyBudgetKey(user.id, now, user.timezone), ttlSeconds: 8 * DAY_SECONDS }, options);
 }
@@ -312,10 +335,29 @@ export function utilityFloor(options: { costFalseAlarm: number; costMissedHelp: 
 const round3 = (n: number) => Math.round(n * 1000) / 1000;
 
 /**
- * Bounded deferral (Horvitz): when the user is busy, wait t* = min(bound,
+ * Bounded deferral: when the user is busy, wait t* = min(bound,
  * lambda * interruptCost / (2 * staleness)), the optimum of a quadratic
  * staleness loss against the cost of interrupting a busy person, with the
  * user becoming free at rate lambda. Never rejects; only moves deliverAt.
+ *
+ * The derivation is Achlioptas and Horvitz, "Principles of Bounded Deferral
+ * for Balancing Information Awareness with Interruption", Microsoft Research
+ * (http://erichorvitz.com/Bounded_Deferral.pdf): the expected cost is
+ * stationary where f'(t0) = lambda * c with f''(t0) > 0, so a quadratic
+ * staleness f(t) = s * t^2 gives t* = lambda * c / (2 * s).
+ *
+ * `lambda` defaults to 1/43 from the same paper's field study: 113 Microsoft
+ * employees (42 program managers, 25 developers, 19 testers, 10 administrators,
+ * 9 managers, 4 in sales and marketing, 4 research scientists), three
+ * sequential business days between 10am and 4pm, 4,803 busy situations, mean
+ * busy-session duration 43.12 s with a standard deviation of 51.79 s. That
+ * spread matters: the same paper's two-subject Interruption Workbench analysis
+ * puts the mean time to a lower-cost state after an alert at 11 s for one
+ * person and 101 s for the other. Measure your own users before trusting it.
+ *
+ * `staleness` and `boundSeconds` are scale choices, not findings. Only the
+ * ratio interruptCost / staleness affects t*, so the pair below is one way to
+ * express "a few minutes"; nothing in the literature fixes either number.
  */
 export function boundedDeferral(options: {
   lambda?: number;
