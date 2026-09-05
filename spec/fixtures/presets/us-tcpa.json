@@ -1,0 +1,90 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "presets/us-tcpa",
+  "description": "usTcpa allows 08:00 to 21:00 in the user's zone.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "preset": "usTcpa"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "21:30 Chicago rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Chicago",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T02:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "window:tcpa",
+        "trace": [
+          "consent",
+          "window:tcpa"
+        ]
+      }
+    },
+    {
+      "description": "09:00 Chicago passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Chicago",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "window:tcpa"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "presets/kr-network-act-50",
+  "description": "krNetworkAct50 needs ad consent always and night consent 21:00 to 08:00.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "krNetworkAct50"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "no ad consent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Seoul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T03:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:ad",
+        "trace": [
+          "consent:ad"
+        ]
+      }
+    },
+    {
+      "description": "ad consent at 12:00 KST passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Seoul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "ad": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T03:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:ad",
+          "consent:night"
+        ]
+      }
+    },
+    {
+      "description": "23:00 KST without night consent rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Seoul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "ad": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:night",
+        "trace": [
+          "consent:ad",
+          "consent:night"
+        ]
+      }
+    },
+    {
+      "description": "23:00 KST with night consent passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Seoul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "ad": true,
+            "night": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:ad",
+          "consent:night"
+        ]
+      }
+    }
+  ]
+}

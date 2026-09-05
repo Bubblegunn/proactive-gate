@@ -1,0 +1,170 @@
+{
+  "spec_version": "1.0.0",
+  "since": "1.0.0",
+  "name": "presets/cn-minor-mode",
+  "description": "cnMinorMode restricts minors to 06:00 to 22:00 China time and one message a day; adults pass.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "preset": "cnMinorMode"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "minor at 23:00 CST rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T15:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "window:minor",
+        "trace": [
+          "consent",
+          "window:minor"
+        ]
+      }
+    },
+    {
+      "description": "adult at 23:00 CST passes both",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": false
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T15:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "window:minor",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "minor at noon CST: first message allowed and consumed",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T04:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "window:minor",
+          "dailyBudget"
+        ],
+        "commit": true
+      }
+    },
+    {
+      "description": "minor at noon CST: second message rejected",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T04:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "window:minor",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}
