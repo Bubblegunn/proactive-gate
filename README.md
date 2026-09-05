@@ -308,8 +308,8 @@ person now.
 
 | subpath | framework | where the gate sits |
 |---|---|---|
-| `proactive-gate/ai-sdk` | Vercel AI SDK | answers a tool's `needsApproval` ([`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts)) |
-| `proactive-gate/mastra` | Mastra | an output processor before the send ([`examples/mastra.ts`](examples/mastra.ts)) |
+| `proactive-gate/ai-sdk` | Vercel AI SDK | answers a tool's `needsApproval` ([`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts); runnable offline: [`examples/ai-sdk/`](examples/ai-sdk/)) |
+| `proactive-gate/mastra` | Mastra | an output processor before the send ([`examples/mastra.ts`](examples/mastra.ts); runnable offline: [`examples/mastra/`](examples/mastra/)) |
 | `proactive-gate/langchain` | LangChain | middleware around the send tool |
 | `proactive-gate/openai-agents` | OpenAI Agents | a guardrail |
 | `npx proactive-gate hook` | Claude Code | a `PreToolUse` hook ([`examples/claude-code-hook.json`](examples/claude-code-hook.json)) |
@@ -320,6 +320,12 @@ approval. The pattern is the same everywhere: the model decides whether there is
 say, `gate.evaluate` decides whether it may be said now, and `gate.commit` runs right before
 the message leaves. [`examples/langgraph.ts`](examples/langgraph.ts) shows the same thing
 inside a LangGraph node.
+
+Two of the examples run without the framework installed and without a network: `node
+examples/mastra/run.mjs` makes the same `processOutputResult` call Mastra makes, over a day of
+candidates with the clock taken from each line, and `node examples/ai-sdk/run.mjs` answers a
+day of tool-approval requests, one of which is a critical alert that a legal window (the TCPA
+preset) still refuses. Both are part of `npm run examples` and of the test suite.
 
 ## Python
 

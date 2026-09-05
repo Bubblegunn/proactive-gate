@@ -10,6 +10,7 @@
 - Adapters on subpaths for the Vercel AI SDK, Mastra, LangChain and OpenAI Agents, and a Claude Code `PreToolUse` hook (`proactive-gate hook`).
 - A Python sibling in `python/` (sync and async gates, Memory, SQLite and Redis stores) that passes the same fixtures.
 - Docs site with a browser playground at https://bubblegunn.github.io/proactive-gate/.
+- Runnable adapter examples that need neither the framework nor a network: `examples/mastra/` and `examples/ai-sdk/`, each with a JSON policy and a day of candidates, run by `npm run examples` and pinned by tests.
 
 ## 0.1.2 (2026-09-05)
 

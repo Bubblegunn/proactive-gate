@@ -216,8 +216,8 @@ birbiriyle çelişir ve not hangi değerin neden seçildiğini söyler.
 
 | alt yol | framework | kapı nerede durur |
 |---|---|---|
-| `proactive-gate/ai-sdk` | Vercel AI SDK | bir aracın `needsApproval` sorusunu yanıtlar |
-| `proactive-gate/mastra` | Mastra | gönderimden önce bir çıktı işlemcisi |
+| `proactive-gate/ai-sdk` | Vercel AI SDK | bir aracın `needsApproval` sorusunu yanıtlar (çevrimdışı çalışan örnek: [`examples/ai-sdk/`](examples/ai-sdk/)) |
+| `proactive-gate/mastra` | Mastra | gönderimden önce bir çıktı işlemcisi (çevrimdışı çalışan örnek: [`examples/mastra/`](examples/mastra/)) |
 | `proactive-gate/langchain` | LangChain | gönderim aracının çevresinde middleware |
 | `proactive-gate/openai-agents` | OpenAI Agents | bir guardrail |
 | `npx proactive-gate hook` | Claude Code | bir `PreToolUse` kancası ([`examples/claude-code-hook.json`](examples/claude-code-hook.json)) |

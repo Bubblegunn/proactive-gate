@@ -43,12 +43,12 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js test/release.test.mjs",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js test/release.test.mjs test/examples.test.mjs",
     "lint": "tsc -p tsconfig.json --noEmit",
     "spec-lint": "node test/spec-lint.mjs",
     "conformance": "npm run build && node dist/src/cli.js replay --fixtures spec/fixtures",
     "prepublishOnly": "npm test",
-    "examples": "npm run build && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.js --commit && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.json --commit",
+    "examples": "npm run build && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.js --commit && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.json --commit && node examples/mastra/run.mjs && node examples/ai-sdk/run.mjs",
     "bench": "npm run build && node bench/evaluate.mjs",
     "release": "node scripts/release.mjs",
     "release-gate": "npm run build && node scripts/release-gate.mjs"

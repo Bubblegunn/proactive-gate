@@ -1,0 +1,12 @@
+{
+  "specVersion": "1.0.0",
+  "onStoreError": "open",
+  "checks": [
+    { "id": "consent" },
+    { "id": "enabled" },
+    { "id": "quietHours", "priorityFloor": "high" },
+    { "id": "trustRamp", "days": 7, "minPriority": "high" },
+    { "preset": "usTcpa" },
+    { "id": "dailyBudget", "limit": 2, "bypassPriority": "critical", "nearLimit": 0.5 }
+  ]
+}
