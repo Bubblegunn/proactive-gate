@@ -2,7 +2,7 @@
 // Structural validation of every fixture and example policy, with no dependencies.
 // It is not a full JSON Schema validator: it checks the shape the schemas describe.
 import { readFile, readdir } from "node:fs/promises";
-import { join } from "node:path";
+import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -41,7 +41,7 @@ function checkFixture(file, fx) {
   for (const key of Object.keys(fx)) if (!["spec_version", "since", "name", "description", "policy", "store_seed", "tests"].includes(key)) fail(file, `unknown key ${key}`);
   if (fx.spec_version !== specVersion) fail(file, `spec_version ${fx.spec_version} is not ${specVersion}`);
   if (!/^[a-z0-9-]+\/[a-z0-9-]+$/.test(fx.name ?? "")) fail(file, "name must be area/name");
-  const expectedName = file.replace(/.*spec\/fixtures\//, "").replace(/\.json$/, "");
+  const expectedName = relative(join(root, "spec/fixtures"), file).split(sep).join("/").replace(/\.json$/, "");
   if (fx.name !== expectedName) fail(file, `name ${fx.name} does not match path ${expectedName}`);
   checkPolicy(file, fx.policy);
   if (fx.store_seed) for (const [k, v] of Object.entries(fx.store_seed)) if (typeof v !== "string") fail(file, `store_seed.${k} must be a string`);
