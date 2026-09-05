@@ -2,6 +2,15 @@
 
 English | [Türkçe](README.tr.md)
 
+<p>
+  <img src="https://img.shields.io/npm/v/proactive-gate?style=flat-square&color=111111&label=npm" alt="npm">
+  <img src="https://img.shields.io/npm/dm/proactive-gate?style=flat-square&color=111111" alt="npm downloads">
+  <img src="https://img.shields.io/github/actions/workflow/status/Bubblegunn/proactive-gate/ci.yml?style=flat-square&color=111111&label=ci" alt="ci">
+  <img src="https://img.shields.io/bundlephobia/minzip/proactive-gate?style=flat-square&color=111111" alt="minzipped size">
+  <img src="https://img.shields.io/github/stars/Bubblegunn/proactive-gate?style=flat-square&color=111111" alt="stars">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT">
+</p>
+
 Decide whether a proactive AI agent may reach a user right now, and log why not.
 
 A proactive assistant has two halves. The generating half decides what is worth

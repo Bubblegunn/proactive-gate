@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, cite it as below."
+title: "proactive-gate"
+version: "0.1.1"
+date-released: "2026-09-05"
+authors:
+  - family-names: "Genc"
+    given-names: "Efe"
+repository-code: "https://github.com/Bubblegunn/proactive-gate"
+license: MIT
+type: software
+abstract: "Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, a replay CLI."

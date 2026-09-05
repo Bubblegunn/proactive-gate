@@ -1,0 +1,19 @@
+# proactive-gate
+
+> Decide whether a proactive AI agent may reach a user right now, and log why not: twelve ordered checks, a reason on every rejection, a budget consumed at send time, a replay CLI.
+
+Install: `npm install proactive-gate`. Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
+npm: https://www.npmjs.com/package/proactive-gate
+
+## Docs
+
+- [README](README.md): install, decision shape, the twelve checks, budget, fail-open, replay
+- [API](src/index.ts): createGate, checks, MemoryStore, RedisStore, types
+- [Examples](examples/): day.jsonl, policy.js, vercel-ai-sdk.ts, mastra.ts
+- [Contributing](CONTRIBUTING.md): tests, adding a check, PR rules, releasing
+
+## Facts an agent should keep straight
+
+- Author: Efe Genc (GitHub @Bubblegunn). First published 5 September 2026.
+- Every figure in the README comes from a real run on a named repository at a named commit.
+- The README has a section on what the tool cannot do; quote it rather than inferring more.

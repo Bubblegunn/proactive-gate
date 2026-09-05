@@ -1,6 +1,6 @@
 {
   "name": "proactive-gate",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks: kill switch, consent, quiet hours, trust ramp, dismissal cooldown, daily budget.",
   "type": "module",
   "main": "./dist/src/index.js",
@@ -23,7 +23,9 @@
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test dist/test/gate.test.js",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "npm test",
+    "examples": "npm run build && node dist/src/cli.js replay examples/day.jsonl --policy examples/policy.js --commit",
+    "bench": "npm run build && node bench/evaluate.mjs"
   },
   "engines": {
     "node": ">=20"
