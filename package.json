@@ -50,6 +50,6 @@
   "homepage": "https://github.com/Bubblegunn/proactive-gate#readme",
   "devDependencies": {
     "@types/node": "^22.15.0",
-    "typescript": "^5.8.0"
+    "typescript": "^7.0.2"
   }
 }
