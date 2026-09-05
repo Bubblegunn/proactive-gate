@@ -227,6 +227,23 @@ işyerinde sürekli ulaşılabilir olmaları beklendiği için katılmayı redde
 seçmediği bir sessizliğin bir bedeli var ve o bedel bu kütüphanenin yazdığı hiçbir izde
 görünmüyor.
 
+## Benimsemeden önce bilmeniz gereken iki sınır
+
+İkisi de hata değil ve ikisi de testle sabitlendi, böylece ileride değişecekse bilerek değişir.
+
+**Hafta, ISO haftasıdır; haftalık bütçe pazartesi yenilenir.** Çalışma haftası pazardan
+perşembeye uzanan yerlerde bu yenilenme haftanın birinci gününe denk gelir: pazar günü
+bütçesini harcayan bir kullanıcı pazartesi sabahı bütçesini geri alır ve önünde hâlâ dört
+iş günü vardır. Anahtarı değiştirmek deponuzdaki bütün sayaçları kaydıracağı için bunu
+sessizce değiştirmek yerine yazıyoruz. ISO haftası sizin kullanıcılarınız için yanlışsa
+kendi bütçe kontrolünüzü istediğiniz anahtarla yazabilirsiniz.
+
+**Sessiz saatler tek bir penceredir ve haftanın her günü aynıdır.** Kullanıcıda tek bir
+`start` ve tek bir `end` vardır; cuma penceresi, Şabat penceresi veya resmî tatil
+tanımlanamaz. Haftanın günü hiç okunmaz. Böyle bir kurala ihtiyacınız varsa kendi
+kontrolünüzü yazın: `id` ve `run` taşıyan bir nesnedir, istediğiniz sırada dizilir ve izde
+yerleşik kontrollerin yanında görünür.
+
 ## Hazır paketler: platform kotaları ve yasal sınırlar, kaynaklarıyla
 
 ```ts

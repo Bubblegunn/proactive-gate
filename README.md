@@ -112,6 +112,22 @@ consumed in check order at commit, so when a weekly check passes and the daily o
 refuses, that weekly unit is spent without a delivery. It only happens when two commits
 race after a shared evaluate.
 
+### Two limits you should know before you adopt this
+
+Neither is a bug, and both are pinned by tests so a future change has to be deliberate.
+
+**The week is the ISO week, so the weekly budget refills on Monday.** Where the working
+week runs Sunday to Thursday, that refill lands one day in: a user who spends the budget on
+Sunday has it back on Monday, with four working days still to run. Changing the key would
+move every counter already in your store, so it is documented rather than quietly altered.
+Pass your own budget check keyed how you like if the ISO week is wrong for your users.
+
+**Quiet hours are a single window, the same on every day of the week.** A user carries one
+`start` and one `end`, so a Friday window, a Shabbat window or a public holiday cannot be
+expressed. The day of the week is never read. If you need one, write a check: it is an
+object with an `id` and a `run`, it composes in the order you choose, and the trace will
+show it firing beside the built-in ones.
+
 Order is a design decision and it should be visible. Consent has to come before
 everything. Quiet hours have to come before the budget, or a rejected candidate
 consumes a delivery it never made. Reorder freely; the trace will show what you did.

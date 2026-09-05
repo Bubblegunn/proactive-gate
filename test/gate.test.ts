@@ -163,6 +163,44 @@ test("weekly budget: resets on the user's local ISO week and commits atomically"
   assert.equal(nextWeek.allowed, true);
 });
 
+test("design limit: the weekly budget resets on Monday, mid-week for a Sunday-to-Thursday week", async () => {
+  // Pinned deliberately. The week is the ISO week, so the counter turns over on Monday
+  // morning in the user's zone. Where the working week runs Sunday to Thursday, that reset
+  // lands in the middle of it. Documented in the README; changing it would move every key.
+  const store = new MemoryStore();
+  const gate = createGate({ store, checks: [checks.weeklyBudget({ limit: 1 })] });
+  const riyadh = user({ timezone: "Asia/Riyadh", quietHours: null });
+
+  // Sunday 6 September 2026 is the first day of this user's working week, but in ISO terms
+  // it is the last day of the week that began Monday 31 August.
+  const sunday = { user: riyadh, candidate: candidate(), now: new Date("2026-09-06T09:00:00Z") };
+  const first = await gate.evaluate(sunday);
+  assert.equal(await gate.commit(first, sunday), true);
+  assert.equal((await gate.evaluate(sunday)).rejectedBy, "weeklyBudget");
+
+  // Monday arrives one day later and refills the budget, one day into a working week that
+  // still has Monday, Tuesday, Wednesday and Thursday to run.
+  const monday = { ...sunday, now: new Date("2026-09-07T09:00:00Z") };
+  assert.equal((await gate.evaluate(monday)).allowed, true);
+});
+
+test("design limit: quiet hours are one window that is the same every day", async () => {
+  // Pinned deliberately. A user carries a single start and end, so a rule that differs by
+  // weekday, such as a Friday or Shabbat window, or a public holiday, cannot be expressed
+  // today. Compose a second check if you need one; the trace will show it.
+  const gate = createGate({ checks: [checks.quietHours()] });
+  const shabbat = user({ timezone: "Asia/Jerusalem", quietHours: { start: "22:00", end: "08:00" } });
+
+  // Friday afternoon in Jerusalem, outside the single window, so the gate allows it even
+  // though a Shabbat rule would not.
+  const fridayAfternoon = new Date("2026-09-04T14:00:00Z"); // 17:00 local
+  assert.equal((await gate.evaluate({ user: shabbat, candidate: candidate(), now: fridayAfternoon })).allowed, true);
+
+  // The same clock time on a Wednesday behaves identically. The day of the week is not read.
+  const wednesdayAfternoon = new Date("2026-09-02T14:00:00Z");
+  assert.equal((await gate.evaluate({ user: shabbat, candidate: candidate(), now: wednesdayAfternoon })).allowed, true);
+});
+
 const sqliteAvailable = Number(process.versions.node.split(".")[0]) >= 22;
 
 test("sqlite store supports get, set, increment, delete and expiration", { skip: !sqliteAvailable }, async () => {
