@@ -2,6 +2,8 @@
 
 ## 0.1.2 (unreleased)
 
+- `SqliteStore` on `node:sqlite` (Node 22.5+), persistence for single-instance deployments, by @aaqib-hafeez-khan-in (#3).
+
 A LangGraph example, a comparison with hand-rolled checks and feature flags, a benchmark (`npm run bench`) with the measured line in the README, and a generated API reference under `docs/api`.
 
 ## 0.1.1 (2026-09-05)
