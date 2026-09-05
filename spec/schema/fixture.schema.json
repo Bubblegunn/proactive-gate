@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Bubblegunn/proactive-gate/spec/schema/fixture.schema.json",
+  "title": "proactive-gate conformance fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["spec_version", "since", "name", "description", "policy", "tests"],
+  "properties": {
+    "spec_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "since": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "name": { "type": "string", "pattern": "^[a-z0-9-]+/[a-z0-9-]+$" },
+    "description": { "type": "string" },
+    "policy": { "$ref": "policy.schema.json" },
+    "store_seed": { "type": "object", "additionalProperties": { "type": "string" } },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "input", "expect"],
+        "properties": {
+          "description": { "type": "string" },
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["user", "candidate", "now"],
+            "properties": {
+              "user": { "type": "object", "required": ["id", "consent"] },
+              "candidate": { "type": "object", "required": ["id", "type"] },
+              "now": { "type": "string", "pattern": "Z$" }
+            }
+          },
+          "commit": { "type": "boolean" },
+          "expect": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["allowed", "trace"],
+            "properties": {
+              "allowed": { "type": "boolean" },
+              "rejectedBy": { "type": "string" },
+              "deferredBy": { "type": "string" },
+              "retryAt": { "type": "string", "pattern": "Z$" },
+              "surfaces": { "type": "array", "items": { "type": "string" } },
+              "deliverAt": { "type": "string", "pattern": "Z$" },
+              "trace": { "type": "array", "items": { "type": "string" } },
+              "shadowed": { "type": "array", "items": { "type": "string" } },
+              "nearLimit": { "type": "array", "items": { "type": "object", "required": ["check", "used", "limit"] } },
+              "reason_pattern": { "type": "string" },
+              "commit": { "type": "boolean" },
+              "store_after": { "type": "object", "additionalProperties": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

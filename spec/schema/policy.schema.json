@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Bubblegunn/proactive-gate/spec/schema/policy.schema.json",
+  "title": "proactive-gate policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "checks"],
+  "properties": {
+    "specVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "onStoreError": { "enum": ["open", "closed"] },
+    "keyPrefix": { "type": "string" },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+          { "required": ["id"], "properties": { "id": { "type": "string" }, "shadow": { "type": "boolean" } } },
+          { "required": ["preset"], "properties": { "preset": { "type": "string" }, "shadow": { "type": "boolean" } } }
+        ]
+      }
+    }
+  }
+}

@@ -50,12 +50,23 @@ jobs:
       - run: npx attw --pack . --ignore-rules cjs-resolves-to-esm # ESM only, by design
       - name: Install the packed tarball in an empty project and run it
         run: sh scripts/smoke-tarball.sh
+  spec-lint:
+    # The behaviour contract: every fixture and example policy has the shape spec/schema describes.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - run: node test/spec-lint.mjs
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
-    needs: [test, package]
+    needs: [test, package, spec-lint]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}"
-          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success
+          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success
