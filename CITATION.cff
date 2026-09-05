@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, cite it as below."
 title: "proactive-gate"
-version: "0.2.3"
+version: "0.2.4"
 date-released: "2026-09-05"
 authors:
   - family-names: "Genc"

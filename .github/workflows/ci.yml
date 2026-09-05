@@ -61,6 +61,22 @@ jobs:
         with:
           node-version: 24
       - run: node test/spec-lint.mjs
+  conformance:
+    # Both implementations against the shared fixtures, and the README table regenerated from
+    # that run. Its own job because it is the only one needing Node and Python together.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - run: npm ci --ignore-scripts
+      - run: node scripts/conformance-table.mjs --check
   python:
     # The Python sibling, held to the same fixtures: mypy strict, then every fixture through both gates.
     runs-on: ubuntu-latest
@@ -100,9 +116,9 @@ jobs:
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
-    needs: [test, package, spec-lint, python, release-gate]
+    needs: [test, package, spec-lint, conformance, python, release-gate]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}"
-          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success
+          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  conformance: ${{ needs.conformance.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.conformance.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success

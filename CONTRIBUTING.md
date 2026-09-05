@@ -18,6 +18,18 @@ Node 20 or newer, Python 3.11 or newer, and git. Node 20's test runner does not 
 
 `spec/SPEC.md` and the fixtures under `spec/fixtures` are the authority; the TypeScript and Python packages are both held to them in CI. A behaviour change therefore lands in three places: a fixture (or a new expectation in an existing one), the TypeScript check, and the Python check. If you can only do one language, open the pull request with the fixture and your language and say so; the other half is a small follow-up.
 
+`spec/CONFORMANCE.md` is the reader-facing half of this: what passing means field by field, how to declare a skip, and how a third implementation in any language claims a version. `npm run conformance-table` regenerates the README table from a real run of both implementations, and CI fails when the committed table is stale, so the table can never be a claim rather than a measurement.
+
+### The spec version is tagged separately
+
+`spec/SPEC_VERSION` moves on its own schedule, so it has its own tag series, `spec/vX.Y.Z`, distinct from the package's `vX.Y.Z` release tags. When a pull request changes `SPEC_VERSION`, the tag for the new version is pushed after it merges:
+
+```sh
+git tag spec/v1.2.0 -m "spec 1.2.0" && git push origin spec/v1.2.0
+```
+
+Maintainers only, because the ruleset restricts tag creation. An implementation pins that tag rather than a package release, which is what lets it target the contract without depending on npm or PyPI.
+
 ## Adding a check
 
 TypeScript: a factory in `src/checks.ts` returning `{ id, run(ctx) }` (set `nonRejecting: true` if it may only adjust; add `consume(ctx)` if it is a budget), registered in `KNOWN_CHECKS` in `src/policy.ts` so JSON policies can name it.
