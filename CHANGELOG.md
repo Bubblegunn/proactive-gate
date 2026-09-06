@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0
+## 0.3.0 (2026-09-06)
 
 **Anyone writing a `Store` can now prove it behaves.** `proactive-gate/store-contract` exports
 `storeContract`, the same suite `MemoryStore` and `SqliteStore` are held to: `get`, `set` and `del`,
