@@ -167,7 +167,7 @@ test("replaying the same decision never spends a second unit", async () => {
 });
 
 const sqliteAvailable = (() => {
-  const [major, minor] = process.versions.node.split(".").map(Number);
+  const [major = 0, minor = 0] = process.versions.node.split(".").map(Number);
   return major > 22 || (major === 22 && minor >= 5);
 })();
 
