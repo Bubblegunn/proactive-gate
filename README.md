@@ -436,6 +436,23 @@ adding a package dependency. It was contributed by
 [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) in [#3](https://github.com/Bubblegunn/proactive-gate/pull/3). `SqliteStore` requires Node.js 22.5 or newer; the SQLite module
 is loaded only when the store is constructed so the package can still be used on Node.js 20. On Node 22 the module prints an ExperimentalWarning on first use; it is stable from Node 24.
 
+**Writing your own store?** `proactive-gate/store-contract` exports the same suite these three are
+held to, so you can prove yours behaves rather than hope:
+
+```ts
+import { storeContract } from "proactive-gate/store-contract";
+storeContract("PostgresStore", (clock) => new PostgresStore({ clock }));
+```
+
+It checks `get`, `set` and `del`, `incr` from an absent key, concurrent `incr` atomicity, the
+expiry boundary, and that a TTL given to `set` and one given to `incr` agree, then replays a
+seeded random operation sequence against `MemoryStore`. A store whose backend owns the clock
+passes `expiry: "skip"` and those cases are reported as skipped rather than quietly dropped. It
+was contributed by [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) in
+[#24](https://github.com/Bubblegunn/proactive-gate/pull/24), and lives on its own subpath so
+importing the package never pulls `node:test` into your bundle. See
+[docs/store-contract.md](docs/store-contract.md).
+
 ## Fail open, on purpose
 
 When a store-backed check throws (Redis is down), the default lets the candidate
@@ -724,7 +741,8 @@ before. [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) wrote `
 ([#3](https://github.com/Bubblegunn/proactive-gate/pull/3)) and
 [@edwardsong08](https://github.com/edwardsong08) wrote the weekly budget
 ([#9](https://github.com/Bubblegunn/proactive-gate/pull/9)). Both shipped in 0.1.2 and are in
-every release since, including the one you install today.
+every release since, including the one you install today. @aaqib-hafeez-khan-in came back for a
+second one and wrote the store contract suite in [#24](https://github.com/Bubblegunn/proactive-gate/pull/24).
 
 ## Cite this
 

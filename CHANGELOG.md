@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.3.0
+
+**Anyone writing a `Store` can now prove it behaves.** `proactive-gate/store-contract` exports
+`storeContract`, the same suite `MemoryStore` and `SqliteStore` are held to: `get`, `set` and `del`,
+`incr` from an absent key, concurrent `incr` atomicity, the expiry boundary, matching TTL behaviour
+for `set` and `incr`, and a seeded random operation sequence replayed against `MemoryStore`. Until
+now that suite existed only inside our own tests, so a Postgres, DynamoDB or KV store had no way to
+find out it disagreed with us about when a key dies.
+
+Contributed by [@aaqib-hafeez-khan-in](https://github.com/aaqib-hafeez-khan-in) in
+[#24](https://github.com/Bubblegunn/proactive-gate/pull/24), closing #11.
+
+Two decisions in it are worth knowing about. A store whose backend owns the clock, which is every
+store backed by a server, declares `expiry: "skip"`, and the expiry cases are then **reported as
+skipped** rather than silently omitted; a suite that quietly tests less is worse than one that
+refuses. And a factory can return a `teardown`, run in a `finally`, so a store holding a connection
+is closed even when a test throws.
+
+It lives on its own subpath rather than the package root, so importing `proactive-gate` still
+reaches no Node built-in. That matters for the adapters: `node:test` does not exist in the edge
+runtimes the Vercel AI SDK is commonly deployed to.
+
+Verified non-vacuous before merge against three stores each broken one way, a non-atomic `incr`, an
+expiry firing one millisecond late, and an `incr` that drops its TTL. Each is caught, by the test
+you would expect to catch it.
+
+`test/properties.test.ts` now calls the exported suite instead of keeping a private copy, so the
+two cannot drift apart.
+
 ## 0.2.5 (2026-09-05)
 
 Documentation only; no behaviour changed.

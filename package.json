@@ -1,6 +1,6 @@
 {
   "name": "proactive-gate",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Decide whether a proactive AI agent may reach a user right now, and log why not. Ordered checks as code or JSON, a conformance spec, presets for platform and legal limits, adapters for AI SDK, Mastra, LangChain and OpenAI Agents, and a Python sibling.",
   "type": "module",
   "main": "./dist/src/index.js",
