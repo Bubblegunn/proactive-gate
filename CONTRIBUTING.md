@@ -62,6 +62,36 @@ A preset is the most natural outside contribution here, and the bar is the sourc
 
 When official sources disagree, pick the stricter documented value and say so in the note.
 
+## What a review here looks like
+
+This is a promise about how your pull request is treated, written down so you can hold it to it.
+
+**You get a real review, quickly.** Not a rubber stamp and not a queue. Every outside pull request so
+far has been reviewed the same day it arrived.
+
+**Your work gets checked, not admired.** If you send a test, it gets run against something broken to
+confirm it fails; if you send a fix, the bug gets reproduced before and after. When that happens the
+review says exactly what was tried, and the throwaway code used to check it is handed to you, because
+it is more useful in your hands than in a maintainer's terminal.
+
+**A change request comes with the answer**, not just the objection: the file, the shape, and why the
+first idea does not work. If something is refused, the reason is given plainly and whatever part of
+your work was used still gets the credit.
+
+**A review written against a stale commit is a mistake on this side.** If you push while a review is
+being written, say so; the review will be redone against your head rather than leaving you to argue
+with a comment about a bug you already fixed.
+
+**Your name goes in three places when it merges**, and stays there: the changelog entry, the README
+beside the thing you built, and the commit itself, because merges are squashed with your authorship
+intact and never rewritten under someone else's name.
+
+**You are told when it ships.** A merge is a promise; a release is the thing you can show somebody. You
+get a message on your pull request with the version and the install command when your code is live.
+
+**And you get thanked, in words.** Reviewing your code carefully is respect, but it is not the same as
+saying thank you, and both are owed.
+
 ## Pull requests
 
 - One change per pull request, with a test that fails before and passes after.
