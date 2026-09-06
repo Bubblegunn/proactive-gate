@@ -14,6 +14,10 @@
       "types": "./dist/src/presets.d.ts",
       "import": "./dist/src/presets.js"
     },
+    "./store-contract": {
+      "types": "./dist/src/store-contract.d.ts",
+      "import": "./dist/src/store-contract.js"
+    },
     "./ai-sdk": {
       "types": "./dist/src/adapters/ai-sdk.d.ts",
       "import": "./dist/src/adapters/ai-sdk.js"
@@ -65,9 +69,9 @@
     "agents",
     "proactive",
     "notifications",
-    "rate-limit",
     "quiet-hours",
     "consent",
+    "rate-limit",
     "budget",
     "llm",
     "policy",

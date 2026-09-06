@@ -9,8 +9,9 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createGate, checks, MemoryStore, SqliteStore, budgetKey } from "../src/index.js";
-import type { Candidate, Check, Priority, Store, UserState } from "../src/index.js";
+import { createGate, checks, MemoryStore, budgetKey, SqliteStore } from "../src/index.js";
+import { storeContract } from "../src/store-contract.js";
+import type { Candidate, Check, Priority, UserState } from "../src/index.js";
 
 /** mulberry32: small, deterministic, good enough to shake out ordering bugs. */
 function rng(seed: number) {
@@ -24,8 +25,6 @@ function rng(seed: number) {
 }
 
 const RUNS = 200;
-/** node:sqlite arrived in 22.5; the store comparison is skipped below that, as in gate.test.ts. */
-const sqliteAvailable = Number(process.versions.node.split(".")[0]) >= 22;
 const PRIORITIES: Priority[] = ["low", "normal", "high", "critical"];
 const ZONES = ["Europe/Istanbul", "Asia/Tokyo", "America/Los_Angeles", "America/New_York", "Pacific/Apia"];
 const TYPES = ["reminder", "insight", "alert", "follow_up"];
@@ -168,41 +167,13 @@ test("replaying the same decision never spends a second unit", async () => {
   }
 });
 
-test("MemoryStore and SqliteStore answer a random operation sequence identically", { skip: !sqliteAvailable }, async () => {
-  {
-    for (let seed = 1; seed <= 40; seed++) {
-      const r = rng(seed + 50_000);
-      let clock = Date.UTC(2026, 8, 4);
-      const tick = () => clock;
-      const memory: Store = new MemoryStore(tick);
-      const sqlite = new SqliteStore(":memory:", tick);
-      const keys = ["a", "b", "c"];
-      try {
-        for (let step = 0; step < 40; step++) {
-          const key = pick(r, keys);
-          const ttl = r() > 0.5 ? 1 + Math.floor(r() * 3) : undefined;
-          const op = Math.floor(r() * 5);
-          if (op === 0) {
-            const value = String(Math.floor(r() * 100));
-            await memory.set(key, value, ttl);
-            await sqlite.set(key, value, ttl);
-          } else if (op === 1) {
-            assert.equal(await memory.incr(key, ttl), await sqlite.incr(key, ttl), `seed ${seed} step ${step}: incr disagreed`);
-          } else if (op === 2) {
-            await memory.del(key);
-            await sqlite.del(key);
-          } else if (op === 3) {
-            clock += Math.floor(r() * 3000);
-          } else {
-            assert.equal(await memory.get(key), await sqlite.get(key), `seed ${seed} step ${step}: get disagreed on "${key}"`);
-          }
-        }
-        for (const key of keys) {
-          assert.equal(await memory.get(key), await sqlite.get(key), `seed ${seed}: final state disagreed on "${key}"`);
-        }
-      } finally {
-        sqlite.close();
-      }
-    }
-  }
-});
+const sqliteAvailable = (() => {
+  const [major = 0, minor = 0] = process.versions.node.split(".").map(Number);
+  return major > 22 || (major === 22 && minor >= 5);
+})();
+
+storeContract("MemoryStore", (clock) => new MemoryStore(clock));
+storeContract("SqliteStore", (clock) => {
+  const store = new SqliteStore(":memory:", clock);
+  return { store, teardown: () => store.close() };
+}, sqliteAvailable ? {} : { skip: "SqliteStore requires Node.js 22.5 or newer" });
