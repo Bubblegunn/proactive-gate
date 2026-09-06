@@ -21,7 +21,7 @@ The exported `storeContract` suite lets a store author run the same contract aga
 A store with an injectable clock can run the full expiry contract. A store backed by a server whose clock cannot be injected can declare `expiry: "skip"`; the expiry tests are then reported as skipped rather than silently omitted. The factory may also return a `teardown` function for connections that need closing.
 
 ```ts
-import { storeContract } from "proactive-gate";
+import { storeContract } from "proactive-gate/store-contract";
 import { PostgresStore } from "./store.js";
 storeContract("PostgresStore", (clock) => new PostgresStore({ clock }), { expiry: "injected" });
 ```
@@ -99,5 +99,4 @@ into the workflow, do these three in this order:
 2. `gh variable set PYPI_TRUSTED_PUBLISHER --body true -R Bubblegunn/proactive-gate`.
 3. Revoke the bootstrap token on PyPI.
 
-The order matters: revoking the token before the publisher exists would leave no way to publish at
-all. Every release prints the same instruction in its job summary.
+The order matters: revoking the token before the publisher exists would leave no way to publish at all. Every release prints the same instruction in its job summary.

@@ -1,9 +1,9 @@
 # Store contract
 
-`storeContract` is the executable contract for third-party `Store` implementations. It is exported from the package root and uses only `node:test` and `node:assert`.
+`storeContract` is the executable contract for third-party `Store` implementations. It is exported from the `proactive-gate/store-contract` subpath and uses only `node:test` and `node:assert`.
 
 ```ts
-import { storeContract } from "proactive-gate";
+import { storeContract } from "proactive-gate/store-contract";
 import { PostgresStore } from "./store.js";
 storeContract("PostgresStore", (clock) => new PostgresStore({ clock }), { expiry: "injected" });
 ```

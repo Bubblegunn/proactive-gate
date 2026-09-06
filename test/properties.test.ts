@@ -9,7 +9,8 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createGate, checks, MemoryStore, budgetKey, storeContract, SqliteStore } from "../src/index.js";
+import { createGate, checks, MemoryStore, budgetKey, SqliteStore } from "../src/index.js";
+import { storeContract } from "../src/store-contract.js";
 import type { Candidate, Check, Priority, UserState } from "../src/index.js";
 
 /** mulberry32: small, deterministic, good enough to shake out ordering bugs. */
