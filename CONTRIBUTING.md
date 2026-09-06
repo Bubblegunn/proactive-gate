@@ -14,6 +14,20 @@ python -m mypy --strict src/proactive_gate tests && pytest
 
 Node 20 or newer, Python 3.11 or newer, and git. Node 20's test runner does not expand glob patterns, so test files are named explicitly in `package.json`.
 
+## Store contract
+
+The exported `storeContract` suite lets a store author run the same contract against a custom `Store` without copying our tests. It covers `get`, `set`, `del`, `incr` from absent, concurrent `incr` atomicity, expiry boundaries, and matching TTL behaviour for `set` and `incr`.
+
+A store with an injectable clock can run the full expiry contract. A store backed by a server whose clock cannot be injected can declare `expiry: "skip"`; the expiry tests are then reported as skipped rather than silently omitted. The factory may also return a `teardown` function for connections that need closing.
+
+```ts
+import { storeContract } from "proactive-gate";
+import { PostgresStore } from "./store.js";
+storeContract("PostgresStore", (clock) => new PostgresStore({ clock }), { expiry: "injected" });
+```
+
+The suite uses only `node:test` and `node:assert` and adds no runtime dependency.
+
 ## Two implementations, one contract
 
 `spec/SPEC.md` and the fixtures under `spec/fixtures` are the authority; the TypeScript and Python packages are both held to them in CI. A behaviour change therefore lands in three places: a fixture (or a new expectation in an existing one), the TypeScript check, and the Python check. If you can only do one language, open the pull request with the fixture and your language and say so; the other half is a small follow-up.
