@@ -25,6 +25,8 @@ dist/src/policy.d.ts
 dist/src/policy.js
 dist/src/presets.d.ts
 dist/src/presets.js
+dist/src/store-contract.d.ts
+dist/src/store-contract.js
 dist/src/stores.d.ts
 dist/src/stores.js
 dist/src/types.d.ts
@@ -65,7 +67,3 @@ spec/fixtures/trust-ramp/first-week.json
 spec/fixtures/utility/bounded-deferral-cap.json
 spec/fixtures/utility/bounded-deferral.json
 spec/fixtures/utility/floor.json
-spec/schema/fixture.schema.json
-spec/schema/policy.schema.json
-spec/skip/python.txt
-spec/skip/ts.txt
