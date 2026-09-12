@@ -51,6 +51,7 @@ spec/fixtures/ordering/kill-switch.json
 spec/fixtures/ordering/short-circuit.json
 spec/fixtures/policy/unknown-check-is-an-error.json
 spec/fixtures/presets/cn-minor-mode.json
+spec/fixtures/presets/in-tcccp.json
 spec/fixtures/presets/kakao-brand-message.json
 spec/fixtures/presets/kr-network-act-50.json
 spec/fixtures/presets/telegram-bot.json
