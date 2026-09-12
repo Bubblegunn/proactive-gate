@@ -85,7 +85,7 @@ const decision = await gate.evaluate(input);
 if (decision.allowed && (await gate.commit(decision, input))) {
   console.log("send", decision.surfaces.join(","));
 } else {
-  console.log("stopped", explain(decision).sentence);
+  console.log("stopped", explain(decision).summary);
 }
 `;
 }

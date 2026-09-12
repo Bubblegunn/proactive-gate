@@ -66,7 +66,7 @@ test("the wire-up snippet runs, and says what the library says", async () => {
       const decision = await gate.evaluate(direct);
       const expected = decision.allowed && (await gate.commit(decision, direct))
         ? `send ${decision.surfaces.join(",")}`
-        : `stopped ${explain(decision).sentence}`;
+        : `stopped ${explain(decision).summary}`;
 
       assert.equal(result.stdout.trim(), expected, `${key}: the snippet agrees with the library`);
     } finally {
