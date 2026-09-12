@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7.1
+## 0.7.1 (2026-09-12)
 
 **An adversarial clock suite, and the two bugs it found in our own code.**
 [@LouisDeconinck](https://github.com/LouisDeconinck) contributed twenty one fixtures for the days a
