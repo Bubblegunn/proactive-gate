@@ -369,6 +369,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `jpAntiSpamLaw` | opt-in |
 | `cnMinorMode` | reşit olmayanlar için: 06:00 ile 22:00 Asia/Shanghai ve günde bir |
 | `inTcccp` | promosyon rızası; varsayılan olarak kapalı olan 00:00-10:00 ve 21:00-24:00 bantları ayrı ayrı opt-in ister ([@LouisDeconinck](https://github.com/LouisDeconinck), [#29](https://github.com/Bubblegunn/proactive-gate/pull/29)) |
+| `brLgpd` | pazarlama rızası; reşit olmayanlarda rıza ebeveynden ya da yasal vasiden gelir |
 | `usTcpa` | kullanıcının yerel saatiyle 08:00 ile 21:00 (47 CFR 64.1200) |
 | `euEprivacy` | pazarlama rızası, mevcut müşteriler için yumuşak opt-in |
 | `telegramBot` | sohbet başına saniyede 1 ve dakikada 20 |
@@ -380,7 +381,7 @@ Her paket `sources` (sayıların geldiği sayfalar) ve neyi dışarıda bırakt�
 birbiriyle çelişir ve not hangi değerin neden seçildiğini söyler.
 
 **Yasal bir pakete uzanmadan önce kapsamını okuyun.** Yukarıdaki bütün düzenlemeler *ticari*
-iletişimi düzenler. `usTcpa`, `euEprivacy`, `krNetworkAct50`, `jpAntiSpamLaw` ve `inTcccp` birer pazarlama
+iletişimi düzenler. `usTcpa`, `euEprivacy`, `krNetworkAct50`, `jpAntiSpamLaw`, `inTcccp` ve `brLgpd` birer pazarlama
 kuralıdır; yani mesajınızı ancak mesajın kendisi ticari olduğunda bağlar. Kullanıcının kendi
 istediği bir hatırlatma reklam değildir ve onun için pazarlama paketi kullanmak, yasanın size
 hiç koymadığı bir kısıtı kendi elinizle içeri almak olur. Aday promosyon niteliğindeyse
@@ -392,9 +393,10 @@ güvenmeden önce çözülmesi gereken durumdur.
 
 Bazı ülkelerin neden burada olmadığı da aynı kapsam sınavıyla açıklanır. Kanada'nın CASL'i ve
 Avustralya'nın 2003 tarihli Spam Act'i rıza, gönderen kimliği ve abonelikten çıkma
-yükümlülükleri getirir; ikisinde de saat kısıtı yoktur. İnternette dolaşan Brezilya penceresi
-PLS 48/2018 sayılı kanun *teklifinden* gelir, yürürlükteki bir kanundan değil, ve
-telefonla pazarlama aramalarını kapsar. Hindistan ilginç olanı: sıkça tekrarlanan "09.00-21.00"
+yükümlülükleri getirir; ikisinde de saat kısıtı yoktur. Brezilya tabloda penceresiz durur:
+internette dolaşan pencere PLS 48/2018 sayılı kanun *teklifinden* gelir, yürürlükteki bir
+kanundan değil, ve telefonla pazarlama aramalarını kapsar; bu yüzden `brLgpd` LGPD'nin rıza
+modelini kodlar, pencere kodlamaz. Hindistan ilginç olanı: sıkça tekrarlanan "09.00-21.00"
 birincil metinde yazmaz. TRAI düzenlemesi zaman bantlarını, içerik kategorisi ve gün tipiyle
 birlikte, abonenin operatörüne *kaydettirdiği bir tercih* yapar; sabit bir yasal sessizlik
 penceresi değildir. Üstelik pencereyi aktaran ikincil kaynaklar başlangıcın 09.00 mı 10.00 mı
@@ -447,7 +449,7 @@ derlemeden token ile yüklendi ve hiçbir kanıt taşımıyor.
 [`spec/SPEC.md`](spec/SPEC.md) davranışı numaralı gereksinimler olarak yazar;
 [`spec/fixtures`](spec/fixtures) dile bağlı olmayan senaryoları tutar: America/New_York'taki
 yaz saati kenarı, Pacific/Apia, 2031'de bir duvar saati senaryosu, atomik commit, ISO haftası,
-erteleme, gölge modu, isteğe bağlı kontroller ve dört hazır paket. TypeScript ve Python
+erteleme, gölge modu, isteğe bağlı kontroller ve altı hazır paket. TypeScript ve Python
 testleri hepsini çalıştırır; `npx proactive-gate replay --fixtures spec/fixtures` komut
 satırından çalıştırır. Üçüncü bir uygulama bu kaynaktan değil, senaryolardan başlar.
 

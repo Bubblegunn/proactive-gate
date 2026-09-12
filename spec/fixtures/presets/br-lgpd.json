@@ -1,0 +1,209 @@
+{
+  "spec_version": "1.4.0",
+  "since": "1.4.0",
+  "name": "presets/br-lgpd",
+  "description": "brLgpd needs marketing consent for every recipient, and a minor additionally needs the parental consent of art. 14.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "brLgpd"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "no marketing consent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": false,
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
+        "trace": [
+          "consent:marketing"
+        ]
+      }
+    },
+    {
+      "description": "an existing customer still needs marketing consent; LGPD has no soft opt-in",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "existingCustomer": true,
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
+        "trace": [
+          "consent:marketing"
+        ]
+      }
+    },
+    {
+      "description": "adult with marketing consent passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": false,
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:marketing",
+          "consent:parental"
+        ]
+      }
+    },
+    {
+      "description": "a minor with marketing consent but no parental consent rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true,
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:parental",
+        "trace": [
+          "consent:marketing",
+          "consent:parental"
+        ]
+      }
+    },
+    {
+      "description": "a minor with marketing and parental consent passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true,
+          "consents": {
+            "marketing": true,
+            "parental": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:marketing",
+          "consent:parental"
+        ]
+      }
+    }
+  ]
+}

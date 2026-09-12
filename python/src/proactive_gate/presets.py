@@ -48,6 +48,11 @@ def _whatsapp_business(o: Options) -> list[Check]:
     return checks
 
 
+def _br_lgpd(o: Options) -> list[Check]:
+    is_minor = lambda ctx: bool(ctx.user.minor)  # noqa: E731
+    return [c.RequiresConsent("marketing"), c.OnlyWhen(c.RequiresConsent("parental"), is_minor, "not a minor")]
+
+
 class _SoftOptIn(c.BaseCheck):
     id = "consent:marketing"
 
@@ -128,6 +133,25 @@ presets: dict[str, Preset] = {
         ],
         ("https://trai.gov.in/tcccpr", "https://www.trai.gov.in/sites/default/files/2025-01/RegulationUcc19072018.pdf", "https://www.trai.gov.in/sites/default/files/2026-05/CA_21052026.pdf"),
         "TCCCPR 2018: commercial communication needs the recipient's registered preference or consent (consents.promotional), and the Schedule-II default-off bands pass only when the subscriber opted that band in (the consents.band* flags, at the recipient's local time). The preference machinery is about promotional communication: the regulation's own block options exempt transactional and service communication and government communication (Schedule-II item 1 Note-4, item 3 Note-4), so pointing this preset at a transactional message imports a restriction the regulation does not place on it. Without user.timezone the four band checks skip and only the promotional consent is left. Opt-outs inside the default-on 10:00 to 21:00, day-type and per-category preferences are per-subscriber state a fixed check list cannot express; carry them in user.quiet_hours and consents. It binds SMS and voice calls on access networks, not in-app notifications or email; 1909 and DLT registration are out of scope. Sources read 2026-09-12.",
+    ),
+    # Brazil: Lei 13.709/2018 (LGPD), as amended by Lei 13.853/2019. Marketing to a
+    # person is processing of their personal data, so it needs a basis under art.
+    # 7; consent (art. 7, I) is the one a send-time gate can verify, and art. 8
+    # ties it to determined purposes, paragraph 4 voiding a generic authorization,
+    # and keeps it revocable at any time through a free and facilitated procedure
+    # (paragraph 5), which is why the flag is a named marketing consent read at
+    # every send. For a child the consent is the parent's: art. 14, paragraph 1
+    # requires specific, highlighted consent from at least one parent or legal
+    # guardian, so a user.minor additionally needs consents.parental. Read
+    # 2026-09-12.
+    "brLgpd": Preset(
+        _br_lgpd,
+        (
+            "https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm",
+            "https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia_legitimo_interesse.pdf",
+            "https://bibliotecadigital.mj.gov.br/handle/1/10215",
+        ),
+        "Lei 13.709/2018: marketing to a person is processing of their personal data and needs a legal basis; consent (art. 7, I) is the one a send-time check can verify, carried as consents.marketing because art. 8, paragraph 4 voids a generic authorization and paragraph 5 keeps it revocable at any time by a free and facilitated procedure. A child's consent comes from at least one parent or legal guardian (art. 14, paragraph 1), which consents.parental carries when user.minor is set; the flag cannot tell a child from an adolescent, and ANPD Enunciado CD/ANPD 1/2023 reads art. 14 as allowing any art. 7 or art. 11 basis for children and adolescents alike under the best-interest rule, so consent is not the only available basis for either group. The parental gate for every minor is stricter than that reading, which is the deliberate call for a gate. Unlike Directive 2002/58/EC art. 13(2) there is no soft opt-in for existing customers, and legitimate interest (art. 7, IX; art. 10) needs a documented balancing test, so if that is the basis, this preset is not the thing that decides the send. The law sets no quiet window, so none is encoded. Sources read 2026-09-12.",
     ),
     "usTcpa": Preset(
         lambda o: [c.AllowedWindow("08:00", "21:00", "user", id="window:tcpa")],

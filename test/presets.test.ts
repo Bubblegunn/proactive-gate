@@ -15,7 +15,7 @@ test("every preset has sources, a note, and builds an ordered list", () => {
     assert.ok(list.length >= 1, `${name} builds nothing`);
     assert.ok(list.every((c) => typeof c.id === "string" && typeof c.run === "function"), `${name} is not a check list`);
   }
-  assert.equal(Object.keys(presets).length, 16);
+  assert.equal(Object.keys(presets).length, 17);
 });
 
 test("lineMessagingApi maps plans to monthly budgets and rejects unknown plans", () => {
@@ -43,6 +43,18 @@ test("inTcccp: promotional consent, and each default-off band needs its own opt-
   assert.equal((await gate.evaluate({ user: optedIn, candidate: candidate(), now: new Date("2026-09-04T17:00:00Z") })).allowed, true);
   const partial = user({ timezone: "Asia/Kolkata", consents: { promotional: true, band06to08: true } });
   assert.equal((await gate.evaluate({ user: partial, candidate: candidate(), now: new Date("2026-09-04T22:30:00Z") })).rejectedBy, "consent:band00to06"); // 04:00 IST: opting into one band does not open another
+});
+
+test("brLgpd: marketing consent for everyone, and a minor needs it from a parent", async () => {
+  const gate = createGate({ checks: presets.brLgpd!() });
+  const at = (iso: string) => new Date(iso);
+  assert.equal((await gate.evaluate({ user: user(), candidate: candidate(), now: at("2026-09-04T14:00:00Z") })).rejectedBy, "consent:marketing");
+  assert.equal((await gate.evaluate({ user: user({ consents: { marketing: true } }), candidate: candidate(), now: at("2026-09-04T14:00:00Z") })).allowed, true);
+  // no soft opt-in: an existing customer without marketing consent still rejects
+  assert.equal((await gate.evaluate({ user: user({ existingCustomer: true }), candidate: candidate(), now: at("2026-09-04T14:00:00Z") })).rejectedBy, "consent:marketing");
+  assert.equal((await gate.evaluate({ user: user({ minor: true, consents: { marketing: true } }), candidate: candidate(), now: at("2026-09-04T14:00:00Z") })).rejectedBy, "consent:parental");
+  const childOk = user({ minor: true, consents: { marketing: true, parental: true } });
+  assert.equal((await gate.evaluate({ user: childOk, candidate: candidate(), now: at("2026-09-04T14:00:00Z") })).allowed, true);
 });
 
 test("euEprivacy: soft opt-in for existing customers, consent otherwise", async () => {
