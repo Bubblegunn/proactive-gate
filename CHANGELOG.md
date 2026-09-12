@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.0 (unreleased)
+## 0.5.0 (2026-09-12)
 
 **India, as the regulation actually reads.** `inTcccp` encodes TRAI's Telecom Commercial
 Communications Customer Preference Regulations, 2018. The widely repeated "9am to 9pm" appears
