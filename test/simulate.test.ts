@@ -163,7 +163,16 @@ test("the timeline joins the runs on the candidate, and disagreements are a subs
   assert.equal(result.timeline.length, events.length);
   assert.ok(result.timeline.every((row) => row.cells.length === 2));
   assert.ok(result.disagreements.length > 0);
-  assert.ok(result.disagreements.every((row) => new Set(row.cells.map((c) => c.outcome)).size > 1));
+  assert.ok(result.disagreements.every((row) => row.differences.length > 0), "a disagreement names how the policies differed");
+  assert.ok(
+    result.disagreements.every((row) => row.differences.includes("outcome") || row.differences.includes("reason") || row.differences.includes("deliveryTime")),
+    "and the kind is one of the three a comparison can have",
+  );
+  assert.equal(
+    result.differenceCounts.outcome,
+    result.disagreements.filter((row) => row.differences.includes("outcome")).length,
+    "the per-kind counts agree with the rows they came from",
+  );
   assert.ok(result.disagreements.length <= result.timeline.length);
 });
 
