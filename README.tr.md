@@ -323,7 +323,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `krNetworkAct50` | reklam rızası, ayrıca 21:00 ile 08:00 yerel saat için gece rızası |
 | `jpAntiSpamLaw` | opt-in |
 | `cnMinorMode` | reşit olmayanlar için: 06:00 ile 22:00 Asia/Shanghai ve günde bir |
-| `inTcccp` | promosyon rızası; varsayılan olarak kapalı olan 00:00-10:00 ve 21:00-24:00 bantları ayrı ayrı opt-in ister |
+| `inTcccp` | promosyon rızası; varsayılan olarak kapalı olan 00:00-10:00 ve 21:00-24:00 bantları ayrı ayrı opt-in ister ([@LouisDeconinck](https://github.com/LouisDeconinck), [#29](https://github.com/Bubblegunn/proactive-gate/pull/29)) |
 | `usTcpa` | kullanıcının yerel saatiyle 08:00 ile 21:00 (47 CFR 64.1200) |
 | `euEprivacy` | pazarlama rızası, mevcut müşteriler için yumuşak opt-in |
 | `telegramBot` | sohbet başına saniyede 1 ve dakikada 20 |

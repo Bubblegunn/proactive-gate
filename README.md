@@ -393,7 +393,9 @@ and day type, not a fixed statutory quiet window, and the secondary sources that
 window disagree with each other about whether it starts at 09:00 or 10:00. What the
 regulation does fix is the default: four of the nine Schedule-II bands, covering 00:00 to
 10:00 and 21:00 to 24:00, are off for every customer until the subscriber switches that band
-on, so `inTcccp` encodes those as one opt-in consent per band rather than a hard window.
+on, so `inTcccp` encodes those as one opt-in consent per band rather than a hard window. It was
+contributed by [@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#29](https://github.com/Bubblegunn/proactive-gate/pull/29), in TypeScript and Python together.
 
 ## The budget is enforced at commit, not at evaluate
 
@@ -791,7 +793,7 @@ before. [@Aaqibhafeezkhan](https://github.com/Aaqibhafeezkhan) wrote `SqliteStor
 every release since, including the one you install today. @Aaqibhafeezkhan came back for a
 second one and wrote the store contract suite in [#24](https://github.com/Bubblegunn/proactive-gate/pull/24).
 
-A third person arrived from the other direction. [@LouisDeconinck](https://github.com/LouisDeconinck) took [#26](https://github.com/Bubblegunn/proactive-gate/issues/26), an issue this project filed against itself to admit that expired rows were never cleaned up, and twelve minutes later sent the fix in both languages with the test that would have caught the original bug ([#27](https://github.com/Bubblegunn/proactive-gate/pull/27), in 0.3.1). He then took [#23](https://github.com/Bubblegunn/proactive-gate/issues/23), the issue asking for a rejection reason a product manager could read, and wrote its sixty-seven sentence templates in both languages ([#28](https://github.com/Bubblegunn/proactive-gate/pull/28), in 0.4.0). That is the work in this library that is hardest to review and easiest to get wrong, because it lives in the wording rather than in the code.
+A third person arrived from the other direction. [@LouisDeconinck](https://github.com/LouisDeconinck) took [#26](https://github.com/Bubblegunn/proactive-gate/issues/26), an issue this project filed against itself to admit that expired rows were never cleaned up, and twelve minutes later sent the fix in both languages with the test that would have caught the original bug ([#27](https://github.com/Bubblegunn/proactive-gate/pull/27), in 0.3.1). He then took [#23](https://github.com/Bubblegunn/proactive-gate/issues/23), the issue asking for a rejection reason a product manager could read, and wrote its sixty-seven sentence templates in both languages ([#28](https://github.com/Bubblegunn/proactive-gate/pull/28), in 0.4.0). That is the work in this library that is hardest to review and easiest to get wrong, because it lives in the wording rather than in the code. His third, hours later, was the India preset ([#29](https://github.com/Bubblegunn/proactive-gate/pull/29), in 0.5.0): he read TRAI's Schedule-II rather than the summaries everyone repeats, found that the "9am to 9pm" everybody quotes is not in the primary text, and encoded the four default-off bands as the opt-ins the regulation actually describes.
 
 ## Cite this
 
