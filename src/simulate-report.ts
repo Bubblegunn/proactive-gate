@@ -13,13 +13,16 @@ const VERDICT: Record<string, string> = {
   expired: "expired",
   lostAtCommit: "lost at commit",
   spentNotDelivered: "spent, not delivered",
+  stoppedAtDelivery: "stopped at delivery",
 };
 
 /** Outcome plus the check that produced it, which is the whole verdict in one cell. */
-const verdictOf = (cell: { outcome: string; check?: string } | undefined): string => {
+const verdictOf = (cell: { outcome: string; check?: string; deliveredAt?: string } | undefined, at?: string): string => {
   if (!cell) return "";
   const word = VERDICT[cell.outcome] ?? cell.outcome;
-  return cell.check && cell.outcome !== "sent" ? `${word} ${cell.check}` : word;
+  // A send that landed later than it was decided is a different thing from a send that went now.
+  if (cell.outcome === "sent") return at && cell.deliveredAt && cell.deliveredAt !== at ? "sent later" : word;
+  return cell.check ? `${word} ${cell.check}` : word;
 };
 
 const pad = (s: string, w: number) => (s.length > w ? `${s.slice(0, Math.max(0, w - 1))}…` : s.padEnd(w));
@@ -31,7 +34,7 @@ function timelineTable(result: SimResult, rows: SimTimelineRow[], why: number | 
   const labels = result.runs.map((r) => r.label);
   const cols = labels.map((label, i) => ({
     label,
-    width: widthOf([label, ...rows.map((r) => verdictOf(r.cells[i]))], 8),
+    width: widthOf([label, ...rows.map((r) => verdictOf(r.cells[i], r.at))], 8),
   }));
   const userW = widthOf(["user", ...rows.map((r) => r.userId)], 4);
   const typeW = widthOf(["type", ...rows.map((r) => r.type)], 4);
@@ -39,7 +42,7 @@ function timelineTable(result: SimResult, rows: SimTimelineRow[], why: number | 
   const head = `${pad("when (local)", 13)}  ${pad("user", userW)}  ${pad("type", typeW)}  ${pad("pri", priW)}  ${cols.map((c) => pad(c.label, c.width)).join("  ")}`;
   const out = [head, "-".repeat(head.length)];
   for (const row of rows) {
-    const cells = cols.map((c, i) => pad(verdictOf(row.cells[i]), c.width)).join("  ");
+    const cells = cols.map((c, i) => pad(verdictOf(row.cells[i], row.at), c.width)).join("  ");
     out.push(`${pad(row.localTime, 13)}  ${pad(row.userId, userW)}  ${pad(row.type, typeW)}  ${pad(row.priority, priW)}  ${cells}`.trimEnd());
     // --why prints the sentence explain() already produces, under the row it belongs to.
     const cell = why === null ? undefined : row.cells[why];
@@ -59,6 +62,7 @@ function summaryTable(runs: SimRun[], night: { start: number; end: number }): st
     ["moved to a later moment", runs.map((r) => String(r.counts.sentAtALaterMoment))],
     ["deferred, then expired", runs.map((r) => String(r.counts.expired))],
     ["lost at commit", runs.map((r) => String(r.counts.lostAtCommit))],
+    ["stopped at the delivery moment", runs.map((r) => String(r.counts.stoppedAtDelivery))],
     ["spent, not delivered", runs.map((r) => String(r.counts.spentNotDelivered))],
     [quietLabel, runs.map((r) => String(r.counts.sentInQuietHours))],
     ["  of those, critical (what the floor lets through)", runs.map((r) => String(r.counts.sentInQuietHoursByFloor))],
@@ -125,7 +129,13 @@ export function formatSimulation(result: SimResult, options: ReportOptions = {})
       `${source.length - rows.length} more ${options.disagreementsOnly ? "disagreements" : "candidates"} not shown; --limit 0 prints every row, --json prints everything`,
     );
   }
-  out.push("", `the policies disagreed about ${result.disagreements.length} of ${result.events} candidates`, "");
+  const kinds = result.differenceCounts;
+  out.push(
+    "",
+    `the policies disagreed about ${result.disagreements.length} of ${result.events} candidates: ` +
+      `${kinds.outcome} on the outcome, ${kinds.reason} on the reason, ${kinds.deliveryTime} on when it landed`,
+    "",
+  );
   out.push(...summaryTable(result.runs, night));
 
   const subject = result.runs[reasonsFor];

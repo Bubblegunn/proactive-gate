@@ -88,13 +88,55 @@ about one at a time.
 - **no gate is not a policy.** The baseline bypasses the gate entirely. A policy with no checks is
   not expressible, and a rival built to lose would measure nothing.
 
-## Adding a check cannot make the gate louder
+## Can adding a check make the gate louder? Yes, and here is the case
 
-`test/monotonicity.test.ts` runs the claim rather than asserting it: over three generated weeks and
-ten subsets of the default order it compares **180 policy pairs**, each pair differing by one
-check, and no added check raised the number of deliveries. It also checks the two cases a budget
-makes suspicious, where holding a night message leaves a unit unspent for the morning and a
-deferring snooze can carry a candidate into the next local day.
+The obvious property, that a longer policy can only deliver less, is **false**, and the simulator is
+what found the case. With a daily budget of one: the first message is delivered at 10:00, the second
+arrives at 23:50 carrying a snooze that runs to 00:10 the next day.
 
-That is a measured result over those weeks, not a theorem. If a counterexample ever appears the
-test fails, and the mechanism gets written down instead of the test being loosened.
+- `consent + dailyBudget(1)` refuses the second one. The day's single unit is gone. **One delivery.**
+- `consent + snooze({ defer: true }) + dailyBudget(1)` holds it for twenty minutes and re-evaluates
+  it at 00:10, by which time the local day has rolled over and its budget is untouched. **Two.**
+
+Adding a check raised the number of deliveries. That is not a defect in the gate: a deferral is
+meant to move work into a later window, and the daily budget is per local day by specification. It
+is the general claim that was too broad, and it was published in 0.6.0 before this case was found.
+
+**What is true, and the scope it holds in.** Over the default order, whose checks all reject rather
+than defer, no added check raised deliveries in **180 policy pairs** across three generated weeks:
+ten written-out subsets of the twelve checks, each pair differing by exactly one check. That is a
+measured result over those weeks, not a theorem, and it says nothing about a policy that includes a
+deferring check, which the case above covers. `test/monotonicity.test.ts` holds both halves: the
+counterexample first, so nobody can read the claim without meeting the case that limits it.
+
+## What the simulator guarantees about its own measurements
+
+A simulation is easy to make convincing and hard to make true. These are the contracts it holds,
+each one covered by `test/simulate-fidelity.test.ts`, and each one wrong in 0.6.0 before a review
+found it:
+
+- **One clock.** The store is built with the simulation's clock, so a TTL expires when the simulated
+  week passes it. On a real-time clock a week of simulated traffic takes milliseconds, so a
+  one-hour deduplication window never reopens and the run quietly reports a duplicate that a real
+  deployment would have allowed.
+- **State is read again, never remembered.** A deferred or postponed candidate is re-evaluated
+  against the newest state of that user at or before the moment it runs. Consent withdrawn between
+  a deferral and its retry stops the send. A stream can carry a state change with no candidate
+  attached, which is how a revocation is expressed.
+- **Evaluation time and delivery time are different instants.** When a check moves a send to a
+  later moment, quiet hours and daily volume are counted at the delivery, because that is when the
+  person is disturbed, and the send is re-evaluated then. That second look asks only the checks
+  that read state: a budget already took its unit at evaluation, so asking it again would refuse
+  the delivery on the strength of the candidate's own spend, which is a hold the library would
+  never produce. The unit itself stays on the day the gate spent it, because that is the day its
+  key names, which is also what the store says if you read it.
+- **Deferral terminates.** A `retryAt` that is missing, in the past, or equal to now is recorded as
+  a broken deferral rather than re-queued; the expiry window is measured from the candidate's first
+  sighting rather than its latest hop; and an attempt cap sits behind both. Each of those three
+  inputs used to run until the process ran out of memory.
+- **A candidate id is an identity.** Two candidates sharing one are refused with an error, because
+  ids are how a candidate is followed across policies and attempts.
+- **A difference is more than a different outcome.** Two policies that hold the same candidate for
+  different reasons, or deliver it at different times, are reported as differences of their own
+  kind. In the aggressive-against-respectful comparison that is 7 candidates that 0.6.0 counted as
+  agreement.
