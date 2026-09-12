@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+**A rejection reason a product manager can read.** `explain(decision)` renders a decision as
+sentences built from the same trace with nothing added: "Held until 08:00 because the user's
+quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor
+needed to override them", beside the machine reason, which is unchanged. The allowed path
+renders too, because "why did this go out at 22:30" is asked more often than the reverse.
+
+Contributed by [@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#28](https://github.com/Bubblegunn/proactive-gate/pull/28), closing
+[#23](https://github.com/Bubblegunn/proactive-gate/issues/23), in TypeScript and Python together.
+
+Every check this package ships has a sentence, including the awkward ones the issue was really
+about: a budget near its limit says the unit is spent when the message actually goes out, and a
+cooldown after dismissals names the count, the window and the instant the silence ends. A reason
+matching no template is quoted verbatim and attributed to the check that said it. The renderer
+reads no clock and inspects neither candidate nor user, so it cannot describe a decision the gate
+did not make. `language` is a parameter and an unknown code fails loudly rather than quietly
+answering in English.
+
+**What the review measured.** The two catalogs render identically: 303 sentences across 89
+decisions in all 32 fixtures, the same in both implementations byte for byte, and the same again
+under a foreign time zone and a Turkish locale. `scripts/explain-parity.mjs` now runs that
+comparison in CI on every push, because two catalogs maintained by hand in two languages drift
+while both suites stay green, each asserting only its own wording.
+
+Instrumenting the catalogs showed 59 of 67 templates rendered by the TypeScript suite and 56 of
+67 by the Python one. All eight unrendered sentences turned out to be correct when they were
+exercised by hand, which is the good version of that finding and not a reason to leave them
+unread. Both suites now render 67 of 67, and the sweep fails when a check this package ships
+falls back to quoting its machine reason instead of having a sentence.
+
+**Two sentences changed after the merge.** A rate limit said "per 1 hour" and "per 1 day", which
+is exactly what `kakaoBrandMessage` and `lineMessagingApi` ship; it now says "per hour" and "per
+day", the way the dedupe window next door already said "within the last day". And the presets'
+own window ids (`window:tcpa`, `window:kakao`, `window:minor`) were not among the id conventions
+the renderer knew, so on the way through, the check a whole policy exists to satisfy read as a
+quoted fallback. The window now gets its sentence and its name: *The "tcpa" allowed window did
+not block it.* Over the fixture corpus that took quoted fallbacks from six to two, and both
+survivors are correct: they are the cn-minor-mode wrapper saying "not a minor", which is the
+wrapper's own reason and not a window at all.
+
 ## 0.3.1 (2026-09-12)
 
 **A key nobody reads again used to live in the table forever.** `SqliteStore` pruned an expired row
