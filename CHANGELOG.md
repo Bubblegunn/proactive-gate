@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (unreleased)
+## 0.6.0 (2026-09-12)
 
 **You can now see what the gate changes before you install it.** `npx proactive-gate simulate`
 replays one week of an assistant that fires when its own data arrives, first with no gate at all and
