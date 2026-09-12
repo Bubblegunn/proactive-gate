@@ -442,7 +442,8 @@ adding a package dependency. It was contributed by
 is loaded only when the store is constructed so the package can still be used on Node.js 20. On Node 22 the module prints an ExperimentalWarning on first use; it is stable from Node 24.
 Expired rows are removed when a read touches them, and every `set` or `incr` first removes the
 rows that have already expired, so a key nobody reads again still disappears: a year of daily
-budget keys leaves the live rows in the table rather than one dead row per day.
+budget keys leaves the live rows in the table rather than one dead row per day. The write-time sweep and its partial index were contributed by
+[@LouisDeconinck](https://github.com/LouisDeconinck) in [#27](https://github.com/Bubblegunn/proactive-gate/pull/27).
 
 **Writing your own store?** `proactive-gate/store-contract` exports the same suite these three are
 held to, so you can prove yours behaves rather than hope:
@@ -760,6 +761,8 @@ before. [@Aaqibhafeezkhan](https://github.com/Aaqibhafeezkhan) wrote `SqliteStor
 ([#9](https://github.com/Bubblegunn/proactive-gate/pull/9)). Both shipped in 0.1.2 and are in
 every release since, including the one you install today. @Aaqibhafeezkhan came back for a
 second one and wrote the store contract suite in [#24](https://github.com/Bubblegunn/proactive-gate/pull/24).
+
+A third person arrived from the other direction. [@LouisDeconinck](https://github.com/LouisDeconinck) took [#26](https://github.com/Bubblegunn/proactive-gate/issues/26), an issue this project filed against itself to admit that expired rows were never cleaned up, and twelve minutes later sent the fix in both languages with the test that would have caught the original bug ([#27](https://github.com/Bubblegunn/proactive-gate/pull/27), in 0.3.1).
 
 ## Cite this
 

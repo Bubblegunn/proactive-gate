@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.3.1 (unreleased)
+
+**A key nobody reads again used to live in the table forever.** `SqliteStore` pruned an expired row
+only when a read touched it, and the keys this gate writes most are dated: `budgetKey`,
+`weeklyBudgetKey` and `monthlyBudgetKey` all carry the day, so nobody ever reads yesterday's key and
+nothing ever deleted it. Measured before the fix, 200 keys with a TTL that are never read again left
+all 200 rows in place, which over a year of daily budgets is a year of dead rows.
+
+Contributed by [@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#27](https://github.com/Bubblegunn/proactive-gate/pull/27), closing #26, in TypeScript and Python
+together.
+
+`set` and `incr` now delete every already-expired row before writing, and a partial index on
+`expires_at WHERE expires_at IS NOT NULL` keeps that delete proportional to the dead rows instead of
+a table scan. Deleting everything expired rather than a slice of it is what removes the question the
+issue could not answer: there is no retention horizon to choose and defend, because the only boundary
+is the expiry each row already carries.
+
+**What it costs, measured rather than asserted.** 5,000 `incr` calls over 50 rotating keys against an
+in-memory database: 10.2 microseconds each before, 10.3 after, when nothing is expired; 9.6 before
+and 9.9 after when rows are expiring constantly. About one percent on the path the gate actually runs.
+
+Verified non-vacuous before merge: with the four sweep calls removed and everything else left in
+place, exactly one TypeScript test and one Python test fail, both of them his, and nothing else in
+either suite.
+
+`SqliteStore.size()` is new and additive, marked a test helper the way `MemoryStore.size()` already
+was, so a test can count rows rather than read dead keys back. Nothing a `get` can observe has
+changed, because an expired row was already invisible to it.
+
+`PostgresStore` is not in this release. The same delete and the same partial index apply to it
+verbatim, and [#25](https://github.com/Bubblegunn/proactive-gate/pull/25) is where that lands.
+
 ## 0.3.0 (2026-09-06)
 
 **Anyone writing a `Store` can now prove it behaves.** `proactive-gate/store-contract` exports
