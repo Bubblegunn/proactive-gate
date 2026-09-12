@@ -328,6 +328,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `euEprivacy` | pazarlama rızası, mevcut müşteriler için yumuşak opt-in |
 | `telegramBot` | sohbet başına saniyede 1 ve dakikada 20 |
 | `slackApp` | kanal başına saniyede 1 |
+| `whatsappBusiness({ template })` | WhatsApp opt-in; serbest metin yalnızca 24 saatlik müşteri hizmetleri penceresinde, kullanıcı başına saatte 600 |
 
 Her paket `sources` (sayıların geldiği sayfalar) ve neyi dışarıda bıraktığını söyleyen bir
 `note` taşır. Gözden geçirilebilir varsayılanlar, hukuki tavsiye değil: birkaç resmi kaynak

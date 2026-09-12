@@ -58,6 +58,8 @@ spec/fixtures/presets/kakao-brand-message.json
 spec/fixtures/presets/kr-network-act-50.json
 spec/fixtures/presets/telegram-bot.json
 spec/fixtures/presets/us-tcpa.json
+spec/fixtures/presets/whatsapp-business-template.json
+spec/fixtures/presets/whatsapp-business.json
 spec/fixtures/quiet-hours/apia.json
 spec/fixtures/quiet-hours/caller-supplied-dates.json
 spec/fixtures/quiet-hours/crosses-midnight-by-day.json

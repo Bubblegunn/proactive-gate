@@ -1,19 +1,22 @@
 {
   "spec_version": "1.4.0",
-  "since": "1.3.0",
-  "name": "presets/in-tcccp",
-  "description": "inTcccp needs promotional consent always, and each Schedule-II default-off band passes only when the subscriber opted that band in.",
+  "since": "1.4.0",
+  "name": "presets/whatsapp-business",
+  "description": "whatsappBusiness needs whatsappOptIn consent always, and a free-form service message passes only inside the 24-hour customer service window.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
       {
-        "preset": "inTcccp"
+        "preset": "whatsappBusiness"
       }
     ]
   },
+  "store_seed": {
+    "rate:user:u1:3600:496812": "600"
+  },
   "tests": [
     {
-      "description": "no promotional consent",
+      "description": "no opt-in consent",
       "input": {
         "user": {
           "id": "u1",
@@ -21,7 +24,7 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Asia/Kolkata",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
@@ -38,18 +41,18 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T06:30:00Z"
+        "now": "2026-09-04T09:00:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "consent:promotional",
+        "rejectedBy": "consent:whatsappOptIn",
         "trace": [
-          "consent:promotional"
+          "consent:whatsappOptIn"
         ]
       }
     },
     {
-      "description": "promotional consent at 12:00 IST passes",
+      "description": "opt-in but no inbound message on record",
       "input": {
         "user": {
           "id": "u1",
@@ -57,18 +60,18 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Asia/Kolkata",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
           "consents": {
-            "promotional": true
+            "whatsappOptIn": true
           }
         },
         "candidate": {
-          "id": "c1",
+          "id": "c2",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
@@ -76,21 +79,104 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T06:30:00Z"
+        "now": "2026-09-04T09:00:00Z"
       },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "recentInteraction",
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction"
+        ]
+      }
+    },
+    {
+      "description": "opt-in but the last inbound was 30 hours ago, the window closed",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-03T03:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "recentInteraction",
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction"
+        ]
+      }
+    },
+    {
+      "description": "opt-in and an inbound two hours ago passes and consumes one pair-rate unit",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-04T07:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "commit": true,
       "expect": {
         "allowed": true,
         "trace": [
-          "consent:promotional",
-          "consent:band00to06",
-          "consent:band06to08",
-          "consent:band08to10",
-          "consent:band21to24"
-        ]
+          "consent:whatsappOptIn",
+          "recentInteraction",
+          "rate:waPair"
+        ],
+        "commit": true,
+        "store_after": {
+          "rate:user:u1:3600:496809": "1"
+        }
       }
     },
     {
-      "description": "22:30 IST without the band ix opt-in rejects",
+      "description": "pair rate limit of 600 in the hour exhausted",
       "input": {
         "user": {
           "id": "u1",
@@ -98,18 +184,19 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Asia/Kolkata",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
           "consents": {
-            "promotional": true
-          }
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-04T10:30:00Z"
         },
         "candidate": {
-          "id": "c1",
+          "id": "c5",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
@@ -117,141 +204,17 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T17:00:00Z"
+        "now": "2026-09-04T12:00:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "consent:band21to24",
+        "rejectedBy": "rate:waPair",
         "trace": [
-          "consent:promotional",
-          "consent:band00to06",
-          "consent:band06to08",
-          "consent:band08to10",
-          "consent:band21to24"
-        ]
-      }
-    },
-    {
-      "description": "22:30 IST with the band ix opt-in passes",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Asia/Kolkata",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "consents": {
-            "promotional": true,
-            "band21to24": true
-          }
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ]
-        },
-        "now": "2026-09-04T17:00:00Z"
-      },
-      "expect": {
-        "allowed": true,
-        "trace": [
-          "consent:promotional",
-          "consent:band00to06",
-          "consent:band06to08",
-          "consent:band08to10",
-          "consent:band21to24"
-        ]
-      }
-    },
-    {
-      "description": "04:00 IST rejects when only band 06:00 to 08:00 was opted in",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Asia/Kolkata",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "consents": {
-            "promotional": true,
-            "band06to08": true
-          }
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ]
-        },
-        "now": "2026-09-04T22:30:00Z"
-      },
-      "expect": {
-        "allowed": false,
-        "rejectedBy": "consent:band00to06",
-        "trace": [
-          "consent:promotional",
-          "consent:band00to06"
-        ]
-      }
-    },
-    {
-      "description": "09:00 IST without the band iii opt-in rejects",
-      "input": {
-        "user": {
-          "id": "u1",
-          "consent": true,
-          "proactiveEnabled": true,
-          "mode": "normal",
-          "intensity": "normal",
-          "timezone": "Asia/Kolkata",
-          "quietHours": {
-            "start": "22:00",
-            "end": "08:00"
-          },
-          "createdAt": "2026-01-01T00:00:00Z",
-          "consents": {
-            "promotional": true
-          }
-        },
-        "candidate": {
-          "id": "c1",
-          "type": "reminder",
-          "priority": "normal",
-          "surfaces": [
-            "push",
-            "feed"
-          ]
-        },
-        "now": "2026-09-04T03:30:00Z"
-      },
-      "expect": {
-        "allowed": false,
-        "rejectedBy": "consent:band08to10",
-        "trace": [
-          "consent:promotional",
-          "consent:band00to06",
-          "consent:band06to08",
-          "consent:band08to10"
-        ]
+          "consent:whatsappOptIn",
+          "recentInteraction",
+          "rate:waPair"
+        ],
+        "reason_pattern": "600 used \\(600\\)"
       }
     }
   ]
