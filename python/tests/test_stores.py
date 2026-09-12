@@ -1,4 +1,6 @@
 import asyncio
+import sqlite3
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -29,6 +31,22 @@ def test_sqlite_store_persists_across_connections(tmp_path: Path) -> None:
     second = SqliteStore(path)
     assert second.get("n") == "3"
     second.close()
+
+
+def test_sqlite_store_removes_expired_rows_on_write(tmp_path: Path) -> None:
+    path = str(tmp_path / "gate.sqlite")
+    store = SqliteStore(path)
+    raw = sqlite3.connect(path, isolation_level=None)
+    expired = time.time() - 10
+    for i in range(50):
+        raw.execute("INSERT INTO kv (key, value, expires_at) VALUES (?, 'v', ?)", (f"stale-{i}", expired))
+    raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('keeper', 'v', ?)", (time.time() + 600,))
+    # None of the stale keys were read, so all fifty rows are still physically there.
+    assert raw.execute("SELECT COUNT(*) FROM kv").fetchone()[0] == 51
+    store.incr("fresh", 60)
+    assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"keeper", "fresh"}
+    raw.close()
+    store.close()
 
 
 def _user() -> UserState:

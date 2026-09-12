@@ -79,7 +79,9 @@ runs that loop with values you supply, for tests with no store at all.
 
 `MemoryStore` (in-process), `SqliteStore` (standard library, one file per host),
 `AsyncMemoryStore`, and `RedisStore` over `redis.asyncio` (INCR, then EXPIRE on the first
-increment). Any object with `get`, `set`, `incr` and `delete` works.
+increment). Any object with `get`, `set`, `incr` and `delete` works. `SqliteStore` removes
+an expired row when a read touches it and clears every already-expired row on each `set` or
+`incr`, so a key nobody reads again still disappears.
 
 ## Presets
 
