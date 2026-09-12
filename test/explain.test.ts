@@ -229,6 +229,24 @@ test("allowedWindow: works under a preset's custom id too", async () => {
   assert.equal(explain(d).summary, "Held because messages may only go out between 08:00 and 21:00 (Europe/Istanbul), and the local time was outside that window.");
 });
 
+test("allowedWindow: a preset's window id names the window on the way through", async () => {
+  // us-tcpa, kakao-brand-message and cn-minor-mode all give the window an id of
+  // their own. Before the prefix was known, every one of their passes read as a
+  // quoted fallback: 'The "window:tcpa" check let it through.'
+  const gate = createGate({ checks: [checks.allowedWindow({ start: "08:00", end: "21:00", timezone: "user", id: "window:tcpa" })] });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(d.allowed, true);
+  assert.equal(explain(d).checks[0]!.sentence, 'The "tcpa" allowed window did not block it.');
+
+  const plain = createGate({ checks: [checks.allowedWindow({ start: "08:00", end: "21:00", timezone: "user" })] });
+  const dp = await plain.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(dp).checks[0]!.sentence, "The allowed window did not block it.");
+
+  // The id also answers for a window that could not run at all.
+  const noZone = await gate.evaluate({ user: user({ timezone: undefined as unknown as string }), candidate: candidate(), now: noon });
+  assert.equal(explain(noZone).checks[0]!.sentence, "The user has no time zone, so the allowed window could not be checked.");
+});
+
 test("requiresConsent: the consent name comes from the id, with or without hours", async () => {
   const gate = createGate({ checks: [checks.requiresConsent({ name: "ad" })] });
   const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });

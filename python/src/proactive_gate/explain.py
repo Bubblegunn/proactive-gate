@@ -122,6 +122,11 @@ def _timing_adjust(f: Mapping[str, str]) -> str:
     return f"delivery was narrowed to {surfaces}"
 
 
+def _window_pass(f: Mapping[str, str]) -> str:
+    name = f.get("name")
+    return f'the "{name}" allowed window did not block it' if name else "the allowed window did not block it"
+
+
 def _consent_pass(f: Mapping[str, str]) -> str:
     name = f.get("name")
     return f'the "{name}" consent the check needs was in place' if name else "the consent the check needs was in place"
@@ -196,7 +201,7 @@ EN: Sentences = {
     "utilityFloor.skip": lambda f: "the candidate carried no acceptance estimate, so the utility floor could not run",
     "boundedDeferral.pass": lambda f: "the user did not look busy",
     "boundedDeferral.adjust": lambda f: f"the user looked busy, so delivery was deferred {f['tStar']} seconds to {f['at']}",
-    "allowedWindow.pass": lambda f: "the allowed window did not block it",
+    "allowedWindow.pass": _window_pass,
     "allowedWindow.reject": lambda f: f"messages may only go out between {f['start']} and {f['end']} ({f['zone']}), and the local time was outside that window",
     "allowedWindow.skip": lambda f: "the user has no time zone, so the allowed window could not be checked",
     "requiresConsent.pass": _consent_pass,
@@ -270,6 +275,10 @@ def _consent_id_facts(check_id: str) -> Facts:
     return {"name": check_id[len("consent:"):]} if check_id.startswith("consent:") else {}
 
 
+def _window_id_facts(check_id: str) -> Facts:
+    return {"name": check_id[len("window:"):]} if check_id.startswith("window:") else {}
+
+
 PARSERS: dict[str, dict[str, Parser | Callable[[str], Facts]]] = {
     "killSwitch": {"stop": _fixed("engine kill switch is on")},
     "consent": {"stop": _fixed("user has not consented to proactive behaviour")},
@@ -299,7 +308,11 @@ PARSERS: dict[str, dict[str, Parser | Callable[[str], Facts]]] = {
     "rateLimit": {"stop": _match(r"rate limit (\d+) per (\d+) s of \d+ used \((\d+)\)", ("limit", "per", "used")), "passReason": _BUDGET_NEAR},
     "utilityFloor": {"stop": _match(r"pAccept (\S+) < tau (\S+)", ("pAccept", "tau")), "skip": _fixed("no pAccept on the candidate; utility floor cannot be evaluated")},
     "boundedDeferral": {"adjust": _match(r"user busy; deliver at (\S+) \(t\* (\d+) s\)", ("at", "tStar"))},
-    "allowedWindow": {"stop": _match(r"outside the allowed window (\S+) to (\S+) (.+)", ("start", "end", "zone")), "skip": _fixed("no timezone on the user; window cannot be evaluated")},
+    "allowedWindow": {
+        "stop": _match(r"outside the allowed window (\S+) to (\S+) (.+)", ("start", "end", "zone")),
+        "idFacts": _window_id_facts,
+        "skip": _fixed("no timezone on the user; window cannot be evaluated"),
+    },
     "requiresConsent": {
         "stop": _match(r'consent "(.+)" is missing(?: \(required (\S+) to (\S+)\))?', ("name", "start", "end")),
         "idFacts": _consent_id_facts,
@@ -315,13 +328,15 @@ PARSERS: dict[str, dict[str, Parser | Callable[[str], Facts]]] = {
 
 
 def _key_for_id(check_id: str) -> str | None:
-    """The ids the package itself emits: the fixed check ids, plus consent:<name> and rate:<limit>/<period>s."""
+    """The ids the package itself emits: the fixed check ids, plus consent:<name>, rate:<limit>/<period>s and window:<name>."""
     if check_id in PARSERS:
         return check_id
     if check_id.startswith("consent:"):
         return "requiresConsent"
     if check_id.startswith("rate:"):
         return "rateLimit"
+    if check_id.startswith("window:"):
+        return "allowedWindow"
     return None
 
 

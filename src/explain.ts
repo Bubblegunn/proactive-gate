@@ -225,7 +225,7 @@ export const en: Sentences = {
   "utilityFloor.skip": () => "the candidate carried no acceptance estimate, so the utility floor could not run",
   "boundedDeferral.pass": () => "the user did not look busy",
   "boundedDeferral.adjust": (f) => `the user looked busy, so delivery was deferred ${f.tStar} seconds to ${f.at}`,
-  "allowedWindow.pass": () => "the allowed window did not block it",
+  "allowedWindow.pass": (f) => (f.name ? `the "${f.name}" allowed window did not block it` : "the allowed window did not block it"),
   "allowedWindow.reject": (f) => `messages may only go out between ${f.start} and ${f.end} (${f.zone}), and the local time was outside that window`,
   "allowedWindow.skip": () => "the user has no time zone, so the allowed window could not be checked",
   "requiresConsent.pass": (f) => (f.name ? `the "${f.name}" consent the check needs was in place` : "the consent the check needs was in place"),
@@ -314,7 +314,11 @@ const PARSERS: Record<string, Parsers> = {
   rateLimit: { stop: match(/^rate limit (\d+) per (\d+) s of \d+ used \((\d+)\)$/, ["limit", "per", "used"]), passReason: BUDGET_NEAR },
   utilityFloor: { stop: match(/^pAccept (\S+) < tau (\S+)$/, ["pAccept", "tau"]), skip: fixed("no pAccept on the candidate; utility floor cannot be evaluated") },
   boundedDeferral: { adjust: match(/^user busy; deliver at (\S+) \(t\* (\d+) s\)$/, ["at", "tStar"]) },
-  allowedWindow: { stop: match(/^outside the allowed window (\S+) to (\S+) (.+)$/, ["start", "end", "zone"]), skip: fixed("no timezone on the user; window cannot be evaluated") },
+  allowedWindow: {
+    stop: match(/^outside the allowed window (\S+) to (\S+) (.+)$/, ["start", "end", "zone"]),
+    idFacts: (id) => (id.startsWith("window:") ? { name: id.slice("window:".length) } : {}),
+    skip: fixed("no timezone on the user; window cannot be evaluated"),
+  },
   requiresConsent: {
     stop: match(/^consent "(.+)" is missing(?: \(required (\S+) to (\S+)\))?$/, ["name", "start", "end"]),
     idFacts: (id) => (id.startsWith("consent:") ? { name: id.slice("consent:".length) } : {}),
@@ -325,11 +329,12 @@ const PARSERS: Record<string, Parsers> = {
   },
 };
 
-/** The ids the package itself emits: the fixed check ids, plus consent:<name> and rate:<limit>/<period>s. */
+/** The ids the package itself emits: the fixed check ids, plus consent:<name>, rate:<limit>/<period>s and window:<name>. */
 const keyForId = (id: string): string | undefined => {
   if (id in PARSERS) return id;
   if (id.startsWith("consent:")) return "requiresConsent";
   if (id.startsWith("rate:")) return "rateLimit";
+  if (id.startsWith("window:")) return "allowedWindow";
   return undefined;
 };
 

@@ -210,6 +210,19 @@ def test_allowed_window_custom_id() -> None:
     assert explain(d).summary == "Held because messages may only go out between 08:00 and 21:00 (Europe/Istanbul), and the local time was outside that window."
 
 
+def test_allowed_window_preset_id_names_the_window() -> None:
+    """us_tcpa, kakao_brand_message and cn_minor_mode each give the window an id of its own."""
+    named = evaluate([checks.AllowedWindow("08:00", "21:00", timezone="user", id="window:tcpa")], now=NOON)
+    assert named.allowed is True
+    assert explain(named).checks[0].sentence == 'The "tcpa" allowed window did not block it.'
+
+    plain = evaluate([checks.AllowedWindow("08:00", "21:00", timezone="user")], now=NOON)
+    assert explain(plain).checks[0].sentence == "The allowed window did not block it."
+
+    no_zone = evaluate([checks.AllowedWindow("08:00", "21:00", timezone="user", id="window:tcpa")], u=user(timezone=None), now=NOON)
+    assert explain(no_zone).checks[0].sentence == "The user has no time zone, so the allowed window could not be checked."
+
+
 def test_requires_consent_with_and_without_hours() -> None:
     d = evaluate([checks.RequiresConsent("ad")], now=NOON)
     assert explain(d).summary == 'Held because the user has not given the required "ad" consent.'
