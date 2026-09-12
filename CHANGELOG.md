@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.5.0 (unreleased)
+
+**India, as the regulation actually reads.** `inTcccp` encodes TRAI's Telecom Commercial
+Communications Customer Preference Regulations, 2018. The widely repeated "9am to 9pm" appears
+nowhere in the primary text: Schedule-II item 3 defines nine time bands a subscriber registers
+preferences against, and its Note-1 keeps four of them, 00:00-06:00, 06:00-08:00, 08:00-10:00 and
+21:00-24:00, off for every customer until that subscriber switches the band on. The preset carries
+that as one opt-in consent per default-off band rather than one hard window, which would deny the
+opt-ins the regulation expressly allows, alongside the promotional consent regulation 9 requires.
+The default state is therefore 10:00 to 21:00 in the recipient's own zone.
+
+Contributed by [@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#29](https://github.com/Bubblegunn/proactive-gate/pull/29), closing
+[#15](https://github.com/Bubblegunn/proactive-gate/issues/15), in TypeScript and Python together
+with a spec fixture.
+
+**Checked against the gazette rather than a summary.** The reading was verified in TRAI's May 2026
+consolidated text, which the pull request cited, and then in the 2018 gazetted regulation, where
+Schedule-II Note-1 appears word for word. The consolidation says on its own first page that the
+gazetted document prevails where they differ, so the gazette is now cited too. Every band edge was
+run rather than reasoned about: 09:59 held, 10:00 allowed, 20:59 allowed, 21:00 held, 23:59 held,
+and opting into one band does not open another, in the TypeScript, the Python and the JSON-policy
+paths alike.
+
+**His preset found a defect in the last release.** `requiresConsent` with a window returned a bare
+pass when the local time was outside it, which is the same trace entry as "the consent is on file",
+so `explain()` said *The "band00to06" consent the check needs was in place* about a consent the user
+had never given. Running four windowed consents at once made three of five lines false at any hour.
+The check now says why it passed, and the sentence follows it: *The "band00to06" consent is only
+needed between 00:00 and 06:00, and it was outside those hours.* A fixture cannot express a reason
+on a pass entry, so both suites and the cross-language parity run carry this one.
+
+**The spec is 1.3.0, not 1.2.1.** A patch adds fixtures existing implementations already pass, and
+7.3 requires an implementation to reject a policy naming a preset it does not know, so no
+implementation at 1.2.0 can pass a fixture whose policy names `inTcccp`. The rule had no case for
+presets, this was the first change that is only a preset, and `SPEC.md` and `CONFORMANCE.md` now
+state it. The `spec/v1.3.0` tag follows this release.
+
+**What the legal presets do not cover, measured.** With no `user.timezone` there is no local time to
+compare, so `usTcpa` skips its whole window, `krNetworkAct50` skips its night consent and `inTcccp`
+skips all four bands: a solicitation at 02:00 local goes out in each case, and nothing said so
+anywhere until now. `kakaoBrandMessage` and `cnMinorMode` are unaffected, their windows being in a
+fixed zone. `inTcccp` also states the scope the regulation itself draws: the preference machinery is
+about promotional communication, and TRAI's own block options exempt transactional and service
+communication and government communication.
+
 ## 0.4.1 (2026-09-12)
 
 **`proactive_gate.__version__` said 0.2.0.** It had said that since 0.2.0, through four
