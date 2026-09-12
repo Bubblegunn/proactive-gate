@@ -32,6 +32,14 @@ const sh = (cmd, a, opts = {}) => {
 const read = (f) => readFileSync(join(root, f), "utf8");
 const has = (f) => existsSync(join(root, f));
 
+/** Every python/src/<package>/__init__.py, for repositories that ship a Python sibling. */
+const pythonInits = () =>
+  !has("python/src")
+    ? []
+    : readdirSync(join(root, "python/src"), { withFileTypes: true })
+        .filter((e) => e.isDirectory() && has(`python/src/${e.name}/__init__.py`))
+        .map((e) => `python/src/${e.name}/__init__.py`);
+
 if (!spec) fail("usage: npm run release -- <X.Y.Z | patch | minor | major> [--dry-run]");
 
 const pkg = JSON.parse(read("package.json"));
@@ -93,6 +101,7 @@ if (has("package-lock.json")) plan.push(`package-lock.json: ${target}`);
 if (has("CITATION.cff")) plan.push(`CITATION.cff: version ${target}, date-released ${today}`);
 if (has("action.yml") && /^  version:\n/m.test(read("action.yml"))) plan.push(`action.yml: version input default ${target}`);
 if (has("python/pyproject.toml")) plan.push(`python/pyproject.toml: version ${target}`);
+for (const init of pythonInits()) plan.push(`${init}: __version__ ${target}`);
 if (has(".claude-plugin/plugin.json")) plan.push(`.claude-plugin/plugin.json: version ${target}`);
 const readmes = readdirSync(root).filter((f) => /^README(\.[a-zA-Z-]+)?\.md$/.test(f));
 const pinned = new RegExp(`Bubblegunn/${name}@v\\d+\\.\\d+\\.\\d+`);
@@ -126,6 +135,7 @@ if (has("action.yml") && /^  version:\n/m.test(read("action.yml"))) {
   replaceIn("action.yml", /(^  version:\n(?:    (?!default:).*\n)*    default: ")[^"]*(")/m, `$1${target}$2`, "the version input default");
 }
 if (has("python/pyproject.toml")) replaceIn("python/pyproject.toml", /^version = ".*"$/m, `version = "${target}"`, "version");
+for (const init of pythonInits()) replaceIn(init, /^__version__ = ".*"$/m, `__version__ = "${target}"`, "__version__");
 if (has(".claude-plugin/plugin.json")) replaceIn(".claude-plugin/plugin.json", /"version": "[^"]*"/, `"version": "${target}"`, "version");
 for (const f of readmes) {
   const text = read(f);

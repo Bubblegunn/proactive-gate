@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.1 (unreleased)
+
+**`proactive_gate.__version__` said 0.2.0.** It had said that since 0.2.0, through four
+releases, while the wheel's own metadata was right each time. Nothing compared the two, so
+nothing noticed. It was found by installing the published 0.4.0 wheel and asking it what
+version it was.
+
+The value is now correct, and two things keep it that way rather than none: `release-gate.mjs`
+compares every `python/src/<package>/__init__.py` against `package.json` on each push, the way
+it already compares `CITATION.cff` and `pyproject.toml`, and `scripts/release.mjs` writes it
+during a release so the next version cannot drift either. A Python test asserts the same thing
+against `pyproject.toml`, because somebody working only in Python runs pytest and not the gate.
+
+Verified non-vacuous: setting the value back by one patch makes the gate name the file and
+exit 1.
+
+Nothing else changed, and the TypeScript package is unaffected; it states its version once.
+
 ## 0.4.0 (2026-09-12)
 
 **A rejection reason a product manager can read.** `explain(decision)` renders a decision as

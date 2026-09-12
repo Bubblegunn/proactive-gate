@@ -6,7 +6,7 @@
 // `--update` rewrites the allowlist from the current pack (review the diff before committing).
 // Same file in every Bubblegunn repository. Node built-ins only.
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -16,6 +16,14 @@ const problems = [];
 
 const pkg = JSON.parse(read("package.json"));
 const version = pkg.version;
+
+/** Every python/src/<package>/__init__.py, for repositories that ship a Python sibling. */
+function pythonInits() {
+  if (!has("python/src")) return [];
+  return readdirSync(join(root, "python/src"), { withFileTypes: true })
+    .filter((e) => e.isDirectory() && has(`python/src/${e.name}/__init__.py`))
+    .map((e) => `python/src/${e.name}/__init__.py`);
+}
 
 const heading = /^## +(\S+)/m.exec(read("CHANGELOG.md"));
 if (!heading) problems.push("CHANGELOG.md has no '## ' heading");
@@ -33,6 +41,14 @@ if (has("python/pyproject.toml")) {
   const v = /^version = "([^"]*)"$/m.exec(read("python/pyproject.toml"))?.[1];
   if (v !== version) problems.push(`python/pyproject.toml version is ${v}, package.json is ${version}`);
 }
+// A Python sibling states its version twice: pyproject.toml and the package's own
+// __version__. The second one said 0.2.0 through four releases because nothing compared it,
+// and it is what `import proactive_gate; proactive_gate.__version__` answers.
+for (const init of pythonInits()) {
+  const v = /^__version__ = "([^"]*)"$/m.exec(read(init))?.[1];
+  if (v !== undefined && v !== version) problems.push(`${init} __version__ is ${v}, package.json is ${version}`);
+}
+
 if (has(".claude-plugin/plugin.json")) {
   const v = JSON.parse(read(".claude-plugin/plugin.json")).version;
   if (v !== version) problems.push(`.claude-plugin/plugin.json version is ${v}, package.json is ${version}`);
