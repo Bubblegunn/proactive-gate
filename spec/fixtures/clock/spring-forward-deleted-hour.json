@@ -1,0 +1,125 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/spring-forward-deleted-hour",
+  "description": "On 2026-03-08 New York jumps from 01:59:59 EST to 03:00 EDT at 07:00 UTC, so local times 02:00 to 02:59:59 never occur. A quiet window of 02:00 to 03:00 names an hour that does not exist that morning; no instant resolves inside it, and the same window bites again on the next ordinary day.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "06:30Z is 01:30 EST, still before the jump and before the window",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "02:00",
+            "end": "03:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T06:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "07:30Z is 03:30 EDT; the hour the window names was skipped entirely, so the window never ran today",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "02:00",
+            "end": "03:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T07:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "the same window on the following ordinary day: 06:30Z is 02:30 EDT, a real local time, and it is quiet",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "02:00",
+            "end": "03:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-09T06:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}

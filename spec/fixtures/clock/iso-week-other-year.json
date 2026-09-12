@@ -1,0 +1,189 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/iso-week-other-year",
+  "description": "The weekly budget key is the local ISO week (5.1), and the ISO week-year is not the calendar year. The last days of December can belong to next year's week 1, and the first days of January can belong to a week 53 of the year just ended. A naive year-plus-week key would bill these deliveries to a week that does not exist.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "weeklyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "weeklyBudget:u1:2026-W01": "1",
+    "weeklyBudget:u1:2026-W53": "1",
+    "weeklyBudget:u1:2020-W53": "1"
+  },
+  "tests": [
+    {
+      "description": "Wednesday 2025-12-31 sits in 2026-W01, so the next year's week 1 counter is already the one that answers",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2025-12-31T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "Wednesday 2026-12-30 sits in 2026-W53: a year starting on Thursday gets a 53rd week",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-12-30T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "New Year's Day 2027 is a Friday still inside 2026-W53; the counter named after last year is the live one",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2027-01-01T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "New Year's Eve 2020 is a Thursday inside 2020-W53: a leap year starting on Wednesday also earns a week 53",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2020-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2020-12-31T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "Monday 2027-01-04 finally opens 2027-W01, a fresh counter",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2027-01-04T12:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u1:2027-W01": "1"
+        },
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    }
+  ]
+}

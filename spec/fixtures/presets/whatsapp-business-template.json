@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.4.0",
+  "spec_version": "1.4.1",
   "since": "1.4.0",
   "name": "presets/whatsapp-business-template",
   "description": "whatsappBusiness with template true drops the customer-service-window check: an approved template message is the only kind allowed outside it, and opt-in still binds.",

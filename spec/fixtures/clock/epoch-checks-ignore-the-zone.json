@@ -1,0 +1,106 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/epoch-checks-ignore-the-zone",
+  "description": "Not every clock-reading check works in local time: rateLimit buckets floor the epoch second, windowBudget keys on the instant the user last wrote, and boundedDeferral only ever moves an instant forward. The suite pins that the zone cannot move any of them: the same instant is the same rate bucket in Kiritimati and New York, and a deferral that lands past a deleted local hour still lands on a real instant.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "boundedDeferral"
+      },
+      {
+        "id": "rateLimit",
+        "limit": 1,
+        "perSeconds": 3600
+      },
+      {
+        "id": "windowBudget",
+        "limit": 1,
+        "withinHours": 48
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a busy candidate at 06:58:20Z is deferred 116279 ms to 07:00:16.279Z, an instant that exists even though New York deletes 02:00 that morning; the commit writes the zone-free bucket keys",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Kiritimati",
+          "createdAt": "2026-01-01T00:00:00Z",
+          "lastInboundAt": "2026-03-08T06:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "busy": true,
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T06:58:20Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "deliverAt": "2026-03-08T07:00:16.279Z",
+        "commit": true,
+        "store_after": {
+          "rate:user:u1:3600:492486": "1",
+          "windowBudget:u1:1772949600": "1"
+        },
+        "trace": [
+          "consent",
+          "boundedDeferral",
+          "rate:1/3600s",
+          "windowBudget"
+        ]
+      }
+    },
+    {
+      "description": "the same instant in a New York profile is the same bucket: the slot Kiritimati just spent is already spent here",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z",
+          "lastInboundAt": "2026-03-08T06:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T06:58:20Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "rate:1/3600s",
+        "reason_pattern": "of 1 used",
+        "trace": [
+          "consent",
+          "boundedDeferral",
+          "rate:1/3600s"
+        ]
+      }
+    }
+  ]
+}

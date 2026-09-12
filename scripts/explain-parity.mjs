@@ -13,10 +13,33 @@
  */
 import { spawnSync } from "node:child_process";
 import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const fixtures = join(root, "spec/fixtures");
+
+/** A fixture either implementation has declared it does not pass cannot yield identical decisions. */
+const declared = new Set();
+for (const impl of ["ts", "python"]) {
+  let text = "";
+  try {
+    text = readFileSync(join(root, `spec/skip/${impl}.txt`), "utf8");
+  } catch {
+    continue;
+  }
+  for (const line of text.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    declared.add(trimmed.split("#")[0].trim());
+  }
+}
+
+// The failOpen/failClosed sentences quote the runtime's own exception text, which is
+// environment wording, not catalog wording: V8 says "Invalid time zone specified: X" where
+// Python says "'No time zone found with key X'". The template around it is what parity
+// asserts, so the quoted payload is normalised away before comparing.
+const normalize = (line) => line.replace(/check failed with ".*", and the gate/, 'check failed with "<runtime error>", and the gate');
 
 function fail(message) {
   console.error(`explain-parity: ${message}`);
@@ -95,15 +118,20 @@ const python = JSON.parse(
   run("python", process.env.PYTHON ?? "python3", ["-c", pyScript], { env: { ...process.env, PYTHONPATH: join(root, "python/src"), FIXTURES: fixtures } }),
 );
 
-if (!ts.length) fail("no decisions were rendered; the fixtures or the runner are wrong");
-if (ts.length !== python.length) fail(`TypeScript rendered ${ts.length} decisions and Python ${python.length}`);
+const tsKept = ts.filter((row) => !declared.has(row[0]));
+const pyKept = python.filter((row) => !declared.has(row[0]));
+
+if (!tsKept.length) fail("no decisions were rendered; the fixtures or the runner are wrong");
+if (tsKept.length !== pyKept.length) fail(`TypeScript rendered ${tsKept.length} decisions and Python ${pyKept.length}`);
 
 const differences = [];
-for (const [i, row] of ts.entries()) {
-  const other = python[i];
+for (const [i, row] of tsKept.entries()) {
+  const other = pyKept[i];
   const lines = Math.max(row.length, other.length);
   for (let line = 2; line < lines; line++) {
-    if (row[line] !== other[line]) differences.push(`${row[0]} [${row[1]}]\n    ts: ${row[line] ?? "(nothing)"}\n    py: ${other[line] ?? "(nothing)"}`);
+    const a = row[line] === undefined ? "(nothing)" : normalize(row[line]);
+    const b = other[line] === undefined ? "(nothing)" : normalize(other[line]);
+    if (a !== b) differences.push(`${row[0]} [${row[1]}]\n    ts: ${a}\n    py: ${b}`);
   }
   if (row[0] !== other[0] || row[1] !== other[1]) differences.push(`fixture order differs at ${i}: ${row[0]} [${row[1]}] against ${other[0]} [${other[1]}]`);
 }
@@ -112,5 +140,6 @@ if (differences.length) {
   fail(`${differences.length} sentence(s) differ between the implementations`);
 }
 
-const sentences = ts.reduce((n, row) => n + row.length - 2, 0);
-console.log(`explain-parity: ok, ${sentences} sentences identical across ${ts.length} decisions in ${new Set(ts.map((r) => r[0])).size} fixtures`);
+const sentences = tsKept.reduce((n, row) => n + row.length - 2, 0);
+const excluded = ts.length - tsKept.length;
+console.log(`explain-parity: ok, ${sentences} sentences identical across ${tsKept.length} decisions in ${new Set(tsKept.map((r) => r[0])).size} fixtures${excluded ? `; ${excluded} decisions excluded under declared skips` : ""}`);

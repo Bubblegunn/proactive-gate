@@ -1,0 +1,301 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/leap-day",
+  "description": "2028-02-29 exists once every four years, and every calendar edge has to reach it: a window that opens on the 29th still silences the first hours of March 1 through the yesterday rule, the daily key budget:u:2028-02-29 is a real key, and a trust ramp that began on the 28th ends in the middle of the leap day.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      },
+      {
+        "id": "trustRamp",
+        "days": 1
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      },
+      {
+        "id": "monthlyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u1:2028-02-29": "1",
+    "monthlyBudget:u2:2028-02": "1"
+  },
+  "tests": [
+    {
+      "description": "23:30Z on Feb 29 is inside the window that date carries",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "dates": {
+              "2028-02-29": {
+                "start": "22:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-02-29T23:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "00:30Z on Mar 1 is inside the tail of the leap day's window; the day before Mar 1 is Feb 29 in a leap year",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "dates": {
+              "2028-02-29": {
+                "start": "22:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-03-01T00:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "tue 2028-02-29",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "midday on the leap day: past the ramp, and the once-in-four-years daily key is the one that is spent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "dates": {
+              "2028-02-29": {
+                "start": "22:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-02-29T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "quietHours",
+          "trustRamp",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the leap day belongs to February, so it spends the 2028-02 monthly counter",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-02-29T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "monthlyBudget",
+        "trace": [
+          "consent",
+          "quietHours",
+          "trustRamp",
+          "dailyBudget",
+          "monthlyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the next day opens fresh daily and monthly counters at once",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-03-01T12:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "budget:u2:2028-03-01": "1",
+          "monthlyBudget:u2:2028-03": "1"
+        },
+        "trace": [
+          "consent",
+          "quietHours",
+          "trustRamp",
+          "dailyBudget",
+          "monthlyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a user created on Feb 28 at noon is one second short of day 1 at 11:59:59 on the leap day; normal priority is still below the ramp floor",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2028-02-28T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-02-29T11:59:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "trustRamp",
+        "reason_pattern": "day 1 of 1",
+        "trace": [
+          "consent",
+          "quietHours",
+          "trustRamp"
+        ]
+      }
+    },
+    {
+      "description": "one second later the ramp completes on the leap day and every check passes",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2028-02-28T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2028-02-29T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours",
+          "trustRamp",
+          "dailyBudget",
+          "monthlyBudget"
+        ]
+      }
+    }
+  ]
+}

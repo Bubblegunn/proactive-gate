@@ -1,0 +1,163 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/clock-goes-backwards",
+  "description": "The wall clock rewinds an hour between evaluations, as happens when an NTP correction or a manual change moves the system time back. Records written at 12:00 are still records at 11:00: the dedupe claim made before the rewind still blocks the retry, and the budget spent at 12:00 is already spent at 11:00. The suite pins that a backwards now cannot un-spend or un-claim anything.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "dedupe"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "the original delivery at 12:00 claims the dedupe key and spends the day at commit",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-42",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "dedupe:u1:evt-42": "1",
+          "budget:u1:2026-09-05": "1"
+        },
+        "trace": [
+          "consent",
+          "dedupe",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the clock has moved back to 11:00, but the claim stands: the retry is refused",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-42",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T11:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dedupe",
+        "reason_pattern": "already delivered",
+        "trace": [
+          "consent",
+          "dedupe"
+        ]
+      }
+    },
+    {
+      "description": "a different event at the rewound 11:00 still meets the budget the 12:00 delivery already spent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-43",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T11:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dedupe",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "and a day later the first event's claim still holds; the window is fixed from the first claim (5.8), not from the last attempt",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-42",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-06T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dedupe",
+        "trace": [
+          "consent",
+          "dedupe"
+        ]
+      }
+    }
+  ]
+}

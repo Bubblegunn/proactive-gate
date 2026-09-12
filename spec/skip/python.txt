@@ -1,0 +1,3 @@
+# Fixtures Python does not conform to, one per line: name # reason.
+clock/year-under-1000 # strftime %Y padding is build-dependent; on non-padding builds local_clock emits "1-06-01", the strict-ISO helpers throw, and every clock check fails open; upstream bug #38
+clock/year-under-1000-week # iso_week_key formats the ISO year unpadded ("1-W22") where the spec format is 0001-W22, and on non-padding builds it throws on the unpadded day string; upstream bugs #37 and #38

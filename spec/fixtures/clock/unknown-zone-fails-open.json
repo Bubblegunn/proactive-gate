@@ -1,0 +1,134 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/unknown-zone-fails-open",
+  "description": "A timezone string the platform does not know makes every local-time lookup throw. Under fail-open (3.5) each such check is recorded as a skip and the decision proceeds, so a profile pinned to a bogus zone is unreachable by quiet hours and budgets alike, and nothing refuses it. The control tests show the same policy resolving a real zone normally.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "requiresConsent",
+        "name": "marketing",
+        "when": {
+          "start": "08:00",
+          "end": "20:00",
+          "timezone": "user"
+        }
+      },
+      {
+        "id": "quietHours"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "every check that needs the zone throws on Mars/Olympus_Mons and is recorded as a skip; nothing rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Mars/Olympus_Mons",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "consent:marketing",
+          "quietHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "21:00Z is 10:00 the next morning in Auckland, inside the consent window, so the missing marketing consent refuses",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Auckland",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-26T21:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
+        "trace": [
+          "consent",
+          "consent:marketing"
+        ]
+      }
+    },
+    {
+      "description": "08:30Z is 20:30 in Auckland, outside the window, so the consent is not consulted and the decision proceeds",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Auckland",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-26T08:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "consent:marketing",
+          "quietHours",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

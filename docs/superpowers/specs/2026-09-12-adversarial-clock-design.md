@@ -25,9 +25,14 @@ failing, do not pick a winner quietly. Where the two implementations disagree wi
 other, the disagreement is the finding and is reported in the results section, whether or
 not a fixture can express it.
 
-No check, policy, default or existing fixture changes. `SPEC_VERSION` does not move: these
-are fixtures only, and the current version is untagged, so they arrive in 1.4.0 beside the
-fixtures already there.
+No check, policy, default or existing fixture changes. `SPEC_VERSION` moves once, to
+1.4.1: when this design was written 1.4.0 was untagged and the fixtures would have
+arrived in it, but the 0.7.0 release tagged `spec/v1.4.0` before the suite landed, and a
+tagged version takes no new fixtures. The bump is a patch on the spec's own versioning
+rule, which reserves minor for additions to the vocabulary; these are twenty-one fixtures
+against checks that already exist, and the skips declare implementation failures, not a
+change to the spec. Existing fixtures keep their `since`; the twenty-one below arrive in
+1.4.1.
 
 ## 2. The hostile moments
 

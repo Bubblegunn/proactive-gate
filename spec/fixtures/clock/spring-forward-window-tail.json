@@ -1,0 +1,200 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/spring-forward-window-tail",
+  "description": "A 22:00 to 02:30 window is open when New York springs forward on 2026-03-08: the tail between 02:00 and 02:30 is deleted mid-window, so the quiet period ends half an hour early in local terms, at the 07:00 UTC jump. The window belongs to the day it opened on (6.4), which is why the reason names Saturday Mar 7.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "05:30Z is 00:30 EST on Mar 8, inside the tail of the window that opened on Mar 7",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "22:00",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T05:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "sat 2026-03-07",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "06:59:59Z is 01:59:59 EST, the last quiet minute before the jump deletes the rest of the tail",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "22:00",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T06:59:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "sat 2026-03-07",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "07:00Z lands on 03:00 EDT; local 02:00 to 02:29:59 never happened, so the window is already over",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "22:00",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T07:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "control on an ordinary night: 07:29:59Z on Mar 7 is 02:29:59 EST, the last real minute inside the tail",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "22:00",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-07T07:29:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "fri 2026-03-06",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "07:30Z on Mar 7 is 02:30 EST, the window's exclusive end, so it is no longer quiet",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "22:00",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-07T07:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}

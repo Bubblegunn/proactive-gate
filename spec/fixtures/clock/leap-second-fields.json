@@ -1,0 +1,97 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/leap-second-fields",
+  "description": "No mainstream runtime exposes a 23:59:60 leap second: JavaScript's Date and Python's datetime both refuse to parse one. The suite pins what that refusal does to each field that accepts a timestamp. An unparseable snoozedUntil reads as absent, so the snooze does not hold. An unparseable createdAt reads as absent, so the ramp skips rather than rejects. An unparseable lastInboundAt reads as no inbound on record, which is the conservative refusal.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "snooze"
+      },
+      {
+        "id": "recentInteraction",
+        "withinHours": 48
+      },
+      {
+        "id": "trustRamp",
+        "days": 7
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "the snooze stamp and the creation stamp both carry 23:59:60; both read as absent, so the decision proceeds on the fields that parse",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "snoozedUntil": "2016-12-31T23:59:60Z",
+          "createdAt": "2016-12-31T23:59:60Z",
+          "lastInboundAt": "2026-09-05T10:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "snooze",
+          "recentInteraction",
+          "trustRamp"
+        ]
+      }
+    },
+    {
+      "description": "a leap-second inbound stamp reads as no inbound on record; recentInteraction refuses, the conservative outcome",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z",
+          "lastInboundAt": "2016-12-31T23:59:60Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "recentInteraction",
+        "reason_pattern": "no inbound",
+        "trace": [
+          "consent",
+          "snooze",
+          "recentInteraction"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/timestamps-from-the-future",
+  "description": "Caller-supplied timestamps can sit ahead of now: a skewed client clock, a migrated row, a hand-edited profile. The suite pins what each check does with one. A snooze ending in the future defers to exactly that instant. A future lastInboundAt reads as a negative age, which is inside any lookback window. Dismissal stamps from the future are inside every lookback window too, so they silence until their own stamp plus silenceDays. A future createdAt yields a negative ramp age, reported as day 0.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "snooze",
+        "defer": true
+      },
+      {
+        "id": "recentInteraction",
+        "withinHours": 48
+      },
+      {
+        "id": "trustRamp",
+        "days": 7
+      },
+      {
+        "id": "dismissalCooldown"
+      }
+    ]
+  },
+  "store_seed": {
+    "cooldown:u1:reminder": "[1788613200000,1788613200000,1788613200000]"
+  },
+  "tests": [
+    {
+      "description": "three dismissal stamps dated an hour in the future still count, and the silence runs to their stamp plus seven days",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-01-01T00:00:00Z",
+          "lastInboundAt": "2026-09-05T13:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dismissalCooldown",
+        "reason_pattern": "silent until 2026-09-12T13:00",
+        "trace": [
+          "consent",
+          "snooze",
+          "recentInteraction",
+          "trustRamp",
+          "dismissalCooldown"
+        ]
+      }
+    },
+    {
+      "description": "a profile created tomorrow has a negative age, reported as day 0 of the ramp; the spec is silent on impossible ages, and trusting the record is the consistent reading",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "2026-09-06T00:00:00Z",
+          "lastInboundAt": "2026-09-05T10:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "trustRamp",
+        "reason_pattern": "day 0 of 7",
+        "trace": [
+          "consent",
+          "snooze",
+          "recentInteraction",
+          "trustRamp"
+        ]
+      }
+    },
+    {
+      "description": "a snooze stamp one hour ahead of now defers to exactly that instant",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "snoozedUntil": "2026-09-05T13:00:00Z",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "deferredBy": "snooze",
+        "retryAt": "2026-09-05T13:00:00.000Z",
+        "reason_pattern": "snoozed until 2026-09-05T13:00:00.000Z",
+        "trace": [
+          "consent",
+          "snooze"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/year-under-1000-week",
+  "description": "The weekly key for an instant in year 1 is weeklyBudget:u1:0001-W22 in the spec's padded format (5.1). This case exists to report, not to demand: one implementation derives 1-W22 (ISO arithmetic on an unpadded date string), the other derives NaN-WNaN (the unpadded date string no longer parses), and neither reads the seeded spec-format key. The fixture pins the spec format as expected so the disagreement is visible in the conformance table rather than silently tolerated.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "weeklyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "weeklyBudget:u1:0001-W22": "1"
+  },
+  "tests": [
+    {
+      "description": "0001-06-01 is a Friday in ISO week 22 of year 1; the seeded spec-format key is spent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "0001-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "0001-06-01T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    }
+  ]
+}

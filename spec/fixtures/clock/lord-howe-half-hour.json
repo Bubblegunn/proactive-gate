@@ -1,0 +1,162 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/lord-howe-half-hour",
+  "description": "Lord Howe Island springs forward thirty minutes on 2026-10-04: 02:00 +10:30 becomes 02:30 +11:00 at 15:30 UTC, deleting local 02:00 to 02:29:59. A 01:30 to 02:30 window silences its first thirty real minutes and then dies mid-window, which exercises an HH:MM boundary finer than the usual whole-hour grain.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "15:15Z on Oct 3 is Oct 4 01:45 at +10:30, inside the window",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Australia/Lord_Howe",
+          "quietHours": {
+            "start": "01:30",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-03T15:15:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "15:29:59Z is 01:59:59 at +10:30, the last quiet minute before the jump",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Australia/Lord_Howe",
+          "quietHours": {
+            "start": "01:30",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-03T15:29:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "15:30Z lands on 02:30 at +11:00, the window's exclusive end; the half hour it still had left was deleted",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Australia/Lord_Howe",
+          "quietHours": {
+            "start": "01:30",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-03T15:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "control the next day: 15:15Z on Oct 4 is Oct 5 02:15 at +11:00, inside the window as normal",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Australia/Lord_Howe",
+          "quietHours": {
+            "start": "01:30",
+            "end": "02:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-04T15:15:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}

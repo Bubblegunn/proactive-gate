@@ -1,0 +1,232 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/recently-changed-rules",
+  "description": "Three zones whose rules were rewritten recently enough that an old timezone table gets them wrong. Mexico abolished DST in 2022, so the first Sunday of April 2026 is an ordinary day. Turkey has not observed a fall-back since 2016, so the last Sunday of October 2026 has no repeated hour. Morocco keeps its offset at +0 through Ramadan 1448 (February 2027): the instants chosen sit inside the window where every shipped tzdb vintage agrees.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "07:59:59Z on the first Sunday of April is 01:59:59 CST in Mexico City; under the rules retired in 2022 the spring forward would already have happened",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Mexico_City",
+          "quietHours": {
+            "start": "02:00",
+            "end": "03:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-04-05T07:59:59Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "08:30Z is 02:30 CST, inside the window; the retired rules would read 03:30 CDT and call it over",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Mexico_City",
+          "quietHours": {
+            "start": "02:00",
+            "end": "03:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-04-05T08:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "00:30Z on the last Sunday of October is 03:30 at +3 in Istanbul, before the window",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "04:00",
+            "end": "05:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-25T00:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "01:30Z is 04:30 at +3, inside the window; a table that still schedules a fall-back would disagree about which side of it this instant is on",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Europe/Istanbul",
+          "quietHours": {
+            "start": "04:00",
+            "end": "05:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-10-25T01:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "mid-Ramadan 1448 in Casablanca: 12:30Z is 12:30 local at +0, inside the window",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Africa/Casablanca",
+          "quietHours": {
+            "start": "12:00",
+            "end": "13:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2027-02-10T12:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "outside Ramadan and before the 2026-09-20 transition dispute, 12:30Z is 13:30 at +1 and the window is over",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Africa/Casablanca",
+          "quietHours": {
+            "start": "12:00",
+            "end": "13:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-08-15T12:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}
