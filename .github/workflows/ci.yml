@@ -77,6 +77,8 @@ jobs:
           python-version: "3.13"
       - run: npm ci --ignore-scripts
       - run: node scripts/conformance-table.mjs --check
+      - name: The same sentences in both languages, over every fixture
+        run: node scripts/explain-parity.mjs
   python:
     # The Python sibling, held to the same fixtures: mypy strict, then every fixture through both gates.
     runs-on: ubuntu-latest
