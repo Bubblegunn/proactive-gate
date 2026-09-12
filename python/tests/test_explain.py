@@ -1,6 +1,7 @@
 """explain(): the same sentences as the TypeScript catalog, word for word."""
 from __future__ import annotations
 
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -320,6 +321,17 @@ def test_unknown_check_quotes_its_own_reason() -> None:
     d = evaluate([Weekend()], now=NOON)
     assert explain(d).summary == 'Held because the "weekend" check stopped it: weekend: only high priority.'
 
+    class Weather(checks.BaseCheck):
+        id = "weather"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            from proactive_gate.types import Outcome
+
+            return Outcome("pass", "sunny out")
+
+    passing = evaluate([Weather(), Weekend()], now=NOON)
+    assert explain(passing).checks[0].sentence == 'The "weather" check let it through (sunny out).'
+
 
 def test_language_is_a_parameter() -> None:
     d = evaluate([checks.QuietHours()], now=NIGHT)
@@ -345,6 +357,94 @@ def test_hand_built_decision_without_a_stopping_check() -> None:
     assert explain(odd).summary == "Held; the trace does not name the check that stopped it."
 
 
+def test_the_templates_nothing_else_in_this_file_reaches() -> None:
+    """Each of these was silent until it was asked for; the first person to read an unrendered sentence should not be a user."""
+    from proactive_gate.types import Outcome
+
+    monthly = MemoryStore()
+    monthly.set("pg:monthlyBudget:u1:2026-09", "60")
+    spent = evaluate([checks.MonthlyBudget()], store=monthly, now=NOON)
+    assert explain(spent).summary == "Held because the user's monthly budget of 60 was already spent (60 used)."
+
+    weekly = MemoryStore()
+    weekly.set("pg:weeklyBudget:u1:2026-W36", "20")
+    week_spent = evaluate([checks.WeeklyBudget()], store=weekly, now=NOON)
+    assert explain(week_spent).summary == "Held because the user's weekly budget of 20 was already spent (20 used)."
+
+    # A budget nowhere near its limit passes without a reason, which is a
+    # different sentence from the near-limit one.
+    room = evaluate([checks.DailyBudget(limit=5)], now=NOON)
+    assert explain(room).checks[0].sentence == "The daily budget did not stop it."
+
+    rate = evaluate([checks.RateLimit(limit=20, per_seconds=60)], now=NOON)
+    assert explain(rate).checks[0].sentence == "The rate limit did not stop it."
+
+    unplaced = evaluate(
+        [checks.RequiresConsent("night", when={"start": "21:00", "end": "08:00", "timezone": "user"})],
+        u=user(timezone=None, consents={"night": True}),
+        now=NOON,
+    )
+    assert explain(unplaced).checks[0].sentence == "The user has no time zone, so the hours this consent applies could not be checked."
+
+    # Somebody else's budget: a reason shaped like one, under a label this
+    # package does not ship, keeps the caller's own words.
+    class TeamQuota(checks.BaseCheck):
+        id = "teamQuota"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            return Outcome("reject", "team quota of 5 used (5)")
+
+    assert explain(evaluate([TeamQuota()], now=NOON)).summary == "Held because the team quota was already used up (5 of 5 used)."
+
+    class TeamQuotaNear(checks.BaseCheck):
+        id = "teamQuota"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            return Outcome("pass", "4 of 5 used")
+
+    near = evaluate([TeamQuotaNear()], now=NOON)
+    assert explain(near).checks[0].sentence == (
+        "The budget had room, but only just: 4 of 5 already used; the unit is spent when the message actually goes out."
+    )
+
+    class Weather(checks.BaseCheck):
+        id = "weather"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            return Outcome("skip", "forecast service is down")
+
+    class Router(checks.BaseCheck):
+        id = "router"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            return Outcome("adjust", "sent via SMS instead")
+
+    odd = explain(evaluate([Weather(), Router()], now=NOON))
+    assert odd.checks[0].sentence == 'The "weather" check did not weigh in: forecast service is down.'
+    assert odd.checks[1].sentence == 'The "router" check adjusted it: sent via SMS instead.'
+
+    # A deferral whose clause does not say when: the hold instant comes from retry_at.
+    class Queue(checks.BaseCheck):
+        id = "queue"
+
+        def run(self, ctx: Any, values: Any) -> Any:
+            return Outcome("defer", "the send queue is draining", retry_at=datetime(2026, 9, 4, 10, 30, tzinfo=UTC))
+
+    deferred = evaluate([Queue()], now=NOON)
+    assert explain(deferred).summary == 'Held until 2026-09-04T10:30:00.000Z because the "queue" check stopped it: the send queue is draining.'
+
+    empty = Decision(
+        id="u1:c1:2026-09-04T09:00:00.000Z#1",
+        allowed=True,
+        user_id="u1",
+        candidate_id="c1",
+        surfaces=("feed",),
+        trace=(),
+        evaluated_at=NOON,
+    )
+    assert explain(empty).summary == "Allowed; no checks ran."
+
+
 def test_every_trace_entry_renders() -> None:
     store = MemoryStore()
     gate = Gate(
@@ -367,3 +467,7 @@ def test_every_trace_entry_renders() -> None:
         for c in e.checks:
             assert len(c.sentence) > 10, f"empty sentence for {c.id}"
             assert c.sentence[0].isupper(), f"not a sentence for {c.id}: {c.sentence}"
+            # A check this package ships must have a template. Quoting its machine
+            # reason back is the honest answer for somebody else's check, and a
+            # silent regression for one of ours.
+            assert not re.search(r'" check (stopped it|let it through|did not weigh in|adjusted it)', c.sentence), f"{c.id} fell back to its machine reason: {c.sentence}"

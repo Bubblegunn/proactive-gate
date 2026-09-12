@@ -385,6 +385,59 @@ test("an allowed decision with no checks ran says so", () => {
   assert.equal(explain(empty).summary, "Allowed; no checks ran.");
 });
 
+test("the sentences the rest of this file never reaches: every remaining template, rendered", async () => {
+  // Each of these was silent until it was asked for. A template nothing renders
+  // is a sentence nobody has read, and the first person to read it is a user.
+  const monthly = new MemoryStore();
+  await monthly.set("pg:monthlyBudget:u1:2026-09", "60");
+  const spent = await createGate({ store: monthly, checks: [checks.monthlyBudget()] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(spent).summary, "Held because the user's monthly budget of 60 was already spent (60 used).");
+
+  const weekly = new MemoryStore();
+  await weekly.set("pg:weeklyBudget:u1:2026-W36", "20");
+  const weekSpent = await createGate({ store: weekly, checks: [checks.weeklyBudget()] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(weekSpent).summary, "Held because the user's weekly budget of 20 was already spent (20 used).");
+
+  // A budget nowhere near its limit passes without a reason, which is a different
+  // sentence from the near-limit one and was never asserted before.
+  const room = await createGate({ store: new MemoryStore(), checks: [checks.dailyBudget({ limit: 5 })] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(room).checks[0]!.sentence, "The daily budget did not stop it.");
+
+  const rate = await createGate({ store: new MemoryStore(), checks: [checks.rateLimit({ limit: 20, perSeconds: 60 })] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(rate).checks[0]!.sentence, "The rate limit did not stop it.");
+
+  // Consent hours the gate cannot place, because the user has no time zone.
+  const consentHours = createGate({ checks: [checks.requiresConsent({ name: "night", when: { start: "21:00", end: "08:00", timezone: "user" } })] });
+  const unplaced = await consentHours.evaluate({ user: user({ timezone: undefined as unknown as string, consents: { night: true } }), candidate: candidate(), now: noon });
+  assert.equal(explain(unplaced).checks[0]!.sentence, "The user has no time zone, so the hours this consent applies could not be checked.");
+
+  // Somebody else's budget: a reason shaped like one, under a label this package
+  // does not ship, keeps the caller's own words for the thing that ran out.
+  const quota = { id: "teamQuota", run: () => ({ kind: "reject" as const, reason: "team quota of 5 used (5)" }) };
+  const quotaOut = await createGate({ checks: [quota] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(quotaOut).summary, "Held because the team quota was already used up (5 of 5 used).");
+
+  const quotaNear = { id: "teamQuota", run: () => ({ kind: "pass" as const, reason: "4 of 5 used" }) };
+  const nearDecision = await createGate({ checks: [quotaNear] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(nearDecision).checks[0]!.sentence, "The budget had room, but only just: 4 of 5 already used; the unit is spent when the message actually goes out.");
+
+  // A check nothing knows about, skipping and adjusting rather than stopping.
+  const odd = createGate({
+    checks: [
+      { id: "weather", run: () => ({ kind: "skip" as const, reason: "forecast service is down" }) },
+      { id: "router", run: () => ({ kind: "adjust" as const, reason: "sent via SMS instead" }) },
+    ],
+  });
+  const oddDecision = await odd.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(oddDecision).checks[0]!.sentence, 'The "weather" check did not weigh in: forecast service is down.');
+  assert.equal(explain(oddDecision).checks[1]!.sentence, 'The "router" check adjusted it: sent via SMS instead.');
+
+  // A deferral whose clause does not say when: the hold instant comes from retryAt.
+  const queue = { id: "queue", run: () => ({ kind: "defer" as const, reason: "the send queue is draining", retryAt: new Date("2026-09-04T10:30:00Z") }) };
+  const deferred = await createGate({ checks: [queue] }).evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(explain(deferred).summary, 'Held until 2026-09-04T10:30:00.000Z because the "queue" check stopped it: the send queue is draining.');
+});
+
 test("every check the package ships rejects or adjusts into a readable sentence", async () => {
   // Sweep: run the default policy plus the optional checks across two days and
   // assert no sentence ever came back empty or as a raw machine reason alone.
@@ -408,6 +461,10 @@ test("every check the package ships rejects or adjusts into a readable sentence"
     for (const c of e.checks) {
       assert.ok(c.sentence.length > 10, `empty sentence for ${c.id}`);
       assert.ok(/^[A-Z]/.test(c.sentence), `not a sentence for ${c.id}: ${c.sentence}`);
+      // A check this package ships must have a template. Quoting its machine
+      // reason back is the honest answer for somebody else's check, and a
+      // silent regression for one of ours.
+      assert.doesNotMatch(c.sentence, /" check (stopped it|let it through|did not weigh in|adjusted it)/, `${c.id} fell back to its machine reason: ${c.sentence}`);
     }
   }
 });
