@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7.0 (unreleased)
+## 0.7.0 (2026-09-12)
 
 **Three presets and a store, all from one contributor in a day.** [@LouisDeconinck](https://github.com/LouisDeconinck)
 added Brazil's LGPD ([#30](https://github.com/Bubblegunn/proactive-gate/pull/30), closing #14), the
