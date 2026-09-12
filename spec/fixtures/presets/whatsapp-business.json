@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.4.0",
+  "spec_version": "1.4.1",
   "since": "1.4.0",
   "name": "presets/whatsapp-business",
   "description": "whatsappBusiness needs whatsappOptIn consent always, and a free-form service message passes only inside the 24-hour customer service window.",

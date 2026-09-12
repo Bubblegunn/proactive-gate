@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.4.0",
+  "spec_version": "1.4.1",
   "since": "1.2.0",
   "name": "dedupe/already-delivered",
   "description": "A key claimed inside the window rejects the second attempt at the same event.",

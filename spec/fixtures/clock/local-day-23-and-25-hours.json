@@ -1,0 +1,313 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/local-day-23-and-25-hours",
+  "description": "A local-day budget key (5.1) lives exactly as long as the local day, which in New York is 23 UTC hours on 2026-03-08 and 25 on 2026-11-01. The key does not care how long the day runs: 2026-03-08 is spent from 05:00Z to 04:00Z the next UTC day, and a delivery in the second pass through the repeated autumn hour draws on the same counter as the first pass.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u1:2026-03-08": "1",
+    "budget:u2:2026-11-01": "1"
+  },
+  "tests": [
+    {
+      "description": "04:59:59Z on the spring-forward day is still Mar 7 23:59:59 EST, so the fresh Mar 7 key answers",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T04:59:59Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "05:00Z is Mar 8 00:00 EST; the 23-hour day's seeded counter is already full",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-08T05:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the day is three UTC hours shorter but the key is the same: Mar 8 is still spent at 22:59:59 EDT",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-09T03:59:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "04:00Z on Mar 9 is 00:00 EDT; the 23-hour day is over and the Mar 9 key is fresh",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-03-09T04:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "04:00Z on the fall-back day is Nov 1 00:00 EDT; the 25-hour day's seeded counter is full",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T04:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the 25th hour: 23:59:59 EST on Nov 1 is 04:59:59Z on Nov 2 in UTC and still spends the Nov 1 key",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-02T04:59:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "05:00Z is Nov 2 00:00 EST; the long day is finally over",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-02T05:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "05:30Z is 01:30 EDT, the first pass through the repeated hour; the Nov 1 key is fresh and this commit spends it",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c8",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T05:30:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "budget:u3:2026-11-01": "1"
+        },
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "06:30Z is 01:30 EST again; the repeated hour is not a new day, so the counter spent in the first pass still counts",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c9",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T06:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/year-under-1000",
+  "description": "The spec's calendar fields are written YYYY-MM-DD (5.1), which reads as zero-padded to four digits, so the local day of an instant in year 1 is 0001-06-01 and Friday June 1 of that year is a real Friday. This fixture is adversarial in a different way: it exercises date-string construction itself, where the two implementations historically disagree about padding. The expected behaviour is the spec format; an implementation that derives 1-06-01 or a weekday from a remapped year diverges here.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u3:0001-06-01": "1"
+  },
+  "tests": [
+    {
+      "description": "0001-06-01 is a Friday, so a Friday window is quiet at noon on it",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            }
+          },
+          "createdAt": "0001-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "0001-06-01T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "0001-01-01 is a Monday, so a Monday window is quiet at noon on it",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "days": {
+              "mon": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            }
+          },
+          "createdAt": "0001-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "0001-01-01T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "the day before 0001-06-01 is 0001-05-31 in the spec's calendar arithmetic, so that day's crossing window still silences the first half hour of June",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "quietHours": {
+            "dates": {
+              "0001-05-31": {
+                "start": "22:00",
+                "end": "02:00"
+              }
+            }
+          },
+          "createdAt": "0001-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "0001-06-01T00:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "the daily key for the instant is budget:u3:0001-06-01 in the spec format, and it is already spent",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "UTC",
+          "createdAt": "0001-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "0001-06-01T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "quietHours",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/apia-day-that-never-was",
+  "description": "Samoa skipped Friday 2011-12-30 entirely when it moved across the date line: 10:00 UTC jumps local time from Thursday 23:59:59 to Saturday 00:00. No instant resolves to the 30th, so a dates entry or Friday window for it is dead configuration, and the first daily-budget key written after the skip is the 31st. The plain-window case shows quiet hours do not notice the missing day at all, since they work on local minutes.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "quietHours"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "09:59:59Z is Thursday Dec 29 23:59:59, the last instant before the skip; a Friday window and a Dec 30 dates entry are both unreachable from here",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Apia",
+          "quietHours": {
+            "dates": {
+              "2011-12-30": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            }
+          },
+          "createdAt": "2011-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2011-12-30T09:59:59Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "budget:u1:2011-12-29": "1"
+        },
+        "trace": [
+          "consent",
+          "quietHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "10:00Z is Saturday Dec 31 00:00; the skipped day's schedule never fired and the first spend after the jump lands on the 31st",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Apia",
+          "quietHours": {
+            "dates": {
+              "2011-12-30": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            },
+            "days": {
+              "fri": {
+                "start": "00:00",
+                "end": "23:59"
+              }
+            }
+          },
+          "createdAt": "2011-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2011-12-30T10:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "budget:u1:2011-12-31": "1"
+        },
+        "trace": [
+          "consent",
+          "quietHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a plain overnight window spanning the skip stays in force on Thursday's last second",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Apia",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2011-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2011-12-30T09:59:59Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "and on Saturday's first second; the window that opened Thursday 22:00 is still running even though a whole day vanished, and the calendar arithmetic that owns the tail names the skipped day as its opener",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Apia",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2011-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2011-12-30T10:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "fri 2011-12-30",
+        "trace": [
+          "consent",
+          "quietHours"
+        ]
+      }
+    }
+  ]
+}

@@ -449,7 +449,11 @@ derlemeden token ile yüklendi ve hiçbir kanıt taşımıyor.
 [`spec/SPEC.md`](spec/SPEC.md) davranışı numaralı gereksinimler olarak yazar;
 [`spec/fixtures`](spec/fixtures) dile bağlı olmayan senaryoları tutar: America/New_York'taki
 yaz saati kenarı, Pacific/Apia, 2031'de bir duvar saati senaryosu, atomik commit, ISO haftası,
-erteleme, gölge modu, isteğe bağlı kontroller ve altı hazır paket. TypeScript ve Python
+erteleme, gölge modu, isteğe bağlı kontroller ve dokuz hazır paket. `clock/` alanı
+adversarial saat setidir: silinen ve tekrarlanan yaz saati saatleri, 23 ve 25 saatlik yerel
+günler, hafta ortasında saat dilimi değişimi, Apia'da atlanan bir takvim günü, ISO yılı
+takvim yılından farklı haftalar, geriye saran bir saat ve iki uygulamanın şu anda
+ayrıştığı 1000'den küçük yıllar (`spec/skip/` içinde beyan edilmiş). TypeScript ve Python
 testleri hepsini çalıştırır; `npx proactive-gate replay --fixtures spec/fixtures` komut
 satırından çalıştırır. Üçüncü bir uygulama bu kaynaktan değil, senaryolardan başlar.
 

@@ -1,0 +1,195 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/the-whole-battery",
+  "description": "The full default battery on the day New York falls back. Inside the repeated hour the quiet check stops the delivery before any budget runs; an hour after the second pass the whole battery passes and commit spends the dedupe claim and the day counter together; and the claimed event stays claimed for the rest of its window.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "killSwitch",
+        "on": false
+      },
+      {
+        "id": "consent"
+      },
+      {
+        "id": "enabled"
+      },
+      {
+        "id": "mode",
+        "allow": [
+          "normal"
+        ]
+      },
+      {
+        "id": "snooze"
+      },
+      {
+        "id": "mute"
+      },
+      {
+        "id": "intensity"
+      },
+      {
+        "id": "quietHours"
+      },
+      {
+        "id": "trustRamp"
+      },
+      {
+        "id": "dismissalCooldown"
+      },
+      {
+        "id": "dedupe"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "06:15Z is 01:15 EST on the second pass through the repeated hour; quiet hours stop the run before dedupe or budgets are reached",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "00:30",
+            "end": "01:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-1",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T06:15:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "07:30Z is 02:30 EST, past the window; the whole battery passes and the commit spends the claim and the day together",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "00:30",
+            "end": "01:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-1",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T07:30:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "dedupe:u1:evt-1": "1",
+          "budget:u1:2026-11-01": "1"
+        },
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "dedupe",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "08:00Z is 03:00 EST; the same event is refused by the claim written on the delivery that already went through",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "quietHours": {
+            "start": "00:30",
+            "end": "01:30"
+          },
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "dedupeKey": "evt-1",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-11-01T08:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dedupe",
+        "trace": [
+          "killSwitch",
+          "consent",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "intensity",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "dedupe"
+        ]
+      }
+    }
+  ]
+}

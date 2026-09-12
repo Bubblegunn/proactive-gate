@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.4.0",
+  "spec_version": "1.4.1",
   "since": "1.0.0",
   "name": "shadow/reject-continues",
   "description": "A shadow check records its rejection and evaluation continues.",

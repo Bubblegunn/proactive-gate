@@ -1,0 +1,185 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/local-day-not-utc",
+  "description": "The daily budget key is the user's local day (5.1), not the UTC day. At 15:00 UTC it is already 00:00 on 2026-09-05 in Tokyo, so a UTC-keyed counter would roll nine hours early or late. Kathmandu (+5:45) turns its day at 18:15 UTC, on no hour boundary at all.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u1:2026-09-05": "1",
+    "budget:u3:2026-09-05": "1"
+  },
+  "tests": [
+    {
+      "description": "14:59:59Z is still 23:59:59 on Sep 4 in Tokyo, so the Sep 4 key is fresh and the commit writes that key, not the UTC date's",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Tokyo",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:59:59Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "budget:u1:2026-09-04": "1"
+        },
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "one second later the local day is Sep 5 in Tokyo while UTC still reads Sep 4; the seeded Sep 5 counter is full",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Tokyo",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T15:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a user with no timezone budgets on the UTC day (6.1), so the same instant reads Sep 4 and is fresh",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T15:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "18:14:59Z is 23:59:59 on Sep 4 in Kathmandu; the +5:45 offset turns the day at no round UTC hour",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kathmandu",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T18:14:59Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "18:15:00Z is 00:00 on Sep 5 in Kathmandu and the seeded Sep 5 counter is full",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kathmandu",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T18:15:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

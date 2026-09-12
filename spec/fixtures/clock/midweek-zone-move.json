@@ -1,0 +1,160 @@
+{
+  "spec_version": "1.4.1",
+  "since": "1.4.1",
+  "name": "clock/midweek-zone-move",
+  "description": "A user flies from New York to Apia mid-week with a partially spent weekly budget. The weekly key is the local ISO week of the instant under evaluation (5.1), so the move does not carry the counter: Sunday 16:00 EDT and the same instant Monday 09:00 in Apia resolve to different weeks, and the budget that followed the user home is still spent when they are back on New York time.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "weeklyBudget",
+        "limit": 2
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "20:00Z is Sunday Sep 13 16:00 EDT; the 2026-W37 counter is fresh and this commit spends the first of two",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-13T20:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u1:2026-W37": "1"
+        },
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "still Sunday in New York: the second delivery spends the rest of 2026-W37",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-13T23:30:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u1:2026-W37": "2"
+        },
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the same instant in Apia is already Monday Sep 14, so the user lands in 2026-W38 with a fresh counter; the old week's spend stays recorded under its own key",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Pacific/Apia",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-13T23:30:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u1:2026-W38": "1"
+        },
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "back on New York time at 01:00Z it is still Sunday 21:00 EDT; 2026-W37 is spent and the budget the user left behind is still there",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-14T01:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "trace": [
+          "consent",
+          "weeklyBudget"
+        ]
+      }
+    }
+  ]
+}

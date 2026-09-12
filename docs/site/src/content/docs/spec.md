@@ -13,7 +13,10 @@ tests with an input and the expected decision fields: `allowed`, `trace`, `rejec
 `deferredBy`, `retryAt`, `deliverAt`, `surfaces`, `shadowed`, `nearLimit`, a `reason_pattern`,
 and after `commit`, `store_after`. They cover the DST edge in America/New_York, Pacific/Apia,
 a wall-clock case in 2031, atomic commit, the ISO week, deferral, shadow mode, the optional
-checks and eight presets.
+checks and nine presets. The `clock/` area is the adversarial clock suite: deleted and
+repeated DST hours, 23- and 25-hour local days, a mid-week timezone move, a skipped
+calendar day in Apia, weeks whose ISO year is not the calendar year, a rewound clock, and
+years below 1000, where the two implementations disagree and say so through `spec/skip/`.
 
 An implementation conforms when it passes every fixture for its spec version, minus the names
 in `spec/skip/<impl>.txt`, which must be empty at a stable release.

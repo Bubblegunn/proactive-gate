@@ -11,9 +11,9 @@ The suite is versioned by `SPEC_VERSION`, and each version is tagged `spec/vX.Y.
 separate from the package's own `vX.Y.Z` release tags.
 
 ```sh
-git clone --depth 1 --branch spec/v1.4.0 https://github.com/Bubblegunn/proactive-gate
+git clone --depth 1 --branch spec/v1.4.1 https://github.com/Bubblegunn/proactive-gate
 # or, to keep it beside your own source and update it deliberately
-git subtree add --prefix spec https://github.com/Bubblegunn/proactive-gate spec/v1.4.0 --squash
+git subtree add --prefix spec https://github.com/Bubblegunn/proactive-gate spec/v1.4.1 --squash
 ```
 
 A JavaScript implementation can also read the fixtures from an install, because the npm package
