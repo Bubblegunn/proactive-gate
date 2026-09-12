@@ -5,6 +5,7 @@ contract in ``spec/`` and the same fixtures.
 """
 from . import checks, presets
 from .checks import Check, default_checks
+from .explain import EN, CheckSentence, Explanation, explain
 from .gate import AsyncGate, Evaluation, Gate, Hooks, decide
 from .policy import KNOWN_CHECKS, CompiledPolicy, compile_policy, load_policy
 from .presets import Preset
@@ -24,8 +25,9 @@ from .types import (
 __version__ = "0.2.0"
 
 __all__ = [
-    "PRIORITY_RANK", "KNOWN_CHECKS", "AsyncGate", "AsyncMemoryStore", "AsyncStore", "Candidate", "Check",
-    "CompiledPolicy", "Context", "Decision", "EvaluateInput", "Evaluation", "Gate", "Hooks", "MemoryStore",
+    "EN", "PRIORITY_RANK", "KNOWN_CHECKS", "AsyncGate", "AsyncMemoryStore", "AsyncStore", "Candidate", "Check",
+    "CheckSentence", "CompiledPolicy", "Context", "Decision", "EvaluateInput", "Evaluation", "Explanation",
+    "Gate", "Hooks", "MemoryStore",
     "Outcome", "Preset", "Priority", "RedisStore", "SqliteStore", "Store", "TraceEntry", "UserState",
-    "__version__", "checks", "compile_policy", "decide", "default_checks", "load_policy", "presets",
+    "__version__", "checks", "compile_policy", "decide", "default_checks", "explain", "load_policy", "presets",
 ]

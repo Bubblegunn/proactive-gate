@@ -10,7 +10,7 @@ Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt
 
 - [README](README.md): install, decision shape, the checks, policy as data, defer and shadow mode, optional checks, presets, adapters, Python, spec, budget, fail-open, replay
 - [Spec](spec/SPEC.md): the behaviour contract; fixtures under spec/fixtures, schemas under spec/schema
-- [API](src/index.ts): createGate, compilePolicy, checks, presets, MemoryStore, SqliteStore, RedisStore, types
+- [API](src/index.ts): createGate, compilePolicy, checks, presets, explain, MemoryStore, SqliteStore, RedisStore, types
 - [Adapters](src/adapters/): ai-sdk, mastra, langchain, openai-agents subpaths; `proactive-gate hook` for Claude Code
 - [Python](python/README.md): Gate, AsyncGate, from_policy, stores, conformance
 - [Examples](examples/): day.jsonl, policy.json, policy.js, vercel-ai-sdk.ts, mastra.ts, langgraph.ts, otel.ts, claude-code-hook.json

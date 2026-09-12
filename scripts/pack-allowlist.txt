@@ -15,6 +15,8 @@ dist/src/cli.d.ts
 dist/src/cli.js
 dist/src/conformance.d.ts
 dist/src/conformance.js
+dist/src/explain.d.ts
+dist/src/explain.js
 dist/src/gate.d.ts
 dist/src/gate.js
 dist/src/index.d.ts

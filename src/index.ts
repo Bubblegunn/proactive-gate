@@ -1,5 +1,7 @@
 export { createGate } from "./gate.js";
 export type { Gate, PolicyGateOptions } from "./gate.js";
+export { explain, en } from "./explain.js";
+export type { CheckSentence, Explanation, ExplainOptions, SentenceFacts, Sentences, SentenceTemplate } from "./explain.js";
 export { compilePolicy, KNOWN_CHECKS } from "./policy.js";
 export { presets } from "./presets.js";
 export type { Preset } from "./presets.js";
