@@ -104,7 +104,7 @@ saying thank you, and both are owed.
 
 Maintainers only. One command; the workflow does the rest.
 
-1. Write the `## X.Y.Z (unreleased)` entry in `CHANGELOG.md` and merge it.
+1. In one commit, write the `## X.Y.Z (unreleased)` entry in `CHANGELOG.md` and set the version to `X.Y.Z` in `package.json`, `package-lock.json`, `CITATION.cff` and `python/pyproject.toml`. Merge that commit and let CI finish. The gate described below compares each of those files against the CHANGELOG heading on every push, so a commit that moves the heading by itself turns CI red and blocks the release it was meant to start. `npm run release` then finds those files already carrying the target version, which is expected and not an error.
 2. On a clean, green `main`: `npm run release -- X.Y.Z` (or `patch`, `minor`, `major`; add `--dry-run` to see the plan). It dates the entry, sets the version in `package.json`, `CITATION.cff` and `python/pyproject.toml`, runs the tests, commits, tags `vX.Y.Z`, pushes, and then moves the major tag (`v0` today) to the release and force-pushes it, so anyone pinning a major follows the newest release in it. The major tag moves from this command and not from the workflow because release tags are admin-only by ruleset; a workflow token could not move it.
 3. Watch the `release` workflow: it publishes to npm with provenance, builds and checks the Python package, creates the GitHub release from the CHANGELOG entry, and installs the published version from the registry on three operating systems.
 
