@@ -174,4 +174,117 @@ nothing because it never asked; the sweeps exist so that "nothing found" means s
 
 ## Results
 
-_To be appended after the suite is run, with the commands and versions that produced it._
+Run on 12 September 2026.
+
+### Commands and versions
+
+```sh
+python3 bench/clock-sweep-pairs.py | node bench/clock-sweep.mjs   | sort > /tmp/clock-node.txt
+python3 bench/clock-sweep-pairs.py | python3 bench/clock-sweep.py | sort > /tmp/clock-py.txt
+diff /tmp/clock-node.txt /tmp/clock-py.txt
+
+npm run build
+node dist/src/cli.js replay --fixtures spec/fixtures/clock --skip spec/skip/ts.txt
+PYTHONPATH=python/src python3 -m pytest python/tests/test_conformance.py
+node scripts/conformance-table.mjs
+```
+
+Runtimes on the machine that produced these numbers:
+
+- Node v24.14.0, ICU 78.2, embedded tz data 2025c.
+- Python 3.14.4, system `zoneinfo` against system tzdb 2026c (no `tzdata` wheel installed).
+- Python 3.13.13 in the project venv (uv, python-build-standalone), where
+  `strftime("%Y")` does not zero-pad the year: two Pythons on one machine disagree about
+  the local-day string for year 1, which is finding 3 below.
+
+The tzdb vintage mismatch is deliberate context, not an accident to hide: it is exactly the
+"recently changed rules" hazard the suite exists to surface, and the results below report
+rather than paper over it.
+
+### The sweep
+
+364,110 (zone, instant) pairs were rendered by each implementation. The outputs differ on
+4,340 rows, all in `Africa/Casablanca` and `Africa/El_Aaiun`, first divergence at
+2026-09-20T12:00:00Z, last at the sweep horizon 2029-12-30T00:00:00Z. At
+2026-09-20T12:00:00Z Node reads 13:00 (+1) where Python reads 12:00 (+0): tzdb 2026c moved
+Morocco's post-2026 schedule, and 2025c does not know about it. The diffs pause inside each
+Ramadan window, where both vintages read +0.
+
+This disagreement is decision-relevant, not cosmetic: a `12:00` to `13:00` quiet window at
+that instant rejects under 2025c and passes under 2026c. No fixture pins it, because there
+is no implementation-independent right answer at those instants; picking either side would
+be choosing a tzdb version, not specifying behaviour. The fixture
+`clock/recently-changed-rules` uses instants every plausible vintage agrees on and its
+description says so. The disagreement itself is reported here and is a reproducibility
+property of the environment: two conforming implementations on different tzdb vintages
+will decide differently inside the disputed span, which is an argument for the spec naming
+a minimum tzdb vintage, a spec change this PR does not make.
+
+The day-level sweep of `weekdayOf`, `dayBefore` and the ISO week key against their Python
+siblings over every day from 1990 to 2035 produced an empty diff.
+
+### The fixtures
+
+Twenty-one fixtures under `spec/fixtures/clock/` were added, listed by the conformance
+table. Outcomes on this machine:
+
+- TypeScript: 19 pass, 2 declared skips (`clock/year-under-1000`,
+  `clock/year-under-1000-week`).
+- Python: 19 pass under the venv interpreter, 20 under the system one, 2 declared skips
+  (`clock/year-under-1000`, `clock/year-under-1000-week`) either way, because the verdict
+  on the first is build-dependent.
+
+The skip declarations are per-implementation and asymmetric, which is itself the finding:
+`clock/year-under-1000` passes only where `strftime("%Y")` happens to pad.
+
+### What the suite found
+
+1. **Years below 1000 break TypeScript calendar arithmetic** (upstream bug
+   [#36](https://github.com/Bubblegunn/proactive-gate/issues/36)). `localClock` emits the
+   local day unpadded (`1-06-01`), `Date.UTC` then reads years 0 to 99 as 1900 to 1999, so
+   `weekdayOf` answers for 1901, `dayBefore` produces `1901-05-31`, `dates` lookups miss,
+   and `isoWeekKey` parses an invalid date and emits the literal key `NaN-WNaN`. A Friday
+   quiet window is silent on a Friday in year 1 and a spent daily budget reads fresh.
+2. **Python pads the daily key but not the weekly key** (upstream bug
+   [#37](https://github.com/Bubblegunn/proactive-gate/issues/37)). The same instant
+   produces `budget:u:0001-06-01` and `weeklyBudget:u:1-W22`; the spec format reads the
+   year padded, so the fixture expects `0001-W22` and the skip records the divergence.
+3. **Python's year padding is build-dependent, and the failure mode is silent**
+   (upstream bug [#38](https://github.com/Bubblegunn/proactive-gate/issues/38)). On the
+   non-padding build, `local_clock` emits `1-06-01`, the strict-ISO `weekday_of`,
+   `day_before` and `iso_week_key` all raise on it, and every clock check is recorded as
+   a fail-open skip: the day goes quiet with nothing rejecting. Two interpreters on one
+   machine produced different decisions for the same fixture, which is the closest this
+   suite comes to the issue's "silently make incorrect decisions".
+4. **A tzdb-vintage divergence that no implementation can fix alone**, described in the
+   sweep section. It is the one disagreement where "expected behaviour" is genuinely
+   undefined by the spec, and it is reported rather than pinned.
+5. **Confirmed correct on both sides**, the null results the suite exists to prove: a
+   deleted-hour window never fires and a truncated window ends early; the repeated hour
+   silences both passes (a 60-minute window for 90 real minutes, a four-hour window for
+   five); a skipped calendar day leaves its `dates` entry dead while the plain overnight
+   window keeps running and even names the missing day as its opener; budgets key on the
+   local day across 23- and 25-hour days and across a mid-week zone move; ISO week-year
+   edges resolve to the neighbouring year's key; `now` moving backwards cannot un-claim a
+   dedupe key or un-spend a budget; future timestamps degrade predictably (negative ages
+   pass lookbacks, future dismissal stamps silence); a `23:59:60` field parses to absent
+   in both runtimes; an unresolvable zone fails open identically; and the epoch-keyed
+   checks (`rateLimit`, `windowBudget`, `boundedDeferral`) are provably zone-free.
+
+### Boundaries of what the suite can see
+
+- Store TTLs run on real elapsed time in `MemoryStore`, so fixture-level assertions about
+  a rewound clock cover the decision records (claims, counters, cooldowns), not key
+  expiry; stores whose TTL source is the rewound clock are a store-contract question.
+- The 4,340 sweep rows are version-dependent by construction: on a host where Node's tz
+  data is 2026c or later the sweep diff is expected to shrink to zero.
+- `clock/year-under-1000*` asserts the spec format for a case the spec never discusses
+  explicitly; if the spec is amended to bless unpadded years, the fixtures and skips
+  change together.
+- `scripts/explain-parity.mjs` changed in the same PR, for honesty rather than coverage:
+  a fixture either side has declared a skip on can no longer yield identical decisions,
+  so the comparison now excludes declared-skip fixtures (announced in its output), and the
+  `check failed with "..."` sentences quote each runtime's own exception text, so the
+  quoted payload is normalised before comparing while the template around it is still
+  held identical.
+
