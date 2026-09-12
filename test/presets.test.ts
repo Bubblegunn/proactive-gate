@@ -15,7 +15,7 @@ test("every preset has sources, a note, and builds an ordered list", () => {
     assert.ok(list.length >= 1, `${name} builds nothing`);
     assert.ok(list.every((c) => typeof c.id === "string" && typeof c.run === "function"), `${name} is not a check list`);
   }
-  assert.equal(Object.keys(presets).length, 14);
+  assert.equal(Object.keys(presets).length, 15);
 });
 
 test("lineMessagingApi maps plans to monthly budgets and rejects unknown plans", () => {
@@ -29,6 +29,20 @@ test("usTcpa rejects at 21:30 in the user's zone and passes at 09:00", async () 
   const u = user({ timezone: "America/Chicago" });
   assert.equal((await gate.evaluate({ user: u, candidate: candidate(), now: new Date("2026-09-05T02:30:00Z") })).rejectedBy, "window:tcpa");
   assert.equal((await gate.evaluate({ user: u, candidate: candidate(), now: new Date("2026-09-04T14:00:00Z") })).allowed, true);
+});
+
+test("inTcccp: promotional consent, and each default-off band needs its own opt-in", async () => {
+  const gate = createGate({ checks: presets.inTcccp!() });
+  const kolkata = (consents: Record<string, boolean>) => user({ timezone: "Asia/Kolkata", consents });
+  const at = (iso: string) => gate.evaluate({ user: kolkata({ promotional: true }), candidate: candidate(), now: new Date(iso) });
+  assert.equal((await gate.evaluate({ user: kolkata({}), candidate: candidate(), now: new Date("2026-09-04T06:30:00Z") })).rejectedBy, "consent:promotional");
+  assert.equal((await at("2026-09-04T06:30:00Z")).allowed, true); // 12:00 IST, inside the default-on window
+  assert.equal((await at("2026-09-04T17:00:00Z")).rejectedBy, "consent:band21to24"); // 22:30 IST
+  assert.equal((await at("2026-09-04T03:30:00Z")).rejectedBy, "consent:band08to10"); // 09:00 IST
+  const optedIn = user({ timezone: "Asia/Kolkata", consents: { promotional: true, band21to24: true } });
+  assert.equal((await gate.evaluate({ user: optedIn, candidate: candidate(), now: new Date("2026-09-04T17:00:00Z") })).allowed, true);
+  const partial = user({ timezone: "Asia/Kolkata", consents: { promotional: true, band06to08: true } });
+  assert.equal((await gate.evaluate({ user: partial, candidate: candidate(), now: new Date("2026-09-04T22:30:00Z") })).rejectedBy, "consent:band00to06"); // 04:00 IST: opting into one band does not open another
 });
 
 test("euEprivacy: soft opt-in for existing customers, consent otherwise", async () => {

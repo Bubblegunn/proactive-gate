@@ -103,6 +103,23 @@ presets: dict[str, Preset] = {
         ("https://www.cac.gov.cn/2024-11/15/c_1733364304749288.htm", "https://www.cac.gov.cn/2022-01/04/c_1642894606364259.htm"),
         "Minor mode: no service 22:00 to 06:00 China time and a daily budget of one when user.minor is true; adults pass both checks. Per-age daily durations are not encoded.",
     ),
+    # India: TCCCPR 2018 (6 of 2018), consolidated text of May 2026. Regulation 9 lets a
+    # commercial communication reach a recipient only per the recipient's registered
+    # preference or consent; Schedule-II item 3 fixes nine time bands and keeps (i)
+    # 00:00-06:00, (ii) 06:00-08:00, (iii) 08:00-10:00 and (ix) 21:00-24:00 default OFF for
+    # every customer until the subscriber switches that band on, which the four band flags
+    # below carry. Read 2026-09-12.
+    "inTcccp": Preset(
+        lambda o: [
+            c.RequiresConsent("promotional"),
+            c.RequiresConsent("band00to06", when={"start": "00:00", "end": "06:00", "timezone": "user"}),
+            c.RequiresConsent("band06to08", when={"start": "06:00", "end": "08:00", "timezone": "user"}),
+            c.RequiresConsent("band08to10", when={"start": "08:00", "end": "10:00", "timezone": "user"}),
+            c.RequiresConsent("band21to24", when={"start": "21:00", "end": "24:00", "timezone": "user"}),
+        ],
+        ("https://trai.gov.in/tcccpr", "https://www.trai.gov.in/sites/default/files/2026-05/CA_21052026.pdf"),
+        "TCCCPR 2018: commercial communication needs the recipient's registered preference or consent (consents.promotional), and the Schedule-II default-off bands pass only when the subscriber opted that band in (the consents.band* flags, at the recipient's local time). Opt-outs inside the default-on 10:00 to 21:00, day-type and per-category preferences are per-subscriber state a fixed check list cannot express; carry them in user.quiet_hours and consents. It binds SMS and voice calls on access networks, not in-app notifications or email; 1909 and DLT registration are out of scope. Sources read 2026-09-12.",
+    ),
     "usTcpa": Preset(
         lambda o: [c.AllowedWindow("08:00", "21:00", "user", id="window:tcpa")],
         ("https://www.law.cornell.edu/cfr/text/47/64.1200",),

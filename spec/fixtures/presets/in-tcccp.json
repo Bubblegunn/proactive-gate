@@ -1,0 +1,258 @@
+{
+  "spec_version": "1.2.1",
+  "since": "1.2.1",
+  "name": "presets/in-tcccp",
+  "description": "inTcccp needs promotional consent always, and each Schedule-II default-off band passes only when the subscriber opted that band in.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "inTcccp"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "no promotional consent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T06:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:promotional",
+        "trace": [
+          "consent:promotional"
+        ]
+      }
+    },
+    {
+      "description": "promotional consent at 12:00 IST passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "promotional": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T06:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:promotional",
+          "consent:band00to06",
+          "consent:band06to08",
+          "consent:band08to10",
+          "consent:band21to24"
+        ]
+      }
+    },
+    {
+      "description": "22:30 IST without the band ix opt-in rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "promotional": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T17:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:band21to24",
+        "trace": [
+          "consent:promotional",
+          "consent:band00to06",
+          "consent:band06to08",
+          "consent:band08to10",
+          "consent:band21to24"
+        ]
+      }
+    },
+    {
+      "description": "22:30 IST with the band ix opt-in passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "promotional": true,
+            "band21to24": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T17:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:promotional",
+          "consent:band00to06",
+          "consent:band06to08",
+          "consent:band08to10",
+          "consent:band21to24"
+        ]
+      }
+    },
+    {
+      "description": "04:00 IST rejects when only band 06:00 to 08:00 was opted in",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "promotional": true,
+            "band06to08": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T22:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:band00to06",
+        "trace": [
+          "consent:promotional",
+          "consent:band00to06"
+        ]
+      }
+    },
+    {
+      "description": "09:00 IST without the band iii opt-in rejects",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "Asia/Kolkata",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "promotional": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T03:30:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:band08to10",
+        "trace": [
+          "consent:promotional",
+          "consent:band00to06",
+          "consent:band06to08",
+          "consent:band08to10"
+        ]
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.2.0",
+  "spec_version": "1.2.1",
   "since": "1.2.0",
   "name": "dedupe/no-key-skips",
   "description": "With no dedupeKey on the candidate the check skips rather than guessing an identity.",
