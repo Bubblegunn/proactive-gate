@@ -41,6 +41,45 @@ A check returns one of five outcomes.
 `rejectedBy`. Snooze with `{ defer: true }` is the built-in example: the decision says when to
 try again instead of saying no.
 
+## The same decision, in sentences
+
+`decision.reason` is written for the engineer holding the trace. `explain(decision)` renders
+the same decision for the person who decides whether the assistant is too chatty, built from
+the same trace with nothing added:
+
+```ts
+import { explain } from "proactive-gate";
+
+const e = explain(decision);
+
+e.summary;
+// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul
+//  and normal priority is below the high floor needed to override them."
+
+e.checks;
+// [ { id: "killSwitch", outcome: "pass",   sentence: "The kill switch was off." },
+//   { id: "consent",    outcome: "pass",   sentence: "The user has agreed to proactive messages." },
+//   { id: "quietHours", outcome: "reject", sentence: "The user's quiet hours run 22:00 to 08:00 …" } ]
+```
+
+An allowed decision explains itself too, because "why did this go out at 22:30" is asked more
+often than the reverse: *Allowed at 2026-09-04T09:00:00.000Z because no check stopped it.*
+
+The renderer is a pure function of the decision. It reads no clock and inspects neither the
+candidate nor the user, so it cannot describe a decision the gate did not make, and a reason
+that matches no template is quoted verbatim and attributed to the check that said it rather
+than guessed at. `decision.reason` is untouched: the machine reason and the sentence sit side
+by side and neither replaces the other.
+
+```ts
+explain(decision, { language: "tr", catalogs: { tr } });
+```
+
+`language` defaults to `"en"`; another language is a `Partial<Sentences>` merged over English,
+so a partial translation still renders and an unknown language code fails loudly instead of
+quietly answering in English. The Python sibling ships the same sentences, and CI compares
+both renderings of every fixture decision on each push.
+
 ## Shadow mode
 
 A check with `shadow: true` runs and is traced with its real outcome, but a reject or defer

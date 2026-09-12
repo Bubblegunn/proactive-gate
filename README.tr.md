@@ -209,6 +209,31 @@ fırlatan bir kanca `error` kancasına yönlendirilir ve kararı asla değiştir
 `commit` bu id üzerinde tekrarlanabilir: zaman aşımından sonraki bir yeniden deneme ikinci
 bir birim tüketmez.
 
+## Bir ürün yöneticisinin okuyabileceği ret gerekçesi
+
+`decision.reason` izi elinde tutan mühendis için yazılmıştır. `explain(decision)` aynı kararı,
+asistanın fazla konuşkan olup olmadığına karar veren kişi için cümlelere çevirir; aynı izden,
+hiçbir şey eklemeden:
+
+```ts
+import { explain } from "proactive-gate";
+
+explain(decision).summary;
+// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and
+//  normal priority is below the critical floor needed to override them."
+```
+
+"Bu mesaj 22:30'da neden gitti" sorusunun da bir yanıtı olur: izin verilen karar da kendini
+anlatır, `explanation.checks` ise çalışan her kontrol için sırayla bir cümle taşır. Renderer
+kararın saf bir fonksiyonudur: saat okumaz, adaya da kullanıcıya da bakmaz, dolayısıyla
+gate'in vermediği bir kararı anlatamaz. Hiçbir şablona uymayan bir gerekçe tahmin edilmez,
+olduğu gibi alıntılanır ve söyleyen kontrolün adıyla verilir. `language` bir parametredir:
+İngilizce `en` olarak gelir, başka bir dil `catalogs` içinde İngilizcenin üzerine birleşen bir
+`Partial<Sentences>`'tır, böylece yarım bir çeviri de görüntülenir. Python kardeşi aynı
+cümleleri yollar, CI her push'ta iki uygulamanın her fixture kararını karşılaştırır. Bu bölümü
+[@LouisDeconinck](https://github.com/LouisDeconinck)
+[#28](https://github.com/Bubblegunn/proactive-gate/pull/28) ile iki dilde birden yazdı.
+
 ## İsteğe bağlı, kendi modelinizin beslediği kontroller
 
 İkisi de kapalı gelir; adayın üzerine çağıranın koyduğu sayıları okurlar.

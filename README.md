@@ -270,7 +270,10 @@ It answers "why did this go out at 22:30" too: an allowed decision explains itse
 pure function of the decision; it invents nothing, and a check whose reason matches nothing
 known is quoted verbatim rather than guessed. `language` is a parameter: English ships as
 `en`, and any other language is a `Partial<Sentences>` in `catalogs`, merged over English so
-a partial translation still renders. The Python sibling ships the same sentences.
+a partial translation still renders. The Python sibling ships the same sentences, and CI
+compares both renderings of every fixture decision on each push. It was contributed by
+[@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#28](https://github.com/Bubblegunn/proactive-gate/pull/28), in TypeScript and Python together.
 
 ## Optional checks, fed by your own model
 
@@ -782,7 +785,7 @@ before. [@Aaqibhafeezkhan](https://github.com/Aaqibhafeezkhan) wrote `SqliteStor
 every release since, including the one you install today. @Aaqibhafeezkhan came back for a
 second one and wrote the store contract suite in [#24](https://github.com/Bubblegunn/proactive-gate/pull/24).
 
-A third person arrived from the other direction. [@LouisDeconinck](https://github.com/LouisDeconinck) took [#26](https://github.com/Bubblegunn/proactive-gate/issues/26), an issue this project filed against itself to admit that expired rows were never cleaned up, and twelve minutes later sent the fix in both languages with the test that would have caught the original bug ([#27](https://github.com/Bubblegunn/proactive-gate/pull/27), in 0.3.1).
+A third person arrived from the other direction. [@LouisDeconinck](https://github.com/LouisDeconinck) took [#26](https://github.com/Bubblegunn/proactive-gate/issues/26), an issue this project filed against itself to admit that expired rows were never cleaned up, and twelve minutes later sent the fix in both languages with the test that would have caught the original bug ([#27](https://github.com/Bubblegunn/proactive-gate/pull/27), in 0.3.1). He then took [#23](https://github.com/Bubblegunn/proactive-gate/issues/23), the issue asking for a rejection reason a product manager could read, and wrote its sixty-seven sentence templates in both languages ([#28](https://github.com/Bubblegunn/proactive-gate/pull/28), in 0.4.0). That is the work in this library that is hardest to review and easiest to get wrong, because it lives in the wording rather than in the code.
 
 ## Cite this
 
