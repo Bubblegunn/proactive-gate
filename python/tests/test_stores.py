@@ -62,6 +62,45 @@ def test_sqlite_store_removes_expired_rows_on_write(tmp_path: Path) -> None:
     store.close()
 
 
+def test_sqlite_store_sweeps_on_set_too(tmp_path: Path) -> None:
+    """Mutating set() to skip the sweep left every suite green: only incr was asserted."""
+    path = str(tmp_path / "gate.sqlite")
+    store = SqliteStore(path)
+    raw = sqlite3.connect(path, isolation_level=None)
+    expired = time.time() - 10
+    for i in range(50):
+        raw.execute("INSERT INTO kv (key, value, expires_at) VALUES (?, 'v', ?)", (f"stale-{i}", expired))
+    raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('keeper', 'v', ?)", (time.time() + 600,))
+    assert raw.execute("SELECT COUNT(*) FROM kv").fetchone()[0] == 51
+    store.set("fresh", "v", 60)
+    assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"keeper", "fresh"}
+    raw.close()
+    store.close()
+
+
+def test_async_sqlite_store_sweeps_on_set_too(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+
+    async def run() -> None:
+        path = str(tmp_path / "async.sqlite")
+        store = AsyncSqliteStore(path)
+        raw = sqlite3.connect(path, isolation_level=None)
+        try:
+            raw.execute("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at REAL)")
+            expired = time.time() - 10
+            for i in range(50):
+                raw.execute("INSERT INTO kv (key, value, expires_at) VALUES (?, 'v', ?)", (f"stale-{i}", expired))
+            raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('keeper', 'v', ?)", (time.time() + 600,))
+            assert raw.execute("SELECT COUNT(*) FROM kv").fetchone()[0] == 51
+            await store.set("fresh", "v", 60)
+            assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"keeper", "fresh"}
+        finally:
+            raw.close()
+            await store.close()
+
+    asyncio.run(run())
+
+
 def test_async_memory_store() -> None:
     asyncio.run(_exercise_async(AsyncMemoryStore()))
 

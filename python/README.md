@@ -84,7 +84,9 @@ runs that loop with values you supply, for tests with no store at all.
 ## Stores
 
 `MemoryStore` (in-process), `SqliteStore` (standard library, one file per host),
-`AsyncMemoryStore`, `AsyncSqliteStore` over `aiosqlite` (the same file and expiry rules
+`AsyncMemoryStore`, `AsyncSqliteStore` over `aiosqlite` (contributed by
+[@LouisDeconinck](https://github.com/LouisDeconinck) in
+[#32](https://github.com/Bubblegunn/proactive-gate/pull/32); the same file and expiry rules
 as `SqliteStore`, without blocking the loop), and `RedisStore` over `redis.asyncio`
 (INCR, then EXPIRE on the first increment). Any object with `get`, `set`, `incr` and
 `delete` works. `SqliteStore` removes an expired row when a read touches it and clears

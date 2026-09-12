@@ -253,6 +253,21 @@ test("sqlite store removes expired rows on write, including keys nobody reads ag
   store.close();
 });
 
+test("the same sweep runs on set, not only on incr", { skip: !sqliteAvailable }, async () => {
+  // Mutating set() to skip the sweep left every suite green: incr was the only
+  // path anybody asserted, in TypeScript and in Python.
+  let now = 1_000_000;
+  const store = new SqliteStore(":memory:", () => now);
+  for (let i = 0; i < 50; i++) await store.set(`stale-${i}`, "v", 60);
+  await store.set("keeper", "v", 600);
+  now += 61_000;
+  assert.equal(store.size(), 51);
+  await store.set("fresh", "v", 60);
+  assert.equal(store.size(), 2);
+  assert.equal(await store.get("keeper"), "v");
+  store.close();
+});
+
 test("adaptive timing never rejects; it defers and can narrow surfaces", async () => {
   const later = new Date("2026-09-04T15:00:00Z");
   const gate = createGate({
