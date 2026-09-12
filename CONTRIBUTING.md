@@ -62,6 +62,25 @@ A preset is the most natural outside contribution here, and the bar is the sourc
 
 When official sources disagree, pick the stricter documented value and say so in the note.
 
+A preset also moves things a grep will not show you, and two pull requests have gone red on the
+last one of these, which was our omission rather than theirs:
+
+- `test/presets.test.ts` asserts the number of presets exactly. Raise it.
+- `scripts/pack-allowlist.txt` lists every path `npm pack` may ship, and the package ships
+  `spec/`, so a new fixture must be listed there or `release-gate` fails. `node
+  scripts/release-gate.mjs --update` rewrites the file; commit the diff after reading it.
+- The README carries the preset table, the count in the `init --list` sentence, and a count of
+  preset fixtures in the spec paragraph. `docs/site/src/content/docs/index.mdx`,
+  `docs/site/src/content/docs/spec.md` and `python/README.md` repeat those counts.
+- `npm run conformance-table` regenerates the README table from a real run of both
+  implementations, and CI fails when it is stale. Never edit that table by hand.
+- A fixture's `spec_version` must equal `spec/SPEC_VERSION` and its `since` is the version it
+  arrived in. One spec version per release: if the current `SPEC_VERSION` has not been tagged
+  yet, add your fixture to it rather than bumping again. The `spec/vX.Y.Z` tag is the
+  maintainer's to push.
+- Leave `CHANGELOG.md` and the version files alone. The release commit carries those, and your
+  name goes in the changelog entry when your work merges.
+
 ## What a review here looks like
 
 This is a promise about how your pull request is treated, written down so you can hold it to it.
