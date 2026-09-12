@@ -1,5 +1,85 @@
 # Changelog
 
+## 0.7.0 (unreleased)
+
+**Three presets and a store, all from one contributor in a day.** [@LouisDeconinck](https://github.com/LouisDeconinck)
+added Brazil's LGPD ([#30](https://github.com/Bubblegunn/proactive-gate/pull/30), closing #14), the
+WhatsApp Business rules ([#31](https://github.com/Bubblegunn/proactive-gate/pull/31), closing #13)
+and `AsyncSqliteStore` for the Python sibling ([#32](https://github.com/Bubblegunn/proactive-gate/pull/32),
+closing #17).
+
+`brLgpd` carries the consent model and nothing else, because the law has nothing else to carry:
+article 8 paragraph 4 makes generic authorisations void, which is why it is a named
+`consents.marketing` read at every send, and article 14 paragraph 1 requires a parent's or
+guardian's specific consent, which `consents.parental` carries for a user marked minor. There is no
+soft opt-in for an existing customer and no time-of-day rule anywhere in the statute; a fixture pins
+the first and the note says the second.
+
+`whatsappBusiness` holds the three rules a gate can hold: opt-in before any business-initiated
+message, the 24-hour customer service window for free-form sends, and one message every six seconds
+to the same user, which Meta states as 600 an hour. `{ template: true }` drops the window check,
+because an approved template is the only thing allowed outside it. The note says what the preset
+cannot carry, and which way its rate-limit approximation errs.
+
+`AsyncSqliteStore` is the same file, schema and expiry rules as `SqliteStore` behind the async
+protocol, over `aiosqlite` as an optional extra imported in the constructor, so importing the
+package without it still works. Its expiry rules are checked against the synchronous store operation
+by operation, and a concurrent task keeps getting turns while it writes, which is what "does not
+block the loop" means. Both halves are pinned by tests in this release rather than by a measurement
+nobody could repeat: a blocking driver would give a concurrent task exactly zero turns.
+
+**Spec 1.4.0.** Two presets joined the vocabulary, so the fixture suite is 36 and the version is a
+minor under the rule in `SPEC.md`: an implementation that does not know a preset name must reject
+the policy, so nobody already passes a fixture that names one. Tag `spec/v1.4.0` after the release.
+
+**One follow-up that was ours rather than a contributor's.** No suite in either language ever
+asserted that the expired-row sweep runs on `set()`, only on `incr()`; mutation-testing #32 found
+it, and three tests now cover the other write path in all three stores.
+
+**A review of 0.6.0 found five ways the simulator could lie, and one published claim that was
+false. All six are fixed, each with the behavioural test that reproduces it first.**
+
+- **One clock.** `simulate()` built its store without the simulation's clock, so TTLs ran on wall
+  time: a week of simulated traffic passes in milliseconds, so a one-hour deduplication window
+  never reopened and a duplicate a real deployment would have allowed was reported as suppressed.
+  The store now runs on the simulated instant. Budget rows are snapshotted at each commit instead
+  of read back at the end, because the daily key carries a two-day TTL and a report written after a
+  simulated week would otherwise show zeros for the first days.
+- **State is read again, never remembered.** A deferred candidate was re-evaluated against the user
+  snapshot it was deferred with, so consent withdrawn at 08:30 did not stop a 09:00 retry. The
+  contract is now explicit: the snapshot used at any instant is the newest one at or before it, and
+  a stream may carry a state change with no candidate attached, which is how a revocation is said.
+- **Evaluation time and delivery time are different instants.** A future `deliverAt` was recorded
+  and then ignored: the send was counted at the evaluation moment, so quiet hours and the daily
+  volume were attributed to a moment when nobody was disturbed. The delivery now happens at that
+  instant, is re-evaluated there, and is counted there. The budget unit stays on the day the gate
+  spent it, which is what its key says.
+- **Deferral terminates.** A `retryAt` that was missing, in the past or equal to now re-queued the
+  same instant for ever; each of those three inputs ran until the process aborted. They are now
+  recorded as broken deferrals. The expiry window is measured from a candidate's first sighting
+  rather than from its latest hop, so a check that defers in three-hour steps can no longer carry a
+  candidate past a four-hour expiry indefinitely, and an attempt cap sits behind both.
+- **A difference is more than a different outcome.** Two policies that hold the same candidate for
+  different reasons, or deliver it at different times, are differences of their own kind now. The
+  aggressive-against-respectful comparison reports 80 differing candidates where 0.6.0 reported 73.
+- **A candidate id is an identity**, and a duplicate is refused rather than silently collapsed into
+  one row. A time zone change no longer re-judges earlier deliveries: every send records the local
+  day and the quiet-hours verdict in force at the moment it landed.
+
+**The correction that matters most.** 0.6.0 said "adding a check cannot make the gate louder" in the
+changelog and in the documentation. It is false. With a daily budget of one, a delivery at 10:00 and
+a candidate at 23:50 snoozed until 00:10, adding `snooze({ defer: true })` takes deliveries from one
+to two, because a deferral crosses the local-day boundary into an untouched budget. The
+counterexample is now a regression test, and the claim that survives is narrower: over the default
+order, whose checks all reject rather than defer, no added check raised deliveries in 180 policy
+pairs across three generated weeks. That is a measured result in that scope, not a theorem.
+
+The demo figures are unchanged, and that is worth stating plainly: 171 candidates, 171 delivered
+with no gate against 74 through the default order, 52 landing inside the recipient's own quiet hours
+against 3. None of the six defects touched the default run, because the generated week has no
+deferring policy, no deduplication key, no postponed delivery, no time zone change and no repeated
+candidate id. They were real, and they were invisible in the figures the README quotes.
+
 ## 0.6.0 (2026-09-12)
 
 **You can now see what the gate changes before you install it.** `npx proactive-gate simulate`
