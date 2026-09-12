@@ -91,9 +91,10 @@ an expired row when a read touches it and clears every already-expired row on ea
 
 ## Presets
 
-`proactive_gate.presets` holds the same fifteen presets as the TypeScript package, each with
+`proactive_gate.presets` holds the same sixteen presets as the TypeScript package, each with
 its source URLs and a note on what it leaves out: LINE, WeChat, WeCom, Kakao, Korea's Network
 Act, Japan's anti-spam law, China's minor mode, India's TCCCPR, US TCPA, EU ePrivacy, Telegram
+Act, Japan's anti-spam law, China's minor mode, Brazil's LGPD, US TCPA, EU ePrivacy, Telegram
 and Slack. They are reviewable defaults, not legal advice.
 
 ## Conformance

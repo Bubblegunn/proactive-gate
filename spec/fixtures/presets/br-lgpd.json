@@ -1,22 +1,19 @@
 {
   "spec_version": "1.4.0",
-  "since": "1.0.0",
-  "name": "presets/cn-minor-mode",
-  "description": "cnMinorMode restricts minors to 06:00 to 22:00 China time and one message a day; adults pass.",
+  "since": "1.4.0",
+  "name": "presets/br-lgpd",
+  "description": "brLgpd needs marketing consent for every recipient, and a minor additionally needs the parental consent of art. 14.",
   "policy": {
     "specVersion": "1.0.0",
     "checks": [
       {
-        "id": "consent"
-      },
-      {
-        "preset": "cnMinorMode"
+        "preset": "brLgpd"
       }
     ]
   },
   "tests": [
     {
-      "description": "minor at 23:00 CST rejects",
+      "description": "no marketing consent",
       "input": {
         "user": {
           "id": "u1",
@@ -24,13 +21,14 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Europe/Istanbul",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
+          "minor": false,
+          "consents": {}
         },
         "candidate": {
           "id": "c1",
@@ -41,19 +39,18 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T15:00:00Z"
+        "now": "2026-09-04T14:00:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "window:minor",
+        "rejectedBy": "consent:marketing",
         "trace": [
-          "consent",
-          "window:minor"
+          "consent:marketing"
         ]
       }
     },
     {
-      "description": "adult at 23:00 CST passes both",
+      "description": "an existing customer still needs marketing consent; LGPD has no soft opt-in",
       "input": {
         "user": {
           "id": "u1",
@@ -61,13 +58,14 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Europe/Istanbul",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
-          "minor": false
+          "existingCustomer": true,
+          "consents": {}
         },
         "candidate": {
           "id": "c1",
@@ -78,19 +76,18 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T15:00:00Z"
+        "now": "2026-09-04T14:00:00Z"
       },
       "expect": {
-        "allowed": true,
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
         "trace": [
-          "consent",
-          "window:minor",
-          "dailyBudget"
+          "consent:marketing"
         ]
       }
     },
     {
-      "description": "minor at noon CST: first message allowed and consumed",
+      "description": "adult with marketing consent passes",
       "input": {
         "user": {
           "id": "u1",
@@ -98,16 +95,19 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Europe/Istanbul",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
+          "minor": false,
+          "consents": {
+            "marketing": true
+          }
         },
         "candidate": {
-          "id": "c2",
+          "id": "c1",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
@@ -115,21 +115,18 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T04:00:00Z"
+        "now": "2026-09-04T14:00:00Z"
       },
-      "commit": true,
       "expect": {
         "allowed": true,
         "trace": [
-          "consent",
-          "window:minor",
-          "dailyBudget"
-        ],
-        "commit": true
+          "consent:marketing",
+          "consent:parental"
+        ]
       }
     },
     {
-      "description": "minor at noon CST: second message rejected",
+      "description": "a minor with marketing consent but no parental consent rejects",
       "input": {
         "user": {
           "id": "u1",
@@ -137,16 +134,19 @@
           "proactiveEnabled": true,
           "mode": "normal",
           "intensity": "normal",
-          "timezone": "Europe/Istanbul",
+          "timezone": "America/Sao_Paulo",
           "quietHours": {
             "start": "22:00",
             "end": "08:00"
           },
           "createdAt": "2026-01-01T00:00:00Z",
-          "minor": true
+          "minor": true,
+          "consents": {
+            "marketing": true
+          }
         },
         "candidate": {
-          "id": "c3",
+          "id": "c1",
           "type": "reminder",
           "priority": "normal",
           "surfaces": [
@@ -154,15 +154,54 @@
             "feed"
           ]
         },
-        "now": "2026-09-04T04:00:00Z"
+        "now": "2026-09-04T14:00:00Z"
       },
       "expect": {
         "allowed": false,
-        "rejectedBy": "dailyBudget",
+        "rejectedBy": "consent:parental",
         "trace": [
-          "consent",
-          "window:minor",
-          "dailyBudget"
+          "consent:marketing",
+          "consent:parental"
+        ]
+      }
+    },
+    {
+      "description": "a minor with marketing and parental consent passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "minor": true,
+          "consents": {
+            "marketing": true,
+            "parental": true
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T14:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:marketing",
+          "consent:parental"
         ]
       }
     }

@@ -28,6 +28,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.usTcpa()] });
 | `jpAntiSpamLaw` | `consents.optIn` | MIC, anti-spam law |
 | `cnMinorMode` | for `user.minor`: 06:00 to 22:00 Asia/Shanghai and one a day | CAC, 2022 and 2024 rules |
 | `inTcccp` | `consents.promotional`; the four default-off Schedule-II bands need their own `consents.band*` opt-in | TRAI, TCCCPR 2018 |
+| `brLgpd` | `consents.marketing`, and `consents.parental` for `user.minor` | LGPD, Lei 13.709/2018 arts. 7, 8 and 14 |
 | `usTcpa` | 08:00 to 21:00 at the user's local time | 47 CFR 64.1200 |
 | `euEprivacy` | `consents.marketing`, soft opt-in for `existingCustomer` | Directive 2002/58/EC art. 13 |
 | `telegramBot` | 1 a second and 20 a minute per `candidate.channel` | Telegram bots FAQ |
