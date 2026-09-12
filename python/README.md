@@ -93,10 +93,10 @@ disappears.
 
 ## Presets
 
-`proactive_gate.presets` holds the same fifteen presets as the TypeScript package, each with
+`proactive_gate.presets` holds the same sixteen presets as the TypeScript package, each with
 its source URLs and a note on what it leaves out: LINE, WeChat, WeCom, Kakao, Korea's Network
-Act, Japan's anti-spam law, China's minor mode, India's TCCCPR, US TCPA, EU ePrivacy, Telegram
-and Slack. They are reviewable defaults, not legal advice.
+Act, Japan's anti-spam law, China's minor mode, India's TCCCPR, US TCPA, EU ePrivacy, Telegram,
+Slack and WhatsApp Business. They are reviewable defaults, not legal advice.
 
 ## Conformance
 

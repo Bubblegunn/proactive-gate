@@ -32,6 +32,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.usTcpa()] });
 | `euEprivacy` | `consents.marketing`, soft opt-in for `existingCustomer` | Directive 2002/58/EC art. 13 |
 | `telegramBot` | 1 a second and 20 a minute per `candidate.channel` | Telegram bots FAQ |
 | `slackApp` | 1 a second per `candidate.channel` | Slack rate limits |
+| `whatsappBusiness({ template })` | `consents.whatsappOptIn`, free-form inside the 24-hour customer service window, 600 an hour per user | WhatsApp Business Platform docs |
 
 The exact URLs are in
 [`src/presets.ts`](https://github.com/Bubblegunn/proactive-gate/blob/main/src/presets.ts) and on
