@@ -34,8 +34,9 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+aiosqlite = ["aiosqlite>=0.20"]
 redis = ["redis>=5"]
-dev = ["pytest>=8", "mypy>=1.11", "redis>=5"]
+dev = ["pytest>=8", "mypy>=1.11", "aiosqlite>=0.20", "redis>=5"]
 
 [project.urls]
 Homepage = "https://bubblegunn.github.io/proactive-gate/"

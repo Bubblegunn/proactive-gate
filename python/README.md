@@ -14,7 +14,7 @@ pip install proactive-gate
 ```
 
 Python 3.11 or newer, no runtime dependencies. Add `[redis]` (`pip install "proactive-gate[redis]"`)
-for the Redis store.
+for the Redis store, or `[aiosqlite]` for the async SQLite store.
 
 To run an unreleased state, install from the repository instead:
 `pip install "proactive-gate @ git+https://github.com/Bubblegunn/proactive-gate#subdirectory=python"`.
@@ -84,10 +84,12 @@ runs that loop with values you supply, for tests with no store at all.
 ## Stores
 
 `MemoryStore` (in-process), `SqliteStore` (standard library, one file per host),
-`AsyncMemoryStore`, and `RedisStore` over `redis.asyncio` (INCR, then EXPIRE on the first
-increment). Any object with `get`, `set`, `incr` and `delete` works. `SqliteStore` removes
-an expired row when a read touches it and clears every already-expired row on each `set` or
-`incr`, so a key nobody reads again still disappears.
+`AsyncMemoryStore`, `AsyncSqliteStore` over `aiosqlite` (the same file and expiry rules
+as `SqliteStore`, without blocking the loop), and `RedisStore` over `redis.asyncio`
+(INCR, then EXPIRE on the first increment). Any object with `get`, `set`, `incr` and
+`delete` works. `SqliteStore` removes an expired row when a read touches it and clears
+every already-expired row on each `set` or `incr`, so a key nobody reads again still
+disappears.
 
 ## Presets
 
