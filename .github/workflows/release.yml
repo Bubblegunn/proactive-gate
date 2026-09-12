@@ -51,13 +51,32 @@ jobs:
       - name: npx the released version from the registry
         shell: bash
         run: |
+          # This step is the only proof that what was published installs and runs, and until
+          # 2026-09-12 it could not fail. The old check searched the output for the version
+          # string anywhere, and npm's own failure text quotes it back:
+          #
+          #   npm error notarget No matching version found for ai-slop-linter@0.1.5.
+          #
+          # So six exhausted retries against a registry that was still processing the publish
+          # printed "smoke ok" and the job went green. Installing is now tracked separately from
+          # what was printed, and the printed version must equal the released one exactly.
           v="${TAG#v}"
+          installed=""
           for i in 1 2 3 4 5 6; do
-            out=$(npx --yes "$PKG@$v" --version 2>&1) && break
-            echo "attempt $i: $out"; sleep 20
+            if out=$(npx --yes "$PKG@$v" --version 2>&1); then installed=yes; break; fi
+            echo "attempt $i did not install:"; echo "$out"; sleep 20
           done
+          if [ -z "$installed" ]; then
+            echo "the registry never served $PKG@$v: six attempts over two minutes all failed"
+            exit 1
+          fi
           echo "$out"
-          case "$out" in *"$v"*) echo "smoke ok: $PKG@$v" ;; *) echo "expected version $v in the output"; exit 1 ;; esac
+          printed=$(printf '%s' "$out" | tr -d '\r' | tail -n 1 | tr -d '[:space:]')
+          if [ "$printed" != "$v" ]; then
+            echo "installed, but --version printed '$printed' where $v was expected"
+            exit 1
+          fi
+          echo "smoke ok: $PKG@$v"
         env:
           TAG: ${{ github.ref_name }}
           PKG: ${{ github.event.repository.name }}
