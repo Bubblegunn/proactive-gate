@@ -239,6 +239,20 @@ test("sqlite store preserves values across database connections", { skip: !sqlit
   }
 });
 
+test("sqlite store removes expired rows on write, including keys nobody reads again", { skip: !sqliteAvailable }, async () => {
+  let now = 1_000_000;
+  const store = new SqliteStore(":memory:", () => now);
+  for (let i = 0; i < 50; i++) await store.set(`stale-${i}`, "v", 60);
+  await store.set("keeper", "v", 600);
+  now += 61_000;
+  // None of the stale keys were read, so all fifty rows are still physically there.
+  assert.equal(store.size(), 51);
+  await store.incr("fresh", 60);
+  assert.equal(store.size(), 2);
+  assert.equal(await store.get("keeper"), "v");
+  store.close();
+});
+
 test("adaptive timing never rejects; it defers and can narrow surfaces", async () => {
   const later = new Date("2026-09-04T15:00:00Z");
   const gate = createGate({

@@ -440,6 +440,9 @@ shares values across instances. `SqliteStore` persists values in a SQLite databa
 adding a package dependency. It was contributed by
 [@Aaqibhafeezkhan](https://github.com/Aaqibhafeezkhan) in [#3](https://github.com/Bubblegunn/proactive-gate/pull/3). `SqliteStore` requires Node.js 22.5 or newer; the SQLite module
 is loaded only when the store is constructed so the package can still be used on Node.js 20. On Node 22 the module prints an ExperimentalWarning on first use; it is stable from Node 24.
+Expired rows are removed when a read touches them, and every `set` or `incr` first removes the
+rows that have already expired, so a key nobody reads again still disappears: a year of daily
+budget keys leaves the live rows in the table rather than one dead row per day.
 
 **Writing your own store?** `proactive-gate/store-contract` exports the same suite these three are
 held to, so you can prove yours behaves rather than hope:

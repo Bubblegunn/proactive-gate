@@ -72,7 +72,14 @@ class SqliteStore:
     def __init__(self, path: str = ":memory:") -> None:
         self._conn = sqlite3.connect(path, isolation_level=None, check_same_thread=False)
         self._conn.execute("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at REAL)")
+        # The partial index keeps a sweep proportional to the dead rows instead of a table scan.
+        self._conn.execute("CREATE INDEX IF NOT EXISTS kv_expires_at ON kv (expires_at) WHERE expires_at IS NOT NULL")
         self._lock = threading.Lock()
+
+    def _sweep(self, now: float) -> None:
+        """A read prunes only the key it touches; a write first clears every row
+        that has already expired, so a key nobody reads again does not live forever."""
+        self._conn.execute("DELETE FROM kv WHERE expires_at IS NOT NULL AND expires_at <= ?", (now,))
 
     def _row(self, key: str) -> str | None:
         row = self._conn.execute("SELECT value, expires_at FROM kv WHERE key = ?", (key,)).fetchone()
@@ -89,14 +96,17 @@ class SqliteStore:
             return self._row(key)
 
     def set(self, key: str, value: str, ttl_seconds: int | None = None) -> None:
-        expires = time.time() + ttl_seconds if ttl_seconds else None
+        now = time.time()
+        expires = now + ttl_seconds if ttl_seconds else None
         with self._lock:
+            self._sweep(now)
             self._conn.execute("INSERT OR REPLACE INTO kv (key, value, expires_at) VALUES (?, ?, ?)", (key, value, expires))
 
     def incr(self, key: str, ttl_seconds: int | None = None) -> int:
         with self._lock:
             self._conn.execute("BEGIN IMMEDIATE")
             try:
+                self._sweep(time.time())
                 current = self._row(key)
                 next_value = int(current or 0) + 1
                 if current is None:

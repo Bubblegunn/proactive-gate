@@ -98,6 +98,18 @@ export class SqliteStore implements Store {
     this.database.exec(
       "CREATE TABLE IF NOT EXISTS proactive_gate_store (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL, expires_at INTEGER)",
     );
+    // The partial index keeps a sweep proportional to the dead rows instead of a table scan.
+    this.database.exec(
+      "CREATE INDEX IF NOT EXISTS proactive_gate_store_expires_at ON proactive_gate_store (expires_at) WHERE expires_at IS NOT NULL",
+    );
+  }
+
+  /**
+   * A read prunes only the key it touches; a write first clears every row that
+   * has already expired, so a key nobody reads again does not live forever.
+   */
+  private sweep(now: number): void {
+    this.database.prepare("DELETE FROM proactive_gate_store WHERE expires_at IS NOT NULL AND expires_at <= ?").run(now);
   }
 
   private live(key: string): { value: string; expiresAt: number | null } | undefined {
@@ -117,7 +129,9 @@ export class SqliteStore implements Store {
   }
 
   async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
-    const expiresAt = ttlSeconds ? this.clock() + ttlSeconds * 1000 : null;
+    const now = this.clock();
+    const expiresAt = ttlSeconds ? now + ttlSeconds * 1000 : null;
+    this.sweep(now);
     this.database
       .prepare(
         "INSERT INTO proactive_gate_store (key, value, expires_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, expires_at = excluded.expires_at",
@@ -128,6 +142,7 @@ export class SqliteStore implements Store {
   async incr(key: string, ttlSeconds?: number): Promise<number> {
     const now = this.clock();
     const expiresAt = ttlSeconds ? now + ttlSeconds * 1000 : null;
+    this.sweep(now);
     const row = this.database
       .prepare(
         "INSERT INTO proactive_gate_store (key, value, expires_at) VALUES (?, '1', ?) ON CONFLICT(key) DO UPDATE SET value = CASE WHEN proactive_gate_store.expires_at IS NOT NULL AND proactive_gate_store.expires_at <= ? THEN '1' ELSE CAST(CAST(proactive_gate_store.value AS INTEGER) + 1 AS TEXT) END, expires_at = CASE WHEN proactive_gate_store.expires_at IS NOT NULL AND proactive_gate_store.expires_at <= ? THEN excluded.expires_at ELSE proactive_gate_store.expires_at END RETURNING value",
@@ -138,6 +153,12 @@ export class SqliteStore implements Store {
 
   async del(key: string): Promise<void> {
     this.database.prepare("DELETE FROM proactive_gate_store WHERE key = ?").run(key);
+  }
+
+  /** Test helper. */
+  size(): number {
+    const row = this.database.prepare("SELECT COUNT(*) AS n FROM proactive_gate_store").get() as { n: number };
+    return row.n;
   }
 
   close(): void {
