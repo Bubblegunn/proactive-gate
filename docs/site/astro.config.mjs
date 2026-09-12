@@ -31,6 +31,7 @@ export default defineConfig({
       sidebar: [
         { label: "Start", slug: "start" },
         { label: "Decisions", slug: "decisions" },
+        { label: "Simulate", slug: "simulate" },
         { label: "Checks", slug: "checks" },
         { label: "Policy as data", slug: "policy" },
         { label: "Presets", slug: "presets" },

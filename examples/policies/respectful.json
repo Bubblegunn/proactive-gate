@@ -1,0 +1,17 @@
+{
+  "specVersion": "1.0.0",
+  "onStoreError": "closed",
+  "checks": [
+    { "id": "consent" },
+    { "id": "enabled" },
+    { "id": "mode", "allow": ["normal"] },
+    { "id": "snooze", "defer": true },
+    { "id": "mute" },
+    { "id": "intensity" },
+    { "id": "quietHours", "priorityFloor": "critical" },
+    { "id": "trustRamp" },
+    { "id": "dismissalCooldown" },
+    { "id": "adaptiveTiming" },
+    { "id": "dailyBudget", "limit": 3 }
+  ]
+}

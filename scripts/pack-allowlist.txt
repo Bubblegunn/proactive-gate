@@ -15,6 +15,8 @@ dist/src/cli.d.ts
 dist/src/cli.js
 dist/src/conformance.d.ts
 dist/src/conformance.js
+dist/src/demo-week.d.ts
+dist/src/demo-week.js
 dist/src/explain.d.ts
 dist/src/explain.js
 dist/src/gate.d.ts
@@ -27,6 +29,10 @@ dist/src/policy.d.ts
 dist/src/policy.js
 dist/src/presets.d.ts
 dist/src/presets.js
+dist/src/simulate-report.d.ts
+dist/src/simulate-report.js
+dist/src/simulate.d.ts
+dist/src/simulate.js
 dist/src/store-contract.d.ts
 dist/src/store-contract.js
 dist/src/stores.d.ts

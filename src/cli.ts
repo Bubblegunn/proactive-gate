@@ -21,15 +21,37 @@ import { createRequire } from "node:module";
 import { createGate } from "./gate.js";
 import { defaultChecks } from "./checks.js";
 import { loadFixtures, readSkips, runFixture } from "./conformance.js";
+import { simulate } from "./simulate.js";
+import type { SimPolicy } from "./simulate.js";
+import { formatSimulation } from "./simulate-report.js";
+import { DEMO_WEEK_NOTE, demoWeek, demoWeekPeople } from "./demo-week.js";
 import { FRAMEWORKS, listText, plan } from "./init.js";
 import type { Framework } from "./init.js";
 import type { Gate } from "./gate.js";
 import type { Decision, EvaluateInput, Policy } from "./types.js";
 
-const HELP = `usage: proactive-gate init [--preset <name>] [--framework <name>] [--out <file>]
+const HELP = `usage: proactive-gate simulate [events.jsonl] [--policy <file>]... [--seed <n>]
+       proactive-gate init [--preset <name>] [--framework <name>] [--out <file>]
        proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
        proactive-gate replay --fixtures <dir> [--skip <file>]
        proactive-gate hook --policy <file> [--tool <name>]
+
+simulate runs one stream of candidates under two policies and shows what each one did
+with every candidate: sent, held and why, deferred and until when, which budget it spent.
+With no arguments it runs a generated week against no gate at all, which is the comparison
+that answers what installing this would change. It adds nothing to the decision path: the
+same gate runs twice.
+
+  events.jsonl       your own candidates, one EvaluateInput per line (default: a generated week)
+  --policy <file>    a policy.json to run. Given once, it is compared against no gate; given
+                     twice, the two policies are compared against each other
+  --seed <n>         seeds the generated week and the simulated transport (default 7)
+  --limit <n>        timeline rows to print, 0 for all (default 20)
+  --disagreements    print only the candidates the policies disagreed about
+  --why              print each held candidate's sentence under its row
+  --transport-failure-rate <f>  fraction of simulated sends that fail (default 0)
+  --dump-events <f>  write the generated week to <f> as JSONL and exit
+  --json             the whole result, for computing your own figures
 
 init writes a policy you can read and edit, and prints the lines that wire it in.
 
@@ -127,6 +149,28 @@ export function summarize(decisions: Decision[]): string {
 
 const pct = (n: number, total: number) => (total ? `${((100 * n) / total).toFixed(1)}%` : "0%");
 
+/** Every value of a flag that may be repeated, in the order it was given. */
+const argValues = (argv: string[], flag: string): string[] => {
+  const out: string[] = [];
+  for (const [i, a] of argv.entries()) if (a === flag && argv[i + 1] !== undefined) out.push(argv[i + 1] as string);
+  return out;
+};
+
+/** One JSONL line per candidate, the same shape `replay` reads. */
+export function parseEvents(text: string): EvaluateInput[] {
+  const events: EvaluateInput[] = [];
+  for (const [i, line] of text.split("\n").entries()) {
+    if (!line.trim()) continue;
+    try {
+      const raw = JSON.parse(line) as EvaluateInput & { now?: string };
+      events.push({ ...raw, ...(raw.now ? { now: new Date(raw.now) } : {}) });
+    } catch (error) {
+      throw new Error(`line ${i + 1}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  return events;
+}
+
 const argValue = (argv: string[], flag: string): string | undefined => {
   const i = argv.indexOf(flag);
   return i >= 0 ? argv[i + 1] : undefined;
@@ -196,6 +240,52 @@ async function main(argv: string[]) {
     return;
   }
   const [command, file] = argv;
+  if (command === "simulate") {
+    const seed = Number(argValue(argv, "--seed") ?? 7);
+    if (!Number.isFinite(seed)) {
+      console.error("--seed takes a number");
+      process.exit(2);
+    }
+    const eventsFile = file && !file.startsWith("--") ? file : undefined;
+    const events = eventsFile ? parseEvents(await readFile(eventsFile, "utf8")) : demoWeek(seed);
+    const dump = argValue(argv, "--dump-events");
+    if (dump) {
+      const lines = events.map((e) => JSON.stringify({ user: e.user, candidate: e.candidate, now: e.now?.toISOString() }));
+      await writeFile(dump, `${lines.join("\n")}\n`);
+      console.log(`wrote ${events.length} events to ${dump}`);
+      return;
+    }
+    const policyFiles = argValues(argv, "--policy");
+    const policies: SimPolicy[] = [];
+    for (const path of policyFiles) {
+      if (!path.endsWith(".json")) {
+        console.error(`simulate reads policy documents, not modules: ${path} must be a .json policy, because the simulation owns the store it reads budgets back out of`);
+        process.exit(2);
+      }
+      const label = path.replace(/^.*[/\\]/, "").replace(/\.json$/, "");
+      policies.push({ label, policy: JSON.parse(await readFile(path, "utf8")) as Policy });
+    }
+    // No policy given: the comparison a stranger wants, no gate against the default order.
+    // One policy given: the same comparison, against theirs. Two or more: theirs against theirs.
+    if (policies.length === 0) policies.push({ label: "proactive-gate", checks: defaultChecks() });
+    if (policies.length === 1) policies.unshift({ label: "no gate" });
+    const failureRate = Number(argValue(argv, "--transport-failure-rate") ?? 0);
+    const result = await simulate({ events, policies, seed, transportFailureRate: failureRate });
+    if (argv.includes("--json")) {
+      console.log(JSON.stringify(result, null, 2));
+      return;
+    }
+    const limitArg = argValue(argv, "--limit");
+    console.log(
+      formatSimulation(result, {
+        ...(limitArg === undefined ? {} : { limit: Number(limitArg) }),
+        disagreementsOnly: argv.includes("--disagreements"),
+        why: argv.includes("--why"),
+        ...(eventsFile ? {} : { note: DEMO_WEEK_NOTE, people: demoWeekPeople() }),
+      }),
+    );
+    return;
+  }
   if (command === "init") {
     if (argv.includes("--list")) {
       console.log(listText());
