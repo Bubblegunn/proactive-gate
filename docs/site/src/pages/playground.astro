@@ -53,6 +53,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     </p>
   </details>
 
+  <details class="src ex">
+    <summary>Take this run with you</summary>
+    <p class="hint">
+      These are built from the two boxes above, so they carry the run in front of you rather than
+      a sample. There is no share link on purpose: the input can hold a user id, a payload, event
+      text or someone's real quiet hours, and a link is copied into chat logs and kept in browser
+      history. Save the files instead.
+    </p>
+    <label>Install it <textarea id="ex-install" rows="1" readonly spellcheck="false"></textarea></label>
+    <label>Replay a file of candidates through this policy <textarea id="ex-replay" rows="2" readonly spellcheck="false"></textarea></label>
+    <label>Wire it into your own send, as run.mjs beside the policy file <textarea id="ex-snippet" rows="20" readonly spellcheck="false"></textarea></label>
+    <p class="acts">
+      <button id="copy-install" class="copy">Copy the install</button>
+      <button id="copy-replay" class="copy">Copy the command</button>
+      <button id="copy-snippet" class="copy">Copy the snippet</button>
+      <span id="ex-status"></span>
+    </p>
+  </details>
+
   <script is:inline define:vars={{ base }}>
     const $ = (id) => document.getElementById(id);
 
@@ -73,6 +92,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     let data;
     const loadData = async () => (data ??= await import(`${base}/playground/scenarios.mjs`));
 
+    // The policy file, the replay command and the wire-up snippet. Pure functions of the policy
+    // and the input, and test/snippet.test.mjs executes the snippet it produces against the
+    // built package, so what this page offers is a snippet that runs.
+    let ex;
+    const loadExport = async () => (ex ??= await import(`${base}/playground/export.mjs`));
+
     async function run() {
       $("error").hidden = true;
       $("status").textContent = "running";
@@ -80,6 +105,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         const m = await load();
         const p = JSON.parse($("policy").value);
         const i = JSON.parse($("input").value);
+        await refreshExport(i);
 
         // Whatever is in those two boxes goes through the same function the test runs, so the
         // page and the test cannot diverge. The budget is spent the only way it can honestly
@@ -154,16 +180,33 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       const b = e.target.closest(".scen-b");
       if (b) pick(b.dataset.key);
     });
+    // Rebuilt from whatever is in the boxes, so editing the policy and pressing Run changes
+    // what you would copy. Nothing is written to a URL here or anywhere else on this page.
+    async function refreshExport(input) {
+      const x = await loadExport();
+      $("ex-install").value = x.installCommand;
+      $("ex-replay").value = x.replayCommand;
+      $("ex-snippet").value = x.wireUpSnippet(input);
+    }
+
+    /** Copy a field, and say so in plain words when the clipboard is not reachable. */
+    function wireCopy(buttonId, sourceId, statusId, done) {
+      $(buttonId).addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText($(sourceId).value);
+          $(statusId).textContent = done;
+          setTimeout(() => ($(statusId).textContent = ""), 4000);
+        } catch {
+          $(statusId).textContent = "could not reach the clipboard; select the text and copy it";
+        }
+      });
+    }
+
     $("run").addEventListener("click", run);
-    $("copy").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText($("policy").value);
-        $("status").textContent = "policy copied; save it as proactive-gate.policy.json";
-        setTimeout(() => ($("status").textContent = ""), 4000);
-      } catch {
-        $("status").textContent = "could not reach the clipboard; select the policy and copy it";
-      }
-    });
+    wireCopy("copy", "policy", "status", "policy copied; save it as proactive-gate.policy.json");
+    wireCopy("copy-install", "ex-install", "ex-status", "copied");
+    wireCopy("copy-replay", "ex-replay", "ex-status", "copied; run it beside the policy file and a day.jsonl");
+    wireCopy("copy-snippet", "ex-snippet", "ex-status", "copied; save it as run.mjs beside the policy file");
 
     // The buttons have to exist before pick() can mark one of them current, so the first
     // render and the first run are one sequence. If the render module cannot be fetched the
@@ -227,6 +270,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     .pg { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 72rem) { .pg { grid-template-columns: 1fr; } }
     .pg label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
+    .hint { font-size: 0.85rem; color: var(--sl-color-gray-3); margin: 0 0 0.9rem; }
+    .ex label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; margin-bottom: 0.8rem; font-size: 0.9rem; }
+    .ex textarea { font-family: var(--__sl-font-mono); font-size: 0.8rem; line-height: 1.4; padding: 0.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.25rem; background: var(--sl-color-black); color: var(--sl-color-white); resize: vertical; }
+    .ex .acts { flex-wrap: wrap; gap: 0.5rem; }
     .pg textarea { font-family: var(--__sl-font-mono); font-size: 0.8rem; line-height: 1.4; padding: 0.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.25rem; background: var(--sl-color-black); color: var(--sl-color-white); }
     .run, .copy { font: inherit; font-weight: 600; padding: 0.4rem 1rem; border-radius: 0.25rem; cursor: pointer; }
     .run { border: 1px solid var(--sl-color-accent); background: var(--sl-color-accent); color: var(--sl-color-black); }
