@@ -172,7 +172,26 @@ test("rateLimit: the id's own numbers, and a preset's custom id renders the same
   await store.set(`pg:rate:channel:general:60:${window}`, "20");
   const gate = createGate({ store, checks: [checks.rateLimit({ limit: 20, perSeconds: 60, keyBy: "channel", id: "rate:20/min" })] });
   const d = await gate.evaluate({ user: user(), candidate: candidate({ channel: "general" }), now: noon });
-  assert.equal(explain(d).summary, "Held because the rate limit of 20 messages per 1 minute was already reached (20 used).");
+  assert.equal(explain(d).summary, "Held because the rate limit of 20 messages per minute was already reached (20 used).");
+});
+
+test("rateLimit periods: one of a unit drops the number, and the presets' hour and day are that case", async () => {
+  // kakaoBrandMessage rate-limits per hour and lineMessagingApi per 24 hours, so
+  // the singular is what ships rather than the exception.
+  const cases: Array<[number, number, string]> = [
+    [60, 20, "per minute"],
+    [3600, 1000, "per hour"],
+    [24 * 3600, 3, "per day"],
+    [7200, 5, "per 2 hours"],
+    [90, 2, "per 90 seconds"],
+  ];
+  for (const [perSeconds, limit, said] of cases) {
+    const store = new MemoryStore();
+    await store.set(`pg:rate:user:u1:${perSeconds}:${Math.floor(noon.getTime() / 1000 / perSeconds)}`, String(limit));
+    const gate = createGate({ store, checks: [checks.rateLimit({ limit, perSeconds })] });
+    const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+    assert.equal(explain(d).summary, `Held because the rate limit of ${limit} messages ${said} was already reached (${limit} used).`);
+  }
 });
 
 test("dedupe: a delivered event and a missing key both read clearly", async () => {

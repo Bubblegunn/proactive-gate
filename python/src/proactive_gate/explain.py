@@ -65,18 +65,23 @@ def _span_words(label: str) -> str:
 
 
 def _seconds_words(text: str) -> str:
-    """'86400' to '24 hours': a rate-limit period in seconds, said long."""
+    """'86400' to 'day', '7200' to '2 hours': a rate-limit period in seconds, said long."""
     try:
         n = int(text)
     except ValueError:
         return f"{text} seconds"
+
+    # "per hour", not "per 1 hour": the same singular _span_words already says as "the last day".
+    def period(count: int, unit: str) -> str:
+        return unit if count == 1 else _plural(count, unit)
+
     if n % 86400 == 0:
-        return _plural(n // 86400, "day")
+        return period(n // 86400, "day")
     if n % 3600 == 0:
-        return _plural(n // 3600, "hour")
+        return period(n // 3600, "hour")
     if n % 60 == 0:
-        return _plural(n // 60, "minute")
-    return _plural(n, "second")
+        return period(n // 60, "minute")
+    return period(n, "second")
 
 
 def _budget_pass(label: str) -> SentenceTemplate:

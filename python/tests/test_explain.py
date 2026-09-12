@@ -165,7 +165,19 @@ def test_rate_limit_custom_id() -> None:
     window = int(NOON.timestamp() // 60)
     store.set(f"pg:rate:channel:general:60:{window}", "20")
     d = evaluate([checks.RateLimit(limit=20, per_seconds=60, key_by="channel", id="rate:20/min")], c=candidate(channel="general"), store=store, now=NOON)
-    assert explain(d).summary == "Held because the rate limit of 20 messages per 1 minute was already reached (20 used)."
+    assert explain(d).summary == "Held because the rate limit of 20 messages per minute was already reached (20 used)."
+
+
+@pytest.mark.parametrize(
+    ("per_seconds", "limit", "said"),
+    [(60, 20, "per minute"), (3600, 1000, "per hour"), (24 * 3600, 3, "per day"), (7200, 5, "per 2 hours"), (90, 2, "per 90 seconds")],
+)
+def test_rate_limit_periods(per_seconds: int, limit: int, said: str) -> None:
+    """One of a unit drops the number; kakao_brand_message ships the hour and line_messaging_api the day."""
+    store = MemoryStore()
+    store.set(f"pg:rate:user:u1:{per_seconds}:{int(NOON.timestamp() // per_seconds)}", str(limit))
+    d = evaluate([checks.RateLimit(limit=limit, per_seconds=per_seconds)], store=store, now=NOON)
+    assert explain(d).summary == f"Held because the rate limit of {limit} messages {said} was already reached ({limit} used)."
 
 
 def test_dedupe_delivered_and_missing_key() -> None:

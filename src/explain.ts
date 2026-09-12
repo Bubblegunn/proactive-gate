@@ -145,14 +145,16 @@ const spanWords = (label: string): string => {
   return n === 1 ? `within the last ${unit}` : `within the last ${plural(n, unit)}`;
 };
 
-/** "86400" to "24 hours": a rate-limit period in seconds, said long. */
+/** "86400" to "day", "7200" to "2 hours": a rate-limit period in seconds, said long. */
 const secondsWords = (text: string): string => {
   const n = Number(text);
   if (!Number.isFinite(n)) return `${text} seconds`;
-  if (n % 86400 === 0) return plural(n / 86400, "day");
-  if (n % 3600 === 0) return plural(n / 3600, "hour");
-  if (n % 60 === 0) return plural(n / 60, "minute");
-  return plural(n, "second");
+  // "per hour", not "per 1 hour": the same singular spanWords already says as "the last day".
+  const period = (count: number, unit: string) => (count === 1 ? unit : plural(count, unit));
+  if (n % 86400 === 0) return period(n / 86400, "day");
+  if (n % 3600 === 0) return period(n / 3600, "hour");
+  if (n % 60 === 0) return period(n / 60, "minute");
+  return period(n, "second");
 };
 
 /** The spend note is true only when the pass really read the counter: a bypassed budget returns a bare pass, a near-limit pass cannot be a bypass. */
