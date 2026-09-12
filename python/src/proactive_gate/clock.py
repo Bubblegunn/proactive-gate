@@ -10,7 +10,7 @@ DAY_SECONDS = 24 * 60 * 60
 def local_clock(now: datetime, tz: str) -> tuple[int, str]:
     """Minutes since local midnight and the local calendar day, ``YYYY-MM-DD``."""
     local = now.astimezone(ZoneInfo(tz))
-    return local.hour * 60 + local.minute, local.strftime("%Y-%m-%d")
+    return local.hour * 60 + local.minute, f"{local.year:04d}-{local.month:02d}-{local.day:02d}"
 
 
 def parse_hhmm(text: str) -> int:
@@ -37,7 +37,7 @@ def local_day(now: datetime, tz: str | None) -> str:
 
 def iso_week_key(day: str) -> str:
     year, week, _ = datetime.strptime(day, "%Y-%m-%d").isocalendar()
-    return f"{year}-W{week:02d}"
+    return f"{year:04d}-W{week:02d}"
 
 
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")

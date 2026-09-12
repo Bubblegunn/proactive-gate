@@ -452,8 +452,8 @@ yaz saati kenarı, Pacific/Apia, 2031'de bir duvar saati senaryosu, atomik commi
 erteleme, gölge modu, isteğe bağlı kontroller ve dokuz hazır paket. `clock/` alanı
 adversarial saat setidir: silinen ve tekrarlanan yaz saati saatleri, 23 ve 25 saatlik yerel
 günler, hafta ortasında saat dilimi değişimi, Apia'da atlanan bir takvim günü, ISO yılı
-takvim yılından farklı haftalar, geriye saran bir saat ve iki uygulamanın şu anda
-ayrıştığı 1000'den küçük yıllar (`spec/skip/` içinde beyan edilmiş). TypeScript ve Python
+takvim yılından farklı haftalar, geriye saran bir saat ve set sorana kadar iki uygulamanın
+da yanlış yaptığı 1000'den küçük yıllar (#36, #37, #38). TypeScript ve Python
 testleri hepsini çalıştırır; `npx proactive-gate replay --fixtures spec/fixtures` komut
 satırından çalıştırır. Üçüncü bir uygulama bu kaynaktan değil, senaryolardan başlar.
 

@@ -1,3 +1,1 @@
 # Fixtures TypeScript does not conform to, one per line: name # reason.
-clock/year-under-1000 # localClock formats years < 1000 unpadded ("1-06-01"), so weekdayOf remaps the year through Date.UTC (0-99 mean 1900s) and dayBefore/dates lookups miss; upstream bug #36
-clock/year-under-1000-week # isoWeekKey parses "1-06-01T00:00:00Z" as Invalid Date, producing NaN-WNaN instead of the spec-format 0001-W22; upstream bug #36

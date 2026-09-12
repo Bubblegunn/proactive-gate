@@ -33,3 +33,25 @@ def test_iso_week_key_uses_the_iso_year() -> None:
     assert iso_week_key("2026-01-01") == "2026-W01"
     assert iso_week_key("2027-01-01") == "2026-W53"
     assert iso_week_key("2026-09-07") == "2026-W37"
+
+
+def test_local_day_is_four_digits_whatever_the_year() -> None:
+    """``strftime("%Y")`` pads on most builds and not on all of them (#38).
+
+    The day string is built from the fields instead, so the result does not depend on which
+    C library the interpreter was linked against. Two interpreters on one machine disagreed
+    about this before the fix, which is the worst kind of test to have to debug.
+    """
+    for year, expected in ((1, "0001-06-01"), (99, "0099-06-01"), (999, "0999-06-01"), (2026, "2026-06-01")):
+        now = datetime(year, 6, 1, 12, 0, tzinfo=timezone.utc)
+        assert local_clock(now, "UTC") == (720, expected)
+
+
+def test_iso_week_key_pads_the_year_to_the_spec_format() -> None:
+    """5.1 fixes the key format at ``YYYY-Www``; this emitted ``1-W22`` (#37).
+
+    The TypeScript sibling writes ``0001-W22`` for the same instant, so an unpadded key here
+    meant one store served two sets of counters without either side noticing.
+    """
+    assert iso_week_key("0001-06-01") == "0001-W22"
+    assert iso_week_key("0999-06-01") == "0999-W22"
