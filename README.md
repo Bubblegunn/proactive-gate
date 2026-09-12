@@ -252,6 +252,26 @@ a hook that throws is routed to `error` and never changes the decision. `example
 turns them into one span per check. Every decision has an `id`, and `commit` is idempotent on
 it: a retry after a timeout does not consume a second unit.
 
+## A rejection reason a product manager can read
+
+`decision.reason` is written for the engineer holding the trace. `explain(decision)` renders
+the same decision as sentences for the person who decides whether the assistant is too chatty:
+
+```ts
+import { explain } from "proactive-gate";
+
+explain(decision).summary;
+// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and
+//  normal priority is below the critical floor needed to override them."
+```
+
+It answers "why did this go out at 22:30" too: an allowed decision explains itself, and
+`explanation.checks` carries one sentence per check that ran, in order. The renderer is a
+pure function of the decision; it invents nothing, and a check whose reason matches nothing
+known is quoted verbatim rather than guessed. `language` is a parameter: English ships as
+`en`, and any other language is a `Partial<Sentences>` in `catalogs`, merged over English so
+a partial translation still renders. The Python sibling ships the same sentences.
+
 ## Optional checks, fed by your own model
 
 Both ship off. They read numbers the caller puts on the candidate.

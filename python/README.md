@@ -47,6 +47,12 @@ else:
 `evaluate` reads; `commit` is the atomic increment right before you send, and it is
 idempotent on `decision.id`. Every decision carries `trace`, one entry per check that ran.
 
+`explain(decision)` renders a decision as sentences a non-engineer follows, a pure function
+of the trace with the same wording as the TypeScript catalog: `explain(decision).summary`
+for the decision as one sentence, `.checks` for one per check that ran. `language` defaults
+to `"en"`; another language is a mapping over the same keys in `catalogs`, merged over
+English so a partial translation still renders.
+
 ## A policy is data
 
 ```python
