@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.1 (unreleased)
+## 0.3.1 (2026-09-12)
 
 **A key nobody reads again used to live in the table forever.** `SqliteStore` pruned an expired row
 only when a read touched it, and the keys this gate writes most are dated: `budgetKey`,
