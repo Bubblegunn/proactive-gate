@@ -377,7 +377,10 @@ and the note says which value was chosen and why.
 commercial. A reminder your user asked for is not advertising, and pulling in a marketing preset for it
 imports a restriction the law never placed on you, which is its own kind of wrong answer.
 Use them when the candidate is promotional; when it is not, the platform quotas and your own
-quiet hours are the honest constraints.
+quiet hours are the honest constraints. A preset that reads the recipient's own zone
+(`usTcpa`, `krNetworkAct50`, `inTcccp`) has no local time to compare without `user.timezone`,
+so those checks skip and the message goes out; each preset's note says so, and a user with no
+zone is the case to handle before you rely on one of them.
 
 That scope test is also why some jurisdictions people ask for are missing. Canada's CASL and
 Australia's Spam Act 2003 set consent, identification and unsubscribe duties, and neither

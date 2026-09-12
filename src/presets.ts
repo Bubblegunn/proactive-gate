@@ -69,7 +69,7 @@ export const presets: Record<string, Preset> = {
   krNetworkAct50: define(
     () => [c.requiresConsent({ name: "ad" }), c.requiresConsent({ name: "night", when: { start: "21:00", end: "08:00", timezone: "user" } })],
     ["https://www.law.go.kr", "https://developers.fingerpush.com/biz-message/console/ads-guide"],
-    "Network Act article 50: prior consent for advertising, and a separate consent for 21:00 to 08:00 (email is exempt). The two-year re-confirmation is not encoded.",
+    "Network Act article 50: prior consent for advertising, and a separate consent for 21:00 to 08:00 (email is exempt). Without user.timezone the night consent cannot be placed in the day and skips; the advertising consent still applies. The two-year re-confirmation is not encoded.",
   ),
   jpAntiSpamLaw: define(
     () => [c.requiresConsent({ name: "optIn" })],
@@ -89,12 +89,13 @@ export const presets: Record<string, Preset> = {
     ["https://www.cac.gov.cn/2024-11/15/c_1733364304749288.htm", "https://www.cac.gov.cn/2022-01/04/c_1642894606364259.htm"],
     "Minor mode: no service 22:00 to 06:00 China time and a daily budget of one when user.minor is true; adults pass both checks. Per-age daily durations are not encoded.",
   ),
-  // India: TCCCPR 2018 (6 of 2018), consolidated text of May 2026. Regulation 9 lets a
-  // commercial communication reach a recipient only per the recipient's registered
-  // preference or consent; Schedule-II item 3 fixes nine time bands and keeps (i)
-  // 00:00-06:00, (ii) 06:00-08:00, (iii) 08:00-10:00 and (ix) 21:00-24:00 default OFF for
-  // every customer until the subscriber switches that band on, which the four band flags
-  // below carry. Read 2026-09-12.
+  // India: TCCCPR 2018 (6 of 2018). Regulation 9 lets a commercial communication reach a
+  // recipient only per the recipient's registered preference or consent; Schedule-II item 3
+  // fixes nine time bands and keeps (i) 00:00-06:00, (ii) 06:00-08:00, (iii) 08:00-10:00
+  // and (ix) 21:00-24:00 default OFF for every customer until the subscriber switches that
+  // band on, which the four band flags below carry. The second source is the gazetted
+  // regulation and the third is the May 2026 consolidation, which says on its own first
+  // page that the gazetted text prevails where they differ. Read 2026-09-12.
   inTcccp: define(
     () => [
       c.requiresConsent({ name: "promotional" }),
@@ -103,13 +104,13 @@ export const presets: Record<string, Preset> = {
       c.requiresConsent({ name: "band08to10", when: { start: "08:00", end: "10:00", timezone: "user" } }),
       c.requiresConsent({ name: "band21to24", when: { start: "21:00", end: "24:00", timezone: "user" } }),
     ],
-    ["https://trai.gov.in/tcccpr", "https://www.trai.gov.in/sites/default/files/2026-05/CA_21052026.pdf"],
-    "TCCCPR 2018: commercial communication needs the recipient's registered preference or consent (consents.promotional), and the Schedule-II default-off bands pass only when the subscriber opted that band in (the consents.band* flags, at the recipient's local time). Opt-outs inside the default-on 10:00 to 21:00, day-type and per-category preferences are per-subscriber state a fixed check list cannot express; carry them in user.quietHours and consents. It binds SMS and voice calls on access networks, not in-app notifications or email; 1909 and DLT registration are out of scope. Sources read 2026-09-12.",
+    ["https://trai.gov.in/tcccpr", "https://www.trai.gov.in/sites/default/files/2025-01/RegulationUcc19072018.pdf", "https://www.trai.gov.in/sites/default/files/2026-05/CA_21052026.pdf"],
+    "TCCCPR 2018: commercial communication needs the recipient's registered preference or consent (consents.promotional), and the Schedule-II default-off bands pass only when the subscriber opted that band in (the consents.band* flags, at the recipient's local time). The preference machinery is about promotional communication: the regulation's own block options exempt transactional and service communication and government communication (Schedule-II item 1 Note-4, item 3 Note-4), so pointing this preset at a transactional message imports a restriction the regulation does not place on it. Without user.timezone the four band checks skip and only the promotional consent is left. Opt-outs inside the default-on 10:00 to 21:00, day-type and per-category preferences are per-subscriber state a fixed check list cannot express; carry them in user.quietHours and consents. It binds SMS and voice calls on access networks, not in-app notifications or email; 1909 and DLT registration are out of scope. Sources read 2026-09-12.",
   ),
   usTcpa: define(
     () => [c.allowedWindow({ start: "08:00", end: "21:00", timezone: "user", id: "window:tcpa" })],
     ["https://www.law.cornell.edu/cfr/text/47/64.1200"],
-    "47 CFR 64.1200: no solicitation before 8 a.m. or after 9 p.m. at the called party's local time.",
+    "47 CFR 64.1200: no solicitation before 8 a.m. or after 9 p.m. at the called party's local time. Without user.timezone there is no local time to compare, so the check skips and the caller is not covered.",
   ),
   euEprivacy: define(
     () => [{ ...c.requiresConsent({ name: "marketing" }), run: (ctx) => (ctx.user.existingCustomer ? { kind: "pass", reason: "existing customer, soft opt-in" } : c.requiresConsent({ name: "marketing" }).run(ctx)) }],
