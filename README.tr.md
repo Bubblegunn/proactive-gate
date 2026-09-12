@@ -339,6 +339,10 @@ kuralıdır; yani mesajınızı ancak mesajın kendisi ticari olduğunda bağlar
 istediği bir hatırlatma reklam değildir ve onun için pazarlama paketi kullanmak, yasanın size
 hiç koymadığı bir kısıtı kendi elinizle içeri almak olur. Aday promosyon niteliğindeyse
 kullanın; değilse dürüst sınırlar platform kotaları ve kendi sessiz saatlerinizdir.
+Alıcının kendi saat dilimini okuyan paketlerde (`usTcpa`, `krNetworkAct50`, `inTcccp`)
+`user.timezone` yoksa karşılaştırılacak yerel saat de yoktur: o kontroller atlanır ve mesaj
+çıkar. Her paketin notu bunu söyler; saat dilimi olmayan kullanıcı, bu paketlerden birine
+güvenmeden önce çözülmesi gereken durumdur.
 
 Bazı ülkelerin neden burada olmadığı da aynı kapsam sınavıyla açıklanır. Kanada'nın CASL'i ve
 Avustralya'nın 2003 tarihli Spam Act'i rıza, gönderen kimliği ve abonelikten çıkma
