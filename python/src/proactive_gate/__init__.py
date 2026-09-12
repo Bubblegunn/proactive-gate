@@ -9,7 +9,7 @@ from .explain import EN, CheckSentence, Explanation, explain
 from .gate import AsyncGate, Evaluation, Gate, Hooks, decide
 from .policy import KNOWN_CHECKS, CompiledPolicy, compile_policy, load_policy
 from .presets import Preset
-from .stores import AsyncMemoryStore, AsyncStore, MemoryStore, RedisStore, SqliteStore, Store
+from .stores import AsyncMemoryStore, AsyncSqliteStore, AsyncStore, MemoryStore, RedisStore, SqliteStore, Store
 from .types import (
     PRIORITY_RANK,
     Candidate,
@@ -25,7 +25,7 @@ from .types import (
 __version__ = "0.5.0"
 
 __all__ = [
-    "EN", "PRIORITY_RANK", "KNOWN_CHECKS", "AsyncGate", "AsyncMemoryStore", "AsyncStore", "Candidate", "Check",
+    "EN", "PRIORITY_RANK", "KNOWN_CHECKS", "AsyncGate", "AsyncMemoryStore", "AsyncSqliteStore", "AsyncStore", "Candidate", "Check",
     "CheckSentence", "CompiledPolicy", "Context", "Decision", "EvaluateInput", "Evaluation", "Explanation",
     "Gate", "Hooks", "MemoryStore",
     "Outcome", "Preset", "Priority", "RedisStore", "SqliteStore", "Store", "TraceEntry", "UserState",

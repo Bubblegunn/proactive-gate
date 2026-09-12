@@ -2,6 +2,7 @@
 Every method may raise; the gate decides whether that fails open or closed."""
 from __future__ import annotations
 
+import asyncio
 import sqlite3
 import threading
 import time
@@ -147,6 +148,90 @@ class AsyncMemoryStore:
         self.inner.delete(key)
 
 
+class AsyncSqliteStore:
+    """``SqliteStore`` behind the async protocol: the same file, schema and expiry rules,
+    over ``aiosqlite`` so the event loop never blocks. The driver is the optional
+    ``aiosqlite`` extra, imported in the constructor so importing the package without it
+    still works. Unlike ``SqliteStore`` the schema is created on first use, not at
+    construction, so a store that is never awaited starts no thread and creates no file."""
+
+    def __init__(self, path: str = ":memory:") -> None:
+        import aiosqlite
+
+        self._conn: aiosqlite.Connection = aiosqlite.connect(path, isolation_level=None)
+        self._opened = False
+        self._lock = asyncio.Lock()
+
+    async def _open(self) -> None:
+        """The connection's worker thread starts on first use: awaiting it is allowed
+        exactly once, so construction stays synchronous and a store that is never
+        awaited starts nothing. Always called with ``self._lock`` held."""
+        if self._opened:
+            return
+        await self._conn
+        await self._conn.execute("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at REAL)")
+        # The partial index keeps a sweep proportional to the dead rows instead of a table scan.
+        await self._conn.execute("CREATE INDEX IF NOT EXISTS kv_expires_at ON kv (expires_at) WHERE expires_at IS NOT NULL")
+        self._opened = True
+
+    async def _sweep(self, now: float) -> None:
+        """A read prunes only the key it touches; a write first clears every row
+        that has already expired, so a key nobody reads again does not live forever."""
+        await self._conn.execute("DELETE FROM kv WHERE expires_at IS NOT NULL AND expires_at <= ?", (now,))
+
+    async def _row(self, key: str) -> str | None:
+        async with await self._conn.execute("SELECT value, expires_at FROM kv WHERE key = ?", (key,)) as cursor:
+            row = await cursor.fetchone()
+        if row is None:
+            return None
+        value, expires = row
+        if expires is not None and time.time() >= expires:
+            await self._conn.execute("DELETE FROM kv WHERE key = ?", (key,))
+            return None
+        return str(value)
+
+    async def get(self, key: str) -> str | None:
+        async with self._lock:
+            await self._open()
+            return await self._row(key)
+
+    async def set(self, key: str, value: str, ttl_seconds: int | None = None) -> None:
+        now = time.time()
+        expires = now + ttl_seconds if ttl_seconds else None
+        async with self._lock:
+            await self._open()
+            await self._sweep(now)
+            await self._conn.execute("INSERT OR REPLACE INTO kv (key, value, expires_at) VALUES (?, ?, ?)", (key, value, expires))
+
+    async def incr(self, key: str, ttl_seconds: int | None = None) -> int:
+        async with self._lock:
+            await self._open()
+            await self._conn.execute("BEGIN IMMEDIATE")
+            try:
+                await self._sweep(time.time())
+                current = await self._row(key)
+                next_value = int(current or 0) + 1
+                if current is None:
+                    expires = time.time() + ttl_seconds if ttl_seconds else None
+                    await self._conn.execute("INSERT OR REPLACE INTO kv (key, value, expires_at) VALUES (?, ?, ?)", (key, str(next_value), expires))
+                else:
+                    await self._conn.execute("UPDATE kv SET value = ? WHERE key = ?", (str(next_value), key))
+                await self._conn.execute("COMMIT")
+            except BaseException:
+                await self._conn.execute("ROLLBACK")
+                raise
+            return next_value
+
+    async def delete(self, key: str) -> None:
+        async with self._lock:
+            await self._open()
+            await self._conn.execute("DELETE FROM kv WHERE key = ?", (key,))
+
+    async def close(self) -> None:
+        async with self._lock:
+            await self._conn.close()
+
+
 class RedisStore:
     """Wraps a ``redis.asyncio`` client. INCR, then EXPIRE on the first increment so a key never lives forever."""
 
@@ -175,4 +260,4 @@ class RedisStore:
         await self.client.delete(key)
 
 
-__all__ = ["AsyncMemoryStore", "AsyncStore", "MemoryStore", "RedisStore", "SqliteStore", "Store"]
+__all__ = ["AsyncMemoryStore", "AsyncSqliteStore", "AsyncStore", "MemoryStore", "RedisStore", "SqliteStore", "Store"]

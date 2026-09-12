@@ -4,7 +4,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-from proactive_gate import AsyncGate, AsyncMemoryStore, Candidate, EvaluateInput, Gate, MemoryStore, SqliteStore, UserState, checks
+import pytest
+
+from proactive_gate import AsyncGate, AsyncMemoryStore, AsyncSqliteStore, AsyncStore, Candidate, EvaluateInput, Gate, MemoryStore, SqliteStore, UserState, checks
 
 
 def _exercise(store: MemoryStore | SqliteStore) -> None:
@@ -16,6 +18,17 @@ def _exercise(store: MemoryStore | SqliteStore) -> None:
     assert store.get("n") == "2"
     store.delete("a")
     assert store.get("a") is None
+
+
+async def _exercise_async(store: AsyncStore) -> None:
+    assert await store.get("a") is None
+    await store.set("a", "1")
+    assert await store.get("a") == "1"
+    assert await store.incr("n") == 1
+    assert await store.incr("n") == 2
+    assert await store.get("n") == "2"
+    await store.delete("a")
+    assert await store.get("a") is None
 
 
 def test_memory_store() -> None:
@@ -47,6 +60,101 @@ def test_sqlite_store_removes_expired_rows_on_write(tmp_path: Path) -> None:
     assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"keeper", "fresh"}
     raw.close()
     store.close()
+
+
+def test_async_memory_store() -> None:
+    asyncio.run(_exercise_async(AsyncMemoryStore()))
+
+
+def test_async_sqlite_store() -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        store = AsyncSqliteStore()
+        try:
+            await _exercise_async(store)
+        finally:
+            await store.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_persists_across_connections(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        path = str(tmp_path / "gate.sqlite")
+        first = AsyncSqliteStore(path)
+        try:
+            await _exercise_async(first)
+            await first.incr("n")
+        finally:
+            await first.close()
+        second = AsyncSqliteStore(path)
+        try:
+            assert await second.get("n") == "3"
+        finally:
+            await second.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_removes_expired_rows_on_write(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        path = str(tmp_path / "gate.sqlite")
+        store = AsyncSqliteStore(path)
+        raw = sqlite3.connect(path, isolation_level=None)
+        try:
+            raw.execute("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at REAL)")
+            expired = time.time() - 10
+            for i in range(50):
+                raw.execute("INSERT INTO kv (key, value, expires_at) VALUES (?, 'v', ?)", (f"stale-{i}", expired))
+            raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('keeper', 'v', ?)", (time.time() + 600,))
+            # None of the stale keys were read, so all fifty rows are still physically there.
+            assert raw.execute("SELECT COUNT(*) FROM kv").fetchone()[0] == 51
+            await store.incr("fresh", 60)
+            assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"keeper", "fresh"}
+        finally:
+            raw.close()
+            await store.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_read_removes_only_the_expired_row_it_touched(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        path = str(tmp_path / "gate.sqlite")
+        raw = sqlite3.connect(path, isolation_level=None)
+        store = AsyncSqliteStore(path)
+        try:
+            raw.execute("CREATE TABLE IF NOT EXISTS kv (key TEXT PRIMARY KEY, value TEXT NOT NULL, expires_at REAL)")
+            expired = time.time() - 10
+            raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('old', 'v', ?)", (expired,))
+            raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('stale', 'v', ?)", (expired,))
+            raw.execute("INSERT INTO kv (key, value, expires_at) VALUES ('new', 'v', ?)", (time.time() + 600,))
+            assert await store.get("old") is None
+            # The read pruned the row it touched; the other stale row waits for a sweep.
+            assert {key for (key,) in raw.execute("SELECT key FROM kv")} == {"stale", "new"}
+            assert await store.get("new") == "v"
+        finally:
+            raw.close()
+            await store.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_incr_is_atomic_across_tasks(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        store = AsyncSqliteStore(str(tmp_path / "gate.sqlite"))
+        try:
+            results = await asyncio.gather(*(store.incr("n") for _ in range(20)))
+            assert sorted(results) == list(range(1, 21))
+            assert await store.get("n") == "20"
+        finally:
+            await store.close()
+
+    asyncio.run(run())
 
 
 def _user() -> UserState:
@@ -109,5 +217,44 @@ def test_async_gate_shares_the_decision_logic() -> None:
         assert await gate.commit(decision, inp) is True
         again = await gate.evaluate(EvaluateInput(_user(), Candidate("c2", "reminder"), now))
         assert again.rejected_by == "dailyBudget"
+
+    asyncio.run(run())
+
+
+def test_async_gate_over_async_sqlite_store(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+    async def run() -> None:
+        store = AsyncSqliteStore(str(tmp_path / "gate.sqlite"))
+        try:
+            gate = AsyncGate([checks.Consent(), checks.DailyBudget(limit=1)], store)
+            now = datetime(2026, 9, 4, 9, 0, tzinfo=timezone.utc)
+            inp = EvaluateInput(_user(), Candidate("c1", "reminder"), now)
+            decision = await gate.evaluate(inp)
+            assert decision.allowed
+            assert await gate.commit(decision, inp) is True
+            again = await gate.evaluate(EvaluateInput(_user(), Candidate("c2", "reminder"), now))
+            assert again.rejected_by == "dailyBudget"
+        finally:
+            await store.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_incr_does_not_extend_an_existing_ttl(tmp_path: Path) -> None:
+    pytest.importorskip("aiosqlite")
+
+    async def run() -> None:
+        path = str(tmp_path / "gate.sqlite")
+        store = AsyncSqliteStore(path)
+        raw = sqlite3.connect(path, isolation_level=None)
+        try:
+            assert await store.incr("n", 60) == 1
+            first = raw.execute("SELECT expires_at FROM kv WHERE key = 'n'").fetchone()[0]
+            await asyncio.sleep(0.05)
+            assert await store.incr("n", 60) == 2
+            assert raw.execute("SELECT expires_at FROM kv WHERE key = 'n'").fetchone()[0] == first
+        finally:
+            raw.close()
+            await store.close()
 
     asyncio.run(run())
