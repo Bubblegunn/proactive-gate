@@ -36,6 +36,67 @@ if (decision.allowed && (await gate.commit(decision, { user, candidate }))) {
 }
 ```
 
+## What it changes, before you install anything
+
+```
+npx proactive-gate simulate
+```
+
+No key, no account, nothing to configure. It replays one week of an assistant that fires when its
+own data arrives rather than when the recipient is awake, first with no gate and then through the
+default order, and prints what each one did with every candidate.
+
+|                                                             | no gate | proactive-gate |
+| ----------------------------------------------------------- | ------: | -------------: |
+| delivered                                                   |     171 |             74 |
+| held                                                        |       0 |             97 |
+| **delivered inside the recipient's own quiet hours**        |  **52** |          **3** |
+| of those, critical, which the documented floor lets through  |       5 |              3 |
+| most one person received in one local day                   |       6 |              5 |
+
+The row in bold is the one worth reading twice. It counts deliveries inside the window each person
+set for themselves, not inside a curfew somebody picked for them: the user in the week who asked for
+no quiet hours at all is not protected from herself, and the one whose window runs 00:00 to 06:00 is
+not judged against anyone else's night. Under the default order the only three that landed there were
+critical, which is what the documented priority floor is for.
+
+**Scope and method, because a number without them is decoration.** The week is a generator plus a
+seed, not anybody's traffic: eight users in five time zones, candidate instants drawn uniformly
+across the UTC day, parameters written down in `src/demo-week.ts` and dumped to
+[`examples/week.jsonl`](examples/week.jsonl) so you can read what it produced. It measures what a
+policy does to a stream. It cannot tell you whether a message was wanted, or what its recipient did
+with it. Every user in it has consented and no dismissals are seeded, so `consent`, `enabled`,
+`killSwitch`, `dedupe` and `dismissalCooldown` never fire in that run.
+
+Three more ways to run it:
+
+```
+npx proactive-gate simulate --disagreements --why          # the sentence behind each hold
+npx proactive-gate simulate your-candidates.jsonl          # your traffic, not a generated week
+npx proactive-gate simulate --policy examples/policies/aggressive.json \
+                            --policy examples/policies/respectful.json
+```
+
+The last one is the comparison to run before changing a policy in production: same stream, two
+policies, and the 73 candidates they disagree about listed one by one.
+
+## What this will not do
+
+This repository is young and grew quickly, so the boundary is written down rather than left to be
+inferred from what happens to be in it.
+
+- **The twelve checks are the policy surface.** A thirteenth needs a deployment whose rule the
+  twelve cannot express, not a rule that exists somewhere in the world.
+- **The preset catalogue is frozen at what is merged.** A new preset needs someone who is shipping
+  to that channel, or under that instrument, and who says so on the issue. "This country also has a
+  law" is not the bar, because every country does, and a preset nobody ships against rots unread.
+- **Adapters and stores are frozen on the same terms.** The next one arrives with the person who
+  needs it.
+- **What grows instead is evidence**: the simulator above, the conformance suite, and an
+  implementation of the specification by somebody who is not us.
+- **What will never be here**: anything that needs a server, a hosted account, or reads the content
+  of a message.
+
 Or start from a policy file and the wiring for your framework, in one command:
 
 ```
@@ -367,6 +428,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `euEprivacy` | marketing consent with the soft opt-in for existing customers |
 | `telegramBot` | 1 a second and 20 a minute per chat |
 | `slackApp` | 1 a second per channel |
+| `whatsappBusiness({ template })` | WhatsApp opt-in; free-form inside the 24-hour customer service window, 600 an hour per user |
 
 Each preset carries `sources` (the pages the numbers come from) and a `note` on what it leaves
 out. Reviewable defaults, not legal advice: several official sources disagree with each other,
@@ -663,7 +725,7 @@ reproduces exactly. The race property was checked against a mutant: rewriting
 [`spec/SPEC.md`](spec/SPEC.md) states the behaviour as numbered requirements, and
 [`spec/fixtures`](spec/fixtures) holds language-neutral cases: the DST edge in
 America/New_York, Pacific/Apia, a wall-clock case in 2031, atomic commit, the ISO week,
-deferral, shadow mode, the optional checks and six presets. The TypeScript tests and the
+deferral, shadow mode, the optional checks and eight presets. The TypeScript tests and the
 Python tests both run all of them; `npx proactive-gate replay --fixtures spec/fixtures` runs
 them from the command line. A third implementation starts from the fixtures, not from this
 source.
@@ -687,8 +749,8 @@ Generated by `npm run conformance-table`; CI fails when it is stale.
 
 | implementation | spec version | fixtures passed | declared skips |
 |---|---|---:|---|
-| TypeScript | 1.4.0 | 34 of 34 | none |
-| Python | 1.4.0 | 34 of 34 | none |
+| TypeScript | 1.4.0 | 35 of 35 | none |
+| Python | 1.4.0 | 35 of 35 | none |
 <!-- conformance:end -->
 
 ### What made this work elsewhere, and why it might not here

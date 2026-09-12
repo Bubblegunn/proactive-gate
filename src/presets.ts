@@ -153,4 +153,27 @@ export const presets: Record<string, Preset> = {
     ["https://docs.slack.dev/apis/web-api/rate-limits/"],
     "chat.postMessage: one message a second per channel, keyed by candidate.channel.",
   ),
+  // WhatsApp Business Platform. Meta requires opt-in before a business messages a
+  // user at all. A free-form service message may only be sent inside the 24-hour
+  // customer service window the user's last message or call opened; outside it
+  // only pre-approved template messages are allowed, so { template: true } drops
+  // the window check for that path. The pair rate limit is one message every six
+  // seconds to the same user with a 45-message burst that borrows quota; 600 an
+  // hour is the sustained bound Meta documents, and the bound a fixed window can
+  // express. Read 2026-09-12.
+  whatsappBusiness: define(
+    (o) => [
+      c.requiresConsent({ name: "whatsappOptIn" }),
+      ...(o.template === true ? [] : [c.recentInteraction({ withinHours: 24 })]),
+      c.rateLimit({ limit: 600, perSeconds: 3600, keyBy: "user", id: "rate:waPair" }),
+    ],
+    [
+      "https://developers.facebook.com/docs/whatsapp/overview/getting-opt-in/",
+      "https://developers.facebook.com/docs/whatsapp/conversation-types/",
+      "https://developers.facebook.com/docs/whatsapp/overview/",
+      "https://developers.facebook.com/docs/whatsapp/messaging-limits/",
+      "https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/per-user-limits",
+    ],
+    "WhatsApp Business Platform: the recipient's opt-in is required before any business message (consents.whatsappOptIn), and a free-form service message may be sent only inside the 24-hour customer service window the user's last message or call opened (user.lastInboundAt; each inbound resets it). Pass { template: true } for an approved template message, the only kind allowed outside the window; template approval is out of scope. The pair rate limit is encoded as 600 messages an hour to the same user, the sustained bound Meta documents; the real mechanism is a six-second bucket that also allows a 45-message burst, which a fixed window cannot express; the approximation errs looser, since a 3,600-second bucket lets all 600 leave in the first second and turns over at a fixed boundary rather than a moving one, so it is inside-the-hour looser than the platform and boundary-looser still. Not encoded: the business portfolio messaging limit (250 unique recipient phone numbers per moving 24 hours, rising to 2,000, 10,000, 100,000 or unlimited by quality-based scaling), because it counts distinct recipients sender-side rather than messages; the per-user marketing template cap, for which Meta publishes no number; the current non-delivery of marketing templates to +1 numbers and the EEA, UK, Japan and Korea exclusions; and free entry point windows, which change pricing rather than permission. Sources read 2026-09-12.",
+  ),
 };

@@ -1,0 +1,135 @@
+{
+  "spec_version": "1.4.0",
+  "since": "1.4.0",
+  "name": "presets/whatsapp-business-template",
+  "description": "whatsappBusiness with template true drops the customer-service-window check: an approved template message is the only kind allowed outside it, and opt-in still binds.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "whatsappBusiness",
+        "template": true
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a template still needs the opt-in",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:whatsappOptIn",
+        "trace": [
+          "consent:whatsappOptIn"
+        ]
+      }
+    },
+    {
+      "description": "opt-in template passes with no inbound message on record",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          }
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:whatsappOptIn",
+          "rate:waPair"
+        ],
+        "commit": true,
+        "store_after": {
+          "rate:user:u1:3600:496809": "1"
+        }
+      }
+    },
+    {
+      "description": "a window closed days ago does not stop an approved template",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-01T03:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:whatsappOptIn",
+          "rate:waPair"
+        ]
+      }
+    }
+  ]
+}

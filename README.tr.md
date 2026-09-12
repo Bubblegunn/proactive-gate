@@ -29,6 +29,51 @@ if (decision.allowed && (await gate.commit(decision, { user, candidate }))) {
 }
 ```
 
+## Kurmadan önce ne değiştirdiğini görün
+
+```
+npx proactive-gate simulate
+```
+
+Anahtar yok, hesap yok, ayar yok. Verisi hazır olduğunda tetiklenen, yani kullanıcının uyanık olup
+olmadığına bakmayan bir asistanın bir haftasını önce hiç geçit olmadan, sonra varsayılan sırayla
+tekrar oynatır ve her adaya ne olduğunu yazar.
+
+|                                                        | geçit yok | proactive-gate |
+| ------------------------------------------------------ | --------: | -------------: |
+| iletildi                                               |       171 |             74 |
+| tutuldu                                                |         0 |             97 |
+| **kişinin kendi sessiz saatleri içinde iletilen**      |    **52** |          **3** |
+| bunlardan kritik olanlar (eşiğin geçirdiği)            |         5 |              3 |
+| bir kişinin bir günde aldığı en yüksek sayı            |         6 |              5 |
+
+Koyu satır iki kez okunmaya değer: herkesin **kendi** belirlediği pencereyi sayar, birinin başkası
+için seçtiği bir sokağa çıkma yasağını değil. Varsayılan sırada o pencereye giren üç mesajın üçü de
+kritikti, ki belgelenmiş öncelik eşiği tam bunun için var.
+
+**Kapsam ve yöntem, çünkü bunlar olmadan sayı süstür.** Hafta bir üretici ve bir tohumdur, kimsenin
+gerçek trafiği değil: beş saat diliminde sekiz kullanıcı, adayların anları UTC günü boyunca düzgün
+dağılımla seçilmiş, bütün parametreler `src/demo-week.ts` içinde yazılı ve
+[`examples/week.jsonl`](examples/week.jsonl) dosyasına dökülmüş. Bir politikanın bir akışa ne
+yaptığını ölçer; bir mesajın istenip istendiğini ya da alıcının onunla ne yaptığını ölçemez.
+
+```
+npx proactive-gate simulate --disagreements --why      # her tutmanın arkasındaki cümle
+npx proactive-gate simulate kendi-adaylarim.jsonl      # üretilmiş hafta değil, sizin trafiğiniz
+```
+
+## Bu kütüphanenin yapmayacağı şeyler
+
+- **On iki kontrol, politika yüzeyinin tamamıdır.** On üçüncüsü için, on ikisinin ifade edemediği
+  bir kuralı olan gerçek bir kurulum gerekir.
+- **Preset kataloğu birleşmiş hâliyle donduruldu.** Yeni bir preset için, o kanala ya da o mevzuata
+  göre gerçekten ürün gönderen ve bunu issue'da söyleyen birine ihtiyaç var. "Bu ülkenin de bir
+  yasası var" yeterli değil, çünkü her ülkenin var; kimsenin kullanmadığı preset çürür.
+- **Adaptörler ve store'lar da aynı kuralla dondu.** Bir sonraki, ona ihtiyacı olan kişiyle gelir.
+- **Bunun yerine büyüyen şey kanıt**: yukarıdaki simülatör, uygunluk paketi ve spesifikasyonun
+  bizim dışımızda biri tarafından yazılmış bir uygulaması.
+- **Asla olmayacaklar**: sunucu, barındırılan hesap ya da mesaj içeriğini okuyan herhangi bir şey.
+
 Sıfır bağımlılık. TypeScript. Node 20 ya da üstü. Framework'ten bağımsız: kapı, "model bir
 şey üretti" ile "kullanıcının telefonu titredi" arasında durur; hangi model ya da framework
 üretmiş olursa olsun. Örnekler: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
@@ -329,6 +374,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `euEprivacy` | pazarlama rızası, mevcut müşteriler için yumuşak opt-in |
 | `telegramBot` | sohbet başına saniyede 1 ve dakikada 20 |
 | `slackApp` | kanal başına saniyede 1 |
+| `whatsappBusiness({ template })` | WhatsApp opt-in; serbest metin yalnızca 24 saatlik müşteri hizmetleri penceresinde, kullanıcı başına saatte 600 |
 
 Her paket `sources` (sayıların geldiği sayfalar) ve neyi dışarıda bıraktığını söyleyen bir
 `note` taşır. Gözden geçirilebilir varsayılanlar, hukuki tavsiye değil: birkaç resmi kaynak

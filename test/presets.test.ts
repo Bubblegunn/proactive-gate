@@ -80,6 +80,21 @@ test("wechatCustomerService: 48 h window from the last inbound message, five mes
   assert.equal((await gate.evaluate({ user: user(), candidate: candidate(), now })).rejectedBy, "recentInteraction");
 });
 
+test("whatsappBusiness: opt-in always, free-form only inside the 24 h window, template skips it", async () => {
+  const gate = createGate({ checks: presets.whatsappBusiness!() });
+  const optedIn = (o: Partial<UserState> = {}) => user({ consents: { whatsappOptIn: true }, ...o });
+  const now = new Date("2026-09-04T12:00:00Z");
+  assert.equal((await gate.evaluate({ user: user(), candidate: candidate(), now })).rejectedBy, "consent:whatsappOptIn");
+  assert.equal((await gate.evaluate({ user: optedIn(), candidate: candidate(), now })).rejectedBy, "recentInteraction");
+  const stale = optedIn({ lastInboundAt: "2026-09-03T11:30:00Z" }); // 24.5 h ago
+  assert.equal((await gate.evaluate({ user: stale, candidate: candidate(), now })).rejectedBy, "recentInteraction");
+  const fresh = optedIn({ lastInboundAt: "2026-09-04T10:00:00Z" });
+  assert.equal((await gate.evaluate({ user: fresh, candidate: candidate(), now })).allowed, true);
+  const tpl = createGate({ checks: presets.whatsappBusiness!({ template: true }) });
+  assert.equal((await tpl.evaluate({ user: optedIn(), candidate: candidate(), now })).allowed, true); // approved templates go outside the window
+  assert.equal((await tpl.evaluate({ user: user(), candidate: candidate(), now })).rejectedBy, "consent:whatsappOptIn");
+});
+
 test("wecomAppMessage: 30 a minute, consumed at commit", async () => {
   const gate = createGate({ checks: presets.wecomAppMessage!() });
   const now = new Date("2026-09-04T09:00:00Z");

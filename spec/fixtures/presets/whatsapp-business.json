@@ -1,0 +1,221 @@
+{
+  "spec_version": "1.4.0",
+  "since": "1.4.0",
+  "name": "presets/whatsapp-business",
+  "description": "whatsappBusiness needs whatsappOptIn consent always, and a free-form service message passes only inside the 24-hour customer service window.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "whatsappBusiness"
+      }
+    ]
+  },
+  "store_seed": {
+    "rate:user:u1:3600:496812": "600"
+  },
+  "tests": [
+    {
+      "description": "no opt-in consent",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:whatsappOptIn",
+        "trace": [
+          "consent:whatsappOptIn"
+        ]
+      }
+    },
+    {
+      "description": "opt-in but no inbound message on record",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          }
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "recentInteraction",
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction"
+        ]
+      }
+    },
+    {
+      "description": "opt-in but the last inbound was 30 hours ago, the window closed",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-03T03:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "recentInteraction",
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction"
+        ]
+      }
+    },
+    {
+      "description": "opt-in and an inbound two hours ago passes and consumes one pair-rate unit",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-04T07:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction",
+          "rate:waPair"
+        ],
+        "commit": true,
+        "store_after": {
+          "rate:user:u1:3600:496809": "1"
+        }
+      }
+    },
+    {
+      "description": "pair rate limit of 600 in the hour exhausted",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/Sao_Paulo",
+          "quietHours": {
+            "start": "22:00",
+            "end": "08:00"
+          },
+          "createdAt": "2026-01-01T00:00:00Z",
+          "consents": {
+            "whatsappOptIn": true
+          },
+          "lastInboundAt": "2026-09-04T10:30:00Z"
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "rate:waPair",
+        "trace": [
+          "consent:whatsappOptIn",
+          "recentInteraction",
+          "rate:waPair"
+        ],
+        "reason_pattern": "600 used \\(600\\)"
+      }
+    }
+  ]
+}

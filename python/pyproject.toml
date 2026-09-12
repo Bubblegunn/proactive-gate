@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "proactive-gate"
-version = "0.5.0"
+version = "0.6.0"
 description = "Decide whether a proactive assistant may speak now: ordered checks, budgets, quiet hours, JSON policies, shared conformance fixtures with the TypeScript package."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -34,8 +34,9 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+aiosqlite = ["aiosqlite>=0.20"]
 redis = ["redis>=5"]
-dev = ["pytest>=8", "mypy>=1.11", "redis>=5"]
+dev = ["pytest>=8", "mypy>=1.11", "aiosqlite>=0.20", "redis>=5"]
 
 [project.urls]
 Homepage = "https://bubblegunn.github.io/proactive-gate/"

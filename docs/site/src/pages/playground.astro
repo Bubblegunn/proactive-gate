@@ -10,8 +10,23 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     message, and the verdict changes with it. The policy and the input for whichever scenario you
     picked stay editable below, so you can take any of them apart.
   </p>
+  <p>
+    Eight of these scenarios run under one policy about the things you actually control: whether
+    the user consented, their operating mode, their snooze, their quiet hours, how new the account
+    is, and your own daily limit. The ninth carries a commercial-communication preset and runs
+    under its own policy, because that answers a different question and only applies to a
+    different kind of message. Picking it says what it covers.
+  </p>
 
   <div id="scenarios" class="scen"></div>
+
+  <!-- Shown only for a scenario that carries a regulatory preset. The text comes from the
+       scenario's own scope note and from the preset's `note` and `sources` in the library,
+       so it cannot drift away from what the preset actually encodes. -->
+  <div id="scopebox" class="scopebox" hidden>
+    <p id="scope" class="scope"></p>
+    <p id="scopesrc" class="scopesrc"></p>
+  </div>
 
   <div id="out" hidden>
     <div id="banner" class="banner">
@@ -38,63 +53,50 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     </p>
   </details>
 
+  <details class="src ex">
+    <summary>Take this run with you</summary>
+    <p class="hint">
+      These are built from the two boxes above, so they carry the run in front of you rather than
+      a sample. There is no share link on purpose: the input can hold a user id, a payload, event
+      text or someone's real quiet hours, and a link is copied into chat logs and kept in browser
+      history. Save the files instead.
+    </p>
+    <label>Install it <textarea id="ex-install" rows="1" readonly spellcheck="false"></textarea></label>
+    <label>Replay a file of candidates through this policy <textarea id="ex-replay" rows="2" readonly spellcheck="false"></textarea></label>
+    <label>Wire it into your own send, as run.mjs beside the policy file <textarea id="ex-snippet" rows="20" readonly spellcheck="false"></textarea></label>
+    <p class="acts">
+      <button id="copy-install" class="copy">Copy the install</button>
+      <button id="copy-replay" class="copy">Copy the command</button>
+      <button id="copy-snippet" class="copy">Copy the snippet</button>
+      <span id="ex-status"></span>
+    </p>
+  </details>
+
   <script is:inline define:vars={{ base }}>
     const $ = (id) => document.getElementById(id);
-
-    const policy = {
-      specVersion: "1.0.0",
-      checks: [
-        { id: "consent" },
-        { id: "mode", allow: ["normal", "commute"] },
-        { id: "snooze", defer: true },
-        { id: "quietHours", priorityFloor: "high" },
-        { id: "trustRamp", days: 7, minPriority: "high" },
-        { preset: "usTcpa" },
-        { id: "utilityFloor", costFalseAlarm: 1, costMissedHelp: 2, shadow: true },
-        { id: "dailyBudget", limit: 3, bypassPriority: "critical", nearLimit: 0.67 },
-      ],
-    };
-    const user = {
-      id: "ayse", consent: true, mode: "normal", timezone: "Europe/Istanbul",
-      quietHours: { start: "22:00", end: "08:00" }, createdAt: "2026-01-01T00:00:00Z",
-    };
-    const candidate = { id: "a1", type: "reminder", priority: "normal", surfaces: ["push", "feed"], pAccept: 0.41, pNeed: 0.4 };
-
-    // The same message in nine situations. Each entry says what it changes and how many messages
-    // were already delivered today, because a budget can only be exhausted by actually spending it:
-    // `deliveredToday` commits that many decisions before the one you are shown. Every verdict these
-    // labels imply was run against the library before being written down; one of them was wrong the
-    // first time, and the label was changed to match the library rather than the other way round.
-    const scenarios = [
-      { key: "ok", label: "09:00, ordinary day", note: "nothing in the way", now: "2026-09-04T06:00:00Z" },
-      { key: "quiet", label: "23:47, quiet hours", note: "asleep", now: "2026-09-04T20:47:00Z" },
-      // Not the demo it looks like, and better for it: priority clears the quiet-hours floor and
-      // the message still stops, because the TCPA window is law rather than preference and no
-      // priority is allowed past it. The trace shows quietHours pass and window:tcpa reject.
-      { key: "critical", label: "23:47, escalated to critical", note: "clears quiet hours, then meets US law", now: "2026-09-04T20:47:00Z", candidate: { priority: "critical" } },
-      { key: "snooze", label: "snoozed until the morning", note: "held, not dropped", now: "2026-09-04T06:00:00Z", user: { snoozedUntil: "2026-09-04T09:00:00Z" } },
-      { key: "budget", label: "the fourth message today", note: "three already sent", now: "2026-09-04T06:00:00Z", deliveredToday: 3 },
-      { key: "bypass", label: "the fourth, but critical", note: "priority does bypass the budget", now: "2026-09-04T06:00:00Z", deliveredToday: 3, candidate: { priority: "critical" } },
-      { key: "trust", label: "account is three days old", note: "trust is earned over a week", now: "2026-09-04T06:00:00Z", user: { createdAt: "2026-09-01T00:00:00Z" } },
-      { key: "consent", label: "consent never given", note: "the first check", now: "2026-09-04T06:00:00Z", user: { consent: false } },
-      { key: "focus", label: "phone in focus mode", note: "the user's own setting", now: "2026-09-04T06:00:00Z", user: { mode: "focus" } },
-    ];
-
-    $("scenarios").innerHTML = scenarios
-      .map((s) => `<button type="button" class="scen-b" data-key="${s.key}"><span class="scen-l">${s.label}</span><span class="scen-n">${s.note}</span></button>`)
-      .join("");
 
     let mod;
     const load = async () => (mod ??= await import(`${base}/playground/gate.js`));
 
-    function inputFor(s) {
-      return {
-        user: { ...user, ...(s.user ?? {}) },
-        candidate: { ...candidate, ...(s.candidate ?? {}) },
-        now: s.now,
-        ...(s.deliveredToday ? { deliveredToday: s.deliveredToday } : {}),
-      };
-    }
+    // The trace table and the scenario buttons are built as DOM nodes, never as a string of
+    // HTML. A trace reason is assembled by the library from values that reach it from the Input
+    // textarea below (quietHours builds its reason from user.timezone), so caller text reaches
+    // this render path. test/playground-render.test.mjs holds it to text.
+    let ui;
+    const loadUi = async () => (ui ??= await import(`${base}/playground/trace-table.mjs`));
+
+    // The scenarios, the two policies behind them and the run logic live in a module beside
+    // this page, because test/playground-scenarios.test.mjs runs those exact scenarios through
+    // the real library. Every verdict these labels imply is therefore measured rather than
+    // transcribed, and the page keeps no second copy of the data that could drift from it.
+    let data;
+    const loadData = async () => (data ??= await import(`${base}/playground/scenarios.mjs`));
+
+    // The policy file, the replay command and the wire-up snippet. Pure functions of the policy
+    // and the input, and test/snippet.test.mjs executes the snippet it produces against the
+    // built package, so what this page offers is a snippet that runs.
+    let ex;
+    const loadExport = async () => (ex ??= await import(`${base}/playground/export.mjs`));
 
     async function run() {
       $("error").hidden = true;
@@ -103,18 +105,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         const m = await load();
         const p = JSON.parse($("policy").value);
         const i = JSON.parse($("input").value);
-        const now = i.now ? new Date(i.now) : undefined;
-        const gate = m.createGate({ policy: p, store: new m.MemoryStore() });
+        await refreshExport(i);
 
-        // Spend the budget the only way it can honestly be spent: by committing real decisions
-        // first. Nothing here pre-loads a counter behind the library's back.
-        for (let n = 0; n < (i.deliveredToday ?? 0); n += 1) {
-          const earlier = { ...i.candidate, id: `earlier-${n}` };
-          const d = await gate.evaluate({ user: i.user, candidate: earlier, now });
-          if (d.allowed) await gate.commit(d, { user: i.user, candidate: earlier });
-        }
-
-        const d = await gate.evaluate({ user: i.user, candidate: i.candidate, now });
+        // Whatever is in those two boxes goes through the same function the test runs, so the
+        // page and the test cannot diverge. The budget is spent the only way it can honestly
+        // be spent, by committing real decisions first; nothing pre-loads a counter behind the
+        // library's back.
+        const d = await (await loadData()).evaluateWithPrespend(m, p, i);
         const stoppedBy = d.rejectedBy ?? d.deferredBy;
         // classList, not className: assigning className would drop the class Astro stamps on this
         // element to scope the stylesheet, and the verdict would lose its colour along with it.
@@ -135,17 +132,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           i.deliveredToday ? `${i.deliveredToday} already delivered today` : "",
           d.shadowed?.length ? `shadowed: ${d.shadowed.join(", ")}` : "",
         ].filter(Boolean).join("  \u00b7  ");
-        // The same glyph vocabulary the CLI and docs/assets/trace.svg use, so the demo, the
-        // terminal and the figure in the README all read as one tool rather than three.
-        const glyph = { pass: "\u2713", reject: "\u2717", defer: "\u2192", skip: "\u00b7" };
-        $("rows").innerHTML = d.trace
-          .map((t, n) => {
-            const cls = [t.id === stoppedBy ? "stop" : `o-${t.outcome}`, t.shadow ? "shadow" : ""].filter(Boolean).join(" ");
-            return `<tr class="${cls}"><td class="n">${n + 1}</td><td><code>${t.id}</code></td>` +
-              `<td class="oc"><span class="g">${glyph[t.outcome] ?? "\u00b7"}</span> ${t.outcome}${t.shadow ? " <span class=\"sh\">shadow</span>" : ""}</td>` +
-              `<td class="rs">${t.reason ?? ""}</td><td class="ms">${t.ms}</td></tr>`;
-          })
-          .join("");
+        // The glyph vocabulary lives in the render module now, so the demo, the terminal and
+        // the figure in the README still read as one tool rather than three.
+        (await loadUi()).renderTraceTable($("rows"), d.trace, stoppedBy, document);
         $("out").hidden = false;
         $("status").textContent = "";
       } catch (e) {
@@ -155,30 +144,83 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       }
     }
 
-    function pick(key) {
-      const s = scenarios.find((x) => x.key === key) ?? scenarios[0];
+    async function pick(key) {
+      const d = await loadData();
+      const s = d.scenarios.find((x) => x.key === key) ?? d.scenarios[0];
       for (const b of document.querySelectorAll(".scen-b")) b.classList.toggle("on", b.dataset.key === s.key);
-      $("policy").value = JSON.stringify(policy, null, 2);
-      $("input").value = JSON.stringify(inputFor(s), null, 2);
+      // Each scenario names the policy it runs under, so picking one shows the policy that
+      // actually produced the verdict rather than one shared policy for all nine.
+      $("policy").value = JSON.stringify(d.policyFor(s), null, 2);
+      $("input").value = JSON.stringify(d.inputFor(s), null, 2);
+      await showScope(s, d);
       run();
+    }
+
+    // Scope for a scenario that carries a regulatory preset, and nothing at all for one that
+    // does not. The sentence is the scenario's own; the note and the sources are the preset's,
+    // read out of the library so they cannot drift from what it encodes. Nothing here states a
+    // conclusion about anyone's obligations, and there is no badge to earn.
+    async function showScope(s, d) {
+      if (!s.scope) {
+        $("scopebox").hidden = true;
+        return;
+      }
+      const m = await load();
+      const preset = s.preset ? m.presets[s.preset] : undefined;
+      $("scope").textContent = s.scope;
+      $("scopesrc").textContent = [
+        preset ? `${s.preset}: ${preset.note}` : "",
+        preset && preset.sources && preset.sources.length ? `Sources: ${preset.sources.join("  ")}` : "",
+        `Wording last checked against the preset's own note and sources on ${d.SCOPE_CHECKED}.`,
+      ].filter(Boolean).join("  ·  ");
+      $("scopebox").hidden = false;
     }
 
     $("scenarios").addEventListener("click", (e) => {
       const b = e.target.closest(".scen-b");
       if (b) pick(b.dataset.key);
     });
-    $("run").addEventListener("click", run);
-    $("copy").addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText($("policy").value);
-        $("status").textContent = "policy copied — save it as proactive-gate.policy.json";
-        setTimeout(() => ($("status").textContent = ""), 4000);
-      } catch {
-        $("status").textContent = "could not reach the clipboard; select the policy and copy it";
-      }
-    });
+    // Rebuilt from whatever is in the boxes, so editing the policy and pressing Run changes
+    // what you would copy. Nothing is written to a URL here or anywhere else on this page.
+    async function refreshExport(input) {
+      const x = await loadExport();
+      $("ex-install").value = x.installCommand;
+      $("ex-replay").value = x.replayCommand;
+      $("ex-snippet").value = x.wireUpSnippet(input);
+    }
 
-    pick("ok");
+    /** Copy a field, and say so in plain words when the clipboard is not reachable. */
+    function wireCopy(buttonId, sourceId, statusId, done) {
+      $(buttonId).addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText($(sourceId).value);
+          $(statusId).textContent = done;
+          setTimeout(() => ($(statusId).textContent = ""), 4000);
+        } catch {
+          $(statusId).textContent = "could not reach the clipboard; select the text and copy it";
+        }
+      });
+    }
+
+    $("run").addEventListener("click", run);
+    wireCopy("copy", "policy", "status", "policy copied; save it as proactive-gate.policy.json");
+    wireCopy("copy-install", "ex-install", "ex-status", "copied");
+    wireCopy("copy-replay", "ex-replay", "ex-status", "copied; run it beside the policy file and a day.jsonl");
+    wireCopy("copy-snippet", "ex-snippet", "ex-status", "copied; save it as run.mjs beside the policy file");
+
+    // The buttons have to exist before pick() can mark one of them current, so the first
+    // render and the first run are one sequence. If the render module cannot be fetched the
+    // page says so rather than showing an empty strip of nothing.
+    (async () => {
+      try {
+        const d = await loadData();
+        (await loadUi()).renderScenarioButtons($("scenarios"), d.scenarios, document);
+        await pick("ok");
+      } catch (e) {
+        $("error").textContent = e && e.message ? e.message : String(e);
+        $("error").hidden = false;
+      }
+    })();
   </script>
 
   <style is:global>
@@ -204,6 +246,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   <style>
     .scen { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.5rem; margin: 1.25rem 0; }
+    /* Scope, not decoration: a neutral box rather than a warning colour, because this says
+       what the example covers and it is not a verdict about anyone's obligations. */
+    .scopebox { border: 1px solid var(--sl-color-gray-5); border-radius: 4px; padding: 0.7rem 1rem; margin: 1.25rem 0; }
+    .scope { margin: 0; font-size: 0.9rem; color: var(--sl-color-gray-2); }
+    .scopesrc { margin: 0.4rem 0 0; font-size: 0.8rem; color: var(--sl-color-gray-3); }
     /* A panel with a coloured edge, the same shape the share card and trace.svg use. */
     .banner { border: 1px solid var(--sl-color-gray-5); border-left-width: 4px; border-radius: 4px; padding: 0.7rem 1rem; margin: 1.25rem 0 0.9rem; background: var(--sl-color-gray-7, transparent); }
     .banner.go { border-left-color: var(--sl-color-green-high); }
@@ -223,6 +270,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
     .pg { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 72rem) { .pg { grid-template-columns: 1fr; } }
     .pg label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; }
+    .hint { font-size: 0.85rem; color: var(--sl-color-gray-3); margin: 0 0 0.9rem; }
+    .ex label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; margin-bottom: 0.8rem; font-size: 0.9rem; }
+    .ex textarea { font-family: var(--__sl-font-mono); font-size: 0.8rem; line-height: 1.4; padding: 0.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.25rem; background: var(--sl-color-black); color: var(--sl-color-white); resize: vertical; }
+    .ex .acts { flex-wrap: wrap; gap: 0.5rem; }
     .pg textarea { font-family: var(--__sl-font-mono); font-size: 0.8rem; line-height: 1.4; padding: 0.5rem; border: 1px solid var(--sl-color-gray-5); border-radius: 0.25rem; background: var(--sl-color-black); color: var(--sl-color-white); }
     .run, .copy { font: inherit; font-weight: 600; padding: 0.4rem 1rem; border-radius: 0.25rem; cursor: pointer; }
     .run { border: 1px solid var(--sl-color-accent); background: var(--sl-color-accent); color: var(--sl-color-black); }
