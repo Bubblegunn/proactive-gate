@@ -48,7 +48,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js dist/test/dedupe.test.js dist/test/explain.test.js test/release.test.mjs test/examples.test.mjs test/example-imports.test.mjs test/naive.test.mjs test/suite.test.mjs",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js dist/test/dedupe.test.js dist/test/explain.test.js test/release.test.mjs test/examples.test.mjs test/example-imports.test.mjs test/naive.test.mjs test/playground-render.test.mjs test/playground-scenarios.test.mjs test/compare-policies.test.mjs test/snippet.test.mjs test/suite.test.mjs",
     "lint": "tsc -p tsconfig.json --noEmit",
     "spec-lint": "node test/spec-lint.mjs",
     "conformance": "npm run build && node dist/src/cli.js replay --fixtures spec/fixtures",
@@ -59,6 +59,8 @@
     "release-gate": "npm run build && node scripts/release-gate.mjs",
     "trace-svg": "npm run build && node scripts/trace-svg.mjs",
     "bench:compare": "npm run build && node bench/compare.mjs",
+    "bench:compare-policies": "npm run build && node bench/compare-policies.mjs",
+    "bench:compare-policies": "npm run build && node bench/compare-policies.mjs",
     "conformance-table": "node scripts/conformance-table.mjs",
     "explain-parity": "node scripts/explain-parity.mjs",
     "og": "npm run build && node scripts/og-image.mjs"
