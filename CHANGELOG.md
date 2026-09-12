@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.7.1
+
+**An adversarial clock suite, and the two bugs it found in our own code.**
+[@LouisDeconinck](https://github.com/LouisDeconinck) contributed twenty one fixtures for the days a
+clock misbehaves ([#39](https://github.com/Bubblegunn/proactive-gate/pull/39), closing
+[#21](https://github.com/Bubblegunn/proactive-gate/issues/21)): deleted and repeated daylight saving
+hours, 23 and 25 hour local days, a mid week timezone move, non hour offsets, Apia's skipped calendar
+day, ISO week years that are not the calendar year, a rewound clock, and years below 1000. Seventeen
+of them agree across both implementations, which is the null result the study was designed to be able
+to report.
+
+Two did not, and the fixtures were merged with both implementations declaring the failure rather than
+with the fixtures adjusted to pass. Fixed here:
+
+- **`localClock` formatted years below 1000 unpadded**, so the local day read `1-06-01`
+  ([#36](https://github.com/Bubblegunn/proactive-gate/issues/36)). Three separate `Date.UTC(y, ...)`
+  calls then read that year as an offset from 1900, so `weekdayOf` answered for the wrong century,
+  `dayBefore` missed, and the ISO week arithmetic subtracted a 1901 year start from a year 1 instant
+  and produced `weeklyBudget:u:0001-W-99115`.
+- **`weeklyBudgetKey` emitted `NaN-WNaN`**, because `new Date("1-06-01T00:00:00Z")` is an invalid
+  date. A literal `NaN` in a storage key.
+- **The monthly cap silently stopped binding.** `monthlyBudgetKey` takes the first seven characters
+  of the local day, which is the month on `2026-06-01` and the whole date on `1-06-01`, so every day
+  got its own monthly bucket. This one was found while reviewing the fixtures rather than by them,
+  and it is the reason the fix carries unit tests as well: a gate that stops working is a bug, and a
+  gate that quietly stops stopping is worse.
+- **Python's `iso_week_key` emitted `1-W22`** where 5.1 fixes the format at `YYYY-Www`
+  ([#37](https://github.com/Bubblegunn/proactive-gate/issues/37)), and **`local_clock` depended on
+  whether the interpreter's `strftime("%Y")` pads**
+  ([#38](https://github.com/Bubblegunn/proactive-gate/issues/38)). The day string is now built from
+  the fields, so the answer no longer depends on which C library the build was linked against.
+
+Until this release the two implementations wrote different keys for the same instant, `0001-06-01` in
+Python and `1-06-01` in TypeScript, so one store serving both would have kept two sets of counters
+without either side noticing. Both skip files are empty again and the conformance table reads 57 of
+57 in both languages.
+
+The spec moves to **1.4.1**: fixtures only, no new vocabulary. It is tagged separately as
+`spec/v1.4.1` once this is released, because `SPEC.md` requires the skip files to be empty at a
+stable release and they were not until this change.
+
 ## 0.7.0 (2026-09-12)
 
 **Three presets and a store, all from one contributor in a day.** [@LouisDeconinck](https://github.com/LouisDeconinck)
