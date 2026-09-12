@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 0.4.0 (2026-09-12)
 
 **A rejection reason a product manager can read.** `explain(decision)` renders a decision as
 sentences built from the same trace with nothing added: "Held until 08:00 because the user's
