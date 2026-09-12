@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.6.0 (unreleased)
+
+**You can now see what the gate changes before you install it.** `npx proactive-gate simulate`
+replays one week of an assistant that fires when its own data arrives, first with no gate at all and
+then through the default order, and prints what each policy did with every candidate: sent, held and
+why, deferred and until when, which budget unit it spent. No key, no account, nothing to configure.
+Over the generated week the ungated stream delivers all 171 candidates, 52 of them inside the
+recipient's own quiet hours; the default order delivers 74, and the only three that reach a quiet
+window are critical, which is what the documented priority floor is for. The quiet-hours figure is
+measured against the window each person set rather than against a fixed curfew, so the user who
+asked for no quiet hours is not counted as harmed by her own preference.
+
+Point it at your own candidates for a number about your own traffic, `simulate your-events.jsonl`,
+which runs locally with an in-memory store per policy. `--policy a.json --policy b.json` compares
+two real policies, which is the run to do before changing one in production. `--why` prints the
+sentence `explain()` already produces under each held candidate, `--disagreements` prints only the
+candidates the policies disagreed about, and `--json` prints the whole result.
+
+It adds no check, no store, no adapter and no dependency, and the decision path is untouched: the
+same gate runs twice and the difference is rendered. The generated week is a seeded generator with
+its parameters written down rather than a committed blob, dumped to `examples/week.jsonl` for
+reading and deliberately not packed.
+
+**Adding a check cannot make the gate louder, measured rather than asserted.** `test/monotonicity.test.ts`
+compares 180 policy pairs over three generated weeks, each pair differing by exactly one check, and
+no added check raised the number of deliveries. It includes the two cases a budget makes suspicious:
+quiet hours in front of a cap, where a night hold leaves a unit unspent for the morning, and a
+deferring snooze in front of a cap, where a deferral can carry a candidate into the next local day's
+counter. A measured result over those weeks, not a theorem; a counterexample fails the test.
+
+**The feature surface is frozen, and the boundary is now written down.** The twelve checks are the
+policy surface, the preset catalogue is frozen at what is merged, and adapters and stores are frozen
+on the same terms: the next one arrives with the person who needs it. A new preset needs somebody
+shipping to that channel or under that instrument who says so on the issue, because every country
+has a law and a preset nobody ships against rots unread. `ROADMAP.md` keeps one invitation, an
+implementation of `spec/` by somebody who is not us, and `spec/CONFORMANCE.md` now has the section
+that makes it actionable. Nothing about the published API changed.
+
+`bench/compare-policies.mjs` and its test are removed: the command answers the same question inside
+the product instead of in a bench folder only the maintainer runs, and its two policies live on as
+`examples/policies/aggressive.json` and `examples/policies/respectful.json`.
+
 ## 0.5.0 (2026-09-12)
 
 **India, as the regulation actually reads.** `inTcccp` encodes TRAI's Telecom Commercial
