@@ -59,6 +59,7 @@
     "release-gate": "npm run build && node scripts/release-gate.mjs",
     "trace-svg": "npm run build && node scripts/trace-svg.mjs",
     "bench:compare": "npm run build && node bench/compare.mjs",
+    "bench:compare-policies": "npm run build && node bench/compare-policies.mjs",
     "conformance-table": "node scripts/conformance-table.mjs",
     "explain-parity": "node scripts/explain-parity.mjs",
     "og": "npm run build && node scripts/og-image.mjs"
