@@ -298,6 +298,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.kakaoBrandMessag
 | `krNetworkAct50` | reklam rızası, ayrıca 21:00 ile 08:00 yerel saat için gece rızası |
 | `jpAntiSpamLaw` | opt-in |
 | `cnMinorMode` | reşit olmayanlar için: 06:00 ile 22:00 Asia/Shanghai ve günde bir |
+| `inTcccp` | promosyon rızası; varsayılan olarak kapalı olan 00:00-10:00 ve 21:00-24:00 bantları ayrı ayrı opt-in ister |
 | `usTcpa` | kullanıcının yerel saatiyle 08:00 ile 21:00 (47 CFR 64.1200) |
 | `euEprivacy` | pazarlama rızası, mevcut müşteriler için yumuşak opt-in |
 | `telegramBot` | sohbet başına saniyede 1 ve dakikada 20 |
@@ -308,7 +309,7 @@ Her paket `sources` (sayıların geldiği sayfalar) ve neyi dışarıda bırakt�
 birbiriyle çelişir ve not hangi değerin neden seçildiğini söyler.
 
 **Yasal bir pakete uzanmadan önce kapsamını okuyun.** Yukarıdaki bütün düzenlemeler *ticari*
-iletişimi düzenler. `usTcpa`, `euEprivacy`, `krNetworkAct50` ve `jpAntiSpamLaw` birer pazarlama
+iletişimi düzenler. `usTcpa`, `euEprivacy`, `krNetworkAct50`, `jpAntiSpamLaw` ve `inTcccp` birer pazarlama
 kuralıdır; yani mesajınızı ancak mesajın kendisi ticari olduğunda bağlar. Kullanıcının kendi
 istediği bir hatırlatma reklam değildir ve onun için pazarlama paketi kullanmak, yasanın size
 hiç koymadığı bir kısıtı kendi elinizle içeri almak olur. Aday promosyon niteliğindeyse
@@ -322,8 +323,10 @@ telefonla pazarlama aramalarını kapsar. Hindistan ilginç olanı: sıkça tekr
 birincil metinde yazmaz. TRAI düzenlemesi zaman bantlarını, içerik kategorisi ve gün tipiyle
 birlikte, abonenin operatörüne *kaydettirdiği bir tercih* yapar; sabit bir yasal sessizlik
 penceresi değildir. Üstelik pencereyi aktaran ikincil kaynaklar başlangıcın 09.00 mı 10.00 mı
-olduğunda birbiriyle çelişir. Bunun üzerine kurulacak bir paket, hiçbir birincil kaynağın
-yazmadığı bir sayıyı kodlardı; o yüzden yok.
+olduğunda birbiriyle çelişir. Düzenlemenin sabitlediği şey varsayılan durumdur:
+Schedule-II'deki dokuz bandın dördü, yani 00:00-10:00 ve 21:00-24:00 arasını kapsayanlar,
+abone o bandı açmadıkça her müşteri için kapalıdır. `inTcccp` bu bantları sabit bir pencere
+yerine bant başına birer opt-in rızası olarak kodlar.
 
 ## Adaptörler
 
