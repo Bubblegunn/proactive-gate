@@ -129,6 +129,9 @@ def _window_pass(f: Mapping[str, str]) -> str:
 
 def _consent_pass(f: Mapping[str, str]) -> str:
     name = f.get("name")
+    if "start" in f:
+        named = f'"{name}" ' if name else ""
+        return f"the {named}consent is only needed between {f['start']} and {f['end']}, and it was outside those hours"
     return f'the "{name}" consent the check needs was in place' if name else "the consent the check needs was in place"
 
 
@@ -315,6 +318,7 @@ PARSERS: dict[str, dict[str, Parser | Callable[[str], Facts]]] = {
     },
     "requiresConsent": {
         "stop": _match(r'consent "(.+)" is missing(?: \(required (\S+) to (\S+)\))?', ("name", "start", "end")),
+        "passReason": _match(r"outside the consent window (\S+) to (\S+)", ("start", "end")),
         "idFacts": _consent_id_facts,
         "skip": _fixed("no timezone on the user; consent window cannot be evaluated"),
     },
@@ -422,7 +426,10 @@ def _entry_body(entry: TraceEntry, sentences: Mapping[str, SentenceTemplate]) ->
             else:
                 facts = _BUDGET_NEAR(reason)
             if facts is not None:
-                return _t(sentences, f"{check_key or 'budget'}.pass", facts)
+                # The id carries facts a reason does not, like which consent this is.
+                from_id = PARSERS[check_key].get("idFacts") if check_key is not None else None
+                named = dict(from_id(entry.id) or {}) if from_id is not None else {}
+                return _t(sentences, f"{check_key or 'budget'}.pass", {**named, **facts})
             return _t(sentences, "fallback.pass", {"id": entry.id, "reason": reason})
         base: Facts = {}
         if check_key is not None:

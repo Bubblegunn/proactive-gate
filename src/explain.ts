@@ -228,7 +228,12 @@ export const en: Sentences = {
   "allowedWindow.pass": (f) => (f.name ? `the "${f.name}" allowed window did not block it` : "the allowed window did not block it"),
   "allowedWindow.reject": (f) => `messages may only go out between ${f.start} and ${f.end} (${f.zone}), and the local time was outside that window`,
   "allowedWindow.skip": () => "the user has no time zone, so the allowed window could not be checked",
-  "requiresConsent.pass": (f) => (f.name ? `the "${f.name}" consent the check needs was in place` : "the consent the check needs was in place"),
+  "requiresConsent.pass": (f) =>
+    f.start
+      ? `the ${f.name ? `"${f.name}" ` : ""}consent is only needed between ${f.start} and ${f.end}, and it was outside those hours`
+      : f.name
+        ? `the "${f.name}" consent the check needs was in place`
+        : "the consent the check needs was in place",
   "requiresConsent.reject": (f) => `the user has not given the required "${f.name}" consent${f.start ? `, which applies between ${f.start} and ${f.end}` : ""}`,
   "requiresConsent.skip": () => "the user has no time zone, so the hours this consent applies could not be checked",
   "recentInteraction.pass": () => "the user had written to the assistant recently enough",
@@ -321,6 +326,7 @@ const PARSERS: Record<string, Parsers> = {
   },
   requiresConsent: {
     stop: match(/^consent "(.+)" is missing(?: \(required (\S+) to (\S+)\))?$/, ["name", "start", "end"]),
+    passReason: match(/^outside the consent window (\S+) to (\S+)$/, ["start", "end"]),
     idFacts: (id) => (id.startsWith("consent:") ? { name: id.slice("consent:".length) } : {}),
     skip: fixed("no timezone on the user; consent window cannot be evaluated"),
   },
@@ -403,7 +409,8 @@ function entryBody(entry: TraceEntry, s: Sentences): string {
     case "pass": {
       if (reason) {
         const facts = key ? PARSERS[key]?.passReason?.(reason) : BUDGET_NEAR(reason);
-        if (facts) return t(s, `${key ?? "budget"}.pass`, facts);
+        // The id carries facts a reason does not, like which consent this is.
+        if (facts) return t(s, `${key ?? "budget"}.pass`, { ...(key ? (PARSERS[key]?.idFacts?.(entry.id) ?? {}) : {}), ...facts });
         return t(s, "fallback.pass", { id: entry.id, reason });
       }
       const facts = key ? (PARSERS[key]?.idFacts?.(entry.id) ?? {}) : {};

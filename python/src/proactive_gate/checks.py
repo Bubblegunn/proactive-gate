@@ -447,7 +447,9 @@ class RequiresConsent(BaseCheck):
                 return skip("no timezone on the user; consent window cannot be evaluated")
             minutes, _ = local_clock(ctx.now, zone)
             if not in_window(minutes, parse_hhmm(self.when["start"]), parse_hhmm(self.when["end"])):
-                return PASS
+                # A bare pass here would be indistinguishable from "the consent is on
+                # file", and explain() said exactly that about a consent nobody gave.
+                return Outcome("pass", f"outside the consent window {self.when['start']} to {self.when['end']}")
             suffix = f" (required {self.when['start']} to {self.when['end']})"
         if ctx.user.consents.get(self.name):
             return PASS

@@ -233,6 +233,21 @@ def test_requires_consent_with_and_without_hours() -> None:
     assert explain(ok).checks[0].sentence == 'The "ad" consent the check needs was in place.'
 
 
+def test_windowed_consent_outside_its_hours_does_not_claim_the_consent_exists() -> None:
+    """A bare pass outside the hours is the same trace entry as "the consent is on file"."""
+    d = evaluate([checks.RequiresConsent("night", when={"start": "21:00", "end": "24:00", "timezone": "user"})], now=NOON)
+    assert d.allowed is True
+    assert d.trace[0].reason == "outside the consent window 21:00 to 24:00"
+    assert explain(d).checks[0].sentence == 'The "night" consent is only needed between 21:00 and 24:00, and it was outside those hours.'
+
+    inside = evaluate(
+        [checks.RequiresConsent("night", when={"start": "21:00", "end": "24:00", "timezone": "user"})],
+        u=user(consents={"night": True}),
+        now=NIGHT,
+    )
+    assert explain(inside).checks[0].sentence == 'The "night" consent the check needs was in place.'
+
+
 def test_recent_interaction() -> None:
     never = evaluate([checks.RecentInteraction(48)], now=NOON)
     assert explain(never).summary == "Held because the user has never written to the assistant, and this rule allows messages only after they do."

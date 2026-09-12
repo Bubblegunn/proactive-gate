@@ -260,6 +260,21 @@ test("requiresConsent: the consent name comes from the id, with or without hours
   assert.equal(explain(ok).checks[0]!.sentence, 'The "ad" consent the check needs was in place.');
 });
 
+test("a windowed consent that was not needed yet does not claim the consent exists", async () => {
+  // The check used to return a bare pass outside its hours, which is the same
+  // trace entry as "the consent is on file", so the sentence asserted a consent
+  // the user had never given. India's TCCCPR preset runs four of these at once.
+  const gate = createGate({ checks: [checks.requiresConsent({ name: "night", when: { start: "21:00", end: "24:00", timezone: "user" } })] });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(d.allowed, true);
+  assert.equal(d.trace[0]!.reason, "outside the consent window 21:00 to 24:00");
+  assert.equal(explain(d).checks[0]!.sentence, 'The "night" consent is only needed between 21:00 and 24:00, and it was outside those hours.');
+
+  // Inside the hours, with the consent given, the old sentence is still the true one.
+  const inside = await gate.evaluate({ user: user({ consents: { night: true } }), candidate: candidate(), now: night });
+  assert.equal(explain(inside).checks[0]!.sentence, 'The "night" consent the check needs was in place.');
+});
+
 test("recentInteraction: no inbound on record and an old one both read plainly", async () => {
   const gate = createGate({ checks: [checks.recentInteraction({ withinHours: 48 })] });
   const never = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });

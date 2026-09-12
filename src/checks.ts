@@ -531,7 +531,10 @@ export function requiresConsent(options: { name: string; when?: { start: string;
       if (when) {
         const zone = zoneOf(ctx, when.timezone);
         if (!zone) return skip("no timezone on the user; consent window cannot be evaluated");
-        if (!inWindow(localClock(ctx.now, zone).minutes, when.start, when.end)) return pass;
+        // A bare pass here would be indistinguishable from "the consent is on file",
+        // and explain() said exactly that about a consent nobody had given.
+        if (!inWindow(localClock(ctx.now, zone).minutes, when.start, when.end))
+          return { kind: "pass", reason: `outside the consent window ${options.when!.start} to ${options.when!.end}` };
       }
       return ctx.user.consents?.[options.name] ? pass : reject(`consent "${options.name}" is missing${when ? ` (required ${options.when!.start} to ${options.when!.end})` : ""}`);
     },
