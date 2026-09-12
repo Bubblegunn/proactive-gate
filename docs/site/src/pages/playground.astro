@@ -80,12 +80,15 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       { key: "focus", label: "phone in focus mode", note: "the user's own setting", now: "2026-09-04T06:00:00Z", user: { mode: "focus" } },
     ];
 
-    $("scenarios").innerHTML = scenarios
-      .map((s) => `<button type="button" class="scen-b" data-key="${s.key}"><span class="scen-l">${s.label}</span><span class="scen-n">${s.note}</span></button>`)
-      .join("");
-
     let mod;
     const load = async () => (mod ??= await import(`${base}/playground/gate.js`));
+
+    // The trace table and these buttons are built as DOM nodes, never as a string of HTML.
+    // A trace reason is assembled by the library from values that reach it from the Input
+    // textarea below (quietHours builds its reason from user.timezone), so caller text
+    // reaches this render path. test/playground-render.test.mjs holds it to text.
+    let ui;
+    const loadUi = async () => (ui ??= await import(`${base}/playground/trace-table.mjs`));
 
     function inputFor(s) {
       return {
@@ -135,17 +138,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           i.deliveredToday ? `${i.deliveredToday} already delivered today` : "",
           d.shadowed?.length ? `shadowed: ${d.shadowed.join(", ")}` : "",
         ].filter(Boolean).join("  \u00b7  ");
-        // The same glyph vocabulary the CLI and docs/assets/trace.svg use, so the demo, the
-        // terminal and the figure in the README all read as one tool rather than three.
-        const glyph = { pass: "\u2713", reject: "\u2717", defer: "\u2192", skip: "\u00b7" };
-        $("rows").innerHTML = d.trace
-          .map((t, n) => {
-            const cls = [t.id === stoppedBy ? "stop" : `o-${t.outcome}`, t.shadow ? "shadow" : ""].filter(Boolean).join(" ");
-            return `<tr class="${cls}"><td class="n">${n + 1}</td><td><code>${t.id}</code></td>` +
-              `<td class="oc"><span class="g">${glyph[t.outcome] ?? "\u00b7"}</span> ${t.outcome}${t.shadow ? " <span class=\"sh\">shadow</span>" : ""}</td>` +
-              `<td class="rs">${t.reason ?? ""}</td><td class="ms">${t.ms}</td></tr>`;
-          })
-          .join("");
+        // The glyph vocabulary lives in the render module now, so the demo, the terminal and
+        // the figure in the README still read as one tool rather than three.
+        (await loadUi()).renderTraceTable($("rows"), d.trace, stoppedBy, document);
         $("out").hidden = false;
         $("status").textContent = "";
       } catch (e) {
@@ -178,7 +173,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
       }
     });
 
-    pick("ok");
+    // The buttons have to exist before pick() can mark one of them current, so the first
+    // render and the first run are one sequence. If the render module cannot be fetched the
+    // page says so rather than showing an empty strip of nothing.
+    (async () => {
+      try {
+        (await loadUi()).renderScenarioButtons($("scenarios"), scenarios, document);
+        pick("ok");
+      } catch (e) {
+        $("error").textContent = e && e.message ? e.message : String(e);
+        $("error").hidden = false;
+      }
+    })();
   </script>
 
   <style is:global>
