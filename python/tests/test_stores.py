@@ -182,6 +182,76 @@ def test_async_sqlite_store_read_removes_only_the_expired_row_it_touched(tmp_pat
     asyncio.run(run())
 
 
+def test_async_sqlite_store_matches_the_sync_store_operation_by_operation(tmp_path: Path) -> None:
+    """The two stores are one behaviour with two call styles, so the same sequence must give the same answers.
+
+    Written because the review of #32 measured this by hand and a number measured by hand is a
+    number nobody else can repeat.
+    """
+    pytest.importorskip("aiosqlite")
+
+    async def run() -> None:
+        sync = SqliteStore(str(tmp_path / "sync.sqlite"))
+        store = AsyncSqliteStore(str(tmp_path / "async.sqlite"))
+        try:
+            steps: list[tuple[str, str]] = [
+                ("get", "missing"), ("set", "k"), ("get", "k"), ("incr", "n"), ("incr", "n"),
+                ("get", "n"), ("set", "ttl"), ("get", "ttl"), ("delete", "k"), ("get", "k"),
+                ("incr", "ttl2"), ("get", "ttl2"), ("delete", "nothing"),
+            ]
+            for op, key in steps:
+                if op == "get":
+                    assert sync.get(key) == await store.get(key), f"get {key}"
+                elif op == "set":
+                    sync.set(key, "v")
+                    await store.set(key, "v")
+                elif op == "incr":
+                    assert sync.incr(key) == await store.incr(key), f"incr {key}"
+                else:
+                    sync.delete(key)
+                    await store.delete(key)
+            # A zero TTL means no expiry in both, and an elapsed one is invisible to both.
+            sync.set("zero", "v", 0)
+            await store.set("zero", "v", 0)
+            assert sync.get("zero") == await store.get("zero") == "v"
+        finally:
+            sync.close()
+            await store.close()
+
+    asyncio.run(run())
+
+
+def test_async_sqlite_store_leaves_the_event_loop_free(tmp_path: Path) -> None:
+    """Liveness, not a benchmark: a concurrent task must still get turns while the store writes.
+
+    The count is deliberately not asserted. Four runs of the same probe during review gave 23, 56,
+    45 and 78 ticks, so any figure here would be a number nobody can reproduce; that it is above
+    zero is the claim, and a blocking driver would give exactly zero.
+    """
+    pytest.importorskip("aiosqlite")
+
+    async def run() -> None:
+        store = AsyncSqliteStore(str(tmp_path / "loop.sqlite"))
+        ticks = 0
+
+        async def ticker() -> None:
+            nonlocal ticks
+            while True:
+                await asyncio.sleep(0.001)
+                ticks += 1
+
+        task = asyncio.create_task(ticker())
+        try:
+            for i in range(400):
+                await store.set(f"k{i}", "v")
+        finally:
+            task.cancel()
+            await store.close()
+        assert ticks > 0, "the event loop never got a turn while the store was writing"
+
+    asyncio.run(run())
+
+
 def test_async_sqlite_store_incr_is_atomic_across_tasks(tmp_path: Path) -> None:
     pytest.importorskip("aiosqlite")
     async def run() -> None:
