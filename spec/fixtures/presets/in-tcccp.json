@@ -1,6 +1,6 @@
 {
-  "spec_version": "1.2.1",
-  "since": "1.2.1",
+  "spec_version": "1.3.0",
+  "since": "1.3.0",
   "name": "presets/in-tcccp",
   "description": "inTcccp needs promotional consent always, and each Schedule-II default-off band passes only when the subscriber opted that band in.",
   "policy": {

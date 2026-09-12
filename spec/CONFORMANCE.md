@@ -11,9 +11,9 @@ The suite is versioned by `SPEC_VERSION`, and each version is tagged `spec/vX.Y.
 separate from the package's own `vX.Y.Z` release tags.
 
 ```sh
-git clone --depth 1 --branch spec/v1.2.1 https://github.com/Bubblegunn/proactive-gate
+git clone --depth 1 --branch spec/v1.3.0 https://github.com/Bubblegunn/proactive-gate
 # or, to keep it beside your own source and update it deliberately
-git subtree add --prefix spec https://github.com/Bubblegunn/proactive-gate spec/v1.2.1 --squash
+git subtree add --prefix spec https://github.com/Bubblegunn/proactive-gate spec/v1.3.0 --squash
 ```
 
 A JavaScript implementation can also read the fixtures from an install, because the npm package
@@ -72,7 +72,9 @@ A fixture is a contract for every implementation, not only this one. So a change
 `test/spec-lint.mjs` checks.
 
 Versioning follows `SPEC.md`: a patch adds fixtures existing implementations already pass, a minor
-adds a check or a field, a major changes an expectation.
+adds a check or a field, a major changes an expectation. A new preset is a minor for the same
+reason a new check is: 7.3 makes a policy that names an unknown preset a compile error, so nobody
+already passes the fixture that exercises it.
 
 ## The honest status of this suite
 

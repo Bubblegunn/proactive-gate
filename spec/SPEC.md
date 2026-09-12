@@ -7,6 +7,9 @@ empty at a stable release.
 
 Versioning: patch releases add fixtures that existing implementations already pass; minor
 releases add a check or field and mark it with `since`; major releases change an expectation.
+A preset added to the vocabulary is a minor, because 7.3 requires an implementation to reject a
+policy naming a preset it does not know, so a fixture that names the new preset is one no existing
+implementation can pass.
 An implementation declares the spec version it targets, and its CI MUST assert that the value
 equals `SPEC_VERSION`.
 
