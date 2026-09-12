@@ -20,22 +20,33 @@ with the fixtures adjusted to pass. Fixed here:
   `dayBefore` missed, and the ISO week arithmetic subtracted a 1901 year start from a year 1 instant
   and produced `weeklyBudget:u:0001-W-99115`.
 - **`weeklyBudgetKey` emitted `NaN-WNaN`**, because `new Date("1-06-01T00:00:00Z")` is an invalid
-  date. A literal `NaN` in a storage key.
-- **The monthly cap silently stopped binding.** `monthlyBudgetKey` takes the first seven characters
-  of the local day, which is the month on `2026-06-01` and the whole date on `1-06-01`, so every day
-  got its own monthly bucket. This one was found while reviewing the fixtures rather than by them,
-  and it is the reason the fix carries unit tests as well: a gate that stops working is a bug, and a
-  gate that quietly stops stopping is worse.
+  date. Not merely a misnamed bucket: it is the *same* bucket for every week of every such year, so
+  the weekly cap stopped being weekly and became a single quota that never reset.
+- **The monthly cap silently stopped binding, in TypeScript only.** `monthlyBudgetKey` takes the
+  first seven characters of the local day, which is the month on `2026-06-01` and the whole date on
+  `1-06-01`, so every day got its own monthly bucket. Python's monthly key was correct throughout,
+  which means the same policy bound in one sibling and not in the other. Found while reviewing the
+  fixtures rather than by them, and the reason this carries unit tests as well: a gate that stops
+  working is a bug, and a gate that quietly stops stopping is worse.
 - **Python's `iso_week_key` emitted `1-W22`** where 5.1 fixes the format at `YYYY-Www`
   ([#37](https://github.com/Bubblegunn/proactive-gate/issues/37)), and **`local_clock` depended on
   whether the interpreter's `strftime("%Y")` pads**
   ([#38](https://github.com/Bubblegunn/proactive-gate/issues/38)). The day string is now built from
   the fields, so the answer no longer depends on which C library the build was linked against.
 
-Until this release the two implementations wrote different keys for the same instant, `0001-06-01` in
-Python and `1-06-01` in TypeScript, so one store serving both would have kept two sets of counters
-without either side noticing. Both skip files are empty again and the conformance table reads 57 of
-57 in both languages.
+Until this release the two implementations disagreed on **all three** budget keys for the same
+instant, measured against the published 0.7.0 packages rather than against the source:
+
+| counter | TypeScript 0.7.0 | Python 0.7.0 |
+|---|---|---|
+| daily | `budget:u:1-06-01` | `budget:u:0001-06-01` |
+| weekly | `weeklyBudget:u:NaN-WNaN` | `weeklyBudget:u:1-W22` |
+| monthly | `monthlyBudget:u:1-06-01` | `monthlyBudget:u:0001-06` |
+
+So one store serving both siblings kept two sets of counters for those dates rather than one wrong
+set, and the parity the shared fixtures were supposed to guarantee held for decisions while failing
+for the keys those decisions are recorded under. All three agree now. Both skip files are empty again
+and the conformance table reads 57 of 57 in both languages.
 
 The spec moves to **1.4.1**: fixtures only, no new vocabulary. It is tagged separately as
 `spec/v1.4.1` once this is released, because `SPEC.md` requires the skip files to be empty at a
