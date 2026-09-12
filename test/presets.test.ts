@@ -15,7 +15,7 @@ test("every preset has sources, a note, and builds an ordered list", () => {
     assert.ok(list.length >= 1, `${name} builds nothing`);
     assert.ok(list.every((c) => typeof c.id === "string" && typeof c.run === "function"), `${name} is not a check list`);
   }
-  assert.equal(Object.keys(presets).length, 16);
+  assert.equal(Object.keys(presets).length, 17);
 });
 
 test("lineMessagingApi maps plans to monthly budgets and rejects unknown plans", () => {
