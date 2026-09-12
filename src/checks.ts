@@ -29,7 +29,7 @@ export function localClock(now: Date, timezone: string): { minutes: number; day:
   }).formatToParts(now);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
   const hour = Number(get("hour")) % 24;
-  return { minutes: hour * 60 + Number(get("minute")), day: `${get("year")}-${get("month")}-${get("day")}` };
+  return { minutes: hour * 60 + Number(get("minute")), day: `${get("year").padStart(4, "0")}-${get("month")}-${get("day")}` };
 }
 
 const parseHHMM = (text: string): number => {
@@ -46,6 +46,24 @@ export function inWindow(minutes: number, start: number, end: number): boolean {
 
 const localDay = (now: Date, timezone?: string) => (timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10));
 
+/**
+ * A UTC instant from calendar fields, without `Date.UTC`'s two-digit-year rule.
+ *
+ * `Date.UTC(1, 5, 1)` is 1901, not year 1, because years 0 to 99 are read as
+ * offsets from 1900. Every date in this file arrives as a "YYYY-MM-DD" that
+ * `localClock` already resolved, so a year below 1000 is a real year and not
+ * an abbreviation. Reading it as one made `weekdayOf` answer for the wrong
+ * century, `dayBefore` miss, and the ISO week arithmetic subtract a 1901 year
+ * start from a year-1 instant, which is where `weeklyBudget:u:0001-W-99115`
+ * came from.
+ */
+const utcDate = (year: number, monthIndex: number, day: number): Date => {
+  const at = new Date(0);
+  at.setUTCFullYear(year, monthIndex, day);
+  at.setUTCHours(0, 0, 0, 0);
+  return at;
+};
+
 const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
 /**
@@ -58,12 +76,12 @@ const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
  */
 export function weekdayOf(day: string): Weekday {
   const [y, m, d] = day.split("-").map(Number) as [number, number, number];
-  return WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()]!;
+  return WEEKDAYS[utcDate(y, m - 1, d).getUTCDay()]!;
 }
 
 export function dayBefore(day: string): string {
   const [y, m, d] = day.split("-").map(Number) as [number, number, number];
-  return new Date(Date.UTC(y, m - 1, d - 1)).toISOString().slice(0, 10);
+  return utcDate(y, m - 1, d - 1).toISOString().slice(0, 10);
 }
 
 const isSchedule = (q: QuietWindow | QuietSchedule): q is QuietSchedule => !("start" in q);
@@ -323,9 +341,9 @@ const isoWeekKey = (day: string): string => {
   const date = new Date(`${day}T00:00:00Z`);
   const weekday = date.getUTCDay() || 7;
   date.setUTCDate(date.getUTCDate() + 4 - weekday);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const yearStart = utcDate(date.getUTCFullYear(), 0, 1);
   const week = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-  return `${date.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+  return `${String(date.getUTCFullYear()).padStart(4, "0")}-W${String(week).padStart(2, "0")}`;
 };
 
 export const weeklyBudgetKey = (userId: string, now: Date, timezone?: string) => `weeklyBudget:${userId}:${isoWeekKey(localDay(now, timezone))}`;
