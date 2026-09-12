@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.1 (unreleased)
+## 0.4.1 (2026-09-12)
 
 **`proactive_gate.__version__` said 0.2.0.** It had said that since 0.2.0, through four
 releases, while the wheel's own metadata was right each time. Nothing compared the two, so
