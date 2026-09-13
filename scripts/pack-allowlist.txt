@@ -102,5 +102,6 @@ spec/fixtures/utility/bounded-deferral.json
 spec/fixtures/utility/floor.json
 spec/schema/fixture.schema.json
 spec/schema/policy.schema.json
+spec/skip/go.txt
 spec/skip/python.txt
 spec/skip/ts.txt
