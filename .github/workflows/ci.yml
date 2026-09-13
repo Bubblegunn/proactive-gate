@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      - run: npm ci --ignore-scripts
+      - run: npm install --ignore-scripts
       - run: npm run lint
       - run: npm test
       - run: npm run examples
@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --ignore-scripts
+      - run: npm install --ignore-scripts
       - run: npm run build
       - run: npx publint --strict
       - run: npx attw --pack . --profile esm-only # ESM only, by design; node10 and CJS resolution are not a target
@@ -60,6 +60,7 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
+      - run: npm install --ignore-scripts
       - run: node test/spec-lint.mjs
   conformance:
     # Both implementations against the shared fixtures, and the README table regenerated from
@@ -75,7 +76,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.13"
-      - run: npm ci --ignore-scripts
+      - run: npm install --ignore-scripts
       - run: node scripts/conformance-table.mjs --check
       - name: The same sentences in both languages, over every fixture
         run: node scripts/explain-parity.mjs
@@ -112,7 +113,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --ignore-scripts
+      - run: npm install --ignore-scripts
       - run: npm run build --if-present
       - run: node scripts/release-gate.mjs
   postgres:
@@ -130,7 +131,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U postgres -d gate"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -144,8 +145,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --ignore-scripts
-      - run: npm test
+      - run: npm install --ignore-scripts
+      - run: npm run build
+      - run: node test/postgres.test.mjs
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
