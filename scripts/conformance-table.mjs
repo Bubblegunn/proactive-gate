@@ -127,6 +127,13 @@ const results = [];
   results.push({ impl: "Python", skips: skips("python"), ...JSON.parse(out) });
 }
 
+// Go, through its own runner. The module under go/ has no dependencies, so
+// `go run` is the whole build and nothing has to be installed to check the claim.
+{
+  const out = run("go", "go", ["run", "./cmd/pg-conformance", "-json"], { cwd: join(root, "go") });
+  results.push({ impl: "Go", skips: skips("go"), ...JSON.parse(out) });
+}
+
 const broken = results.filter((r) => r.failures.length);
 if (broken.length) {
   for (const r of broken) console.error(`${r.impl}:\n  ${r.failures.join("\n  ")}`);

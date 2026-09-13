@@ -1,0 +1,1 @@
+# Fixtures Go does not conform to, one per line: name # reason.
