@@ -5,8 +5,8 @@ export type { CheckSentence, Explanation, ExplainOptions, SentenceFacts, Sentenc
 export { compilePolicy, KNOWN_CHECKS } from "./policy.js";
 export { presets } from "./presets.js";
 export type { Preset } from "./presets.js";
-export { MemoryStore, RedisStore, SqliteStore } from "./stores.js";
-export type { RedisLike } from "./stores.js";
+export { MemoryStore, RedisStore, PostgresStore, SqliteStore } from "./stores.js";
+export type { RedisLike, PostgresLike } from "./stores.js";
 export * as checks from "./checks.js";
 export { defaultChecks, localClock, inWindow, budgetKey, weeklyBudgetKey, monthlyBudgetKey, dismissalKey } from "./checks.js";
 export { PRIORITY_RANK } from "./types.js";
