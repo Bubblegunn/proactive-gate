@@ -122,7 +122,10 @@ export class PostgresStore implements Store {
   private async initialize(): Promise<void> {
     try {
       await this.client.query(
-        "DO $$ BEGIN PERFORM pg_advisory_xact_lock(hashtext('proactive_gate_store')); CREATE TABLE IF NOT EXISTS proactive_gate_store (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL, expires_at BIGINT); COMMENT ON TABLE proactive_gate_store IS 'Expired rows remain until read, write sweep, or delete.'; END $$",
+        // The partial index keeps the write sweep proportional to the dead rows rather than to the
+        // table, the same reason SqliteStore carries one. Without it every set and every incr
+        // scans for expired rows.
+        "DO $$ BEGIN PERFORM pg_advisory_xact_lock(hashtext('proactive_gate_store')); CREATE TABLE IF NOT EXISTS proactive_gate_store (key TEXT PRIMARY KEY NOT NULL, value TEXT NOT NULL, expires_at BIGINT); CREATE INDEX IF NOT EXISTS proactive_gate_store_expires_at ON proactive_gate_store (expires_at) WHERE expires_at IS NOT NULL; COMMENT ON TABLE proactive_gate_store IS 'Expired rows remain until read, write sweep, or delete.'; END $$",
       );
     } catch (error) {
       this.readyError = error;
