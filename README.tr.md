@@ -264,8 +264,8 @@ hiçbir şey eklemeden:
 import { explain } from "proactive-gate";
 
 explain(decision).summary;
-// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and
-//  normal priority is below the critical floor needed to override them."
+// "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal
+//  priority is below the critical floor needed to override them."
 ```
 
 "Bu mesaj 22:30'da neden gitti" sorusunun da bir yanıtı olur: izin verilen karar da kendini

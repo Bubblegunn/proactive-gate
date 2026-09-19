@@ -13,8 +13,9 @@ import { fileURLToPath } from "node:url";
 import { defaultChecks, localClock, quietAt } from "../src/checks.js";
 import { demoWeek, DEMO_WEEK_DAYS, DEMO_WEEK_NOTE, demoWeekPeople } from "../src/demo-week.js";
 import { simulate } from "../src/simulate.js";
-import { formatSimulation } from "../src/simulate-report.js";
+import { LOCAL_STREAM_NOTE, formatSimulation } from "../src/simulate-report.js";
 import type { EvaluateInput, Policy } from "../src/index.js";
+import type { SimPolicy } from "../src/simulate.js";
 
 const src = (name: string) => readFileSync(fileURLToPath(new URL(`../../src/${name}`, import.meta.url)), "utf8");
 
@@ -201,4 +202,36 @@ test("events from a file and events from the generator run the same way", async 
   const a = await simulate({ events, policies: [gated()], seed: 2 });
   const b = await simulate({ events: asFile, policies: [gated()], seed: 2 });
   assert.deepEqual(JSON.parse(JSON.stringify(b.runs[0]?.counts)), JSON.parse(JSON.stringify(a.runs[0]?.counts)));
+});
+
+test("the result says where the stream came from, because the counts mean different things", async () => {
+  // A generated stream is simply what each policy does to it. A logged stream has
+  // already been filtered by whatever policy wrote it, so the same numbers are an
+  // illustration rather than an estimate. The library cannot know which it is
+  // holding, so the caller declares it and the result carries the declaration.
+  const events = demoWeek(7);
+  const policies: SimPolicy[] = [{ label: "no gate" }, { label: "default", checks: defaultChecks() }];
+
+  const undeclared = await simulate({ events, policies, seed: 7 });
+  assert.equal(undeclared.stream, undefined, "no claim is not the same as a claim of synthetic");
+
+  const synthetic = await simulate({ events, policies, seed: 7, stream: "synthetic" });
+  assert.equal(synthetic.stream, "synthetic");
+
+  const local = await simulate({ events, policies, seed: 7, stream: "local" });
+  assert.equal(local.stream, "local");
+
+  // Declaring it changes nothing about the run itself.
+  assert.deepEqual(local.differenceCounts, synthetic.differenceCounts);
+  assert.equal(local.disagreements.length, synthetic.disagreements.length);
+});
+
+test("a local stream is told what its counts are not", async () => {
+  const note = LOCAL_STREAM_NOTE;
+  assert.match(note, /illustration rather than an estimate/);
+  assert.match(note, /chose at random/, "the condition has to be stated, not just the caveat");
+  assert.match(note, /arXiv:1003\.5956/, "the claim is someone else's proof; cite it");
+  assert.match(note, /Nothing here\s+observes what the recipient did/);
+  // The two footers must not be the same text, or one of them is wrong.
+  assert.notEqual(note, DEMO_WEEK_NOTE);
 });

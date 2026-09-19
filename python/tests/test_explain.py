@@ -63,7 +63,21 @@ def test_plain_sentence_and_machine_reason_are_both_on_hand() -> None:
     d = evaluate([checks.QuietHours()], now=NIGHT)
     e = explain(d)
     assert d.reason == "quiet hours 22:00 to 08:00 Europe/Istanbul; priority normal is below the floor (critical)"
-    assert e.summary == "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them."
+    # Not "Held until 08:00": QuietHours only rejects, and nothing retries a
+    # reject. The expectation was changed because it pinned a defect, not
+    # because a test failed. See test_a_reject_never_names_an_instant below.
+    assert e.summary == "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them."
+
+
+def test_a_reject_never_names_an_instant() -> None:
+    """The summary may headline a time only when the decision is reconsidered at it."""
+    d = evaluate([checks.QuietHours()], now=NIGHT)
+    assert d.allowed is False
+    assert d.retry_at is None, "the fixture must be a reject, or this test proves nothing"
+    assert d.deferred_by is None
+    summary = explain(d).summary
+    assert "until" not in summary, f"a reject must not name an instant: {summary}"
+    assert "quiet hours run 22:00 to 08:00" in summary
 
 
 def test_not_stopped_every_check_gets_a_sentence() -> None:
@@ -353,9 +367,13 @@ def test_language_is_a_parameter() -> None:
     assert explain(d).summary == explain(d, language="en").summary
     with pytest.raises(ValueError, match='no sentence catalog for language "tr"'):
         explain(d, language="tr")
-    tr = {"summary.held": lambda f: f"{f['until']} kadar bekletildi, çünkü {f['clause']}"}
+    # `until` is optional: the summary carries it only when the decision will be
+    # reconsidered at it, so a caller catalog must handle its absence the way the
+    # shipped English one does. This template used to index it directly and only
+    # worked because the fixture happened to be a reject that wrongly named a time.
+    tr = {"summary.held": lambda f: f"{f['until'] + ' kadar ' if f.get('until') else ''}bekletildi, çünkü {f['clause']}"}
     e = explain(d, language="tr", catalogs={"tr": tr})
-    assert e.summary.startswith("08:00 kadar bekletildi, çünkü")
+    assert e.summary.startswith("Bekletildi, çünkü")
     assert len(EN) > 0
 
 

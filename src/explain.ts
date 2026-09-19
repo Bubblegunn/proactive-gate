@@ -473,8 +473,17 @@ function summarize(decision: Decision, s: Sentences): string {
   const clause = t(s, stop.template, stop.facts);
   // For a deferral the hold ends at retryAt; when the clause already names the
   // instant (snooze's reason is "snoozed until X"), naming it twice reads worse.
+  //
+  // The summary may headline an instant ONLY when the decision will actually be
+  // reconsidered at it. quietHours can only reject, and its facts carry the
+  // window end as holdUntil, so this line used to render a reject as "held until
+  // 08:00" -- telling the reader the message goes out at 08:00 when nothing
+  // would ever send it. The window is not lost: the clause still names it.
+  const willBeReconsidered = entry.outcome === "defer";
   const clauseSaysWhen = stop.facts.until !== undefined;
-  const until = stop.facts.holdUntil ?? (!clauseSaysWhen && decision.deferredBy ? decision.retryAt?.toISOString() : undefined);
+  const until = willBeReconsidered
+    ? (stop.facts.holdUntil ?? (!clauseSaysWhen ? decision.retryAt?.toISOString() : undefined))
+    : undefined;
   return sentenceOf(t(s, "summary.held", { clause, ...(until ? { until } : {}) }));
 }
 

@@ -149,7 +149,25 @@ export interface SimResult {
   disagreements: SimTimelineRow[];
   /** How many candidates differ in each way. A candidate can appear in more than one. */
   differenceCounts: Record<SimDifference, number>;
+  /**
+   * Where the replayed stream came from, as the caller declared it. The library
+   * cannot know: only whoever loaded the events does. Absent means no claim was
+   * made, which is different from "synthetic". It is carried because what the
+   * counts mean depends on it. See `stream` on SimOptions.
+   */
+  stream?: StreamSource;
 }
+
+/**
+ * `synthetic` is a generated stream, so the two columns are simply what each
+ * policy does to it. `local` is a stream somebody logged, and there the counts
+ * are an illustration rather than an estimate unless the policy that wrote the
+ * log chose at random: replaying a logged stream is an unbiased estimate of a
+ * different policy only under that condition (Li, Chu, Langford and Wang,
+ * "Unbiased Offline Evaluation of Contextual-bandit-based News Article
+ * Recommendation Algorithms", WSDM 2011, arXiv:1003.5956).
+ */
+export type StreamSource = "synthetic" | "local";
 
 /** A policy to run. Leave both `policy` and `checks` out for the no-gate baseline. */
 export interface SimPolicy {
@@ -176,6 +194,8 @@ export interface SimOptions {
   night?: { start: number; end: number };
   /** Backstop against a policy that defers for ever. Reached is recorded, never silent. */
   maxAttempts?: number;
+  /** Where the events came from. Echoed into the result; nothing branches on it. */
+  stream?: StreamSource;
 }
 
 export const DEFAULT_NIGHT = { start: 22, end: 8 };
@@ -373,6 +393,7 @@ export async function simulate(options: SimOptions): Promise<SimResult> {
     timeline,
     disagreements: timeline.filter((row) => row.differences.length > 0),
     differenceCounts,
+    ...(options.stream ? { stream: options.stream } : {}),
   };
 }
 

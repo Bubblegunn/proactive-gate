@@ -43,7 +43,7 @@ test("the plain sentence and the machine reason are both on hand", async () => {
   const d = await gate.evaluate({ user: user(), candidate: candidate(), now: night });
   const e = explain(d);
   assert.equal(d.reason, "quiet hours 22:00 to 08:00 Europe/Istanbul; priority normal is below the floor (critical)");
-  assert.equal(e.summary, "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them.");
+  assert.equal(e.summary, "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them.");
 });
 
 test("the reason a candidate was not stopped: every check that ran gets a sentence", async () => {
@@ -96,10 +96,14 @@ test("intensity names the setting and the floor", async () => {
   assert.equal(explain(d).summary, 'Held because the message was normal priority, and the user\'s "low" intensity setting allows only high and above.');
 });
 
-test("quietHours: the window end becomes the hold, and a window owned by yesterday says so", async () => {
+test("quietHours: the clause carries the window, and a window owned by yesterday says so", async () => {
+  // This expectation used to read "Held until 08:00 because ...". It was changed
+  // because it pinned a defect, not because a test failed: quietHours only ever
+  // rejects, so the instant it named was one nothing would ever deliver at. See
+  // "a decision that will not be retried never names an instant" above.
   const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "high" })] });
   const d = await gate.evaluate({ user: user(), candidate: candidate(), now: night });
-  assert.equal(explain(d).summary, "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the high floor needed to override them.");
+  assert.equal(explain(d).summary, "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the high floor needed to override them.");
 
   // Friday's 18:00 to 06:00 window is what silences Saturday 00:30 local; the
   // machine reason names the owning day and the sentence keeps it.
@@ -109,6 +113,23 @@ test("quietHours: the window end becomes the hold, and a window owned by yesterd
   assert.equal(satEarly.rejectedBy, "quietHours");
   const e = explain(satEarly);
   assert.match(e.summary, /a window belonging to fri 2026-09-04/);
+});
+
+test("a decision that will not be retried never names an instant", async () => {
+  // The summary may headline a time only when the decision will be reconsidered
+  // at it. quietHours only ever rejects, so "held until 08:00" told the reader
+  // the message goes out at 08:00 when nothing would ever send it.
+  const gate = createGate({ checks: [checks.quietHours({ priorityFloor: "high" })] });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: night });
+
+  assert.equal(d.allowed, false);
+  assert.equal(d.retryAt, undefined, "the fixture must be a reject, or this test proves nothing");
+  assert.equal(d.deferredBy, undefined);
+
+  const summary = explain(d).summary;
+  assert.doesNotMatch(summary, /until/, `a reject must not name an instant: ${summary}`);
+  // The window is not lost: the clause still carries it.
+  assert.match(summary, /quiet hours run 22:00 to 08:00/);
 });
 
 test("quietHours skip: set but no timezone", async () => {
@@ -366,7 +387,10 @@ test("language is a parameter: default English, unknown codes fail loudly, calle
     "summary.held": (f) => `${f.until ? `${f.until} kadar ` : ""}bekletildi, çünkü ${f.clause}`,
   };
   const e = explain(d, { language: "tr", catalogs: { tr } });
-  assert.equal(e.summary, "08:00 kadar bekletildi, çünkü the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them.");
+  // The caller catalog renders `until` when it is present. It is absent here for
+  // the same reason as in English: this is a reject, and nothing retries it. The
+  // defect had reached the localisation too.
+  assert.equal(e.summary, "Bekletildi, çünkü the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal priority is below the critical floor needed to override them.");
   assert.ok(Object.keys(en).length > 0, "the English catalog is exported so a translation has a template to copy");
 });
 

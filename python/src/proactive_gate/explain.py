@@ -501,10 +501,19 @@ def _summarize(decision: Decision, sentences: Mapping[str, SentenceTemplate]) ->
     clause = _t(sentences, template, facts)
     # For a deferral the hold ends at retryAt; when the clause already names the
     # instant (snooze's reason is "snoozed until X"), naming it twice reads worse.
+    #
+    # The summary may headline an instant ONLY when the decision will actually be
+    # reconsidered at it. quietHours can only reject, and its facts carry the
+    # window end as holdUntil, so this used to render a reject as "held until
+    # 08:00" -- telling the reader the message goes out at 08:00 when nothing
+    # would ever send it. The window is not lost: the clause still names it.
     clause_says_when = "until" in facts
-    until = facts.get("holdUntil")
-    if until is None and not clause_says_when and decision.deferred_by and decision.retry_at is not None:
-        until = iso_z(decision.retry_at)
+    will_be_reconsidered = entry.outcome == "defer"
+    until = None
+    if will_be_reconsidered:
+        until = facts.get("holdUntil")
+        if until is None and not clause_says_when and decision.retry_at is not None:
+            until = iso_z(decision.retry_at)
     held_facts: Facts = {"clause": clause}
     if until is not None:
         held_facts["until"] = until
