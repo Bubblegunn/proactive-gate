@@ -1,0 +1,240 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+// Imported as text at build time from the files the command line reads, so the page
+// cannot drift away from the comparison the README describes. Nothing is typed in.
+import rawA from "../../../../examples/policies/aggressive.json?raw";
+import rawB from "../../../../examples/policies/respectful.json?raw";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const policyA = rawA.trim();
+const policyB = rawB.trim();
+const SEED = 7;
+---
+
+<StarlightPage frontmatter={{ title: "Replay two policies", description: "Run one week of candidates through two policies and see, candidate by candidate, where they disagree and why. Runs the real simulator in your browser; nothing leaves the page." }}>
+  <p>
+    One stream, two policies, and the candidates they treat differently listed one by one. This runs
+    the package's own simulator in your browser, on a generated week. It is the comparison to look at
+    before changing a policy that is already sending to people.
+  </p>
+  <p>
+    Both policies below are the example files the command line reads, so this page and
+    <code>proactive-gate simulate --policy a --policy b</code> are running the same comparison. Edit
+    either one and run it again.
+  </p>
+
+  <div class="pol">
+    <label class="pcol">
+      <span class="plabel" id="labelA">aggressive</span>
+      <textarea id="polA" spellcheck="false" rows="14">{policyA}</textarea>
+    </label>
+    <label class="pcol">
+      <span class="plabel" id="labelB">respectful</span>
+      <textarea id="polB" spellcheck="false" rows="14">{policyB}</textarea>
+    </label>
+  </div>
+
+  <div class="bar">
+    <button id="run" type="button">Run the week</button>
+    <button id="only" type="button" aria-pressed="false">Show only where they differ</button>
+    <span id="status" class="status" role="status"></span>
+  </div>
+
+  <p id="error" class="error" hidden></p>
+
+  <div id="out" hidden>
+    <p id="headline" class="headline"></p>
+
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th class="t">their local time</th>
+          <th>who</th>
+          <th>what</th>
+          <th id="hA">A</th>
+          <th id="hB">B</th>
+          <th class="d">differs on</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p id="more" class="more" hidden></p>
+
+    <h2>What each policy did to the week</h2>
+    <table class="sum">
+      <thead><tr><th>figure</th><th id="sA">A</th><th id="sB">B</th></tr></thead>
+      <tbody id="sumrows"></tbody>
+    </table>
+
+    <div id="detail" class="detail" hidden>
+      <h2>One candidate, both policies</h2>
+      <p id="dwho" class="dwho"></p>
+      <p id="dA"></p>
+      <p id="dB"></p>
+    </div>
+
+    <p class="note" id="note"></p>
+  </div>
+</StarlightPage>
+
+<script is:inline define:vars={{ base, SEED }}>
+  const $ = (id) => document.getElementById(id);
+  const setText = (id, s) => { const el = $(id); if (el) el.textContent = s; };
+  let mods = null;
+  const load = async () => (mods ??= {
+    sim: await import(`${base}/playground/sim.js`),
+    demo: await import(`${base}/playground/demo.js`),
+  });
+
+  let result = null;
+  let onlyDiff = false;
+  const LIMIT = 60;
+
+  const cellText = (c) => {
+    if (!c) return "";
+    if (c.outcome === "sent" && c.deliveredAt) return `sent ${c.deliveredAt.slice(11, 16)}`;
+    if (c.outcome === "deferred" && c.retryAt) return `deferred to ${c.retryAt.slice(11, 16)}`;
+    return c.check ? `${c.outcome} (${c.check})` : c.outcome;
+  };
+
+  const FIGURES = [
+    ["delivered", "sent"],
+    ["held", "held"],
+    ["deferred at least once", "deferredAtLeastOnce"],
+    ["sent after a deferral", "sentAfterDeferral"],
+    ["expired while held", "expired"],
+    ["budget spent, nothing delivered", "spentNotDelivered"],
+    ["landed in their own quiet hours", "sentInQuietHours"],
+    ["most one person got in one of their days", "busiestUserDay"],
+  ];
+
+  const render = () => {
+    if (!result) return;
+    const rows = onlyDiff ? result.disagreements : result.timeline;
+    const body = $("rows");
+    while (body.firstChild) body.removeChild(body.firstChild);
+
+    for (const row of rows.slice(0, LIMIT)) {
+      const tr = document.createElement("tr");
+      if (row.differences.length) tr.className = "diff";
+      tr.tabIndex = 0;
+      tr.setAttribute("role", "button");
+      const cells = [
+        row.localTime,
+        row.userId,
+        `${row.type} (${row.priority})`,
+        cellText(row.cells[0]),
+        cellText(row.cells[1]),
+        row.differences.join(", "),
+      ];
+      for (const value of cells) {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      }
+      const open = () => showDetail(row);
+      tr.addEventListener("click", open);
+      tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+      body.appendChild(tr);
+    }
+
+    const hidden = rows.length - Math.min(rows.length, LIMIT);
+    const more = $("more");
+    more.hidden = hidden === 0;
+    if (hidden > 0) more.textContent = `${hidden} more rows are not shown here. The command line prints all of them.`;
+
+    setText("headline",
+      `${result.events} candidates, one week, seed ${result.seed}. The policies disagreed about ` +
+      `${result.disagreements.length}: ${result.differenceCounts.outcome} on the outcome, ` +
+      `${result.differenceCounts.reason} on the reason, ${result.differenceCounts.deliveryTime} on when it landed.`);
+
+    const sums = $("sumrows");
+    while (sums.firstChild) sums.removeChild(sums.firstChild);
+    for (const [label, key] of FIGURES) {
+      const tr = document.createElement("tr");
+      const th = document.createElement("th");
+      th.scope = "row";
+      th.textContent = label;
+      tr.appendChild(th);
+      for (const run of result.runs) {
+        const td = document.createElement("td");
+        td.textContent = String(run.counts[key]);
+        tr.appendChild(td);
+      }
+      sums.appendChild(tr);
+    }
+  };
+
+  const showDetail = (row) => {
+    $("detail").hidden = false;
+    setText("dwho", `${row.userId}, ${row.type} at ${row.localTime} their time, priority ${row.priority}.`);
+    const labels = result.runs.map((r) => r.label);
+    setText("dA", `${labels[0]}: ${row.cells[0]?.sentence ?? cellText(row.cells[0])}`);
+    setText("dB", `${labels[1]}: ${row.cells[1]?.sentence ?? cellText(row.cells[1])}`);
+    $("detail").scrollIntoView({ block: "nearest" });
+  };
+
+  const run = async () => {
+    const err = $("error");
+    err.hidden = true;
+    setText("status", "running the week...");
+    try {
+      const { sim, demo } = await load();
+      let a, b;
+      try {
+        a = JSON.parse($("polA").value);
+        b = JSON.parse($("polB").value);
+      } catch (e) {
+        throw new Error(`that policy is not valid JSON: ${e.message}`);
+      }
+      const events = demo.demoWeek(SEED);
+      result = await sim.simulate({
+        events,
+        policies: [{ label: "A", policy: a }, { label: "B", policy: b }],
+        seed: SEED,
+        stream: "synthetic",
+      });
+      setText("hA", "A"); setText("hB", "B");
+      setText("sA", "A"); setText("sB", "B");
+      $("out").hidden = false;
+      $("detail").hidden = true;
+      setText("note", demo.DEMO_WEEK_NOTE);
+      setText("status", "");
+      render();
+    } catch (e) {
+      result = null;
+      $("out").hidden = true;
+      setText("status", "");
+      err.textContent = String(e && e.message ? e.message : e);
+      err.hidden = false;
+    }
+  };
+
+  $("run").addEventListener("click", run);
+  $("only").addEventListener("click", () => {
+    onlyDiff = !onlyDiff;
+    $("only").setAttribute("aria-pressed", String(onlyDiff));
+    $("only").textContent = onlyDiff ? "Show every candidate" : "Show only where they differ";
+    render();
+  });
+  run();
+</script>
+
+<style>
+  .pol { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .pcol { display: flex; flex-direction: column; gap: 0.35rem; }
+  .plabel { font-weight: 600; }
+  .pol textarea { width: 100%; font-family: var(--sl-font-mono, monospace); font-size: 0.8rem; }
+  .bar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
+  .status { font-size: 0.85rem; opacity: 0.8; }
+  .error { color: var(--sl-color-red, #b00); }
+  table.cmp, table.sum { width: 100%; font-size: 0.85rem; }
+  table.cmp td, table.cmp th, table.sum td, table.sum th { padding: 0.25rem 0.4rem; text-align: left; }
+  table.cmp tbody tr { cursor: pointer; }
+  table.cmp tbody tr.diff { background: var(--sl-color-bg-accent, rgba(120, 120, 255, 0.08)); }
+  table.cmp tbody tr:focus-visible { outline: 2px solid var(--sl-color-accent, #57f); outline-offset: -2px; }
+  .headline { font-weight: 600; }
+  .more { font-size: 0.85rem; opacity: 0.85; }
+  .detail { margin-top: 1rem; padding: 0.75rem; border-left: 3px solid var(--sl-color-accent, #57f); }
+  .note { white-space: pre-wrap; font-size: 0.85rem; opacity: 0.9; margin-top: 1.5rem; }
+  @media (max-width: 55rem) { .pol { grid-template-columns: 1fr; } }
+</style>

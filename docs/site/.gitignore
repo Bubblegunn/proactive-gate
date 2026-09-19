@@ -2,3 +2,5 @@ node_modules/
 dist/
 .astro/
 public/playground/gate.js
+public/playground/sim.js
+public/playground/demo.js
