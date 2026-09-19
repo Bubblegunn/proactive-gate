@@ -237,7 +237,13 @@ const insideOwnQuietHours = (quiet: QuietWindow | QuietSchedule | null | undefin
 function countsOf(records: SimRecord[], night: { start: number; end: number }): SimCounts {
   const finals = new Map<string, SimRecord>();
   for (const r of records) finals.set(r.candidateId, r);
-  const deferredIds = new Set(records.filter((r) => r.outcome === "deferred").map((r) => r.candidateId));
+  // A candidate deferred once whose retry instant falls past the expiry window leaves
+  // one record, outcome "expired", carrying deferredBy. Counting only outcome
+  // "deferred" therefore dropped the candidates where a deferral did become a drop,
+  // which is the case this figure exists to expose.
+  const deferredIds = new Set(
+    records.filter((r) => r.outcome === "deferred" || r.deferredBy !== undefined).map((r) => r.candidateId),
+  );
   const perUserDay = new Map<string, number>();
   const stopped = new Map<string, { count: number; example: string }>();
   let sentAtNight = 0;

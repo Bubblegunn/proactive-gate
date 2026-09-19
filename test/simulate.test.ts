@@ -235,3 +235,23 @@ test("a local stream is told what its counts are not", async () => {
   // The two footers must not be the same text, or one of them is wrong.
   assert.notEqual(note, DEMO_WEEK_NOTE);
 });
+
+test("a candidate deferred and then expired was still deferred at least once", async () => {
+  // deferredAtLeastOnce is documented as the argument that a deferral is not a drop.
+  // It counted records whose OUTCOME was "deferred", and a candidate deferred once
+  // whose retry instant fell past the expiry window never produces such a record: it
+  // leaves one record, outcome "expired", carrying deferredBy and retryAt. So the
+  // figure dropped exactly the candidates where a deferral did become a drop, which
+  // is where it is worth reading.
+  const events = demoWeek(7);
+  const respectful = JSON.parse(readFileSync(fileURLToPath(new URL("../../examples/policies/respectful.json", import.meta.url)), "utf8"));
+  const r = await simulate({ events, policies: [{ label: "B", policy: respectful }], seed: 7 });
+  const run = r.runs[0]!;
+
+  const everDeferred = new Set(
+    run.records.filter((rec) => rec.outcome === "deferred" || rec.deferredBy !== undefined).map((rec) => rec.candidateId),
+  );
+  assert.ok(run.counts.expired > 0, "this policy has to expire something, or the case is not exercised");
+  assert.equal(run.counts.deferredAtLeastOnce, everDeferred.size);
+  assert.ok(run.counts.deferredAtLeastOnce >= run.counts.expired, "every expiry here followed a deferral");
+});
