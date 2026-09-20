@@ -23,7 +23,7 @@ import { defaultChecks } from "./checks.js";
 import { loadFixtures, readSkips, runFixture } from "./conformance.js";
 import { simulate } from "./simulate.js";
 import type { SimPolicy } from "./simulate.js";
-import { formatSimulation } from "./simulate-report.js";
+import { LOCAL_STREAM_NOTE, formatSimulation } from "./simulate-report.js";
 import { DEMO_WEEK_NOTE, demoWeek, demoWeekPeople } from "./demo-week.js";
 import { FRAMEWORKS, listText, plan } from "./init.js";
 import type { Framework } from "./init.js";
@@ -270,7 +270,7 @@ async function main(argv: string[]) {
     if (policies.length === 0) policies.push({ label: "proactive-gate", checks: defaultChecks() });
     if (policies.length === 1) policies.unshift({ label: "no gate" });
     const failureRate = Number(argValue(argv, "--transport-failure-rate") ?? 0);
-    const result = await simulate({ events, policies, seed, transportFailureRate: failureRate });
+    const result = await simulate({ events, policies, seed, transportFailureRate: failureRate, stream: eventsFile ? "local" : "synthetic" });
     if (argv.includes("--json")) {
       console.log(JSON.stringify(result, null, 2));
       return;
@@ -281,7 +281,7 @@ async function main(argv: string[]) {
         ...(limitArg === undefined ? {} : { limit: Number(limitArg) }),
         disagreementsOnly: argv.includes("--disagreements"),
         why: argv.includes("--why"),
-        ...(eventsFile ? {} : { note: DEMO_WEEK_NOTE, people: demoWeekPeople() }),
+        ...(eventsFile ? { note: LOCAL_STREAM_NOTE } : { note: DEMO_WEEK_NOTE, people: demoWeekPeople() }),
       }),
     );
     return;

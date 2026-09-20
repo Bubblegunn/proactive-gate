@@ -40,6 +40,7 @@ export default defineConfig({
         { label: "Python", slug: "python" },
         { label: "Spec and conformance", slug: "spec" },
         { label: "Playground", link: "/playground/" },
+        { label: "Replay two policies", link: "/replay/" },
       ],
       plugins: [starlightLlmsTxt()],
     }),

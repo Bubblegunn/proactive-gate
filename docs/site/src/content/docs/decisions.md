@@ -53,8 +53,8 @@ import { explain } from "proactive-gate";
 const e = explain(decision);
 
 e.summary;
-// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul
-//  and normal priority is below the high floor needed to override them."
+// "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal
+//  priority is below the high floor needed to override them."
 
 e.checks;
 // [ { id: "killSwitch", outcome: "pass",   sentence: "The kill switch was off." },

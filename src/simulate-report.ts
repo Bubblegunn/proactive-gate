@@ -159,4 +159,20 @@ export function formatSimulation(result: SimResult, options: ReportOptions = {})
   return out.join("\n");
 }
 
+/**
+ * The footer for a stream somebody logged themselves. The demo week gets
+ * DEMO_WEEK_NOTE; before this, a local stream got no footer at all, which left
+ * the reading that matters most unsaid.
+ */
+export const LOCAL_STREAM_NOTE = [
+  "This is your stream, so the columns are what each policy would have done to it, candidate by",
+  "candidate. That is not the same as what would have happened. If this log was written while a",
+  "policy was already deciding what to send, the stream has been filtered by that policy before",
+  "you replayed it, and these counts are an illustration rather than an estimate. Replaying a",
+  "logged stream is an unbiased estimate of a different policy only when the policy that wrote",
+  "the log chose at random (Li, Chu, Langford and Wang, WSDM 2011, arXiv:1003.5956). Nothing here",
+  "observes what the recipient did with a message: outcomes are what the policy decided, not how",
+  "it landed.",
+].join("\n");
+
 export { DEMO_WEEK_NOTE };

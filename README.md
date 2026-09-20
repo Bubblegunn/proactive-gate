@@ -78,7 +78,8 @@ npx proactive-gate simulate --policy examples/policies/aggressive.json \
 ```
 
 The last one is the comparison to run before changing a policy in production: same stream, two
-policies, and the 73 candidates they disagree about listed one by one.
+policies, and the 80 candidates they disagree about listed one by one: 73 where the outcome
+differs, 7 where the outcome matches and the reason does not.
 
 ## What this will not do
 
@@ -322,8 +323,8 @@ the same decision as sentences for the person who decides whether the assistant 
 import { explain } from "proactive-gate";
 
 explain(decision).summary;
-// "Held until 08:00 because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and
-//  normal priority is below the critical floor needed to override them."
+// "Held because the user's quiet hours run 22:00 to 08:00 Europe/Istanbul and normal
+//  priority is below the critical floor needed to override them."
 ```
 
 It answers "why did this go out at 22:30" too: an allowed decision explains itself, and
