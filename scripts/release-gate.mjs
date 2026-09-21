@@ -8,6 +8,8 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { compareVersions } from "./version.mjs";
+import { extractPackedFiles } from "./npm-pack.mjs";
 
 const root = process.cwd();
 const read = (f) => readFileSync(join(root, f), "utf8");
@@ -25,9 +27,32 @@ function pythonInits() {
     .map((e) => `python/src/${e.name}/__init__.py`);
 }
 
-const heading = /^## +(\S+)/m.exec(read("CHANGELOG.md"));
-if (!heading) problems.push("CHANGELOG.md has no '## ' heading");
-else if (heading[1] !== version) problems.push(`CHANGELOG.md top entry is ${heading[1]}, package.json is ${version}`);
+// Two states, not one. A released entry carries the package's own version and a date; an entry for
+// a version that is not out yet carries no date. Requiring the first alone contradicts release.mjs,
+// which will not cut a release until an entry for the new version exists, so a contributor's credit
+// could only ever be written at release time. Ported from workproof#29 by @shivam-070208.
+const heading = /^## +(\S+)(.*)$/m.exec(read("CHANGELOG.md"));
+let changelogState;
+if (!heading) {
+  problems.push("CHANGELOG.md has no '## ' heading");
+} else {
+  const headingVersion = heading[1];
+  const hasDate = /\d{4}-\d{2}-\d{2}/.test(heading[2]);
+  if (!/^\d+\.\d+\.\d+$/.test(headingVersion)) {
+    problems.push(`CHANGELOG.md top entry is not a version: ${headingVersion}`);
+  } else {
+    const comparison = compareVersions(headingVersion, version);
+    if (comparison === 0) {
+      if (hasDate) changelogState = `released at ${version}`;
+      else problems.push(`CHANGELOG.md top entry ${headingVersion} is undated`);
+    } else if (comparison > 0) {
+      if (hasDate) problems.push(`CHANGELOG.md top entry ${headingVersion} is dated, package.json is ${version}`);
+      else changelogState = `${headingVersion} pending, package at ${version}`;
+    } else {
+      problems.push(`CHANGELOG.md top entry is ${headingVersion}, package.json is ${version}`);
+    }
+  }
+}
 
 if (has("CITATION.cff")) {
   const v = /^version: "?([^"\n]+)"?$/m.exec(read("CITATION.cff"))?.[1];
@@ -57,7 +82,7 @@ if (has(".claude-plugin/plugin.json")) {
 const packed = JSON.parse(
   execFileSync("npm", ["pack", "--dry-run", "--json", "--ignore-scripts"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], shell: process.platform === "win32" }),
 );
-const files = packed[0].files.map((f) => f.path).sort();
+const files = extractPackedFiles(packed, pkg.name).map((f) => f.path).sort();
 const allowlistPath = "scripts/pack-allowlist.txt";
 if (process.argv.includes("--update")) {
   writeFileSync(join(root, allowlistPath), `${files.join("\n")}\n`);
@@ -78,4 +103,4 @@ if (problems.length) {
   for (const p of problems) console.error(`release-gate: ${p}`);
   process.exit(1);
 }
-console.log(`release-gate: ok, version ${version} everywhere, ${files.length} packed files all allowed`);
+console.log(`release-gate: ok, ${changelogState}, ${files.length} packed files all allowed`);
