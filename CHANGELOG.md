@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.3 (unreleased)
+
+**The release gate died on npm 12 and forbade the entry you are reading.** `npm pack --dry-run
+--json` returns an array on npm 11 and an object keyed by package name on npm 12, and the gate read
+`packed[0].files`. And its CHANGELOG check required the top entry to carry the package's current
+version, while `release.mjs` refuses to release until an entry for the new version exists, so a
+contributor's credit could only ever be written at release time.
+
+Both fixes are [@shivam-070208](https://github.com/shivam-070208)'s, written on workproof
+([#35](https://github.com/Bubblegunn/workproof/pull/35) and
+[#29](https://github.com/Bubblegunn/workproof/pull/29)) and ported here with his four tests. Each
+port was checked by re-running the mutation that ignores the requested package name, which fails
+exactly its own test. Nothing in the published package changes; this is the tooling that decides
+whether a release may happen at all.
+
 ## 0.7.2 (2026-09-13)
 
 **A third implementation of the specification, by somebody who is not us.**
