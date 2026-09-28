@@ -152,12 +152,31 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
+  docs-site:
+    # The Starlight site pages.yml deploys, built from the pull request. docs/site has its own
+    # lockfile and its own Dependabot group, and a bot merge pushes with GITHUB_TOKEN, which
+    # starts no other workflow: without this job a docs dependency bump merges without the site
+    # ever being built (#52 did).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs/site/package-lock.json
+      - run: npm ci # esbuild and sharp need their install scripts for the platform binaries
+        working-directory: docs/site
+      - run: npm run build
+        working-directory: docs/site
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
-    needs: [test, package, spec-lint, conformance, python, release-gate, postgres]
+    needs: [test, package, spec-lint, conformance, python, release-gate, postgres, docs-site]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  conformance: ${{ needs.conformance.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}  postgres: ${{ needs.postgres.result }}"
-          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.conformance.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success && test "${{ needs.postgres.result }}" = success
+          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  conformance: ${{ needs.conformance.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}  postgres: ${{ needs.postgres.result }}  docs-site: ${{ needs.docs-site.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.conformance.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success && test "${{ needs.postgres.result }}" = success && test "${{ needs.docs-site.result }}" = success
