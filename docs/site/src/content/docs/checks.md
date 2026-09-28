@@ -1,5 +1,5 @@
 ---
-# title removed on purpose to prove the CI job can fail
+title: Checks
 description: The built-in checks, the order the default runs them in, and how to write your own.
 ---
 
