@@ -100,7 +100,7 @@ jobs:
           # release that had worked went red and the only real check on it reported nothing. The
           # budget is named once and the message is computed from it, because the old message spelled
           # "six" and "two minutes" in words that nothing would have updated.
-          attempts=15
+          attempts=30 # 15 (five minutes) ran out on three releases on 2026-10-14 while npm was still propagating
           delay=20
           i=1
           while [ "$i" -le "$attempts" ]; do
