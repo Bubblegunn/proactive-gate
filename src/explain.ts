@@ -309,7 +309,9 @@ const PARSERS: Record<string, Parsers> = {
   intensity: { stop: match(/^priority (\w+) is below the "(\w+)" intensity floor \((\w+)\)$/, ["priority", "level", "floor"]) },
   quietHours: { stop: parseQuietHours, skip: fixed("quiet hours set but no timezone on the user; cannot evaluate") },
   trustRamp: { stop: match(/^trust ramp: day (\d+) of (\S+), priority (\w+) is below (\w+)$/, ["day", "days", "priority", "floor"]), skip: fixed("no createdAt on the user; ramp cannot be evaluated") },
-  dismissalCooldown: { stop: match(/^(\d+) dismissals of "(.+)" in (\S+) days; silent until (.+)$/, ["count", "type", "within", "until"]) },
+  // The instant is an ISO timestamp, so \S+: with (.+) the type and the
+  // instant could both absorb a crafted reason and the match went quadratic.
+  dismissalCooldown: { stop: match(/^(\d+) dismissals of "(.+)" in (\S+) days; silent until (\S+)$/, ["count", "type", "within", "until"]) },
   adaptiveTiming: { adjust: first(match(/^deliver at (\S+); surfaces (.+)$/, ["at", "surfaces"]), match(/^deliver at (\S+)$/, ["at"]), match(/^surfaces (.+)$/, ["surfaces"])) },
   dedupe: { stop: match(/^already delivered within the last (.+)$/, ["window"]), skip: fixed("no dedupeKey on the candidate; deduplication cannot be evaluated") },
   dailyBudget: { stop: BUDGET_STOP, passReason: BUDGET_NEAR },

@@ -159,6 +159,37 @@ test("dismissalCooldown: the awkward one, said plainly", async () => {
   assert.equal(explain(d).summary, 'Held because the user has dismissed "reminder" messages 3 times in 30 days, so this type stays silent until 2026-09-10T10:00:00.000Z.');
 });
 
+test("dismissalCooldown: a type carrying the reason's own separators still reads back whole", async () => {
+  const store = new MemoryStore();
+  const gate = createGate({ store, checks: [checks.dismissalCooldown()] });
+  const u = user();
+  const type = 'a" in 9 days; silent until b';
+  for (const day of [1, 2, 3]) await gate.record(u, { type }, "dismissed", new Date(`2026-09-0${day}T10:00:00Z`));
+  const d = await gate.evaluate({ user: u, candidate: candidate({ type }), now: new Date("2026-09-05T10:00:00Z") });
+  assert.equal(explain(d).summary, `Held because the user has dismissed "${type}" messages 3 times in 30 days, so this type stays silent until 2026-09-10T10:00:00.000Z.`);
+});
+
+test("dismissalCooldown: a reason built to backtrack is read in linear time", () => {
+  // CodeQL js/polynomial-redos: with "silent until (.+)$" the type and the
+  // instant could both absorb this repetition, and 8,000 repeats took ~0.9 s.
+  const reason = '9 dismissals of "a" in ! days; silent until ' + 'a" in ! days; silent until a'.repeat(20_000) + "\n";
+  const d: Decision = {
+    id: "u1:c1:2026-09-04T09:00:00.000Z#1",
+    allowed: false,
+    userId: "u1",
+    candidateId: "c1",
+    surfaces: [],
+    shadowed: [],
+    nearLimit: [],
+    trace: [{ id: "dismissalCooldown", outcome: "reject", reason, ms: 0 }],
+    evaluatedAt: noon,
+  };
+  const started = performance.now();
+  explain(d);
+  const elapsed = performance.now() - started;
+  assert.ok(elapsed < 1000, `explain took ${elapsed.toFixed(0)} ms on a 20,000-repeat reason`);
+});
+
 test("adaptiveTiming adjust: moved delivery and narrowed surfaces", async () => {
   const gate = createGate({ checks: [checks.adaptiveTiming({ nextGoodMoment: () => new Date("2026-09-04T10:00:00Z"), surfacesFor: () => ["feed"] })] });
   const d = await gate.evaluate({ user: user(), candidate: candidate(), now: noon });

@@ -295,7 +295,9 @@ PARSERS: dict[str, dict[str, Parser | Callable[[str], Facts]]] = {
         "stop": _match(r"trust ramp: day (\d+) of (\S+), priority (\w+) is below (\w+)", ("day", "days", "priority", "floor")),
         "skip": _fixed("no createdAt on the user; ramp cannot be evaluated"),
     },
-    "dismissalCooldown": {"stop": _match(r'(\d+) dismissals of "(.+)" in (\S+) days; silent until (.+)', ("count", "type", "within", "until"))},
+    # The instant is an ISO timestamp, so \S+: with (.+) the type and the
+    # instant could both absorb a crafted reason and the match went quadratic.
+    "dismissalCooldown": {"stop": _match(r'(\d+) dismissals of "(.+)" in (\S+) days; silent until (\S+)', ("count", "type", "within", "until"))},
     "adaptiveTiming": {
         "adjust": _first(
             _match(r"deliver at (\S+); surfaces (.+)", ("at", "surfaces")),

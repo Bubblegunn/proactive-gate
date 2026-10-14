@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.1 (unreleased)
+
+**`explain()` reads a crafted dismissal-cooldown reason in linear time.** The pattern that reads
+the `dismissalCooldown` reason back into facts ended in `silent until (.+)`, so the quoted type and
+the instant could both absorb the same text, and a reason built for it (CodeQL
+`js/polynomial-redos`, alert 23) backtracked quadratically: 20,000 repetitions took 10.2 s in
+TypeScript, and the Python test of the same input ran 39 s. The instant is always an ISO timestamp, so both languages now
+read it as `\S+`, and the same input takes 2.5 ms in TypeScript and 3.1 ms in Python. The type
+is still read whole when it contains the reason's own separators, and every sentence `explain()` renders for
+`spec/fixtures` is byte-identical before and after the change.
+
 ## 0.8.0 (2026-10-14)
 
 **Breaking for anyone on Node 20: the floor is now Node 22.** `engines.node` is `>=22` and the CI

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import time
 from datetime import datetime, timezone
 from typing import Any
 
@@ -320,6 +321,36 @@ def test_shadowed_stop_is_what_would_have_happened() -> None:
         "and normal priority is below the critical floor needed to override them), but the check ran in shadow mode so evaluation continued."
     )
     assert "quietHours would have stopped it but ran in shadow mode" in e.summary
+
+
+def test_dismissal_cooldown_type_with_the_reasons_own_separators() -> None:
+    store = MemoryStore()
+    gate = Gate([checks.DismissalCooldown()], store=store)
+    u = user()
+    kind = 'a" in 9 days; silent until b'
+    for day in (1, 2, 3):
+        gate.record(u, Candidate(id=f"c{day}", type=kind), "dismissed", datetime(2026, 9, day, 10, 0, tzinfo=UTC))
+    d = gate.evaluate(EvaluateInput(u, candidate(type=kind), datetime(2026, 9, 5, 10, 0, tzinfo=UTC)))
+    assert explain(d).summary == f'Held because the user has dismissed "{kind}" messages 3 times in 30 days, so this type stays silent until 2026-09-10T10:00:00.000Z.'
+
+
+def test_dismissal_cooldown_reason_built_to_backtrack_reads_in_linear_time() -> None:
+    # The pattern CodeQL flagged as js/polynomial-redos in the TypeScript twin;
+    # Python's re backtracks the same way on "silent until (.+)".
+    reason = '9 dismissals of "a" in ! days; silent until ' + 'a" in ! days; silent until a' * 20_000 + "\n"
+    d = Decision(
+        id="u1:c1:2026-09-04T09:00:00.000Z#1",
+        allowed=False,
+        user_id="u1",
+        candidate_id="c1",
+        surfaces=(),
+        trace=(TraceEntry(id="dismissalCooldown", outcome="reject", ms=0.0, reason=reason),),
+        evaluated_at=NOON,
+    )
+    started = time.perf_counter()
+    explain(d)
+    elapsed = time.perf_counter() - started
+    assert elapsed < 1.0, f"explain took {elapsed:.2f} s on a 20,000-repeat reason"
 
 
 def test_shadowed_pass_does_not_claim_it_would_have_stopped() -> None:
