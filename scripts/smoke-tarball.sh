@@ -30,5 +30,11 @@ npm ci --silent --ignore-scripts
 node --input-type=module -e "import('$name').then(m => { const k = Object.keys(m); if (!k.length) throw new Error('no exports'); console.log('exports:', k.join(', ')); })"
 # Subpath exports are part of the contract: presets and one adapter must resolve from the tarball.
 node --input-type=module -e "Promise.all([import('$name/presets'), import('$name/ai-sdk')]).then(([p, a]) => { if (!p.presets || !Object.keys(p.presets).length) throw new Error('no presets'); if (!Object.keys(a).length) throw new Error('ai-sdk subpath is empty'); console.log('subpaths ok: presets (' + Object.keys(p.presets).length + '), ai-sdk'); })"
-if [ -n "$bin" ]; then npx --no "$bin" --help >/dev/null && echo "bin ok: $bin --help"; fi
+# `--` keeps npx from reading --help as its own option (npm 11 then exits 0 for a missing bin), and the
+# explicit exit is needed because a failing command on the left of `&&` does not trip `set -e`: until
+# 2026-10-14 this line printed nothing and the script still exited 0 when the bin path was broken.
+if [ -n "$bin" ]; then
+  npx --no -- "$bin" --help >/dev/null || { echo "bin failed: $bin --help" >&2; exit 1; }
+  echo "bin ok: $bin --help"
+fi
 cd "$root" && rm -rf "$dir" "$tgz"
