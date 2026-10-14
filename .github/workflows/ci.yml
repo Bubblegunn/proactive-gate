@@ -122,11 +122,14 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install --upgrade pip && pip install -e ".[dev]" build twine
+      # requirements-ci.txt is exported from uv.lock with hashes (see pyproject's ci group); the
+      # package itself goes in without dependencies, so nothing reaches CI unpinned.
+      - run: python -m pip install --require-hashes -r requirements-ci.txt
+      - run: python -m pip install --no-deps --no-build-isolation -e .
       - run: python -m mypy --strict src/proactive_gate tests
       - run: python -m pytest -q
       - name: Build the wheel and sdist and check their metadata, the way the release does
-        run: python -m build && python -m twine check dist/*
+        run: python -m build --no-isolation && python -m twine check dist/*
   release-gate:
     # The version the package states is the version every other file states, and npm pack ships only allowlisted paths.
     runs-on: ubuntu-latest
@@ -212,7 +215,8 @@ jobs:
         shell: bash
         working-directory: python
         run: |
-          python -m pip install --upgrade pip && pip install -e ".[dev]"
+          python -m pip install --require-hashes -r requirements-ci.txt
+          python -m pip install --no-deps --no-build-isolation -e .
           python -m pytest -rs tests/test_redis.py | tee redis-py.txt
           ! grep -q "PROACTIVE_GATE_REDIS_URL is not set" redis-py.txt
   docs-site:

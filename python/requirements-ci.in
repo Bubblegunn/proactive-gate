@@ -1,0 +1,8 @@
+# What CI and the release job install next to the package's dev extra (pyproject.toml).
+# The library itself pins nothing; this pins only the tools that test, build and check it.
+# editables is hatchling's editable-install hook, needed because CI installs with
+# --no-build-isolation so the build backend also comes from the hashed file.
+build>=1
+twine>=5
+hatchling>=1.25
+editables>=0.5

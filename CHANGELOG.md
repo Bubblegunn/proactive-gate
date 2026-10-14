@@ -17,6 +17,20 @@ set `package-manager-cache`, so it could restore an npm cache (zizmor `cache-poi
 It now sets `package-manager-cache: false`, as the `publish` job already did. zizmor 1.30.1 reported
 1 high finding before the change and none after.
 
+**Every download in CI is pinned.** The Python jobs in `ci.yml` and `release.yml` ran
+`pip install --upgrade pip` and `pip install -e ".[dev]"`, so pip, the dev tools, `build`, `twine`
+and the build backend arrived at whatever version was newest (Scorecard `PinnedDependencies`,
+alerts 18, 19, 21, 22, 31, 32 and 33). They now install `python/requirements-ci.txt`, compiled with
+uv from the `dev` extra and `python/requirements-ci.in` with a hash for every file and no version
+newer than 2026-10-07, using `--require-hashes`; the package goes in with `--no-deps
+--no-build-isolation`, and `python -m build --no-isolation` builds with the pinned hatchling. The
+wheel and sdist built that way have the same contents as an isolated build. The library still
+declares no dependencies. `tests/test_requirements_ci.py` fails when a requirement is missing from
+the file, pinned outside its range, or pinned without a hash; each of the three was checked by
+breaking the file. `scripts/smoke-tarball.sh` (alert 2) installed the packed tarball with
+`npm install`; it now writes a lockfile naming the tarball's sha512 and runs `npm ci`, and with a
+wrong sha512 in that lockfile npm stops with `EINTEGRITY`.
+
 ## 0.8.0 (2026-10-14)
 
 **Breaking for anyone on Node 20: the floor is now Node 22.** `engines.node` is `>=22` and the CI

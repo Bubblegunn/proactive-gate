@@ -15,6 +15,8 @@ python -m mypy --strict src/proactive_gate tests && pytest
 
 Node 22 or newer, Python 3.11 or newer, and git. Test files are named explicitly in `package.json` rather than globbed, which `test/suite.test.mjs` enforces; the floor in `engines.node` and the lowest Node in the CI matrix are compared by `scripts/release-gate.mjs`, so move them together.
 
+CI installs the Python tools from `python/requirements-ci.txt` with `pip install --require-hashes`, then the package with `--no-deps --no-build-isolation`, so every Python download in CI is pinned by hash, the build backend included. The file is compiled from the `dev` extra and `python/requirements-ci.in`; after changing either, recompile it with the command in its header (move the `--exclude-newer` date to a week before the day you run it). `tests/test_requirements_ci.py` fails when an input is missing from the file, pinned outside its range, or pinned without a hash.
+
 ## Store contract
 
 The exported `storeContract` suite lets a store author run the same contract against a custom `Store` without copying our tests. It covers `get`, `set`, `del`, `incr` from absent, concurrent `incr` atomicity, expiry boundaries, and matching TTL behaviour for `set` and `incr`.

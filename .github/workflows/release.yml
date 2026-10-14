@@ -137,9 +137,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.13"
-      - run: python -m pip install --upgrade pip build && pip install -e ".[dev]"
+      # Everything installed here, build backend included, comes pinned by hash from uv.lock through
+      # requirements-ci.txt; --no-isolation builds with that hatchling instead of fetching the latest.
+      - run: python -m pip install --require-hashes -r requirements-ci.txt
+      - run: python -m pip install --no-deps --no-build-isolation -e .
       - run: python -m mypy --strict src/proactive_gate tests && python -m pytest -q
-      - run: python -m build && python -m pip install twine && python -m twine check dist/*
+      - run: python -m build --no-isolation && python -m twine check dist/*
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: python-dist
