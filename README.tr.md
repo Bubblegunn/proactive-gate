@@ -74,7 +74,7 @@ npx proactive-gate simulate kendi-adaylarim.jsonl      # üretilmiş hafta deği
   bizim dışımızda biri tarafından yazılmış bir uygulaması.
 - **Asla olmayacaklar**: sunucu, barındırılan hesap ya da mesaj içeriğini okuyan herhangi bir şey.
 
-Sıfır bağımlılık. TypeScript. Node 20 ya da üstü. Framework'ten bağımsız: kapı, "model bir
+Sıfır bağımlılık. TypeScript. Node 22 ya da üstü. Framework'ten bağımsız: kapı, "model bir
 şey üretti" ile "kullanıcının telefonu titredi" arasında durur; hangi model ya da framework
 üretmiş olursa olsun. Örnekler: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
 [`examples/mastra.ts`](examples/mastra.ts) ve yeniden oynatılabilir bir politika olarak

@@ -2,7 +2,7 @@
 
 > Decide whether a proactive AI agent may reach a user right now, and log why not: ordered checks as code or JSON, a reason on every rejection, a budget consumed at send time, presets for platform and legal limits, adapters for agent frameworks, a replay CLI, and a Python sibling held to the same fixtures.
 
-Install: `npm install proactive-gate` (Node 20+) or `pip install proactive-gate` (Python 3.11+). Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
+Install: `npm install proactive-gate` (Node 22+) or `pip install proactive-gate` (Python 3.11+). Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
 npm: https://www.npmjs.com/package/proactive-gate
 Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt is served there too)
 

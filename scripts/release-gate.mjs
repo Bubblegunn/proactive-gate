@@ -74,6 +74,23 @@ for (const init of pythonInits()) {
   if (v !== undefined && v !== version) problems.push(`${init} __version__ is ${v}, package.json is ${version}`);
 }
 
+// The Node floor is stated twice: engines.node, which is what npm tells an installer, and the
+// lowest Node the CI matrix tests. When they disagree, either the package claims a version CI
+// never ran or CI spends a leg on one the package refuses. A matrix this cannot find is reported
+// rather than skipped, so a reworded workflow cannot quietly turn the comparison off.
+const ciPath = ".github/workflows/ci.yml";
+if (pkg.engines?.node && has(ciPath)) {
+  const floor = /^>=\s*(\d+)/.exec(pkg.engines.node)?.[1];
+  const matrix = /^\s+node: \[([^\]]*)\]/m.exec(read(ciPath))?.[1];
+  const lowest = matrix
+    ? Math.min(...matrix.split(",").map((v) => Number.parseInt(v.trim().replace(/["']/g, ""), 10)))
+    : undefined;
+  if (floor === undefined) problems.push(`package.json engines.node is "${pkg.engines.node}", not a ">=N" floor`);
+  else if (lowest === undefined || Number.isNaN(lowest)) problems.push(`${ciPath} has no "node: [...]" matrix to compare engines.node against`);
+  else if (lowest !== Number(floor))
+    problems.push(`package.json engines.node is ${pkg.engines.node}, the lowest Node in the ${ciPath} matrix is ${lowest}`);
+}
+
 if (has(".claude-plugin/plugin.json")) {
   const v = JSON.parse(read(".claude-plugin/plugin.json")).version;
   if (v !== version) problems.push(`.claude-plugin/plugin.json version is ${v}, package.json is ${version}`);

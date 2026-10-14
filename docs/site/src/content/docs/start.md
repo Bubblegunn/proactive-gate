@@ -11,7 +11,7 @@ half.
 npm install proactive-gate
 ```
 
-Zero dependencies, TypeScript, Node 20 or newer. For Python see [Python](/proactive-gate/python/).
+Zero dependencies, TypeScript, Node 22 or newer. For Python see [Python](/proactive-gate/python/).
 
 ```ts
 import { createGate, defaultChecks, RedisStore } from "proactive-gate";

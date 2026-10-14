@@ -2,6 +2,14 @@
 
 ## 0.8.0 (unreleased)
 
+**Breaking for anyone on Node 20: the floor is now Node 22.** `engines.node` is `>=22` and the CI
+matrix starts at 22. Node 20 reached end of life on 2026-04-30, and `SqliteStore` already needed
+Node 22.5 for `node:sqlite`. Nothing in the code path changed, so the package may still run on
+Node 20, but it is no longer tested there and npm will warn on install (or refuse, with
+`engine-strict`). The README, the Turkish README, the docs start page, CONTRIBUTING and `llms.txt`
+now say Node 22. `scripts/release-gate.mjs` fails when `engines.node` and the lowest Node in the CI
+matrix disagree, and when it cannot find the matrix at all.
+
 **`RedisStore.incr` attaches the TTL in the same step as the increment.** It used to send `INCR`
 and then, on the first increment, a separate `EXPIRE`; a crash or a dropped connection between
 those two round trips left a daily counter that never expired. Both languages now run the two

@@ -65,7 +65,7 @@
     "simulate": "npm run build && node dist/src/cli.js simulate"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "keywords": [
     "ai",

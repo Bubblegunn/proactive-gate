@@ -12,7 +12,7 @@ pip install -e ".[dev]"
 python -m mypy --strict src/proactive_gate tests && pytest
 ```
 
-Node 20 or newer, Python 3.11 or newer, and git. Node 20's test runner does not expand glob patterns, so test files are named explicitly in `package.json`.
+Node 22 or newer, Python 3.11 or newer, and git. Test files are named explicitly in `package.json` rather than globbed, which `test/suite.test.mjs` enforces; the floor in `engines.node` and the lowest Node in the CI matrix are compared by `scripts/release-gate.mjs`, so move them together.
 
 ## Store contract
 
