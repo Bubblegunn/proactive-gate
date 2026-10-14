@@ -45,6 +45,24 @@ git tag spec/v1.2.0 -m "spec 1.2.0" && git push origin spec/v1.2.0
 
 Maintainers only, because the ruleset restricts tag creation. An implementation pins that tag rather than a package release, which is what lets it target the contract without depending on npm or PyPI.
 
+### The Go module is tagged separately too
+
+`go/` is its own Go module, `github.com/Bubblegunn/proactive-gate/go`, and the Go toolchain finds
+the versions of a module in a subdirectory only through tags prefixed with that directory:
+`go/vX.Y.Z`. That is a third tag series, separate from the package's `vX.Y.Z` and the spec's
+`spec/vX.Y.Z`, and the three do not move together: a package release does not change the Go
+module, and a Go fix does not need an npm release. Tag the commit whose `go/` you want to publish:
+
+```sh
+git tag go/v0.1.0 -m "go module 0.1.0" && git push origin go/v0.1.0
+```
+
+Maintainers only, for the same ruleset reason. After the push, `go get
+github.com/Bubblegunn/proactive-gate/go@v0.1.0` resolves through proxy.golang.org, and
+pkg.go.dev lists the version once someone has fetched it. A tag is never moved or deleted once
+pushed: the checksum database records it, so a changed tag fails verification for everyone who
+fetched the old one. Fix forward with the next patch version.
+
 ## Adding a check
 
 TypeScript: a factory in `src/checks.ts` returning `{ id, run(ctx) }` (set `nonRejecting: true` if it may only adjust; add `consume(ctx)` if it is a budget), registered in `KNOWN_CHECKS` in `src/policy.ts` so JSON policies can name it.

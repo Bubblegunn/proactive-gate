@@ -715,8 +715,11 @@ Python 3.11 and 3.13 in CI. See [`python/README.md`](python/README.md).
 [@LouisDeconinck](https://github.com/LouisDeconinck) wrote it from `spec/SPEC.md` and the fixtures
 for [#16](https://github.com/Bubblegunn/proactive-gate/issues/16). The module has no dependencies
 beyond the standard library. `cd go && go test ./...` runs the same fixture suite, and
-`go run ./cmd/pg-conformance` prints pass, fail or skip per fixture. See
-[`go/README.md`](go/README.md).
+`go run ./cmd/pg-conformance` prints pass, fail or skip per fixture. To use it as a library,
+`go get github.com/Bubblegunn/proactive-gate/go@v0.1.0` and import
+`github.com/Bubblegunn/proactive-gate/go/proactivegate`; the module's versions are tagged
+`go/vX.Y.Z`, separately from the package releases. See [`go/README.md`](go/README.md) for an
+example.
 
 ## Properties, not just examples
 

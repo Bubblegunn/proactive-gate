@@ -17,6 +17,13 @@ configured (92.82% lines, 88.71% branches), rounded down to whole numbers becaus
 thresholds as integers. The new `coverage` job runs it on one Node 24 leg and is required by
 `ci-ok`. Dropping the explain tests from the run took it to 91.39% and 86.63% and failed it.
 
+**The Go module says how to install it.** `go/README.md` and the README's Go section give
+`go get github.com/Bubblegunn/proactive-gate/go@v0.1.0` and an import example, run against the
+local module before it was written down. CONTRIBUTING documents the third tag series,
+`go/vX.Y.Z`, which the Go toolchain needs for a module in a subdirectory and which moves
+independently of `vX.Y.Z` and `spec/vX.Y.Z`. The `go/v0.1.0` tag itself is pushed by a maintainer;
+until it exists, that `go get` line does not resolve.
+
 **`RedisStore.incr` attaches the TTL in the same step as the increment.** It used to send `INCR`
 and then, on the first increment, a separate `EXPIRE`; a crash or a dropped connection between
 those two round trips left a daily counter that never expired. Both languages now run the two

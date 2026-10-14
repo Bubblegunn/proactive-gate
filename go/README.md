@@ -11,6 +11,50 @@ No dependencies beyond the Go standard library. The IANA zone handling reads
 the system time zone database through `time.LoadLocation`, which is part of
 the toolchain's promise rather than a dependency.
 
+## Install
+
+The module lives in this subdirectory, so its versions are tagged `go/vX.Y.Z`, separately from
+the package's `vX.Y.Z` releases and the spec's `spec/vX.Y.Z`:
+
+```sh
+go get github.com/Bubblegunn/proactive-gate/go@v0.1.0
+```
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"time"
+
+	"github.com/Bubblegunn/proactive-gate/go/proactivegate"
+)
+
+func main() {
+	var policy proactivegate.Policy
+	_ = json.Unmarshal([]byte(`{"specVersion":"1.0.0","checks":[{"id":"consent"},{"id":"dailyBudget","limit":3}]}`), &policy)
+	gate, err := proactivegate.NewGateFromPolicy(&policy, proactivegate.NewMemoryStore())
+	if err != nil {
+		panic(err)
+	}
+	input := proactivegate.EvaluateInput{
+		User:      &proactivegate.UserState{ID: "u1", Consent: true, Timezone: "Europe/Istanbul"},
+		Candidate: &proactivegate.Candidate{ID: "c1", Type: "reminder"},
+		Now:       time.Now(),
+	}
+	decision := gate.Evaluate(input)
+	if decision.Allowed && gate.Commit(decision, input) {
+		fmt.Println("send")
+	} else {
+		fmt.Println("held:", decision.Reason)
+	}
+}
+```
+
+`NewMemoryStore` is correct for one process. Across processes, implement the `Store` interface in
+`proactivegate/types.go` over a shared store with an atomic increment.
+
 ## Layout
 
 - `proactivegate/` is the library: the decision loop over an ordered list of
