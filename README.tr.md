@@ -470,7 +470,12 @@ if (decision.allowed && await gate.commit(decision, input)) {   // INCR, returns
 }
 ```
 
-`RedisStore`, `INCR` kullanır ve günün TTL'sini ilk artırmada ekler. Sayaç kullanıcının yerel
+`RedisStore`, `INCR` kullanır ve günün TTL'sini ilk artırmada ekler. İstemcide `eval` varsa
+(ioredis'te ve Python'daki `redis.asyncio`'da var), artırma ve TTL tek bir Lua betiğinde
+çalışır; ikisinin arasında bir hata, hiç süresi dolmayan bir sayaç bırakamaz. `eval` olmayan
+bir istemci (örneğin eski `RedisLike` için yazılmış bir node-redis bağdaştırıcısı) çalışmaya
+devam eder, ama `INCR` ve ardından ayrı bir `EXPIRE` ile; bu yol iki gidiş dönüştür ve atomik
+değildir. Bağdaştırıcıya `eval` eklemek bu boşluğu kapatır. Sayaç kullanıcının yerel
 gününe göre anahtarlanır, bu yüzden bütçe UTC'de değil kullanıcının gece yarısında sıfırlanır.
 
 ## Taşıma iki kez ilettiğinde tek mesaj

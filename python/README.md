@@ -88,7 +88,8 @@ runs that loop with values you supply, for tests with no store at all.
 [@LouisDeconinck](https://github.com/LouisDeconinck) in
 [#32](https://github.com/Bubblegunn/proactive-gate/pull/32); the same file and expiry rules
 as `SqliteStore`, without blocking the loop), and `RedisStore` over `redis.asyncio`
-(INCR, then EXPIRE on the first increment). Any object with `get`, `set`, `incr` and
+(INCR, and EXPIRE on the first increment, run as one Lua script through the client's
+`eval`, so a failure between the two cannot leave a counter with no TTL). Any object with `get`, `set`, `incr` and
 `delete` works. `SqliteStore` removes an expired row when a read touches it and clears
 every already-expired row on each `set` or `incr`, so a key nobody reads again still
 disappears.

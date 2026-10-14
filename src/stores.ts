@@ -56,8 +56,15 @@ export class MemoryStore implements Store {
 }
 
 /**
- * The subset of a Redis client the gate needs. Both ioredis and node-redis
- * satisfy it (node-redis names are upper-case; pass a small adapter).
+ * The subset of a Redis client the gate needs. ioredis satisfies it directly;
+ * node-redis names are upper-case or take options objects, so pass a small
+ * adapter.
+ *
+ * `eval` is optional so that adapters written before it existed keep working.
+ * With it, `incr` runs INCR and EXPIRE as one server-side script, so a counter
+ * can never be left without a TTL. Without it, `incr` falls back to INCR then a
+ * separate EXPIRE, and a failure between those two round trips leaves a counter
+ * that never expires. The signature is ioredis's: `eval(script, numKeys, ...keysThenArgs)`.
  */
 export interface RedisLike {
   get(key: string): Promise<string | null>;
@@ -65,12 +72,22 @@ export interface RedisLike {
   incr(key: string): Promise<number>;
   expire(key: string, seconds: number): Promise<unknown>;
   del(key: string): Promise<unknown>;
+  eval?(script: string, numKeys: number, ...args: (string | number)[]): Promise<unknown>;
 }
+
+/**
+ * INCR, and EXPIRE when the increment created the key. Redis runs a script
+ * without interleaving other commands, so the TTL is attached in the same step
+ * that creates the counter. The Python RedisStore runs the same script.
+ */
+const REDIS_INCR_SCRIPT =
+  "local n = redis.call('INCR', KEYS[1]) if n == 1 and tonumber(ARGV[1]) > 0 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end return n";
 
 /**
  * Redis-backed store. `incr` is atomic on the server, which is what makes the
  * daily budget safe across many instances; the TTL is attached on the first
- * increment so a day's counter disappears on its own.
+ * increment so a day's counter disappears on its own. With a client that has
+ * `eval` (ioredis does), the increment and the TTL are one script.
  */
 export class RedisStore implements Store {
   constructor(private readonly client: RedisLike) {}
@@ -85,6 +102,10 @@ export class RedisStore implements Store {
   }
 
   async incr(key: string, ttlSeconds?: number): Promise<number> {
+    if (this.client.eval)
+      return Number(
+        await this.client.eval(REDIS_INCR_SCRIPT, 1, key, ttlSeconds ?? 0),
+      );
     const next = await this.client.incr(key);
     if (next === 1 && ttlSeconds) await this.client.expire(key, ttlSeconds);
     return next;

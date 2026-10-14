@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.8.0 (unreleased)
+
+**`RedisStore.incr` attaches the TTL in the same step as the increment.** It used to send `INCR`
+and then, on the first increment, a separate `EXPIRE`; a crash or a dropped connection between
+those two round trips left a daily counter that never expired. Both languages now run the two
+steps as one Lua script through the client's `eval`. `RedisLike` gains `eval` as an optional
+method with ioredis's signature, so an ioredis client still satisfies it directly and an adapter
+written for the old interface still compiles and runs, through the old two-call path. The README
+says which path is atomic and how to add `eval` to a node-redis adapter. A test that makes
+`EXPIRE` fail after `INCR` failed on the old code in both languages, with a fake client and
+against a real Redis 7 server (`TTL` returned -1), and passes now.
+
+**RedisStore is tested against a real Redis server in CI.** The new `redis` job runs the store
+contract suite and the fault-injection tests in TypeScript and Python against a digest-pinned
+`redis:7-alpine` service, and is required by `ci-ok`. Without `PROACTIVE_GATE_REDIS_URL` the
+tests skip with that reason, so `npm test` and `pytest` still pass with no server; the job fails
+if that skip reason appears in its output, so a renamed variable cannot pass by skipping.
+`ioredis` is a new dev dependency, used only by that test.
+
 ## 0.7.3 (2026-10-14)
 
 **The release gate died on npm 12 and forbade the entry you are reading.** `npm pack --dry-run

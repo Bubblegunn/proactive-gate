@@ -232,8 +232,24 @@ class AsyncSqliteStore:
             await self._conn.close()
 
 
+# INCR, and EXPIRE when the increment created the key. Redis runs a script without interleaving
+# other commands, so the TTL is attached in the same step that creates the counter. The
+# TypeScript RedisStore runs the same script.
+_INCR_SCRIPT = (
+    "local n = redis.call('INCR', KEYS[1]) "
+    "if n == 1 and tonumber(ARGV[1]) > 0 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end "
+    "return n"
+)
+
+
 class RedisStore:
-    """Wraps a ``redis.asyncio`` client. INCR, then EXPIRE on the first increment so a key never lives forever."""
+    """Wraps a ``redis.asyncio`` client.
+
+    ``incr`` runs INCR and, on the first increment, EXPIRE as one server-side script, so a counter
+    can never be left without a TTL. A client object with no ``eval`` method falls back to INCR then
+    a separate EXPIRE; a failure between those two round trips would leave a counter that never
+    expires.
+    """
 
     def __init__(self, client: Any) -> None:
         self.client = client
@@ -251,6 +267,9 @@ class RedisStore:
             await self.client.set(key, value)
 
     async def incr(self, key: str, ttl_seconds: int | None = None) -> int:
+        evaluate = getattr(self.client, "eval", None)
+        if evaluate is not None:
+            return int(await evaluate(_INCR_SCRIPT, 1, key, ttl_seconds or 0))
         value = int(await self.client.incr(key))
         if value == 1 and ttl_seconds:
             await self.client.expire(key, ttl_seconds)

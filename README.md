@@ -478,8 +478,14 @@ if (decision.allowed && await gate.commit(decision, input)) {   // INCR, returns
 }
 ```
 
-`RedisStore` uses `INCR` and attaches the day's TTL on the first increment. The
-counter is keyed on the user's local day, so a budget resets at the user's midnight,
+`RedisStore` uses `INCR` and attaches the day's TTL on the first increment. With a
+client that has `eval` (ioredis has it, and so does `redis.asyncio` in Python), the
+increment and the TTL run as one Lua script, so a failure between them cannot leave a
+counter that never expires. A client without `eval`, such as a node-redis adapter written
+against the older `RedisLike`, still works, through `INCR` and then a separate `EXPIRE`;
+that path is two round trips and is not atomic. Adding `eval: (script, n, ...args) =>
+client.eval(script, { keys: args.slice(0, n).map(String), arguments: args.slice(n).map(String) })`
+to a node-redis adapter closes the gap. The counter is keyed on the user's local day, so a budget resets at the user's midnight,
 not at UTC.
 
 ## One message per event, when the transport delivers twice
