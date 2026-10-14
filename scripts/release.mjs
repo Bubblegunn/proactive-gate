@@ -81,7 +81,7 @@ if (process.env.RELEASE_SKIP_CI_CHECK !== "1") {
   if (r.status !== 0) fail(`gh run list failed (is gh installed and logged in?)\n${r.stderr}`);
   const [run] = JSON.parse(r.stdout || "[]");
   if (!run) fail("no CI run found on main");
-  if (run.headSha !== head) fail(`the latest CI run is for ${run.headSha.slice(0, 7)}, not HEAD ${head.slice(0, 7)}; wait for CI`);
+  if (run.headSha !== head) fail(`the latest CI run is for ${run.headSha.slice(0, 7)}, not HEAD ${head.slice(0, 7)}; wait for CI, or start one with \`gh workflow run ci --ref main\` (a bot merge starts none)`);
   if (run.status !== "completed" || run.conclusion !== "success") fail(`the latest CI run on main is ${run.status} / ${run.conclusion}; releases need a green main`);
 }
 

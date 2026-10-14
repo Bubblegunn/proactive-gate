@@ -3,6 +3,12 @@ on:
   push:
     branches: [main]
   pull_request:
+  # A Dependabot auto-merge pushes with GITHUB_TOKEN, which starts no workflow, so main can sit
+  # on commits CI never ran and the release script waits for a run that never comes. The nightly
+  # run checks main within a day of any bot merge; workflow_dispatch lets a person start one now.
+  workflow_dispatch:
+  schedule:
+    - cron: "23 3 * * *"
 permissions:
   contents: read
 concurrency:
