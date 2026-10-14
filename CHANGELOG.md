@@ -24,6 +24,14 @@ local module before it was written down. CONTRIBUTING documents the third tag se
 independently of `vX.Y.Z` and `spec/vX.Y.Z`. The `go/v0.1.0` tag itself is pushed by a maintainer;
 until it exists, that `go get` line does not resolve.
 
+**Docs site dependencies.** Two of the three open Dependabot alerts on `docs/site` are fixed
+through `overrides`: `postcss-selector-parser` 6.1.4 to 7.1.6 (by moving expressive-code's
+`postcss-nested` to 7.0.2, the release built on it) and `http-cache-semantics` 4.2.0 to 4.3.0. The
+rebuilt site's HTML and CSS are byte-identical to the build before the change. The third,
+`braces` through `micromatch` in `starlight-llms-txt`, has no patched release: 3.0.3 is the latest
+`braces` and is inside the advisory's range, so that alert stays open. All three packages run at
+build time only; none is in the published site or the npm package.
+
 **`RedisStore.incr` attaches the TTL in the same step as the increment.** It used to send `INCR`
 and then, on the first increment, a separate `EXPIRE`; a crash or a dropped connection between
 those two round trips left a daily counter that never expired. Both languages now run the two
