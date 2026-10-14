@@ -10,6 +10,13 @@ Node 20, but it is no longer tested there and npm will warn on install (or refus
 now say Node 22. `scripts/release-gate.mjs` fails when `engines.node` and the lowest Node in the CI
 matrix disagree, and when it cannot find the matrix at all.
 
+**Coverage is measured in CI.** `npm run coverage` runs the same test files as `npm test` under
+Node's built-in `--experimental-test-coverage`, over `dist/src` only, and fails below 92% of lines
+or 88% of branches. Those floors are the first measurement on Node 24 with no database or Redis
+configured (92.82% lines, 88.71% branches), rounded down to whole numbers because Node reads the
+thresholds as integers. The new `coverage` job runs it on one Node 24 leg and is required by
+`ci-ok`. Dropping the explain tests from the run took it to 91.39% and 86.63% and failed it.
+
 **`RedisStore.incr` attaches the TTL in the same step as the increment.** It used to send `INCR`
 and then, on the first increment, a separate `EXPIRE`; a crash or a dropped connection between
 those two round trips left a daily counter that never expired. Both languages now run the two

@@ -7,6 +7,7 @@ proactive-gate decides whether a proactive AI agent may reach a user right now, 
 ```
 npm ci
 npm test               # tsc build, spec-lint, then node:test over dist/test
+npm run coverage       # the same tests with line and branch coverage of dist/src, failing below the floors
 cd python
 pip install -e ".[dev]"
 python -m mypy --strict src/proactive_gate tests && pytest

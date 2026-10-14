@@ -56,6 +56,20 @@ jobs:
       - run: npx attw --pack . --profile esm-only # ESM only, by design; node10 and CJS resolution are not a target
       - name: Install the packed tarball in an empty project and run it
         run: sh scripts/smoke-tarball.sh
+  coverage:
+    # Line and branch coverage of dist/src over the same files npm test runs, with Node's own
+    # runner and no dependency. scripts/coverage.mjs holds the floors and fails below them.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run coverage
   spec-lint:
     # The behaviour contract: every fixture and example policy has the shape spec/schema describes.
     runs-on: ubuntu-latest
@@ -223,9 +237,9 @@ jobs:
   ci-ok:
     # The one check the branch ruleset requires; it fails if any job above failed or was cancelled.
     if: always()
-    needs: [test, package, spec-lint, conformance, python, release-gate, postgres, redis, docs-site]
+    needs: [test, coverage, package, spec-lint, conformance, python, release-gate, postgres, redis, docs-site]
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "test: ${{ needs.test.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  conformance: ${{ needs.conformance.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}  postgres: ${{ needs.postgres.result }}  redis: ${{ needs.redis.result }}  docs-site: ${{ needs.docs-site.result }}"
-          test "${{ needs.test.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.conformance.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success && test "${{ needs.postgres.result }}" = success && test "${{ needs.redis.result }}" = success && test "${{ needs.docs-site.result }}" = success
+          echo "test: ${{ needs.test.result }}  coverage: ${{ needs.coverage.result }}  package: ${{ needs.package.result }}  spec-lint: ${{ needs.spec-lint.result }}  conformance: ${{ needs.conformance.result }}  python: ${{ needs.python.result }}  release-gate: ${{ needs.release-gate.result }}  postgres: ${{ needs.postgres.result }}  redis: ${{ needs.redis.result }}  docs-site: ${{ needs.docs-site.result }}"
+          test "${{ needs.test.result }}" = success && test "${{ needs.coverage.result }}" = success && test "${{ needs.package.result }}" = success && test "${{ needs.spec-lint.result }}" = success && test "${{ needs.conformance.result }}" = success && test "${{ needs.python.result }}" = success && test "${{ needs.release-gate.result }}" = success && test "${{ needs.postgres.result }}" = success && test "${{ needs.redis.result }}" = success && test "${{ needs.docs-site.result }}" = success
