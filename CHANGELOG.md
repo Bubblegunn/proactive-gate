@@ -11,6 +11,12 @@ read it as `\S+`, and the same input takes 2.5 ms in TypeScript and 3.1 ms in Py
 is still read whole when it contains the reason's own separators, and every sentence `explain()` renders for
 `spec/fixtures` is byte-identical before and after the change.
 
+**The release smoke test installs without a package cache.** The `smoke` job in
+`release.yml` runs `npx` against the registry after a publish, and its `setup-node` step did not
+set `package-manager-cache`, so it could restore an npm cache (zizmor `cache-poisoning`, alert 30).
+It now sets `package-manager-cache: false`, as the `publish` job already did. zizmor 1.30.1 reported
+1 high finding before the change and none after.
+
 ## 0.8.0 (2026-10-14)
 
 **Breaking for anyone on Node 20: the floor is now Node 22.** `engines.node` is `>=22` and the CI
