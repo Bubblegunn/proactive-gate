@@ -5,12 +5,16 @@ grew a week's worth of surface in a week and the honest next step is not a featu
 
 ## The one open invitation
 
-- **An implementation of `spec/` in another language, by somebody who is not us.** Go, Rust,
-  Swift, Kotlin, anything. [`spec/CONFORMANCE.md`](spec/CONFORMANCE.md) states what passing means
-  and what an implementation may leave out, and issue
-  [#16](https://github.com/Bubblegunn/proactive-gate/issues/16) is the place to say you are doing
-  it. The sentence this earns cannot be earned any other way: the TypeScript, the Python and an
+- **An implementation of `spec/` in another language, by somebody who is not us.** Go is done:
+  [@LouisDeconinck](https://github.com/LouisDeconinck) wrote it in
+  [#41](https://github.com/Bubblegunn/proactive-gate/pull/41), it passes every fixture with no
+  skips, and it earned the sentence this item was for: the TypeScript, the Python and an
   independently implemented third version all conform to the same behavioural specification.
+  The invitation stays open for a fourth: Rust, Swift, Kotlin, anything.
+  [`spec/CONFORMANCE.md`](spec/CONFORMANCE.md) states what passing means and what an
+  implementation may leave out, and issue
+  [#71](https://github.com/Bubblegunn/proactive-gate/issues/71) is the place to say you are
+  doing it.
 
 ## What is deliberately closed
 
