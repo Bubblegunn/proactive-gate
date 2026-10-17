@@ -116,7 +116,15 @@ account, a snooze, a run of dismissals, and a local day boundary that silences o
 pays another twice. The output, and why none of the six is a matter of taste, is in
 [Compared with hand-rolled checks](#compared-with-hand-rolled-checks-and-feature-flags).
 
-Zero dependencies. TypeScript. Node 22 or newer. Framework-agnostic: the gate sits
+Zero dependencies. TypeScript. Node 22 or newer. The packed main entry also has a
+CI smoke test on Bun 1.4.3 and Deno 2.9.7 on Linux: `MemoryStore`, the default
+checks, an allowed decision, a budget commit and rejections for budget and consent.
+This does not cover the CLI, `SqliteStore`, external stores, adapters or Workers.
+The separate static import-graph check rejects Node builtins reachable from the
+main entry; it leaves lazy imports alone. With Bun and Deno installed, reproduce
+both checks with `npm ci --ignore-scripts && npm run build && sh scripts/smoke-runtimes.sh`.
+
+Framework-agnostic: the gate sits
 between "the model produced something" and "the user's phone buzzed", whichever
 model or framework produced it. Examples: [`examples/vercel-ai-sdk.ts`](examples/vercel-ai-sdk.ts),
 [`examples/mastra.ts`](examples/mastra.ts), [`examples/langgraph.ts`](examples/langgraph.ts), and a
