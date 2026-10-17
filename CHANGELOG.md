@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.8.2
+
+**The main entry is tested on Bun and Deno, and a Node-only import into it now fails CI.** A new
+`runtimes` job packs the package, installs the tarball into an empty project without registry
+access, and runs one decision fixture on Bun 1.4.3 and Deno 2.9.7: `MemoryStore` and the default
+checks, an allowed decision, a commit that consumes the budget, then a budget rejection and a
+consent rejection. The fixture also fails if any check skipped, so a runtime error cannot pass
+through the gate's fail-open handling unnoticed. Next to it, `scripts/check-main-imports.mjs`
+parses the packed main entry's static import graph without executing it and fails on any Node
+builtin, missing file, external import or path outside the package. The two halves are separate
+because Bun and Deno both implement `node:fs`: with `import "node:fs"` added to `src/gate.ts`,
+the decision fixture still passes on both runtimes and only the graph check fails. The README
+names the tested runtimes and what the test does not cover (the CLI, `SqliteStore`, external
+stores, adapters and Workers). By @siddiksawani (#76, closes #70), who first showed that the
+issue's own acceptance test could never fail.
+
 ## 0.8.1 (2026-10-14)
 
 **`explain()` reads a crafted dismissal-cooldown reason in linear time.** The pattern that reads
