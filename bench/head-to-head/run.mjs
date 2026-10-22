@@ -29,6 +29,10 @@ const model = args.model ?? "sonnet";
 const timeoutMs = Number(args["timeout-min"] ?? 15) * 60_000;
 const need = (name) => { const v = process.env[name]; if (!v) throw new Error(`${name} is not set`); return v; };
 const nodeBin = need("H2H_NODE_BIN");
+// Round 5: every `claude -p` goes through this binary (the Agent SDK shim) when H2H_CLAUDE_BIN is set; the child PATH does not contain the shim.
+const claudeBin = process.env.H2H_CLAUDE_BIN || "claude";
+// Round 5: a task set kept outside this folder (prompts/, fixtures/ of that folder) is used when H2H_TASKS_DIR is set.
+const tasksRoot = process.env.H2H_TASKS_DIR || here;
 if (arms.includes("ours")) need("H2H_OURS_DIR"); // fail before any job starts, not in the middle of the queue
 
 const pluginDir = {
@@ -85,7 +89,7 @@ function prepare(job) {
   writeFileSync(join(work, "package.json"), JSON.stringify(pkg));
   writeFileSync(join(work, ".claude/settings.json"), JSON.stringify({ env: { PATH: pathFor(job.arm) } }));
   writeFileSync(join(out, "_home", `${job.name}.settings.json`), JSON.stringify({ env: { PATH: pathFor(job.arm) } }));
-  const fixture = join(here, "fixtures", job.task);
+  const fixture = join(tasksRoot, "fixtures", job.task);
   if (existsSync(fixture)) cpSync(fixture, work, { recursive: true });
   return work;
 }
@@ -101,12 +105,12 @@ function cleanEnv(home, arm) {
 function runJob(job) {
   assertUnchanged(`before ${job.name}`);
   const work = prepare(job);
-  const prompt = (invocation[job.arm] ?? "") + readFileSync(join(here, "prompts", `${job.task}.txt`), "utf8").trim();
+  const prompt = (invocation[job.arm] ?? "") + readFileSync(join(tasksRoot, "prompts", `${job.task}.txt`), "utf8").trim();
   mkdirSync(join(out, "runs"), { recursive: true });
   const log = join(out, "runs", `${job.name}.jsonl`);
   return new Promise((done) => {
     const started = Date.now();
-    const child = spawn("claude", ["-p", prompt, "--setting-sources", "project", "--settings", join(out, "_home", `${job.name}.settings.json`), "--plugin-dir", dirFor(job.arm), "--model", model, "--dangerously-skip-permissions", "--strict-mcp-config", "--output-format", "stream-json", "--verbose"],
+    const child = spawn(claudeBin, ["-p", prompt, "--setting-sources", "project", "--settings", join(out, "_home", `${job.name}.settings.json`), "--plugin-dir", dirFor(job.arm), "--model", model, "--dangerously-skip-permissions", "--strict-mcp-config", "--output-format", "stream-json", "--verbose"],
       { cwd: work, env: cleanEnv(fakeHome(job.name), job.arm), stdio: ["ignore", "pipe", "pipe"] });
     let text = "";
     child.stdout.on("data", (d) => (text += d));

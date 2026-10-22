@@ -11,7 +11,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv;
 const flag = (name, fallback) => (argv.includes(name) ? argv[argv.indexOf(name) + 1] : fallback);
 const out = resolve(flag("--out", ""));
-const labelsPath = resolve(flag("--labels", join(here, "labels.json")));
+const tasksRoot = process.env.H2H_TASKS_DIR || here; // Round 5: held-out task sets live outside this folder
+const labelsPath = resolve(flag("--labels", join(tasksRoot, "labels.json")));
 const nodeBin = process.env.H2H_NODE_BIN;
 if (!nodeBin) throw new Error("H2H_NODE_BIN is not set");
 const labels = existsSync(labelsPath) ? JSON.parse(readFileSync(labelsPath, "utf8")) : {};
@@ -43,7 +44,7 @@ for (const m of metas) {
   let criteria = {};
   let detail = "no bot.mjs";
   {
-    const r = spawnSync(join(nodeBin, "node"), [join(here, "checkers", `${m.task}.mjs`), m.work], { encoding: "utf8", timeout: 240_000, env: { ...process.env, PATH: `${nodeBin}:${process.env.PATH}` } });
+    const r = spawnSync(join(nodeBin, "node"), [join(tasksRoot, "checkers", `${m.task}.mjs`), m.work], { encoding: "utf8", timeout: 240_000, env: { ...process.env, PATH: `${nodeBin}:${process.env.PATH}` } });
     const text = (r.stdout ?? "") + (r.stderr ?? "");
     const start = text.indexOf("{");
     const end = text.lastIndexOf("}");
@@ -54,7 +55,7 @@ for (const m of metas) {
   const full = entries.filter((e) => e.pass).length;
   const outcome = entries.filter((e) => e.pass && label(e) === "outcome").length;
   const outcomeMax = entries.filter((e) => label(e) === "outcome").length || (labels[m.task] ? Object.values(labels[m.task]).filter((l) => l.label === "outcome").length : 6);
-  const fixtureDir = join(here, "fixtures", m.task);
+  const fixtureDir = join(tasksRoot, "fixtures", m.task);
   const lines = countLines(m.work, new Set(existsSync(fixtureDir) ? readdirSync(fixtureDir) : []));
   let source = "";
   try { for (const f of readdirSync(m.work)) if (/\.(mjs|js|ts|py|go)$|^go\.mod$|^requirements/.test(f)) source += readFileSync(join(m.work, f), "utf8"); } catch {}
