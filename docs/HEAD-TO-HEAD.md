@@ -450,6 +450,99 @@ Not passed on either model.
 - Ceiling rule: Sonnet Z1 (other arms at 6.00, ours 5.00) fails.
 - Cost rule (mean cost per run not above the baseline's): fails on both models.
 
+## Round 4 measurement protocol (frozen 2026-10-22, owner decision)
+
+Written and committed before any round-4 benchmark run, and before any round-4 result is known. This section is not
+edited after results are seen; later facts go into a new section.
+
+### What stays the same and what is reused
+
+Tasks Z1 to Z6 are unchanged since the round-3 freeze: prompt text, fixtures, checker scripts, labels, scorer
+(`run.mjs`, `score.mjs`) and the Knock pin (`cc99682ed74ee34198602c7d28569bd1c5f309d3`) have no diff between commit
+`30fdfae` (round-3 build) and the commit that adds this section, except the adding of the Courier arms to `run.mjs`
+(arm table only; the run, the checker and the scoring code are untouched). Models are `claude-sonnet-5-5` and
+`claude-haiku-5-5`, as in round 3. Source round: round 3, results commit `5f4a3f8` (tables in
+`bench/head-to-head/results/round3-sonnet/` and `round3-haiku/`).
+
+Rule for this round:
+
+- On Z1 to Z6, the cells of `baseline`, `knock` and `knock-inv` are not run again. They are taken unchanged from round 3
+  and marked "r3 reused" in the results table. Only `ours` is run again, 3 runs per task and model, and graded by the
+  same checkers.
+- Courier arms are new (see below), so they have no earlier score: all of their cells are run, 3 runs per task and model.
+- Rule A, Rule B, the ceiling rule and the cost rule are computed exactly as in round 3, over all arms present
+  (ours, baseline, knock, knock-inv, courier, courier-inv). The baseline cost per run is also taken from round 3
+  (Sonnet 0.140 USD, Haiku 0.020 USD).
+- The final gate (held-out tasks, Haiku and Opus runs, independent 10 percent audit) is exempt: all arms run in full.
+- If a cell of a reused arm has no stored score in this repository, that task is run for all arms. (All 72 reused
+  cells below exist.)
+
+Disclosed limits of reusing cells: the round-3 cells ran in a Linux cloud container on the cloud session's plan; the
+round-4 `ours` cells and all Courier cells run on macOS with the organisation's API key. Wall time and turn counts are
+therefore not comparable across the two groups and are not used in any rule. The pass/fail checkers run the produced
+code the same way in both. Three runs per cell measure variance only roughly.
+
+### Reused cells (round 3, outcome criteria, per-run scores)
+
+Sonnet (`claude-sonnet-5-5`):
+
+| task | baseline | knock-inv | knock |
+|---|---|---|---|
+| z1 | 6.00 [6, 6, 6] | 6.00 [6, 6, 6] | 6.00 [6, 6, 6] |
+| z2 | 4.00 [5, 3, 4] | 4.00 [4, 4, 4] | 4.67 [4, 4, 6] |
+| z3 | 3.00 [4, 5, 0] | 3.00 [0, 4, 5] | 4.33 [4, 6, 3] |
+| z4 | 2.00 [2, 2, 2] | 2.00 [2, 2, 2] | 2.67 [4, 2, 2] |
+| z5 | 4.00 [4, 4, 4] | 3.00 [3, 3, 3] | 4.00 [4, 4, 4] |
+| z6 | 5.00 [5, 5, 5] | 5.00 [5, 5, 5] | 4.00 [4, 4, 4] |
+
+Haiku (`claude-haiku-5-5`):
+
+| task | baseline | knock-inv | knock |
+|---|---|---|---|
+| z1 | 5.67 [6, 6, 5] | 4.00 [6, 0, 6] | 5.67 [5, 6, 6] |
+| z2 | 4.00 [4, 4, 4] | 4.67 [5, 4, 5] | 4.67 [5, 5, 4] |
+| z3 | 4.00 [4, 4, 4] | 5.00 [5, 6, 4] | 3.67 [5, 3, 3] |
+| z4 | 3.33 [4, 2, 4] | 2.67 [2, 2, 4] | 2.00 [2, 2, 2] |
+| z5 | 4.00 [4, 4, 4] | 4.00 [4, 4, 4] | 4.00 [4, 4, 4] |
+| z6 | 4.33 [4, 4, 5] | 4.00 [4, 4, 4] | 4.33 [4, 4, 5] |
+
+### Competitor scope (research of 2026-10-22, `docs/RESEARCH-ROUND4.md`)
+
+Searched: GitHub, awesome lists and skill directories, npm/PyPI, Hugging Face, the Claude Code plugin ecosystem and
+arXiv. The three strongest alternatives to the user problem, besides Knock skills (already an arm): Courier skills
+(MIT), notifkit (MIT), aaron-marketing-skills `preference-frequency-manager` (Apache-2.0). notifyd (MIT) and the
+OneSignal agent plugin were also considered.
+
+New arms, decided here before any run:
+
+- `courier` and `courier-inv`: trycourier/courier-skills at commit `18c7bcbeee6d5deb58a0d9dfec9ded4f960b2132`
+  (MIT, plugin version 1.8.1), skill-only, the same way Knock runs: the repository is exported with `git archive` at
+  that commit, only `skills/courier` is placed in a generated local plugin directory with a minimal manifest, the
+  Courier docs MCP server is not started (`--strict-mcp-config`) and no `COURIER_API_KEY` is set. The invoked
+  arm prepends: "Use the courier skill from the Courier skills plugin for this. ". Installation by marketplace or
+  `npx skills add` is not used, because both write user-level configuration. The hash guard on the real `hooks` and
+  `mcpServers` runs before and after every job, as for every other arm. The code is only read and used as text.
+- Not added: notifkit and notifyd (they need PostgreSQL or Redis and a running service, so an arm would measure
+  infrastructure setup, not the gate), the aaron skill (marketing-email strategy text with no code and no send caps; it
+  is listed here as the third alternative and not run), OneSignal (needs a hosted account). Vaara is never run.
+
+Scope of any "first" or "best" claim after this round: only the arms run on Z1 to Z6 with the models run. That is plain
+Claude, Knock skills (plain and invoked), Courier skills (plain and invoked) and our plugin. Notifkit, notifyd, the
+aaron skill, Novu, SuprSend, MagicBell, OneSignal and other hosted vendors are outside the claim. The search for
+alternatives was done by web search and GitHub pages, not by direct npm, PyPI or Hugging Face registry queries, so no
+claim of "the only one" is made.
+
+### Runs, order, stop rule
+
+1. Haiku, `ours` and both Courier arms, Z1 to Z6, 3 runs each, as a direction check. If the gate cannot pass on
+   Haiku, one product iteration is allowed, and every build that was measured is reported with its commit.
+2. Sonnet with the final build, the same set of arms.
+3. Scoring is the unchanged `score.mjs`; every criterion is labelled "outcome". The results table marks reused cells
+   "r3 reused".
+4. Parallelism 2. A cell that fails for a rate limit or API error is deleted and run again, never graded.
+5. Spending: the sum of `total_cost_usd` over all headless runs of this session is capped at 30 USD; no new run starts
+   at 24.0 USD.
+
 ## Rulings
 
 - 2026-10-21, Vaara is not run. It is listed as "not run: rewrites the global Claude Code config, unsafe to execute
