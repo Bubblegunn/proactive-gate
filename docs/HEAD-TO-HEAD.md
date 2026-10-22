@@ -716,3 +716,31 @@ The shim writes JSON with a space after the colon; `run.mjs` was fixed to read c
    measured cost of the previous batch) exceeds 24 USD. A run with a 429 or an authentication error stops everything and is reported.
    A cell lost to a rate limit or API error is deleted and run again, never graded.
 8. Claim scope: only the arms run, the tasks run, the models run and the date. The held-out set seen once is not held-out again.
+
+## Results, round 5 (held-out set, Haiku and Sonnet; public set not run)
+
+Date 2026-10-22. Build under test `5dbfaf3` (protocol frozen in `6140b94`, before the product change). Held-out set: five new tasks
+g1 to g5 (6 outcome criteria each), written by an agent that saw neither the code nor these documents (branch
+`heldout-2026-10-b`, commit `bd10f56`, published in the evidence folder now that it has been used). Six arms, 3 runs per cell, 90 cells
+per model, all on the Claude Agent SDK path, no cell reused, scoring by the task checkers. Evidence folder, with every cell
+(redacted), the grades, `score.py` (recomputes every number below; `python3 score.py --check SUMMARY.md` passes), arms, environment,
+reproduction and verification steps and `SHA256SUMS`: `bench/head-to-head/results/round5-heldout/`.
+
+| model | ours | baseline | knock | knock-inv | courier | courier-inv | gate |
+|---|---|---|---|---|---|---|---|
+| Haiku (30 max) | 28.00 | 25.33 | 25.33 | 27.00 | 24.67 | 27.00 | PASS |
+| Sonnet (30 max) | 27.00 | 28.33 | 28.00 | 27.00 | 29.00 | 28.00 | FAIL |
+
+Per task (ours, best other arm), Haiku: g1 4.00 against 3.00; g2 6.00 (knock-inv and courier-inv also 6.00); g3, g4, g5 all arms 6.00.
+Sonnet: g1 3.00 against 5.00 (baseline and courier); g2 to g5 all at the maximum except baseline on g2 (5.33).
+
+- Haiku: Rule B passes on every task (ties at the maximum count, as the rule says), Rule A passes (lost 2.00 against 3.00 for the best
+  other arm; limit 2.40), cost rule passes (ours 0.010 USD per run, baseline 0.012).
+- Sonnet: Rule B fails on g1 (3.00 against 5.00), Rule A fails (lost 3.00 against 1.00 for courier; limit 0.80), cost rule fails
+  (ours 0.095 USD per run, baseline 0.093; 1.02 times). The gate is not passed, so the public set Z1 to Z6, F6 and F9 were not run.
+- Three of the five tasks are saturated (every arm at 6.00 on both models); the Haiku result rests on g1 and g2.
+- g1 post-hoc (not a rule): Sonnet's ours cells all refused daytime marketing texts with a rule the task never stated (an opt-out notice required in
+  the message body), so three criteria failed for one reason. The checklist rules of `5dbfaf3` do not forbid adding such a block.
+- Ours never wrote the library into a solution (0 of 15 on each model); it wrote 94 lines on Haiku against 120 for baseline, 68 against 86 on Sonnet.
+- Departures from the protocol, harness fixes and the two API keys used during the run are listed in `results/round5-heldout/SUMMARY.md`.
+- Claim scope: no claim of "first" or "best". On this held-out set the plugin beats every other arm's total on Haiku and loses to four of five other arms on Sonnet.

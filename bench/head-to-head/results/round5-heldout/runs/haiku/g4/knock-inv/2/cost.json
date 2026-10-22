@@ -1,0 +1,18 @@
+{
+ "model": "haiku",
+ "modelId": "claude-haiku-5-5",
+ "set": "heldout",
+ "task": "g4",
+ "arm": "knock-inv",
+ "rep": 2,
+ "costUsd": 0.014601755,
+ "turns": 11,
+ "seconds": 76,
+ "skillCalls": 1,
+ "exitCode": 0,
+ "sessionId": "6b9e4512-be39-4207-97a7-8c8dfe2e7b6f",
+ "startedAt": "2026-10-22T20:34:59.280Z",
+ "finishedAt": "2026-10-22T20:36:09.860Z",
+ "codeFiles": 3,
+ "codeSkipped": []
+}

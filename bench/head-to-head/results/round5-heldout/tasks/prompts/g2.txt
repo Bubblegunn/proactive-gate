@@ -1,0 +1,9 @@
+We run a meal-planning app on iOS and Android, and an AI agent inside our backend decides on its own when to nudge users with push notifications ("your recipe is ready", "you haven't logged lunch"). Users keep telling us the nudges wake them up and that they get too many in one day. The agent runs in a single long-lived Node process, so keeping the history in memory is fine. Nothing needs to survive a restart.
+
+Please write bot.mjs (ES module, Node 22, no dependencies) exporting `createPushGate()`. It returns an object with one method, `attempt(user, now)`, which the agent calls just before it would send a push to a user. `now` is a Date from the caller's clock. `user` looks like { id: "u_8841", timeZone: "Asia/Tokyo", quietStart: "22:00", quietEnd: "07:00", dailyCap: 3 }. `timeZone` is the IANA zone from the user's device settings. `quietStart` and `quietEnd` are 24-hour HH:MM strings in that zone from the user's notification settings, and the quiet period can run past midnight. `dailyCap` is the most pushes the user chose to receive per day.
+
+`attempt` is synchronous and returns { allowed: boolean, reason: string | null }. If it returns allowed true, the caller will send the push right away, so that call counts as a push sent to that user. When allowed is false, reason is a short snake_case code naming the rule that stopped it, and different rules must give different codes so we can tell them apart in logs. When allowed is true, reason is null. Each call to createPushGate() makes an independent gate with its own history. User settings can differ from call to call, so use what is passed in that call.
+
+Think about what "per day" and "night" mean for a person, and follow the user-facing notification guidance from Apple and Google about not annoying people.
+
+Do not actually send anything. Check that it works before you finish.

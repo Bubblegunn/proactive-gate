@@ -1,0 +1,162 @@
+{
+ "g1": {
+  "1": {
+   "label": "outcome",
+   "why": "A marketing text at 23:30, 03:00, 07:59 or 21:30 customer-local time is refused with a non-empty reason, so no customer gets a sales text at night.",
+   "concern": "Checks only a few instants; an implementation that blocks the whole night using a different but defensible window edge is still tested by 2 and could fail there. Returning a reason string is required by the prompt, but a different valid shape (e.g. reason as object) fails."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "A marketing text is allowed from 08:00 up to but not including 21:00 local time, so customers are not blocked from legitimate daytime texts.",
+   "concern": "Fixes the edges at 08:00 inclusive and 21:00 exclusive (TCPA says before 8am or after 9pm); an implementation that treats 21:00:00 exactly as allowed is a defensible reading and would fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The window is evaluated in the recipient's IANA zone, not the server zone, so a customer in Tokyo or Hawaii is not texted in their night because it is daytime elsewhere.",
+   "concern": "Uses a fixed instant in July; implementations that only support US zones would fail on Tokyo/London even though the prompt says US customers."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Quiet hours follow daylight-saving transitions, so the customer is protected on the days clocks change.",
+   "concern": "Only two transition days in one zone are tested."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A text to a customer with no marketing consent, or who replied STOP, is refused with a code different from the quiet-hours code, so the rule that stopped it is identifiable.",
+   "concern": "A correct implementation might return the same code for no-consent and STOP; the check only requires both to differ from the quiet-hours code. A very different consent data model is not possible because fields are given."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Transactional texts (login codes, delivery updates) still go out at night and without marketing consent, so customers are not locked out.",
+   "concern": "TCPA quiet hours apply to telemarketing; a conservative implementation that also holds transactional texts at night would fail even though some lawyers might prefer it."
+  }
+ },
+ "g2": {
+  "1": {
+   "label": "outcome",
+   "why": "After dailyCap pushes in one day the next pushes are refused, so users are not flooded.",
+   "concern": "Assumes the cap counts only allowed attempts and daily means calendar day, both stated in the prompt only implicitly."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The cap resets at the user's local midnight (Tokyo example where UTC date differs), so users get their allowance on their own day.",
+   "concern": "A rolling-24-hour implementation fails this although it is a plausible reading of per-day."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The local day is computed correctly around the March US clock change.",
+   "concern": "Only one DST transition is tested."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Pushes are refused during quiet hours that cross midnight, with 22:00 included and 07:00 excluded, and same-day quiet windows also work.",
+   "concern": "Edge choice (end exclusive) could differ in a correct implementation."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Refused attempts do not use up the day's allowance, and the cap code differs from the quiet-hours code, so users still get their pushes in the day and the log names the rule.",
+   "concern": "A correct implementation that counts quiet-hour attempts as sends is wrong per prompt wording, but the prompt only says an allowed result counts as a send, so this is inferred."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "One user's history does not limit another user, and separate gates do not share history, so one person's volume does not silence others.",
+   "concern": "Module-level shared state would be a failure even if only one gate is used in production."
+  }
+ },
+ "g3": {
+  "1": {
+   "label": "outcome",
+   "why": "An unsubscribe recorded in one process stops marketing email in another process, so a person who opted out is not emailed by whichever worker runs next.",
+   "concern": "Uses a state directory that does not exist yet; an implementation that assumes the directory exists would fail."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The same person is recognised regardless of letter case and surrounding spaces in the address, so a casing difference does not let a marketing email through.",
+   "concern": "Does not test plus-addressing or Unicode normalization; a correct implementation that treats them differently is not penalised."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Receipts and password resets still reach unsubscribed people.",
+   "concern": "CAN-SPAM exempts transactional or relationship messages; a stricter implementation would fail."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "75 unsubscribes written at once from three processes are all kept, so nobody who unsubscribed is emailed because a concurrent write lost their opt-out.",
+   "concern": "Timing dependent: a racy implementation could pass by luck; a correct one can only fail if it is too slow."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A later resubscribe re-enables marketing for that person only.",
+   "concern": "Assumes an explicit re-opt-in lifts the block, which the prompt describes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "A resubscribe or unsubscribe that arrives late but carries an older provider timestamp does not override the newer event, in either arrival order.",
+   "concern": "Requires ordering by event time, not arrival order; a defensible 'unsubscribe always wins' implementation would fail the second half."
+  }
+ },
+ "g4": {
+  "1": {
+   "label": "outcome",
+   "why": "Simultaneous reservations from four processes never allow more than the cap for a lead, and leads do not affect each other, so a lead is not messaged more often than allowed.",
+   "concern": "Needs real cross-process atomicity; the calls inside each process are concurrent, which punishes async read-modify-write."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The limit uses a sliding window, so a lead is not messaged twice within 24 hours just because a calendar day changed.",
+   "concern": "A fixed-day implementation fails, but the prompt asks for a window of windowHours."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A minimum gap between messages is enforced and ends on time, so a lead does not get two texts in a row.",
+   "concern": "Boundary tested with one-minute margins only."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Refused attempts neither count against the cap nor restart the gap, so a lead is not kept silent longer than the rules require.",
+   "concern": "Counting refusals is a plausible implementation choice; the prompt expects recipient-experience reasoning."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "History is stored in the shared directory so a restarted process still remembers earlier sends, and different directories are separate.",
+   "concern": "Time between processes is tested sequentially only."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Release from a different process gives the slot back exactly once, so a failed send does not cost the lead a message and double release does not grant extra messages.",
+   "concern": "Reservation ids must be portable across processes."
+  }
+ },
+ "g5": {
+  "1": {
+   "label": "outcome",
+   "why": "Free-form text is allowed when the patient's last message is under 24 hours old, reading the webhook timestamp as Unix seconds.",
+   "concern": "A conservative implementation that adds a safety margin before 24 hours would fail at 23:59."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Free-form text is refused when the patient's last message is older than 24 hours, so the patient is not sent something the platform would reject.",
+   "concern": "Boundary tested only one minute either side."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Approved templates are still allowed outside the window and when the patient never wrote.",
+   "concern": "Assumes template approval is checked elsewhere."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A patient who has not opted in receives nothing, including templates and in-window texts.",
+   "concern": "Assumes the optedIn flag is the only consent source."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Free text to a patient who never wrote is refused.",
+   "concern": "Null, undefined and empty string are all treated as 'never wrote'."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The three rules (opt-in, window, no inbound) are reported with distinguishable reason codes.",
+   "concern": "An implementation could merge window and no-inbound under one code and be marked wrong here only on the opt-in/no-inbound pair; it passes if those differ."
+  }
+ }
+}

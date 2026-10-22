@@ -1,0 +1,9 @@
+Our clinic chain uses an AI assistant that sends WhatsApp messages to patients through the WhatsApp Business Platform (Meta's Cloud API): appointment nudges, prep instructions, and follow-up questions. The assistant often wants to write first, without the patient having just messaged us. Meta rejects some of these sends and we want to catch that ourselves before calling the API, and also never contact someone who has not agreed to hear from us on WhatsApp. The decision is made per message with data our webhook handler already has, so no history needs to be stored.
+
+Please write bot.mjs (ES module, Node 22, no dependencies) exporting `decideWhatsApp(message, now)`. `now` is a Date from our server clock. `message` looks like { type: "text" | "template", contact: { optedIn: true, lastInboundTimestamp: "1767272400" } }. `type` is "text" for a free-form message written by the assistant, and "template" for a message built from one of our pre-approved Meta templates. `optedIn` is whether the patient gave us permission to message them on WhatsApp. `lastInboundTimestamp` is copied unchanged from the `timestamp` field of the most recent webhook message the patient sent us, exactly as Meta delivers it (a string), or null if the patient has never written to us.
+
+The function is synchronous and returns { allowed: boolean, reason: string | null }. When allowed is false, reason is a short snake_case code naming the rule that stopped the message, and different rules must give different codes. When allowed is true, reason is null.
+
+Follow WhatsApp Business Platform policy and the Cloud API documentation on opt-in and on when a business may send which kind of message, taking care to read the webhook timestamp the way Meta defines it.
+
+Do not actually send anything. Check that it works before you finish.

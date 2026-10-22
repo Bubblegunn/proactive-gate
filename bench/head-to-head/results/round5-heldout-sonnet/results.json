@@ -1,0 +1,5222 @@
+[
+ {
+  "arm": "baseline",
+  "task": "g1",
+  "rep": 1,
+  "name": "baseline-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g1-1",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.1315984,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 149,
+  "locAll": 149,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g1",
+  "rep": 2,
+  "name": "baseline-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g1-2",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.13501680000000002,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 72,
+  "locAll": 72,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g1",
+  "rep": 3,
+  "name": "baseline-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g1-3",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.1131686,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 125,
+  "locAll": 125,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g2",
+  "rep": 1,
+  "name": "baseline-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g2-1",
+  "code": 0,
+  "seconds": 40,
+  "costUsd": 0.0986715,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g2",
+  "rep": 2,
+  "name": "baseline-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g2-2",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.0907775,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": false,
+    "why": "FAIL [[{\"allowed\":true,\"reason\":null},{\"allowed\":false,\"reason\":\"too_soon_after_last_push\"},{\"allowed\":false,\"reason\":\"too_soon_after_last_push\"}],{\"allowed\":true,\"reason\":null},{\"allowed\":true,\"reason\":null},{\"allowed\":true,\"reason\":null}]"
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": false,
+    "why": "FAIL [[{\"allowed\":true,\"reason\":null},{\"allowed\":false,\"reason\":\"too_soon_after_last_push\"},{\"allowed\":false,\"reason\":\"too_soon_after_last_push\"}],{\"allowed\":true,\"reason\":null},{\"allowed\":true,\"reason\":null}]"
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g2",
+  "rep": 3,
+  "name": "baseline-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g2-3",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.08976319999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 73,
+  "locAll": 73,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g3",
+  "rep": 1,
+  "name": "baseline-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g3-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.08979069999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 92,
+  "locAll": 92,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g3",
+  "rep": 2,
+  "name": "baseline-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g3-2",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.0846381,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 68,
+  "locAll": 68,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g3",
+  "rep": 3,
+  "name": "baseline-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g3-3",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.0870463,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g4",
+  "rep": 1,
+  "name": "baseline-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g4-1",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.09695219999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 123,
+  "locAll": 123,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g4",
+  "rep": 2,
+  "name": "baseline-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g4-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.088758,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 108,
+  "locAll": 108,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g4",
+  "rep": 3,
+  "name": "baseline-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g4-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.08520130000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 110,
+  "locAll": 110,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g5",
+  "rep": 1,
+  "name": "baseline-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g5-1",
+  "code": 0,
+  "seconds": 23,
+  "costUsd": 0.0631865,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 32,
+  "locAll": 32,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g5",
+  "rep": 2,
+  "name": "baseline-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g5-2",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.0723255,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "g5",
+  "rep": 3,
+  "name": "baseline-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/baseline-g5-3",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.0705104,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 39,
+  "locAll": 39,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g1",
+  "rep": 1,
+  "name": "courier-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g1-1",
+  "code": 0,
+  "seconds": 65,
+  "costUsd": 0.1454617,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 78,
+  "locAll": 78,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g1",
+  "rep": 2,
+  "name": "courier-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g1-2",
+  "code": 0,
+  "seconds": 64,
+  "costUsd": 0.1489793,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 109,
+  "locAll": 109,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g1",
+  "rep": 3,
+  "name": "courier-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g1-3",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.1272029,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 78,
+  "locAll": 78,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g2",
+  "rep": 1,
+  "name": "courier-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g2-1",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.10986620000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 89,
+  "locAll": 89,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g2",
+  "rep": 2,
+  "name": "courier-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g2-2",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.08933070000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 74,
+  "locAll": 74,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g2",
+  "rep": 3,
+  "name": "courier-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g2-3",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.09542300000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 91,
+  "locAll": 91,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g3",
+  "rep": 1,
+  "name": "courier-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g3-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.090037,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g3",
+  "rep": 2,
+  "name": "courier-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g3-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.07777930000000001,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 80,
+  "locAll": 80,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g3",
+  "rep": 3,
+  "name": "courier-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g3-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.0826695,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 84,
+  "locAll": 84,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g4",
+  "rep": 1,
+  "name": "courier-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g4-1",
+  "code": 0,
+  "seconds": 40,
+  "costUsd": 0.0849154,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 119,
+  "locAll": 119,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g4",
+  "rep": 2,
+  "name": "courier-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g4-2",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.09053510000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 120,
+  "locAll": 120,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g4",
+  "rep": 3,
+  "name": "courier-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g4-3",
+  "code": 0,
+  "seconds": 41,
+  "costUsd": 0.08685499999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 116,
+  "locAll": 116,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g5",
+  "rep": 1,
+  "name": "courier-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g5-1",
+  "code": 0,
+  "seconds": 25,
+  "costUsd": 0.06479270000000001,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g5",
+  "rep": 2,
+  "name": "courier-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g5-2",
+  "code": 0,
+  "seconds": 23,
+  "costUsd": 0.0642402,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 32,
+  "locAll": 32,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "g5",
+  "rep": 3,
+  "name": "courier-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-g5-3",
+  "code": 0,
+  "seconds": 23,
+  "costUsd": 0.0634047,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 31,
+  "locAll": 31,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g1",
+  "rep": 1,
+  "name": "courier-inv-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g1-1",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.19392650000000006,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 92,
+  "locAll": 92,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g1",
+  "rep": 2,
+  "name": "courier-inv-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g1-2",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.15222650000000001,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 101,
+  "locAll": 101,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"marketing_missing_opt_out\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"marketing_missing_opt_out\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"marketing_missing_opt_out\"},{\"allowed\":false,\"reason\":\"marketing_quiet_hours\"},{\"allowed\":false,\"reason\":\"marketing_quiet_hours\"},{\"allowed\":false,\"reason\":\"marketing_missing_opt_out\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g1",
+  "rep": 3,
+  "name": "courier-inv-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g1-3",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.16786169999999997,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 113,
+  "locAll": 113,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g2",
+  "rep": 1,
+  "name": "courier-inv-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g2-1",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.1338414,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 82,
+  "locAll": 82,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g2",
+  "rep": 2,
+  "name": "courier-inv-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g2-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.14124099999999998,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 71,
+  "locAll": 71,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g2",
+  "rep": 3,
+  "name": "courier-inv-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g2-3",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1372983,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 70,
+  "locAll": 70,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g3",
+  "rep": 1,
+  "name": "courier-inv-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g3-1",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1457034,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 108,
+  "locAll": 108,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g3",
+  "rep": 2,
+  "name": "courier-inv-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g3-2",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.11172549999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g3",
+  "rep": 3,
+  "name": "courier-inv-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g3-3",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.10766350000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g4",
+  "rep": 1,
+  "name": "courier-inv-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g4-1",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.13749029999999998,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 112,
+  "locAll": 112,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g4",
+  "rep": 2,
+  "name": "courier-inv-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g4-2",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.14452289999999998,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 129,
+  "locAll": 129,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g4",
+  "rep": 3,
+  "name": "courier-inv-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g4-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.11461949999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 116,
+  "locAll": 116,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g5",
+  "rep": 1,
+  "name": "courier-inv-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g5-1",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.0957251,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 38,
+  "locAll": 38,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g5",
+  "rep": 2,
+  "name": "courier-inv-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g5-2",
+  "code": 0,
+  "seconds": 24,
+  "costUsd": 0.1004716,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 37,
+  "locAll": 37,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "g5",
+  "rep": 3,
+  "name": "courier-inv-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/courier-inv-g5-3",
+  "code": 0,
+  "seconds": 29,
+  "costUsd": 0.1130641,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 30,
+  "locAll": 30,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g1",
+  "rep": 1,
+  "name": "knock-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g1-1",
+  "code": 0,
+  "seconds": 67,
+  "costUsd": 0.1615401,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 162,
+  "locAll": 162,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"outside_calling_hours\"},{\"allowed\":false,\"reason\":\"outside_calling_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g1",
+  "rep": 2,
+  "name": "knock-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g1-2",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1134326,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 76,
+  "locAll": 76,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g1",
+  "rep": 3,
+  "name": "knock-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g1-3",
+  "code": 0,
+  "seconds": 55,
+  "costUsd": 0.12903489999999998,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 73,
+  "locAll": 73,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g2",
+  "rep": 1,
+  "name": "knock-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g2-1",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1144283,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g2",
+  "rep": 2,
+  "name": "knock-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g2-2",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0948977,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 76,
+  "locAll": 76,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g2",
+  "rep": 3,
+  "name": "knock-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g2-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.1133082,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 93,
+  "locAll": 93,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g3",
+  "rep": 1,
+  "name": "knock-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g3-1",
+  "code": 0,
+  "seconds": 30,
+  "costUsd": 0.0759022,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 77,
+  "locAll": 77,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g3",
+  "rep": 2,
+  "name": "knock-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g3-2",
+  "code": 0,
+  "seconds": 29,
+  "costUsd": 0.07704720000000001,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g3",
+  "rep": 3,
+  "name": "knock-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g3-3",
+  "code": 0,
+  "seconds": 30,
+  "costUsd": 0.0733657,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g4",
+  "rep": 1,
+  "name": "knock-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g4-1",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0842582,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 118,
+  "locAll": 118,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g4",
+  "rep": 2,
+  "name": "knock-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g4-2",
+  "code": 0,
+  "seconds": 41,
+  "costUsd": 0.08945819999999999,
+  "turns": 2,
+  "skillCalls": 0,
+  "loc": 110,
+  "locAll": 110,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g4",
+  "rep": 3,
+  "name": "knock-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g4-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.0962508,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 118,
+  "locAll": 118,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g5",
+  "rep": 1,
+  "name": "knock-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g5-1",
+  "code": 0,
+  "seconds": 25,
+  "costUsd": 0.0661621,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g5",
+  "rep": 2,
+  "name": "knock-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g5-2",
+  "code": 0,
+  "seconds": 24,
+  "costUsd": 0.0675411,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 34,
+  "locAll": 34,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock",
+  "task": "g5",
+  "rep": 3,
+  "name": "knock-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-g5-3",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0734087,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 34,
+  "locAll": 34,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g1",
+  "rep": 1,
+  "name": "knock-inv-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g1-1",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.1403917,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 138,
+  "locAll": 138,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g1",
+  "rep": 2,
+  "name": "knock-inv-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g1-2",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.1519221,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 119,
+  "locAll": 119,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g1",
+  "rep": 3,
+  "name": "knock-inv-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g1-3",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.1333084,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 126,
+  "locAll": 126,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g2",
+  "rep": 1,
+  "name": "knock-inv-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g2-1",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.13945589999999997,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 101,
+  "locAll": 101,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g2",
+  "rep": 2,
+  "name": "knock-inv-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g2-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1411844,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g2",
+  "rep": 3,
+  "name": "knock-inv-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g2-3",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1389605,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 87,
+  "locAll": 87,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g3",
+  "rep": 1,
+  "name": "knock-inv-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g3-1",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.09767819999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 63,
+  "locAll": 63,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g3",
+  "rep": 2,
+  "name": "knock-inv-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g3-2",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.1087556,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g3",
+  "rep": 3,
+  "name": "knock-inv-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g3-3",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.1095215,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 81,
+  "locAll": 81,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g4",
+  "rep": 1,
+  "name": "knock-inv-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g4-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.1087704,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 122,
+  "locAll": 122,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g4",
+  "rep": 2,
+  "name": "knock-inv-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g4-2",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.1419119,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 146,
+  "locAll": 146,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g4",
+  "rep": 3,
+  "name": "knock-inv-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g4-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.10652219999999998,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 108,
+  "locAll": 108,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g5",
+  "rep": 1,
+  "name": "knock-inv-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g5-1",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.08490120000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 51,
+  "locAll": 51,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g5",
+  "rep": 2,
+  "name": "knock-inv-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g5-2",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.07918819999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 35,
+  "locAll": 35,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "knock-inv",
+  "task": "g5",
+  "rep": 3,
+  "name": "knock-inv-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/knock-inv-g5-3",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.08266219999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 39,
+  "locAll": 39,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 1,
+  "name": "ours-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g1-1",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.1069764,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 49,
+  "locAll": 49,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 2,
+  "name": "ours-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g1-2",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.1295811,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 66,
+  "locAll": 66,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 3,
+  "name": "ours-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g1-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.11452899999999999,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 53,
+  "locAll": 53,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"quiet_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_notice\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 1,
+  "name": "ours-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g2-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.0870433,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 70,
+  "locAll": 70,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 2,
+  "name": "ours-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g2-2",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.11906889999999999,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 74,
+  "locAll": 74,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 3,
+  "name": "ours-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g2-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.1009047,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 68,
+  "locAll": 68,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 1,
+  "name": "ours-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g3-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.08020070000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 60,
+  "locAll": 60,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 2,
+  "name": "ours-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g3-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.0938225,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 87,
+  "locAll": 87,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 3,
+  "name": "ours-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g3-3",
+  "code": 0,
+  "seconds": 44,
+  "costUsd": 0.0912402,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 95,
+  "locAll": 95,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 1,
+  "name": "ours-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g4-1",
+  "code": 0,
+  "seconds": 41,
+  "costUsd": 0.09374619999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 91,
+  "locAll": 91,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 2,
+  "name": "ours-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g4-2",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.10279419999999999,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 101,
+  "locAll": 101,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 3,
+  "name": "ours-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g4-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.1003994,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 107,
+  "locAll": 107,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 1,
+  "name": "ours-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g5-1",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.0716126,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 36,
+  "locAll": 36,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 2,
+  "name": "ours-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g5-2",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.066279,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 36,
+  "locAll": 36,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 3,
+  "name": "ours-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round5-heldout-sonnet/work/ours-g5-3",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.06283549999999999,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 32,
+  "locAll": 32,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

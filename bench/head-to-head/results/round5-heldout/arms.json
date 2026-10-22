@@ -1,0 +1,65 @@
+{
+ "arms": [
+  {
+   "name": "ours",
+   "kind": "product under test",
+   "source": "https://github.com/Bubblegunn/proactive-gate",
+   "licence": "MIT",
+   "pinned": "5dbfaf3b3c16f99f02af5c30ccf35aab047c2835",
+   "install": "git archive of the commit, built, packed with npm pack; the archive is the plugin directory and the packed tarball is a file: dependency of the fixture",
+   "promptPrefix": "",
+   "invoked": false
+  },
+  {
+   "name": "baseline",
+   "kind": "control, empty plugin",
+   "source": "bench/head-to-head/arms/baseline in this repository",
+   "licence": "MIT",
+   "pinned": "5dbfaf3b3c16f99f02af5c30ccf35aab047c2835",
+   "install": "empty plugin directory bench/head-to-head/arms/baseline (manifest only)",
+   "promptPrefix": "",
+   "invoked": false
+  },
+  {
+   "name": "knock",
+   "kind": "competitor, task text alone",
+   "source": "https://github.com/knocklabs/skills",
+   "licence": "MIT License",
+   "pinned": "cc99682ed74ee34198602c7d28569bd1c5f309d3",
+   "install": "git clone at the pinned commit, used as a plugin directory, skills only (--strict-mcp-config, no MCP server)",
+   "promptPrefix": "",
+   "invoked": false
+  },
+  {
+   "name": "knock-inv",
+   "kind": "competitor, invoked",
+   "source": "https://github.com/knocklabs/skills",
+   "licence": "MIT License",
+   "pinned": "cc99682ed74ee34198602c7d28569bd1c5f309d3",
+   "install": "same plugin directory as knock",
+   "promptPrefix": "Use the knock-notification-best-practices skill from the Knock skills plugin for this. ",
+   "invoked": true
+  },
+  {
+   "name": "courier",
+   "kind": "competitor, task text alone",
+   "source": "https://github.com/trycourier/courier-skills",
+   "licence": "MIT (courier-skills, version 1.8.1)",
+   "pinned": "18c7bcbeee6d5deb58a0d9dfec9ded4f960b2132 (version 1.8.1)",
+   "install": "git archive of skills/courier and LICENSE at the pinned commit into a generated local plugin with a minimal manifest; MCP server not copied; --strict-mcp-config; no COURIER_API_KEY",
+   "promptPrefix": "",
+   "invoked": false
+  },
+  {
+   "name": "courier-inv",
+   "kind": "competitor, invoked",
+   "source": "https://github.com/trycourier/courier-skills",
+   "licence": "MIT (courier-skills, version 1.8.1)",
+   "pinned": "18c7bcbeee6d5deb58a0d9dfec9ded4f960b2132 (version 1.8.1)",
+   "install": "same generated plugin as courier",
+   "promptPrefix": "Use the courier skill from the Courier skills plugin for this. ",
+   "invoked": true
+  }
+ ],
+ "note": "Every other arm gets the task text alone. ours is this repository at the build sha; the COMMIT file of each result folder holds the full sha."
+}

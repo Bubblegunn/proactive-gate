@@ -1,0 +1,9 @@
+I'm building the SMS side of a retail app for customers in the United States. Our backend sends two kinds of texts: marketing texts (sales, coupons, back-in-stock nudges) that an AI agent decides to send on its own, and transactional texts (login codes, delivery updates) that the customer triggered by doing something in the app. Before anything goes to our SMS provider I need one function that says whether a given text may go out right now and, if not, which rule stopped it, so support can answer customer complaints.
+
+Please write bot.mjs (ES module, Node 22, no dependencies) exporting `checkSms(message, now)`. `now` is a Date. `message` looks like { kind: "marketing" | "transactional", body: "...", to: { phone: "+13125550142", timeZone: "America/Chicago", marketingConsent: true, optedOutAt: null } }. `timeZone` is the IANA zone of the customer's home from their profile. Our servers run in UTC and the server's own time zone must not matter. `marketingConsent` says whether the customer ticked our sign-up box for marketing texts. `optedOutAt` is null, or an ISO 8601 string for when the customer replied STOP.
+
+The function is synchronous and returns { allowed: boolean, reason: string | null }. When allowed is false, reason is a short snake_case code naming the rule that blocked the text, and different rules must give different codes. When allowed is true, reason is null.
+
+Please apply the US rules for telephone and text marketing (the FCC's TCPA rules in 47 CFR 64.1200 and the CTIA messaging principles) to these two kinds of text; our lawyers will ask us how the function follows them.
+
+Do not actually send anything. Check that it works before you finish.
