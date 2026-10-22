@@ -11,7 +11,7 @@
 // Vaara is not run: its first-run setup rewrote the global Claude Code configuration twice, even with a throw-away HOME.
 // The plugin directory for "ours" is H2H_OURS_DIR, never the working tree; "baseline" is arms/baseline (an empty plugin).
 import { spawn } from "node:child_process";
-import { mkdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, cpSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync, symlinkSync, cpSync, readdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { homedir } from "node:os";
 import { join, dirname, resolve } from "node:path";
@@ -72,6 +72,8 @@ function fakeHome(name) {
   const home = join(out, "_home", name);
   mkdirSync(join(home, "Library"), { recursive: true });
   try { symlinkSync(join(realHome, "Library/Keychains"), join(home, "Library/Keychains")); } catch {}
+  // The Agent SDK shim reads its key file from ~ (ACTIVE_KEY, for example ~/.anthropic_key_2); link it (no copy, no key in the results folder).
+  try { for (const f of readdirSync(realHome)) if (f.startsWith(".anthropic_key")) symlinkSync(join(realHome, f), join(home, f)); } catch {}
   return home;
 }
 
@@ -120,6 +122,10 @@ function runJob(job) {
       clearTimeout(timer);
       assertUnchanged(`after ${job.name}`);
       writeFileSync(log, text);
+      if (!/"type":\s*"result"/.test(text)) {
+        console.error(`STOP: ${job.name} produced no result message (the claude call failed before the task ran: ${text.slice(0, 200).replace(/\s+/g, " ")}). Nothing else is run; delete runs/${job.name}.* and run again.`);
+        process.exit(4);
+      }
       if (/You've hit your limit|"is_error":\s*true,\s*"duration_ms":\s*\d+,\s*"duration_api_ms":\s*0\b/.test(text)) {
         console.error(`STOP: ${job.name} failed because of an account limit or API error, not because of the task. Nothing else is run; delete runs/${job.name}.jsonl and run again.`);
         process.exit(4);
