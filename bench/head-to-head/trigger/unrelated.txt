@@ -1,0 +1,20 @@
+write a regex that validates an email address
+limit the number of rows returned by this SQL query to 50
+fix the slow push to git remote
+explain what a rate-limited API response 429 means for my fetch client
+Refactor the CSV parser so it returns typed errors.
+Explain how B-trees keep their height balanced.
+Add a dark mode toggle to the settings page.
+Show the error message from the failed build in a readable table.
+Why does git rebase say the branch has diverged?
+Set up Postgres indexes for the orders table.
+Create a loading skeleton for the product list.
+Summarise the changes in this pull request for the release notes.
+Our email templates render badly in Outlook; find the CSS that breaks the layout.
+Set a timeout of 30 seconds on the payment API client.
+Add pagination with a page size limit to the admin users table.
+Profile the image resize worker and find the hot loop.
+Migrate the user table to add a timezone column with a default of UTC.
+Write unit tests for the currency formatter.
+The consent form on the marketing site has broken spacing on mobile; fix it.
+A cron job failed in staging with a permissions error; show me the log lines around the failure.

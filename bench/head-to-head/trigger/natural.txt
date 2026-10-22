@@ -1,0 +1,10 @@
+Our onboarding agent should send a reminder push to users who have not finished setup, but never more than twice a week.
+Add a cron job that emails each customer a weekly digest, and skip anyone who opted out.
+Our bot messages users in Slack when a deploy fails; make sure it stays quiet at night.
+Write a script that texts drivers their pickup time, with a consent check before every SMS.
+The webhook fires for every order and sends a shipping alert email. Limit it to one per customer per day.
+Make the trial-ending nudges respect quiet hours in each user's own timezone.
+We keep getting complaints about too many notifications. Cap the marketing pushes at three per user a day.
+Build a follow-up email sequence, but stop sending as soon as someone replies STOP.
+Can you add a rule so the appointment reminder SMS never goes out before 8am or after 9pm local time?
+I want the agent to replay last week's notifications under a stricter limit to see how many would have been blocked.

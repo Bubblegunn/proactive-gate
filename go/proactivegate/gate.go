@@ -1,6 +1,8 @@
 package proactivegate
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"sync/atomic"
@@ -8,6 +10,20 @@ import (
 )
 
 const commitTTLSeconds = 2 * daySeconds
+
+// randRead is the entropy source for instance tokens. A variable so a test can make it fail.
+var randRead = rand.Read
+
+// newInstanceToken returns a token unique to one gate instance. Decision ids
+// carry it so two gates sharing a store never produce the same id. If the
+// entropy source fails, the token is the current time in nanoseconds.
+func newInstanceToken() string {
+	var b [16]byte
+	if _, err := randRead(b[:]); err != nil {
+		return fmt.Sprintf("%x", time.Now().UnixNano())
+	}
+	return hex.EncodeToString(b[:])
+}
 
 // Gate is a compiled policy: an ordered list of checks bound to a store.
 // Create one from explicit checks with NewGate, or from a JSON policy
@@ -18,6 +34,7 @@ type Gate struct {
 	inner        Store   // the caller's store, unprefixed
 	store        Store   // inner under the policy's key prefix
 	onStoreError string  // "open" or "closed"
+	instance     string  // unique per gate, prefixes the sequence in decision ids
 	sequence     atomic.Int64
 }
 
@@ -52,6 +69,7 @@ func NewGate(o GateOptions) *Gate {
 		inner:        store,
 		store:        prefixedStore{inner: store, prefix: prefix},
 		onStoreError: onStoreError,
+		instance:     newInstanceToken(),
 	}
 	for _, c := range g.checks {
 		if c.Consume != nil {
@@ -103,7 +121,7 @@ func (g *Gate) Evaluate(input EvaluateInput) *Decision {
 
 	finish := func(allowed bool, rejectedBy, deferredBy string, retryAt *time.Time, reason string, nextAllowedAt *time.Time) *Decision {
 		d := &Decision{
-			ID:          fmt.Sprintf("%s:%s:%s#%d", input.User.ID, input.Candidate.ID, isoMillis(now), g.sequence.Add(1)),
+			ID:          fmt.Sprintf("%s:%s:%s#%s-%d", input.User.ID, input.Candidate.ID, isoMillis(now), g.instance, g.sequence.Add(1)),
 			Allowed:     allowed,
 			UserID:      input.User.ID,
 			CandidateID: input.Candidate.ID,
@@ -150,6 +168,7 @@ func (g *Gate) Evaluate(input EvaluateInput) *Decision {
 			Priority:  priority,
 			Store:     g.store,
 			Surfaces:  surfaces,
+			Flags:     input.Flags,
 		}
 		outcome, err := check.Run(ctx)
 		ms := float64(time.Since(started).Microseconds()) / 1000
@@ -239,6 +258,7 @@ func (g *Gate) Commit(decision *Decision, input EvaluateInput) bool {
 			Priority:  priority,
 			Store:     g.store,
 			Surfaces:  decision.Surfaces,
+			Flags:     input.Flags,
 		}
 		ok, err := check.Consume(ctx)
 		if err != nil {
@@ -259,16 +279,35 @@ func (g *Gate) Commit(decision *Decision, input EvaluateInput) bool {
 	return commitOK
 }
 
-// Record tells the gate what happened after delivery so cooldowns can learn.
-// Only "dismissed" is recorded; other events are accepted and ignored.
-func (g *Gate) Record(userID, candidateType, event string, at time.Time) error {
-	if event != "dismissed" {
+// Record tells the gate what happened after delivery, so the dismissal
+// cooldown and the dead-hours check can learn (SPEC 9.11). "acted" and
+// "dismissed" count against the user's local hour, in the effective zone, for
+// 90 days; "dismissed" also records the dismissal the cooldown reads. "delivered"
+// and "ignored" are accepted and write nothing.
+// Record writes what the person did with a message: an hour counter for "acted" and "dismissed", and for
+// "dismissed" the dismissal that dismissalCooldown reads. An absent user, or a dismissal with no candidate, is
+// an error and writes nothing (SPEC 9.11).
+func (g *Gate) Record(user *UserState, candidate *Candidate, event string, at time.Time) error {
+	if event != "acted" && event != "dismissed" {
 		return nil
+	}
+	if user == nil {
+		return fmt.Errorf("record: no user")
+	}
+	if event == "dismissed" && candidate == nil {
+		return fmt.Errorf("record: a dismissal needs the candidate it dismissed")
 	}
 	if at.IsZero() {
 		at = time.Now()
 	}
-	key := dismissalKey(userID, candidateType)
+	hour := hourOfDay(at, effectiveZone(user))
+	if _, err := g.store.Incr(hoursKey(user.ID, hour, event), hourTTLSeconds); err != nil {
+		return err
+	}
+	if event != "dismissed" {
+		return nil
+	}
+	key := dismissalKey(user.ID, candidate.Type)
 	raw, ok, err := g.store.Get(key)
 	if err != nil {
 		return err

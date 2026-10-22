@@ -8,11 +8,13 @@ import json
 import math
 from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
+from zoneinfo import ZoneInfo
 
 from .clock import DAY_SECONDS, day_before, in_window, iso_week_key, local_clock, local_day, next_key_change, parse_hhmm, weekday_of
 from .types import (
     PASS,
+    Candidate,
     ConsumePlan,
     Context,
     NearLimit,
@@ -20,6 +22,9 @@ from .types import (
     Priority,
     QuietSchedule,
     QuietWindow,
+    UserState,
+    is_count,
+    to_datetime,
     at_least,
     defer,
     epoch_ms,
@@ -75,6 +80,88 @@ def _js_round(n: float) -> int:
     return math.floor(n + 0.5)
 
 
+def _evidence_count(value: object) -> float:
+    """A count the caller supplied as evidence: a finite JSON number, else zero (SPEC 9.9). A string is not a number."""
+    if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value):
+        return float(value)
+    return 0.0
+
+
+def _count(value: object) -> float:
+    """A count as a number, read the way the TypeScript package reads it: absent is zero, text is parsed,
+    and anything that is not a number is NaN, which makes a total not finite (SPEC 9.11)."""
+    if value is None:
+        return 0.0
+    if isinstance(value, (bool, int, float)):
+        return float(value)
+    if isinstance(value, str):
+        text = value.strip()
+        if text == "":
+            return 0.0
+        try:
+            return float(text)
+        except ValueError:
+            return math.nan
+    return math.nan
+
+
+def is_valid_zone(zone: object) -> bool:
+    """True when ``zone`` is an IANA name the runtime knows."""
+    if not isinstance(zone, str) or not zone:
+        return False
+    try:
+        ZoneInfo(zone)
+    except Exception:  # noqa: BLE001 - any failure to load the zone means it is not one
+        return False
+    return True
+
+
+def effective_zone(user: UserState) -> str | None:
+    """``deviceTimezone`` when valid, else ``timezone`` when valid, else none (SPEC 9.2)."""
+    if is_valid_zone(user.device_timezone):
+        return user.device_timezone
+    if is_valid_zone(user.timezone):
+        return user.timezone
+    return None
+
+
+def reported_zone(user: UserState) -> str | None:
+    """The zone quiet hours need under ``onMissingTimezone`` "reject": the placeholder "UTC" is no zone unless a valid device zone exists (SPEC 9.2.1)."""
+    if is_valid_zone(user.device_timezone):
+        return user.device_timezone
+    if is_valid_zone(user.timezone) and user.timezone != "UTC":
+        return user.timezone
+    return None
+
+
+def hour_of_day(now: datetime, zone: str | None) -> int:
+    """The local hour, 0 to 23, in ``zone``, or the UTC hour when there is no zone (SPEC 9.11)."""
+    if zone:
+        return local_clock(now, zone)[0] // 60
+    return now.astimezone(UTC).hour
+
+
+def is_commitment(candidate: Candidate) -> bool:
+    """Something the person set up, such as a reminder they asked for (SPEC 9.4)."""
+    return candidate.kind == "commitment"
+
+
+def not_promotional(candidate: Candidate) -> str | None:
+    """Why a candidate is not promotional (SPEC 9.7), or None when it may be promotion."""
+    if candidate.transactional is True:
+        return "transactional"
+    if candidate.requested is True:
+        return "requested"
+    if is_commitment(candidate):
+        return "commitment"
+    return None
+
+
+def hours_key(user_id: str, hour: int, outcome: str) -> str:
+    """The store key of one local hour's acted or dismissed count (SPEC 9.11)."""
+    return f"hours:{user_id}:{hour}:{outcome}"
+
+
 class KillSwitch(BaseCheck):
     id = "killSwitch"
 
@@ -87,10 +174,44 @@ class KillSwitch(BaseCheck):
 
 
 class Consent(BaseCheck):
+    """Consent, and what a failed consent lookup keeps open (SPEC 9.3).
+
+    ``fail_mode`` maps a surface to "open" or "closed", with an optional ``default``. Read only when
+    ``consentUnknown`` is true; a known consent is decided by ``consent`` alone.
+    """
+
     id = "consent"
 
+    def __init__(self, fail_mode: Mapping[str, str] | None = None) -> None:
+        self.fail_mode: Mapping[str, str] = fail_mode or {}
+
+    def _mode_for(self, surface: str) -> str:
+        if surface in self.fail_mode:
+            return self.fail_mode[surface]
+        return self.fail_mode.get("default", "closed")
+
     def run(self, ctx: Context, values: Values) -> Outcome:
-        return PASS if ctx.user.consent else reject("user has not consented to proactive behaviour")
+        if ctx.user.consent_unknown is not True:
+            return PASS if ctx.user.consent else reject("user has not consented to proactive behaviour")
+        open_surfaces = tuple(s for s in ctx.surfaces if self._mode_for(s) == "open")
+        if not open_surfaces:
+            return reject("consent could not be determined and no surface on the table fails open")
+        return Outcome("adjust", f"consent could not be determined; keeping {', '.join(open_surfaces)}", surfaces=open_surfaces)
+
+
+class KillSwitchFlag(BaseCheck):
+    """Rejects while the runtime flag ``name`` is exactly false (SPEC 9.13). An absent flag stops nothing."""
+
+    id = "killSwitch"
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        flags = ctx.flags or {}
+        if flags.get(self.name) is False:
+            return reject(f'kill switch is on: flag "{self.name}" is false')
+        return PASS
 
 
 class Enabled(BaseCheck):
@@ -136,6 +257,8 @@ class Mute(BaseCheck):
     id = "mute"
 
     def run(self, ctx: Context, values: Values) -> Outcome:
+        if is_commitment(ctx.candidate):
+            return PASS
         if ctx.candidate.type in ctx.user.muted_types:
             return reject(f'type "{ctx.candidate.type}" is muted by the user')
         return PASS
@@ -220,18 +343,27 @@ def quiet_ends_at(quiet: QuietWindow | QuietSchedule, tz: str, now: datetime) ->
 
 
 class QuietHours(BaseCheck):
+    """Quiet hours in the user's effective zone (SPEC 9.2). ``on_missing_timezone`` is "skip" (the default) or "reject"."""
+
     id = "quietHours"
 
-    def __init__(self, priority_floor: str = "critical") -> None:
+    def __init__(self, priority_floor: str = "critical", on_missing_timezone: str = "skip") -> None:
         self.floor = priority_floor
+        self.reject_without_zone = on_missing_timezone == "reject"
+
+    def _zone(self, ctx: Context) -> str | None:
+        return reported_zone(ctx.user) if self.reject_without_zone else effective_zone(ctx.user)
 
     def run(self, ctx: Context, values: Values) -> Outcome:
+        zone = self._zone(ctx)
+        if zone is None and self.reject_without_zone:
+            return reject("no time zone on the user; quiet hours cannot be evaluated")
         qh = ctx.user.quiet_hours
         if qh is None:
             return PASS
-        if not ctx.user.timezone:
+        if zone is None:
             return skip("quiet hours set but no timezone on the user; cannot evaluate")
-        minutes, day = local_clock(ctx.now, ctx.user.timezone)
+        minutes, day = local_clock(ctx.now, zone)
         hit = quiet_at(qh, day, minutes)
         if hit is None:
             return PASS
@@ -241,13 +373,14 @@ class QuietHours(BaseCheck):
         # Name the day the window opened on when it was not today: the reason is
         # yesterday's setting, and a reader checking today's would not find it.
         whose = "" if from_day == day else f" ({weekday_of(from_day)} {from_day})"
-        return reject(f"quiet hours {window.start} to {window.end}{whose} {ctx.user.timezone}; priority {ctx.priority} is below the floor ({self.floor})")
+        return reject(f"quiet hours {window.start} to {window.end}{whose} {zone}; priority {ctx.priority} is below the floor ({self.floor})")
 
     def next_allowed_at(self, ctx: Context) -> datetime | None:
         qh = ctx.user.quiet_hours
-        if qh is None or not ctx.user.timezone:
+        zone = self._zone(ctx)
+        if qh is None or zone is None:
             return None
-        return quiet_ends_at(qh, ctx.user.timezone, ctx.now)
+        return quiet_ends_at(qh, zone, ctx.now)
 
 
 class TrustRamp(BaseCheck):
@@ -258,6 +391,11 @@ class TrustRamp(BaseCheck):
         self.floor = min_priority
 
     def run(self, ctx: Context, values: Values) -> Outcome:
+        # A requested candidate and a commitment are the person's own doing (SPEC 9.4, 9.5).
+        if ctx.candidate.requested is True:
+            return Outcome("pass", "requested by the person; the trust ramp does not apply")
+        if is_commitment(ctx.candidate):
+            return Outcome("pass", "a commitment the person set up; the trust ramp does not apply")
         created = ctx.user.created_at
         if created is None:
             return skip("no createdAt on the user; ramp cannot be evaluated")
@@ -276,15 +414,21 @@ def dismissal_key(user_id: str, type_: str) -> str:
 class DismissalCooldown(BaseCheck):
     id = "dismissalCooldown"
 
-    def __init__(self, dismissals: int = 3, within_days: float = 30, silence_days: float = 7) -> None:
+    def __init__(self, dismissals: int = 3, within_days: float = 30, silence_days: float = 7, exempt_types: Sequence[str] | None = None) -> None:
         self.n = dismissals
         self.within_days = within_days
         self.silence_days = silence_days
+        self.exempt_types = tuple(exempt_types or ())
 
     def keys(self, ctx: Context) -> Sequence[str]:
         return (dismissal_key(ctx.user.id, ctx.candidate.type),)
 
     def run(self, ctx: Context, values: Values) -> Outcome:
+        # A commitment and a listed type are never silenced by the cooldown (SPEC 9.4, 9.6).
+        if is_commitment(ctx.candidate):
+            return Outcome("pass", "a commitment the person set up; the dismissal cooldown does not apply")
+        if ctx.candidate.type in self.exempt_types:
+            return Outcome("pass", f'type "{ctx.candidate.type}" is exempt from the dismissal cooldown')
         raw = values.get(dismissal_key(ctx.user.id, ctx.candidate.type))
         stamps: list[int] = json.loads(raw) if raw else []
         window_start = epoch_ms(ctx.now) - self.within_days * DAY_SECONDS * 1000
@@ -326,49 +470,75 @@ class AdaptiveTiming(BaseCheck):
 
 
 class Budget(BaseCheck):
-    """Reads a counter at evaluate, increments it at commit. Subclasses name the key."""
+    """Reads a counter at evaluate, increments it at commit. Subclasses name the key.
+
+    A commitment (SPEC 9.4) and a bypassed priority are not counted. The limit is the check's own,
+    unless the user has a ``dailyLimit`` override or a tier named in ``tiers`` (SPEC 9.12).
+    """
 
     label = "budget"
     default_limit = 5
     ttl_seconds = 2 * DAY_SECONDS
 
-    def __init__(self, limit: int | None = None, bypass_priority: str | None = None, near_limit: float = 0.8) -> None:
+    def __init__(self, limit: int | None = None, bypass_priority: str | None = None, near_limit: float = 0.8, tiers: Mapping[str, Any] | None = None) -> None:
         self.limit = limit if limit is not None else self.default_limit
         self.bypass_priority = bypass_priority
-        self.near_at = max(1, math.ceil(self.limit * near_limit))
+        self.near_fraction = near_limit
+        self.tiers: Mapping[str, Any] = tiers or {}
 
     def key_for(self, ctx: Context) -> str:
         raise NotImplementedError
-
-    def bypass(self, ctx: Context) -> bool:
-        return self.bypass_priority is not None and at_least(ctx.priority, self.bypass_priority)
-
-    def keys(self, ctx: Context) -> Sequence[str]:
-        return () if self.bypass(ctx) else (self.key_for(ctx),)
-
-    def run(self, ctx: Context, values: Values) -> Outcome:
-        if self.bypass(ctx):
-            return PASS
-        used = int(values.get(self.key_for(ctx)) or 0)
-        if used >= self.limit:
-            return reject(f"{self.label} of {self.limit} used ({used})")
-        if used >= self.near_at:
-            return Outcome("pass", f"{used} of {self.limit} used", near_limit=NearLimit(used, self.limit))
-        return PASS
-
-    def consume_plan(self, ctx: Context) -> ConsumePlan | None:
-        if self.bypass(ctx):
-            return None
-        return ConsumePlan(self.key_for(ctx), self.ttl_seconds, self.limit)
 
     def key_at(self, user_id: str, at: datetime, tz: str | None) -> str:
         """The counter key in force at ``at``; the reset is the first minute this answers differently."""
         raise NotImplementedError
 
+    def override(self, user: UserState) -> float | None:
+        """An explicit per-user limit that wins over the tiers, or None."""
+        return None
+
+    def effective_limit(self, ctx: Context) -> float:
+        override = self.override(ctx.user)
+        if override is not None:
+            return override
+        tier = ctx.user.tier
+        if tier is not None and tier in self.tiers and is_count(self.tiers[tier]):
+            return float(self.tiers[tier])
+        return self.limit
+
+    def bypass(self, ctx: Context) -> bool:
+        return self.bypass_priority is not None and at_least(ctx.priority, self.bypass_priority)
+
+    def skipped(self, ctx: Context) -> bool:
+        return is_commitment(ctx.candidate) or self.bypass(ctx)
+
+    def keys(self, ctx: Context) -> Sequence[str]:
+        return () if self.skipped(ctx) else (self.key_for(ctx),)
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        if is_commitment(ctx.candidate):
+            return Outcome("pass", "a commitment the person set up; it spends no budget")
+        if self.bypass(ctx):
+            return PASS
+        limit = self.effective_limit(ctx)
+        used = int(values.get(self.key_for(ctx)) or 0)
+        if used >= limit:
+            return reject(f"{self.label} of {_num(limit)} used ({used})")
+        near_at = max(1, math.ceil(limit * self.near_fraction))
+        if used >= near_at:
+            return Outcome("pass", f"{used} of {_num(limit)} used", near_limit=NearLimit(used, int(limit)))
+        return PASS
+
+    def consume_plan(self, ctx: Context) -> ConsumePlan | None:
+        if self.skipped(ctx):
+            return None
+        return ConsumePlan(self.key_for(ctx), self.ttl_seconds, int(self.effective_limit(ctx)))
+
     def next_allowed_at(self, ctx: Context) -> datetime | None:
         user = ctx.user
+        zone = effective_zone(user)
         try:
-            return next_key_change(ctx.now, user.timezone, lambda at: self.key_at(user.id, at, user.timezone))
+            return next_key_change(ctx.now, zone, lambda at: self.key_at(user.id, at, zone))
         except NotImplementedError:
             return None
 
@@ -391,8 +561,14 @@ class DailyBudget(Budget):
     default_limit = 5
     ttl_seconds = 2 * DAY_SECONDS
 
+    def override(self, user: UserState) -> float | None:
+        explicit: Any = user.daily_limit
+        if is_count(explicit) and math.isfinite(explicit) and explicit >= 0:
+            return float(explicit)
+        return None
+
     def key_for(self, ctx: Context) -> str:
-        return budget_key(ctx.user.id, ctx.now, ctx.user.timezone)
+        return budget_key(ctx.user.id, ctx.now, effective_zone(ctx.user))
 
     def key_at(self, user_id: str, at: datetime, tz: str | None) -> str:
         return budget_key(user_id, at, tz)
@@ -405,7 +581,7 @@ class WeeklyBudget(Budget):
     ttl_seconds = 8 * DAY_SECONDS
 
     def key_for(self, ctx: Context) -> str:
-        return weekly_budget_key(ctx.user.id, ctx.now, ctx.user.timezone)
+        return weekly_budget_key(ctx.user.id, ctx.now, effective_zone(ctx.user))
 
     def key_at(self, user_id: str, at: datetime, tz: str | None) -> str:
         return weekly_budget_key(user_id, at, tz)
@@ -418,7 +594,7 @@ class MonthlyBudget(Budget):
     ttl_seconds = 32 * DAY_SECONDS
 
     def key_for(self, ctx: Context) -> str:
-        return monthly_budget_key(ctx.user.id, ctx.now, ctx.user.timezone)
+        return monthly_budget_key(ctx.user.id, ctx.now, effective_zone(ctx.user))
 
     def key_at(self, user_id: str, at: datetime, tz: str | None) -> str:
         return monthly_budget_key(user_id, at, tz)
@@ -470,7 +646,7 @@ class BoundedDeferral(BaseCheck):
 
 
 def _zone_of(ctx: Context, tz: str) -> str | None:
-    return ctx.user.timezone if tz == "user" else tz
+    return effective_zone(ctx.user) if tz == "user" else tz
 
 
 class AllowedWindow(BaseCheck):
@@ -494,12 +670,20 @@ class AllowedWindow(BaseCheck):
 
 
 class RequiresConsent(BaseCheck):
-    def __init__(self, name: str, when: Mapping[str, str] | None = None, id: str | None = None) -> None:
+    """Requires ``consents[name]``, always or only inside a window. ``exempt_transactional`` lifts it for
+    candidates that are not promotional (SPEC 9.7)."""
+
+    def __init__(self, name: str, when: Mapping[str, str] | None = None, id: str | None = None, exempt_transactional: bool = False) -> None:
         self.name = name
         self.id = id or f"consent:{name}"
         self.when = when
+        self.exempt_transactional = exempt_transactional
 
     def run(self, ctx: Context, values: Values) -> Outcome:
+        if self.exempt_transactional:
+            why = not_promotional(ctx.candidate)
+            if why:
+                return Outcome("pass", f'{why}; not promotional, so consent "{self.name}" is not required')
         suffix = ""
         if self.when:
             zone = _zone_of(ctx, self.when["timezone"])
@@ -561,6 +745,130 @@ class WindowBudget(Budget):
         last = ctx.user.last_inbound_at
         opened = math.floor(epoch_ms(last) / 1000) if last else "none"
         return f"windowBudget:{ctx.user.id}:{opened}"
+
+
+class CrisisQuiet(BaseCheck):
+    """Rejects every candidate while ``user.crisisUntil`` is after now, except ``kind: "support"`` (SPEC 9.10)."""
+
+    id = "crisisQuiet"
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        until = ctx.user.crisis_until
+        if until is None or until <= ctx.now or ctx.candidate.kind == "support":
+            return PASS
+        return reject(f"crisis quiet period until {iso_z(until)}; only support messages pass")
+
+    def next_allowed_at(self, ctx: Context) -> datetime | None:
+        return ctx.user.crisis_until
+
+
+class Freshness(BaseCheck):
+    """Refuses stale content (SPEC 9.8). ``max_age_seconds`` also refuses content created too long ago."""
+
+    id = "freshness"
+
+    def __init__(self, max_age_seconds: float | None = None) -> None:
+        self.max_age = max_age_seconds
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        candidate = ctx.candidate
+        has_until = candidate.fresh_until is not None
+        has_created = candidate.created_at is not None
+        if not has_until and not (has_created and self.max_age is not None):
+            if has_created:
+                return skip("no maxAgeSeconds set; createdAt is not checked")
+            return skip("no freshUntil or createdAt on the candidate; freshness cannot be evaluated")
+        if has_until:
+            until = to_datetime(candidate.fresh_until)
+            if until is None:
+                return reject("freshUntil is not a valid instant; treated as expired")
+            if until <= ctx.now:
+                return reject(f"expired at {iso_z(until)}")
+        if has_created and self.max_age is not None:
+            created = to_datetime(candidate.created_at)
+            if created is None:
+                return reject("createdAt is not a valid instant; treated as expired")
+            if (ctx.now - created).total_seconds() > self.max_age:
+                return reject(f"expired: created {iso_z(created)}, older than {_num(self.max_age)} seconds")
+        return PASS
+
+
+class Silence(BaseCheck):
+    """Refuses a candidate whose caller-supplied evidence is too thin (SPEC 9.9). The gate never fills evidence."""
+
+    id = "silence"
+
+    def __init__(self, min_data_points: float = 5, min_confidence: float = 0.5, require_new: bool = True) -> None:
+        self.min_points = min_data_points
+        self.min_confidence = min_confidence
+        self.require_new = require_new
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        evidence = ctx.candidate.evidence
+        if evidence is None:
+            return skip("no evidence on the candidate; silence cannot be evaluated")
+        data: Mapping[str, Any] = evidence if isinstance(evidence, Mapping) else {}
+        points = _evidence_count(data.get("dataPoints"))
+        if points < self.min_points:
+            return reject(f"not enough data: {_num(points)} data points, need {_num(self.min_points)}")
+        confidence = _evidence_count(data.get("confidence"))
+        if confidence < self.min_confidence:
+            return reject(f"not enough confidence: {_num(confidence)}, need {_num(self.min_confidence)}")
+        if self.require_new and data.get("newSinceLast") is False:
+            return reject("nothing new since the last message")
+        return PASS
+
+
+class DeadHours(BaseCheck):
+    """Takes push off the table in an hour when the user acted on too little of what they got then (SPEC 9.11).
+
+    Never rejects. The counts are the caller's ``hourStats`` entry for the hour when given, else the
+    counters ``Gate.record`` wrote. The defaults are judgements, not findings.
+    """
+
+    id = "deadHours"
+    non_rejecting = True
+
+    def __init__(self, min_samples: float = 5, max_act_rate: float = 0.2, min_priority: str = "high") -> None:
+        self.min_samples = min_samples
+        self.max_act_rate = max_act_rate
+        self.floor = min_priority
+
+    def _judged(self, ctx: Context) -> bool:
+        return "push" in ctx.surfaces and not at_least(ctx.priority, self.floor)
+
+    def _own_entry(self, ctx: Context, hour: int) -> tuple[bool, Any]:
+        stats = ctx.user.hour_stats
+        if not isinstance(stats, Mapping):
+            return False, None
+        entry = stats.get(str(hour))
+        return entry is not None, entry
+
+    def keys(self, ctx: Context) -> Sequence[str]:
+        if not self._judged(ctx):
+            return ()
+        hour = hour_of_day(ctx.now, effective_zone(ctx.user))
+        present, _ = self._own_entry(ctx, hour)
+        if present:
+            return ()
+        return (hours_key(ctx.user.id, hour, "acted"), hours_key(ctx.user.id, hour, "dismissed"))
+
+    def run(self, ctx: Context, values: Values) -> Outcome:
+        if not self._judged(ctx):
+            return PASS
+        hour = hour_of_day(ctx.now, effective_zone(ctx.user))
+        present, entry = self._own_entry(ctx, hour)
+        if present:
+            acted = _count(entry.get("acted")) if isinstance(entry, Mapping) else 0.0
+            dismissed = _count(entry.get("dismissed")) if isinstance(entry, Mapping) else 0.0
+        else:
+            acted = _count(values.get(hours_key(ctx.user.id, hour, "acted")))
+            dismissed = _count(values.get(hours_key(ctx.user.id, hour, "dismissed")))
+        total = acted + dismissed
+        if not math.isfinite(total) or total == 0 or total < self.min_samples or acted / total >= self.max_act_rate:
+            return PASS
+        surfaces = tuple(s for s in ctx.surfaces if s != "push")
+        return Outcome("adjust", f"dead hour {hour}:00: {_num(acted)} of {_num(total)} acted on; push removed for {ctx.candidate.id}", surfaces=surfaces)
 
 
 class OnlyWhen(BaseCheck):
@@ -647,7 +955,7 @@ def default_checks(
     weekly_limit: int | None = None,
     quiet_hours_floor: str = "critical",
 ) -> list[Check]:
-    """The LILA order, as a starting point."""
+    """The default order, as a starting point."""
     checks: list[Check] = [
         KillSwitch(kill_switch),
         Consent(),
@@ -669,8 +977,9 @@ def default_checks(
 
 __all__ = [
     "AdaptiveTiming", "AllowedWindow", "BaseCheck", "BoundedDeferral", "Budget", "Check", "Consent", "Consumer",
-    "DailyBudget", "Dedupe", "DismissalCooldown", "Enabled", "Intensity", "KillSwitch", "Mode", "MonthlyBudget", "Mute",
-    "OnlyWhen", "QuietHours", "RateLimit", "RecentInteraction", "RequiresConsent", "Snooze", "TrustRamp",
-    "UtilityFloor", "WeeklyBudget", "WindowBudget", "budget_key", "default_checks", "dismissal_key",
-    "dedupe_key_for", "monthly_budget_key", "weekly_budget_key",
+    "CrisisQuiet", "DailyBudget", "DeadHours", "Dedupe", "DismissalCooldown", "Enabled", "Freshness", "Intensity",
+    "KillSwitch", "KillSwitchFlag", "Mode", "MonthlyBudget", "Mute", "OnlyWhen", "QuietHours", "RateLimit",
+    "RecentInteraction", "RequiresConsent", "Silence", "Snooze", "TrustRamp", "UtilityFloor", "WeeklyBudget",
+    "WindowBudget", "budget_key", "default_checks", "dismissal_key", "dedupe_key_for", "hours_key",
+    "monthly_budget_key", "weekly_budget_key",
 ]

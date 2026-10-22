@@ -1,0 +1,115 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/cooldown-exempt",
+  "description": "dismissalCooldown with exemptTypes: a listed type is never silenced; an unlisted type with three dismissals is silenced; a type with two dismissals is not silenced yet.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "dismissalCooldown",
+        "exemptTypes": [
+          "digest"
+        ]
+      }
+    ]
+  },
+  "store_seed": {
+    "cooldown:u1:reminder": "[1788177600000, 1788264000000, 1788436800000]",
+    "cooldown:u1:digest": "[1788177600000, 1788264000000, 1788436800000]",
+    "cooldown:u3:reminder": "[1788177600000, 1788264000000]"
+  },
+  "tests": [
+    {
+      "description": "three dismissals silence an unlisted type",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dismissalCooldown",
+        "reason_pattern": "dismissals of",
+        "trace": [
+          "dismissalCooldown"
+        ]
+      }
+    },
+    {
+      "description": "the same three dismissals do not silence a listed type",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "digest"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "dismissalCooldown"
+        ]
+      }
+    },
+    {
+      "description": "a listed type with no dismissals is allowed",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "digest"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "dismissalCooldown"
+        ]
+      }
+    },
+    {
+      "description": "two dismissals of an unlisted type do not yet silence it",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "reminder"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "dismissalCooldown"
+        ]
+      }
+    }
+  ]
+}

@@ -2,10 +2,10 @@
 
 An independent implementation of the behaviour contract in
 [`../spec/SPEC.md`](../spec/SPEC.md), written against the fixtures rather than
-ported from the TypeScript source. It targets spec version **1.5.0**, pinned
-by the `spec/v1.5.0` tag, and passes all 68 fixtures in
-[`../spec/fixtures`](../spec/fixtures) with no skips declared in
-[`../spec/skip/go.txt`](../spec/skip/go.txt). A denied decision carries
+ported from the TypeScript source. It targets spec version **1.6.0**, pinned
+by the `spec/v1.6.0` tag, and passes every fixture in [`../spec/fixtures`](../spec/fixtures), the `lessons/`
+fixtures for the 1.6.0 additions included, with none skipped
+([`../spec/skip/go.txt`](../spec/skip/go.txt) lists no fixture). A denied decision carries
 `NextAllowedAt` (spec 3.6) when the check that denied it can name the instant.
 
 No dependencies beyond the Go standard library. The IANA zone handling reads
@@ -67,12 +67,16 @@ func main() {
     years the spec's date format needs below year 1000.
   - `store.go` the `Store` contract, an in-memory implementation, and the key
     prefixing.
-  - `checks.go` the twenty-two checks a JSON policy can name.
+  - `checks.go` the checks a JSON policy can name, including the checks added in 1.6.0.
+  - `values.go` the readers for instants, counts and flags, which accept the Go and the JSON forms of each.
+  - `zone.go` the effective zone (device zone, then profile zone, then none) and
+    the transactional and commitment tests (spec 9.2, 9.4, 9.7).
   - `presets.go` the named preset expansions.
   - `policy.go` the JSON policy compiler; unknown check ids and preset names
     are rejected at compile time with the known vocabulary named (spec 7.3).
   - `gate.go` `Evaluate`, `Commit` (atomic, idempotent on the decision id) and
-    `Record`.
+    `Record`. `Record(user, candidate, event, at)` returns an error for a nil
+    user, or a dismissal with no candidate; it writes nothing in that case.
   - `target.go` the adapter that plugs the gate into the runner.
 - `conformance/` is the runner: it reads the fixtures as data and executes
   them against a `Target` it knows nothing about. `conformance.Stub` is a

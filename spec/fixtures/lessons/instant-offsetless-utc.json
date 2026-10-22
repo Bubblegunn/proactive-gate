@@ -1,0 +1,157 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/instant-offsetless-utc",
+  "description": "An instant with no offset is UTC, whatever zone the reader is in, and a date alone is 00:00 UTC (SPEC 9.1.1). An instant with an offset keeps its offset.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "freshness"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "an offset-less instant one second after now is fresh, read as UTC",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "freshUntil": "2026-09-04T12:00:01"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "an offset-less instant one second before now is expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "freshUntil": "2026-09-04T11:59:59"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "an instant with +03:00 keeps its offset: 15:00:01 local is 12:00:01 UTC and fresh",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "freshUntil": "2026-09-04T15:00:01+03:00"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "an instant with +03:00 keeps its offset: 12:00:01 local is 09:00:01 UTC and expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "freshUntil": "2026-09-04T12:00:01+03:00"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a date alone is 00:00 UTC: the 5th is fresh",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight",
+          "freshUntil": "2026-09-05"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a date alone is 00:00 UTC: the 4th is expired at noon",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "insight",
+          "freshUntil": "2026-09-04"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    }
+  ]
+}

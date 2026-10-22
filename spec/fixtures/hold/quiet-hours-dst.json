@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.5.0",
   "name": "hold/quiet-hours-dst",
   "description": "Across a daylight-saving change the answer is the first open minute by the local clock, not the naive sum of hours.",

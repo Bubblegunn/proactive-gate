@@ -1,5 +1,5 @@
 import { PRIORITY_RANK } from "./types.js";
-import type { Check, CheckContext, CheckOutcome, Priority, QuietSchedule, QuietWindow, Surface, Weekday } from "./types.js";
+import type { Candidate, Check, CheckContext, CheckOutcome, Priority, QuietSchedule, QuietWindow, Store, SyncStore, Surface, UserState, Weekday } from "./types.js";
 
 const pass: CheckOutcome = { kind: "pass" };
 const reject = (reason: string): CheckOutcome => ({ kind: "reject", reason });
@@ -8,11 +8,18 @@ const defer = (reason: string, retryAt: Date): CheckOutcome => ({ kind: "defer",
 
 const atLeast = (priority: Priority, floor: Priority) => PRIORITY_RANK[priority] >= PRIORITY_RANK[floor];
 
-const toDate = (value: Date | string | null | undefined): Date | null => {
+/** An ISO 8601 date-time with no offset. JavaScript would read it in the host zone; the spec reads it as UTC (SPEC 9.1). */
+const OFFSETLESS_INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
+
+const toDate = (value: Date | string | number | null | undefined): Date | null => {
   if (value === null || value === undefined) return null;
-  const d = value instanceof Date ? value : new Date(value);
+  const text = typeof value === "string" && OFFSETLESS_INSTANT.test(value) ? `${value}Z` : value;
+  const d = text instanceof Date ? text : new Date(text);
   return Number.isNaN(d.getTime()) ? null : d;
 };
+
+/** A count the caller supplied as evidence: a finite JSON number, else zero (SPEC 9.9). */
+const evidenceCount = (value: unknown): number => (typeof value === "number" && Number.isFinite(value) ? value : 0);
 
 export const DAY_SECONDS = 24 * 60 * 60;
 
@@ -45,6 +52,38 @@ export function inWindow(minutes: number, start: number, end: number): boolean {
 }
 
 const localDay = (now: Date, timezone?: string) => (timezone ? localClock(now, timezone).day : now.toISOString().slice(0, 10));
+
+/** True when `zone` is an IANA name the runtime's Intl knows. */
+const isValidZone = (zone: string | undefined): zone is string => {
+  if (!zone) return false;
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: zone });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * The zone a user's local clock is read in: `deviceTimezone` when it is a valid IANA name, else
+ * `timezone` when it is one, else undefined (SPEC 9.2). Every check that reads a zone, and every
+ * budget key, goes through this so the device's zone and the stored zone cannot disagree.
+ */
+export function effectiveZone(user: Pick<UserState, "deviceTimezone" | "timezone">): string | undefined {
+  if (isValidZone(user.deviceTimezone)) return user.deviceTimezone;
+  if (isValidZone(user.timezone)) return user.timezone;
+  return undefined;
+}
+
+/**
+ * The zone quiet hours need when `onMissingTimezone` is "reject". The placeholder "UTC" is not a
+ * zone the user chose, so it counts as no zone unless a valid `deviceTimezone` is present (SPEC 9.2).
+ */
+const reportedZone = (user: Pick<UserState, "deviceTimezone" | "timezone">): string | undefined => {
+  if (isValidZone(user.deviceTimezone)) return user.deviceTimezone;
+  if (isValidZone(user.timezone) && user.timezone !== "UTC") return user.timezone;
+  return undefined;
+};
 
 /**
  * A UTC instant from calendar fields, without `Date.UTC`'s two-digit-year rule.
@@ -181,25 +220,86 @@ export function nextKeyChange(now: Date, timezone: string | undefined, keyAt: (a
   return null;
 }
 
+const mod1440 = (minutes: number) => ((minutes % 1440) + 1440) % 1440;
+
+/**
+ * The earliest minute after `now` whose local time satisfies `ready`, found by moving `jumpTo`
+ * minutes at a time on the local clock, as quietEndsAt does. A jump that a daylight-saving change
+ * carries past the target lands late, and the walk back to the first ready minute corrects it; a
+ * target inside a spring-forward gap resolves to the first minute the clocks show after it.
+ * Returns null when no ready minute is found within sixteen jumps.
+ */
+function firstReadyMinute(now: Date, timezone: string, ready: (minutes: number) => boolean, jumpTo: (minutes: number) => number): Date | null {
+  const start = floorMinute(now);
+  let at = start;
+  for (let jump = 0; jump < 16; jump++) {
+    const { minutes } = localClock(at, timezone);
+    if (!ready(minutes)) {
+      at = new Date(at.getTime() + jumpTo(minutes) * MINUTE_MS);
+      continue;
+    }
+    for (let back = 0; back < 180; back++) {
+      const earlier = new Date(at.getTime() - MINUTE_MS);
+      if (earlier <= start || !ready(localClock(earlier, timezone).minutes)) break;
+      at = earlier;
+    }
+    return at > now ? at : null;
+  }
+  return null;
+}
+
+/**
+ * A commitment is something the person set up, such as a reminder they asked for (SPEC 9.4). It skips the
+ * trust ramp, the dismissal cooldown, mute and every budget, and spends nothing when committed.
+ */
+const isCommitment = (candidate: Candidate): boolean => candidate.kind === "commitment";
+
 /* ------------------------------------------------------------------------ */
-/* The checks, in the order LILA runs them. Compose your own order freely.  */
+/* The checks, in the default order. Compose your own order freely.  */
 /* ------------------------------------------------------------------------ */
 
 /** A production hard-stop that silences every producer at once. */
 export function killSwitch(isOn: () => boolean | Promise<boolean>): Check {
+  const verdict = (on: boolean): CheckOutcome => (on ? reject("engine kill switch is on") : pass);
+  // A callback that returns a plain boolean has a synchronous path; an async callback hands back its promise from
+  // runSync, which the gate refuses with a TypeError (SPEC 10.2).
+  const run = (): CheckOutcome | Promise<CheckOutcome> => {
+    const on = isOn();
+    return isPromiseLike(on) ? Promise.resolve(on).then(verdict) : verdict(on);
+  };
+  return { id: "killSwitch", run, runSync: () => run() as CheckOutcome };
+}
+
+/**
+ * A kill switch read from the runtime flags the caller passes to evaluate (SPEC 9.13). It rejects only
+ * while flag `name` is exactly false. A flag that is absent, or any other value, stops nothing, so a
+ * caller that never sets the flag keeps the behaviour it had.
+ */
+export function killSwitchFlag(name: string): Check {
   return {
     id: "killSwitch",
-    async run() {
-      return (await isOn()) ? reject("engine kill switch is on") : pass;
-    },
+    run: ({ flags }) => (flags?.[name] === false ? reject(`kill switch is on: flag "${name}" is false`) : pass),
   };
 }
 
-/** Consent comes before everything, or you have evaluated preferences for someone who never agreed. */
-export function consent(): Check {
+/**
+ * Consent comes before everything, or you have evaluated preferences for someone who never agreed.
+ *
+ * When the caller could not look consent up (`consentUnknown` true), the value is not false, it is
+ * unknown. `failMode` then decides each surface still on the table: "open" keeps it, "closed" drops it,
+ * and a surface with no entry takes `failMode.default`, else "closed" (SPEC 9.3). When no surface stays
+ * open the candidate is rejected. A known consent is unaffected by `failMode`.
+ */
+export function consent(options: { failMode?: Record<string, "open" | "closed"> } = {}): Check {
+  const modeFor = (surface: Surface) => options.failMode?.[surface] ?? options.failMode?.default ?? "closed";
   return {
     id: "consent",
-    run: ({ user }) => (user.consent ? pass : reject("user has not consented to proactive behaviour")),
+    run: ({ user, surfaces }) => {
+      if (user.consentUnknown !== true) return user.consent ? pass : reject("user has not consented to proactive behaviour");
+      const open = surfaces.filter((surface) => modeFor(surface) === "open");
+      if (open.length === 0) return reject("consent could not be determined and no surface on the table fails open");
+      return { kind: "adjust", reason: `consent could not be determined; keeping ${open.join(", ")}`, surfaces: open };
+    },
   };
 }
 
@@ -241,7 +341,7 @@ export function mute(): Check {
   return {
     id: "mute",
     run: ({ user, candidate }) =>
-      user.mutedTypes?.includes(candidate.type) ? reject(`type "${candidate.type}" is muted by the user`) : pass,
+      !isCommitment(candidate) && user.mutedTypes?.includes(candidate.type) ? reject(`type "${candidate.type}" is muted by the user`) : pass,
   };
 }
 
@@ -260,23 +360,32 @@ export function intensity(floors: Record<"low" | "normal" | "high", Priority> = 
 }
 
 /** Timezone-aware quiet hours, bypassed only at or above the priority floor. */
-export function quietHours(options: { priorityFloor?: Priority } = {}): Check {
+export function quietHours(options: { priorityFloor?: Priority; onMissingTimezone?: "skip" | "reject" } = {}): Check {
   const floor = options.priorityFloor ?? "critical";
+  const rejectWithoutZone = options.onMissingTimezone === "reject";
+  const zoneOf = (user: UserState) => (rejectWithoutZone ? reportedZone(user) : effectiveZone(user));
   return {
     id: "quietHours",
     run: ({ user, now, priority }) => {
+      // Under "reject" a user with no zone is rejected before quiet hours are looked at, so the rule
+      // holds whether or not the user has quiet hours (SPEC 9.2.1).
+      const zone = zoneOf(user);
+      if (!zone && rejectWithoutZone) return reject("no time zone on the user; quiet hours cannot be evaluated");
       if (!user.quietHours) return pass;
-      if (!user.timezone) return skip("quiet hours set but no timezone on the user; cannot evaluate");
-      const { minutes, day } = localClock(now, user.timezone);
+      if (!zone) return skip("quiet hours set but no timezone on the user; cannot evaluate");
+      const { minutes, day } = localClock(now, zone);
       const hit = quietAt(user.quietHours, day, minutes);
       if (!hit) return pass;
       if (atLeast(priority, floor)) return pass;
       // Name the day the window came from: when it crossed midnight the reason is
       // yesterday's setting, and a reader looking at today's would not find it.
       const whose = hit.day === day ? "" : ` (${weekdayOf(hit.day)} ${hit.day})`;
-      return reject(`quiet hours ${hit.window.start} to ${hit.window.end}${whose} ${user.timezone}; priority ${priority} is below the floor (${floor})`);
+      return reject(`quiet hours ${hit.window.start} to ${hit.window.end}${whose} ${zone}; priority ${priority} is below the floor (${floor})`);
     },
-    nextAllowedAt: ({ user, now }) => (user.quietHours && user.timezone ? quietEndsAt(user.quietHours, user.timezone, now) : null),
+    nextAllowedAt: ({ user, now }) => {
+      const zone = zoneOf(user);
+      return user.quietHours && zone ? quietEndsAt(user.quietHours, zone, now) : null;
+    },
   };
 }
 
@@ -293,7 +402,10 @@ export function trustRamp(options: { days?: number; minPriority?: Priority } = {
   const floor = options.minPriority ?? "high";
   return {
     id: "trustRamp",
-    run: ({ user, now, priority }) => {
+    run: ({ user, now, priority, candidate }) => {
+      // A requested candidate and a commitment are the person's own doing, so the ramp does not apply (SPEC 9.4, 9.5).
+      if (candidate.requested === true) return { kind: "pass", reason: "requested by the person; the trust ramp does not apply" };
+      if (isCommitment(candidate)) return { kind: "pass", reason: "a commitment the person set up; the trust ramp does not apply" };
       const created = toDate(user.createdAt);
       if (!created) return skip("no createdAt on the user; ramp cannot be evaluated");
       const age = (now.getTime() - created.getTime()) / (DAY_SECONDS * 1000);
@@ -312,29 +424,61 @@ export function trustRamp(options: { days?: number; minPriority?: Priority } = {
  * is defensible, since a dismissal is the clearest signal a user gives; the
  * three numbers are ours and no study sets them.
  */
-export function dismissalCooldown(options: { dismissals?: number; withinDays?: number; silenceDays?: number } = {}): Check {
+/** The store as a synchronous store, or a TypeError that says so. The gate checks this first; a check calls it too. */
+export function syncStoreOf(store: Store): SyncStore {
+  const candidate = store as Partial<SyncStore>;
+  if (typeof candidate.getSync !== "function" || typeof candidate.incrSync !== "function" || typeof candidate.setSync !== "function" || typeof candidate.delSync !== "function")
+    throw new TypeError("this check needs a store with synchronous methods for the synchronous path");
+  return store as SyncStore;
+}
+
+export function dismissalCooldown(options: { dismissals?: number; withinDays?: number; silenceDays?: number; exemptTypes?: string[] } = {}): Check {
   const n = options.dismissals ?? 3;
   const withinDays = options.withinDays ?? 30;
   const silenceDays = options.silenceDays ?? 7;
+  const exempt = options.exemptTypes ?? [];
+  // The cooldown's pure parts: what is decided before the store is read, and the verdict once it is.
+  const cooldownEarly = (candidate: Candidate): CheckOutcome | null => {
+    if (isCommitment(candidate)) return { kind: "pass", reason: "a commitment the person set up; the dismissal cooldown does not apply" };
+    // Types the caller lists are never silenced by the cooldown (SPEC 9.6).
+    if (exempt.includes(candidate.type)) return { kind: "pass", reason: `type "${candidate.type}" is exempt from the dismissal cooldown` };
+    return null;
+  };
+  const cooldownVerdict = (candidate: Candidate, now: Date, raw: string | null): CheckOutcome => {
+    const stamps: number[] = raw ? JSON.parse(raw) : [];
+    const windowStart = now.getTime() - withinDays * DAY_SECONDS * 1000;
+    const recent = stamps.filter((t) => t >= windowStart).sort((a, b) => a - b);
+    if (recent.length < n) return pass;
+    // Silence runs from the most recent dismissal; every further dismissal restarts it.
+    const latest = recent[recent.length - 1]!;
+    const silentUntil = latest + silenceDays * DAY_SECONDS * 1000;
+    if (now.getTime() >= silentUntil) return pass;
+    return reject(`${recent.length} dismissals of "${candidate.type}" in ${withinDays} days; silent until ${new Date(silentUntil).toISOString()}`);
+  };
   return {
     id: "dismissalCooldown",
     async run({ user, candidate, now, store }) {
-      const key = dismissalKey(user.id, candidate.type);
-      const raw = await store.get(key);
-      const stamps: number[] = raw ? JSON.parse(raw) : [];
-      const windowStart = now.getTime() - withinDays * DAY_SECONDS * 1000;
-      const recent = stamps.filter((t) => t >= windowStart).sort((a, b) => a - b);
-      if (recent.length < n) return pass;
-      // Silence runs from the most recent dismissal; every further dismissal restarts it.
-      const latest = recent[recent.length - 1]!;
-      const silentUntil = latest + silenceDays * DAY_SECONDS * 1000;
-      if (now.getTime() >= silentUntil) return pass;
-      return reject(`${recent.length} dismissals of "${candidate.type}" in ${withinDays} days; silent until ${new Date(silentUntil).toISOString()}`);
+      const early = cooldownEarly(candidate);
+      if (early) return early;
+      return cooldownVerdict(candidate, now, await store.get(dismissalKey(user.id, candidate.type)));
+    },
+    runSync({ user, candidate, now, store }) {
+      const early = cooldownEarly(candidate);
+      if (early) return early;
+      return cooldownVerdict(candidate, now, syncStoreOf(store).getSync(dismissalKey(user.id, candidate.type)));
     },
   };
 }
 
 export const dismissalKey = (userId: string, type: string) => `cooldown:${userId}:${type}`;
+
+/** The store key of one local hour's count of acted or dismissed candidates (SPEC 9.11). */
+export const hourKeyFor = (userId: string, hour: number, outcome: "acted" | "dismissed") => `hours:${userId}:${hour}:${outcome}`;
+
+/** The local hour of day, 0 to 23, of an instant in a zone, or its UTC hour when there is no zone (SPEC 9.11). */
+export function hourOfDay(now: Date, zone: string | undefined): number {
+  return zone ? Math.floor(localClock(now, zone).minutes / 60) : now.getUTCHours();
+}
 
 /**
  * Never rejects. Moves a delivery to the user's next good moment when the
@@ -345,20 +489,26 @@ export function adaptiveTiming(options: {
   nextGoodMoment?: (ctx: CheckContext) => Promise<Date | null> | Date | null;
   surfacesFor?: (ctx: CheckContext) => Surface[] | null;
 } = {}): Check {
-  return {
-    id: "adaptiveTiming",
-    nonRejecting: true,
-    async run(ctx) {
-      const at = options.nextGoodMoment ? await options.nextGoodMoment(ctx) : null;
-      const surfaces = options.surfacesFor ? options.surfacesFor(ctx) : null;
-      if (!at && !surfaces) return pass;
-      const parts: string[] = [];
-      if (at) parts.push(`deliver at ${at.toISOString()}`);
-      if (surfaces) parts.push(`surfaces ${surfaces.join(",")}`);
-      return { kind: "adjust", reason: parts.join("; "), ...(at ? { deliverAt: at } : {}), ...(surfaces ? { surfaces } : {}) };
-    },
+  const outcomeFor = (ctx: CheckContext, at: Date | null): CheckOutcome => {
+    const surfaces = options.surfacesFor ? options.surfacesFor(ctx) : null;
+    if (!at && !surfaces) return pass;
+    const parts: string[] = [];
+    if (at) parts.push(`deliver at ${at.toISOString()}`);
+    if (surfaces) parts.push(`surfaces ${surfaces.join(",")}`);
+    return { kind: "adjust", reason: parts.join("; "), ...(at ? { deliverAt: at } : {}), ...(surfaces ? { surfaces } : {}) };
   };
+  // A synchronous nextGoodMoment keeps the check synchronous; an async one makes run return a promise, and runSync hands
+  // that promise back so the gate refuses it (SPEC 10.2).
+  const run = (ctx: CheckContext): CheckOutcome | Promise<CheckOutcome> => {
+    const at = options.nextGoodMoment ? options.nextGoodMoment(ctx) : null;
+    return isPromiseLike(at) ? Promise.resolve(at).then((when) => outcomeFor(ctx, when)) : outcomeFor(ctx, at);
+  };
+  return { id: "adaptiveTiming", nonRejecting: true, run, runSync: (ctx) => run(ctx) as CheckOutcome };
 }
+
+/** True for a promise or thenable. A check that returns one from runSync is refused on the synchronous path. */
+const isPromiseLike = (value: unknown): value is PromiseLike<unknown> =>
+  (typeof value === "object" || typeof value === "function") && value !== null && typeof (value as { then?: unknown }).then === "function";
 
 /* ------------------------------------------------------------------------ */
 /* Budgets. The check reads the counter; gate.commit() calls consume(),      */
@@ -375,25 +525,84 @@ export interface BudgetOptions {
   bypassPriority?: Priority;
   /** Fraction of the limit at which a pass carries a nearLimit note. Default 0.8. */
   nearLimit?: number;
+  /**
+   * A limit per `user.tier` (SPEC 9.12). Read after an explicit `user.dailyLimit` and before `limit`, so a
+   * tier with no entry falls back to `limit`.
+   */
+  tiers?: Record<string, number>;
 }
 
-function budget(spec: { id: string; label: string; defaultLimit: number; keyFor: (ctx: CheckContext) => string; ttlSeconds: number; resetsAt?: (ctx: CheckContext) => Date | null }, options: BudgetOptions): BudgetCheck {
-  const limit = options.limit ?? spec.defaultLimit;
-  const nearAt = Math.max(1, Math.ceil(limit * (options.nearLimit ?? 0.8)));
+/**
+ * The limit a budget check applies to this user (SPEC 9.12): an explicit override the check names, else the
+ * user's tier from `tiers` when it has one of its own, else the check's own limit. A tier name is looked up
+ * on the object's own keys only, so a tier called "constructor" is not a limit.
+ */
+const limitFor = (base: number, tiers: Record<string, number> | undefined, user: UserState, override?: number): number => {
+  if (override !== undefined) return override;
+  const tier = user.tier;
+  if (tier !== undefined && tiers && Object.prototype.hasOwnProperty.call(tiers, tier)) {
+    const limit = tiers[tier];
+    if (typeof limit === "number") return limit;
+  }
+  return base;
+};
+
+/** A finite number of at least 0 that the user set as dailyLimit, or undefined. */
+const dailyOverride = (user: UserState): number | undefined => {
+  const explicit = user.dailyLimit;
+  return typeof explicit === "number" && Number.isFinite(explicit) && explicit >= 0 ? explicit : undefined;
+};
+
+function budget(spec: { id: string; label: string; defaultLimit: number; keyFor: (ctx: CheckContext) => string; ttlSeconds: number; resetsAt?: (ctx: CheckContext) => Date | null; override?: (user: UserState) => number | undefined }, options: BudgetOptions): BudgetCheck {
+  const base = options.limit ?? spec.defaultLimit;
+  const nearFraction = options.nearLimit ?? 0.8;
+  const limitOf = (ctx: CheckContext) => limitFor(base, options.tiers, ctx.user, spec.override?.(ctx.user));
   const bypass = (priority: Priority) => options.bypassPriority !== undefined && atLeast(priority, options.bypassPriority);
+  // Budget-like checks skip the count for a priority the caller bypasses and for a commitment.
+  const skipped = (ctx: CheckContext) => bypass(ctx.priority) || isCommitment(ctx.candidate);
+  // A commitment says why it spent nothing; a bypassed priority passes without a reason, as before.
+  const skippedPass = (ctx: CheckContext): CheckOutcome => (isCommitment(ctx.candidate) ? { kind: "pass", reason: "a commitment the person set up; it spends no budget" } : pass);
+  const verdict = (ctx: CheckContext, used: number): CheckOutcome => {
+    const limit = limitOf(ctx);
+    if (used >= limit) return reject(`${spec.label} of ${limit} used (${used})`);
+    const nearAt = Math.max(1, Math.ceil(limit * nearFraction));
+    return used >= nearAt ? { kind: "pass", reason: `${used} of ${limit} used`, nearLimit: { used, limit } } : pass;
+  };
   return {
     id: spec.id,
-    limit,
+    limit: base,
     async run(ctx) {
-      if (bypass(ctx.priority)) return pass;
-      const used = Number((await ctx.store.get(spec.keyFor(ctx))) ?? 0);
-      if (used >= limit) return reject(`${spec.label} of ${limit} used (${used})`);
-      return used >= nearAt ? { kind: "pass", reason: `${used} of ${limit} used`, nearLimit: { used, limit } } : pass;
+      if (skipped(ctx)) return skippedPass(ctx);
+      return verdict(ctx, Number((await ctx.store.get(spec.keyFor(ctx))) ?? 0));
+    },
+    runSync(ctx) {
+      if (skipped(ctx)) return skippedPass(ctx);
+      return verdict(ctx, Number(syncStoreOf(ctx.store).getSync(spec.keyFor(ctx)) ?? 0));
     },
     async consume(ctx) {
-      if (bypass(ctx.priority)) return true;
-      const used = await ctx.store.incr(spec.keyFor(ctx), spec.ttlSeconds);
-      return used <= limit;
+      if (skipped(ctx)) return true;
+      const key = spec.keyFor(ctx);
+      const used = await ctx.store.incr(key, spec.ttlSeconds);
+      if (used <= limitOf(ctx)) return true;
+      // A refused unit was never spent. Give it back, so the counter counts committed units and nothing else.
+      if (ctx.store.incrBy) await ctx.store.incrBy(key, -1);
+      return false;
+    },
+    consumeSync(ctx) {
+      if (skipped(ctx)) return true;
+      const store = syncStoreOf(ctx.store);
+      const key = spec.keyFor(ctx);
+      const used = store.incrSync(key, spec.ttlSeconds);
+      if (used <= limitOf(ctx)) return true;
+      if (store.incrBySync) store.incrBySync(key, -1);
+      return false;
+    },
+    async release(ctx) {
+      if (bypass(ctx.priority) || isCommitment(ctx.candidate)) return;
+      const key = spec.keyFor(ctx);
+      if (!ctx.store.incrBy) return;
+      // Never below zero: if the counter had already expired or gone, the decrement is undone.
+      if ((await ctx.store.incrBy(key, -1, spec.ttlSeconds)) < 0) await ctx.store.incrBy(key, 1, spec.ttlSeconds);
     },
     ...(spec.resetsAt ? { nextAllowedAt: spec.resetsAt } : {}),
   };
@@ -425,7 +634,7 @@ export const monthlyBudgetKey = (userId: string, now: Date, timezone?: string) =
  * ambient load. Nothing in that work says five.
  */
 export function dailyBudget(options: BudgetOptions = {}): BudgetCheck {
-  return budget({ id: "dailyBudget", label: "daily budget", defaultLimit: 5, keyFor: ({ user, now }) => budgetKey(user.id, now, user.timezone), ttlSeconds: 2 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, user.timezone, (at) => budgetKey(user.id, at, user.timezone)) }, options);
+  return budget({ id: "dailyBudget", label: "daily budget", defaultLimit: 5, override: dailyOverride, keyFor: ({ user, now }) => budgetKey(user.id, now, effectiveZone(user)), ttlSeconds: 2 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, effectiveZone(user), (at) => budgetKey(user.id, at, effectiveZone(user))) }, options);
 }
 
 /**
@@ -437,12 +646,12 @@ export function dailyBudget(options: BudgetOptions = {}): BudgetCheck {
  * existing key.
  */
 export function weeklyBudget(options: BudgetOptions = {}): BudgetCheck {
-  return budget({ id: "weeklyBudget", label: "weekly budget", defaultLimit: 20, keyFor: ({ user, now }) => weeklyBudgetKey(user.id, now, user.timezone), ttlSeconds: 8 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, user.timezone, (at) => weeklyBudgetKey(user.id, at, user.timezone)) }, options);
+  return budget({ id: "weeklyBudget", label: "weekly budget", defaultLimit: 20, keyFor: ({ user, now }) => weeklyBudgetKey(user.id, now, effectiveZone(user)), ttlSeconds: 8 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, effectiveZone(user), (at) => weeklyBudgetKey(user.id, at, effectiveZone(user))) }, options);
 }
 
 /** At most `limit` deliveries per user per local calendar month. */
 export function monthlyBudget(options: BudgetOptions = {}): BudgetCheck {
-  return budget({ id: "monthlyBudget", label: "monthly budget", defaultLimit: 60, keyFor: ({ user, now }) => monthlyBudgetKey(user.id, now, user.timezone), ttlSeconds: 32 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, user.timezone, (at) => monthlyBudgetKey(user.id, at, user.timezone)) }, options);
+  return budget({ id: "monthlyBudget", label: "monthly budget", defaultLimit: 60, keyFor: ({ user, now }) => monthlyBudgetKey(user.id, now, effectiveZone(user)), ttlSeconds: 32 * DAY_SECONDS, resetsAt: ({ user, now }) => nextKeyChange(now, effectiveZone(user), (at) => monthlyBudgetKey(user.id, at, effectiveZone(user))) }, options);
 }
 
 export const dedupeKeyFor = (userId: string, key: string) => `dedupe:${userId}:${key}`;
@@ -489,17 +698,185 @@ const humanWindow = (seconds: number): string => {
 export function dedupe(options: { windowSeconds?: number } = {}): Check {
   const windowSeconds = options.windowSeconds ?? DAY_SECONDS;
   const label = humanWindow(windowSeconds);
+  const seenVerdict = (seen: string | null): CheckOutcome => (seen === null ? pass : reject(`already delivered within the last ${label}`));
   return {
     id: "dedupe",
     async run({ user, candidate, store }) {
       if (!candidate.dedupeKey) return skip("no dedupeKey on the candidate; deduplication cannot be evaluated");
-      const seen = await store.get(dedupeKeyFor(user.id, candidate.dedupeKey));
-      return seen === null ? pass : reject(`already delivered within the last ${label}`);
+      return seenVerdict(await store.get(dedupeKeyFor(user.id, candidate.dedupeKey)));
+    },
+    runSync({ user, candidate, store }) {
+      if (!candidate.dedupeKey) return skip("no dedupeKey on the candidate; deduplication cannot be evaluated");
+      return seenVerdict(syncStoreOf(store).getSync(dedupeKeyFor(user.id, candidate.dedupeKey)));
     },
     async consume({ user, candidate, store }) {
       if (!candidate.dedupeKey) return true;
       const claims = await store.incr(dedupeKeyFor(user.id, candidate.dedupeKey), windowSeconds);
       return claims === 1;
+    },
+    consumeSync({ user, candidate, store }) {
+      if (!candidate.dedupeKey) return true;
+      return syncStoreOf(store).incrSync(dedupeKeyFor(user.id, candidate.dedupeKey), windowSeconds) === 1;
+    },
+    /** Releases the claim commit made, so a failed send does not block the retry of the same event. */
+    async release({ user, candidate, store }) {
+      if (!candidate.dedupeKey) return;
+      await store.del(dedupeKeyFor(user.id, candidate.dedupeKey));
+    },
+  };
+}
+
+/** The store key an inbound STOP is recorded under, before the gate's key prefix is added. */
+export const inboundKeyFor = (userId: string, channel: string) => `inbound:${userId}:${channel}`;
+
+/**
+ * The channel a candidate's inbound consent is read from: its `channel`, else its first
+ * surface, else "default". An empty string counts as missing. `inbound.handle` must be given the same
+ * string for the same channel.
+ */
+export const inboundChannelOf = (candidate: Candidate): string => candidate.channel || candidate.surfaces?.[0] || "default";
+
+/**
+ * Rejects a candidate on a channel where the user has replied STOP and not yet START.
+ * Reads the store the gate was built with, so the state written by `createInboundConsent`
+ * must go through that same store. Place it right after `consent()` in the checks list.
+ *
+ * It follows the gate's onStoreError. The default, "open", lets a candidate through when the store
+ * throws, so set "closed" where consent is legally required. Write the stops with `gate.inbound`
+ * (or `createInboundConsent`), which uses the same store.
+ *
+ * This check is a TypeScript extension. It is not in KNOWN_CHECKS, so a JSON policy cannot name it;
+ * the spec and schema do not describe it.
+ */
+export function inboundConsent(): Check {
+  const stoppedVerdict = (channel: string, state: string | null): CheckOutcome =>
+    state === "stopped" ? reject(`user replied STOP on ${channel}; they have not sent START since`) : pass;
+  return {
+    id: "inboundConsent",
+    run: async ({ user, candidate, store }) => {
+      const channel = inboundChannelOf(candidate);
+      return stoppedVerdict(channel, await store.get(inboundKeyFor(user.id, channel)));
+    },
+    runSync: ({ user, candidate, store }) => {
+      const channel = inboundChannelOf(candidate);
+      return stoppedVerdict(channel, syncStoreOf(store).getSync(inboundKeyFor(user.id, channel)));
+    },
+  };
+}
+
+/**
+ * Stale content is not sent (SPEC 9.8). A candidate is refused at or after its `freshUntil` instant. With
+ * `maxAgeSeconds` it is also refused when its `createdAt` is older than that. An unreadable instant is refused,
+ * since a check that cannot read the date cannot say the content is fresh. With neither field the check skips.
+ */
+export function freshness(options: { maxAgeSeconds?: number } = {}): Check {
+  return {
+    id: "freshness",
+    run: ({ candidate, now }) => {
+      // A JSON null is absent (SPEC 9.8), the same as a missing field.
+      const hasUntil = candidate.freshUntil !== undefined && candidate.freshUntil !== null;
+      const hasCreated = candidate.createdAt !== undefined && candidate.createdAt !== null;
+      if (!hasUntil && !(hasCreated && options.maxAgeSeconds !== undefined)) {
+        return skip(hasCreated ? "no maxAgeSeconds set; createdAt is not checked" : "no freshUntil or createdAt on the candidate; freshness cannot be evaluated");
+      }
+      if (hasUntil) {
+        const until = toDate(candidate.freshUntil);
+        if (!until) return reject("freshUntil is not a valid instant; treated as expired");
+        if (until.getTime() <= now.getTime()) return reject(`expired at ${until.toISOString()}`);
+      }
+      if (hasCreated && options.maxAgeSeconds !== undefined) {
+        const created = toDate(candidate.createdAt);
+        if (!created) return reject("createdAt is not a valid instant; treated as expired");
+        if (now.getTime() - created.getTime() > options.maxAgeSeconds * 1000) {
+          return reject(`expired: created ${created.toISOString()}, older than ${options.maxAgeSeconds} seconds`);
+        }
+      }
+      return pass;
+    },
+  };
+}
+
+/**
+ * Refuses a candidate whose caller-supplied evidence is too thin to act on (SPEC 9.9). The gate never reads the
+ * evidence itself; the caller fills it. Missing data points or confidence count as zero, so they refuse. With no
+ * evidence on the candidate the check skips. `requireNew` refuses a candidate that says it repeats nothing new.
+ */
+export function silence(options: { minDataPoints?: number; minConfidence?: number; requireNew?: boolean } = {}): Check {
+  const minDataPoints = options.minDataPoints ?? 5;
+  const minConfidence = options.minConfidence ?? 0.5;
+  const requireNew = options.requireNew ?? true;
+  return {
+    id: "silence",
+    run: ({ candidate }) => {
+      const evidence = candidate.evidence;
+      if (!evidence) return skip("no evidence on the candidate; silence cannot be evaluated");
+      const points = evidenceCount(evidence.dataPoints);
+      if (points < minDataPoints) return reject(`not enough data: ${points} data points, need ${minDataPoints}`);
+      const confidence = evidenceCount(evidence.confidence);
+      if (confidence < minConfidence) return reject(`not enough confidence: ${confidence}, need ${minConfidence}`);
+      if (requireNew && evidence.newSinceLast === false) return reject("nothing new since the last message");
+      return pass;
+    },
+  };
+}
+
+/**
+ * While the user is in a crisis-support quiet period (SPEC 9.10), only `kind: "support"` candidates pass. The
+ * check reads `user.crisisUntil` and spends nothing. Place it first in the checks list, so no later check can
+ * let a message through first.
+ */
+export function crisisQuiet(): Check {
+  return {
+    id: "crisisQuiet",
+    run: ({ user, candidate, now }) => {
+      const until = toDate(user.crisisUntil);
+      if (!until || until <= now || candidate.kind === "support") return pass;
+      return reject(`crisis quiet period until ${until.toISOString()}; only support messages pass`);
+    },
+    nextAllowedAt: ({ user }) => toDate(user.crisisUntil),
+  };
+}
+
+/**
+ * Takes push off the table in an hour when the user has acted on too little of what they were sent then (SPEC 9.11).
+ * It never rejects; it only narrows the surfaces. The counts are the user's own `hourStats` entry for the hour when
+ * the caller supplied one, else the counters `gate.record` wrote. The defaults (five samples, an acted rate below
+ * 0.2, priority below high) are judgements, not findings.
+ */
+export function deadHours(options: { minSamples?: number; maxActRate?: number; minPriority?: Priority } = {}): Check {
+  const minSamples = options.minSamples ?? 5;
+  const maxActRate = options.maxActRate ?? 0.2;
+  const floor = options.minPriority ?? "high";
+  // A missing count is zero. A count that is not a number makes the total not finite, and such an hour is not judged dead.
+  const countOf = (value: unknown): number => (value === undefined || value === null ? 0 : Number(value));
+  const hourVerdict = (hour: number, acted: number, dismissed: number, candidate: Candidate, surfaces: Surface[]): CheckOutcome => {
+    const total = acted + dismissed;
+    if (!Number.isFinite(total) || total === 0 || total < minSamples || acted / total >= maxActRate) return pass;
+    return {
+      kind: "adjust",
+      reason: `dead hour ${hour}:00: ${acted} of ${total} acted on; push removed for ${candidate.id}`,
+      surfaces: surfaces.filter((s) => s !== "push"),
+    };
+  };
+  return {
+    id: "deadHours",
+    nonRejecting: true,
+    async run({ user, candidate, now, priority, surfaces, store }) {
+      if (!surfaces.includes("push") || atLeast(priority, floor)) return pass;
+      const hour = hourOfDay(now, effectiveZone(user));
+      const own = user.hourStats?.[String(hour)];
+      const acted = own ? countOf(own.acted) : countOf(await store.get(hourKeyFor(user.id, hour, "acted")));
+      const dismissed = own ? countOf(own.dismissed) : countOf(await store.get(hourKeyFor(user.id, hour, "dismissed")));
+      return hourVerdict(hour, acted, dismissed, candidate, surfaces);
+    },
+    runSync({ user, candidate, now, priority, surfaces, store }) {
+      if (!surfaces.includes("push") || atLeast(priority, floor)) return pass;
+      const hour = hourOfDay(now, effectiveZone(user));
+      const own = user.hourStats?.[String(hour)];
+      const sync = syncStoreOf(store);
+      const acted = own ? countOf(own.acted) : countOf(sync.getSync(hourKeyFor(user.id, hour, "acted")));
+      const dismissed = own ? countOf(own.dismissed) : countOf(sync.getSync(hourKeyFor(user.id, hour, "dismissed")));
+      return hourVerdict(hour, acted, dismissed, candidate, surfaces);
     },
   };
 }
@@ -586,7 +963,7 @@ export function boundedDeferral(options: {
 /* Primitives the presets compose.                                           */
 /* ------------------------------------------------------------------------ */
 
-const zoneOf = (ctx: CheckContext, timezone: string) => (timezone === "user" ? ctx.user.timezone : timezone);
+const zoneOf = (ctx: CheckContext, timezone: string) => (timezone === "user" ? effectiveZone(ctx.user) : timezone);
 
 /** Deliveries only inside [start, end) local time in a fixed zone or the user's. */
 export function allowedWindow(options: { start: string; end: string; timezone: string; priorityFloor?: Priority; id?: string }): Check {
@@ -601,15 +978,44 @@ export function allowedWindow(options: { start: string; end: string; timezone: s
       const { minutes } = localClock(ctx.now, zone);
       return inWindow(minutes, start, end) ? pass : reject(`outside the allowed window ${options.start} to ${options.end} ${zone}`);
     },
+    // The earliest local minute the window is open. Null when no zone, or when the window is empty.
+    nextAllowedAt: (ctx) => {
+      const zone = zoneOf(ctx, options.timezone);
+      if (!zone || start === end || (options.priorityFloor && atLeast(ctx.priority, options.priorityFloor))) return null;
+      return firstReadyMinute(ctx.now, zone, (minutes) => inWindow(minutes, start, end), (minutes) => mod1440(start - minutes));
+    },
   };
 }
 
+/**
+ * Why a candidate is not promotional, or undefined when it may be promotional (SPEC 9.7): a transactional message
+ * the user's own action caused, a message the person requested, or a commitment they set up.
+ */
+const notPromotional = (candidate: Candidate): string | undefined => {
+  if (candidate.transactional === true) return "transactional";
+  if (candidate.requested === true) return "requested";
+  if (isCommitment(candidate)) return "commitment";
+  return undefined;
+};
+
 /** Requires `user.consents[name]`, always or only inside a local-time window. */
-export function requiresConsent(options: { name: string; when?: { start: string; end: string; timezone: string }; id?: string }): Check {
+export function requiresConsent(options: { name: string; when?: { start: string; end: string; timezone: string }; id?: string; exemptTransactional?: boolean }): Check {
   const when = options.when ? { start: parseHHMM(options.when.start), end: parseHHMM(options.when.end), timezone: options.when.timezone } : null;
   return {
     id: options.id ?? `consent:${options.name}`,
+    // Only a windowed consent is time-dependent: inside the window a missing consent stops rejecting at the window's end.
+    ...(when ? { nextAllowedAt: (ctx: CheckContext) => {
+      const zone = zoneOf(ctx, when.timezone);
+      if (!zone || when.start === when.end || ctx.user.consents?.[options.name]) return null;
+      return firstReadyMinute(ctx.now, zone, (minutes) => !inWindow(minutes, when.start, when.end), (minutes) => mod1440(when.end - minutes));
+    } } : {}),
     run: (ctx) => {
+      // Marketing consent applies to promotion only (SPEC 9.7). With the option, a transactional, requested or
+      // commitment candidate is not promotional and passes without the consent.
+      if (options.exemptTransactional) {
+        const why = notPromotional(ctx.candidate);
+        if (why) return { kind: "pass", reason: `${why}; not promotional, so consent "${options.name}" is not required` };
+      }
       if (when) {
         const zone = zoneOf(ctx, when.timezone);
         if (!zone) return skip("no timezone on the user; consent window cannot be evaluated");
@@ -656,7 +1062,7 @@ export function windowBudget(options: { limit: number; withinHours: number }): B
   return budget({ id: "windowBudget", label: `window budget`, defaultLimit: options.limit, keyFor, ttlSeconds: options.withinHours * 3600 }, { limit: options.limit, nearLimit: 1 });
 }
 
-/** The LILA order, as a starting point. Replace, reorder, or drop checks freely. */
+/** The default order, as a starting point. Replace, reorder, or drop checks freely. */
 export function defaultChecks(options: {
   killSwitch?: () => boolean | Promise<boolean>;
   modes?: string[];
@@ -668,10 +1074,16 @@ export function defaultChecks(options: {
    * every trace; on, it costs nothing until a candidate carries a `dedupeKey`.
    */
   dedupe?: boolean | { windowSeconds?: number };
+  /**
+   * Add `inboundConsent` right after `consent`. Off by default: it reads STOP replies that
+   * `createInboundConsent` records, so it does nothing unless the caller writes them.
+   */
+  inboundConsent?: boolean;
 } = {}): Check[] {
   return [
     killSwitch(options.killSwitch ?? (() => false)),
     consent(),
+    ...(options.inboundConsent ? [inboundConsent()] : []),
     enabled(),
     mode({ allow: options.modes ?? ["normal"] }),
     snooze(),

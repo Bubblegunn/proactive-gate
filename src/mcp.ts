@@ -55,6 +55,7 @@ const INPUT_SCHEMA: Json = {
     user: { ...(object("The person: id and consent are required; timezone, quietHours, snoozedUntil, mutedTypes, intensity and the rest are read by the checks that need them.") as object), required: ["id", "consent"] },
     candidate: { ...(object("The message the agent wants to send: id and type are required; priority, surfaces, channel and dedupeKey are optional.") as object), required: ["id", "type"] },
     now: { type: "string", description: "The instant to decide at, ISO 8601 ending in Z. Default: the current time." },
+    flags: { type: "object", additionalProperties: { type: "boolean" }, description: "Operations flags. A killSwitch entry with a flag rejects while its flag is false." },
   },
 };
 
@@ -90,7 +91,13 @@ function parseInput(args: Record<string, unknown>): EvaluateInput {
     now = new Date(String(args.now));
     if (Number.isNaN(now.getTime())) throw new Error(`now "${String(args.now)}" is not an ISO 8601 instant`);
   }
-  return { user: user as unknown as EvaluateInput["user"], candidate: candidate as unknown as EvaluateInput["candidate"], ...(now ? { now } : {}) };
+  let flags: Record<string, boolean> | undefined;
+  if (args.flags !== undefined) {
+    const raw = asObject(args.flags, "flags");
+    for (const [name, value] of Object.entries(raw)) if (typeof value !== "boolean") throw new Error(`flags.${name} must be a boolean`);
+    flags = raw as Record<string, boolean>;
+  }
+  return { user: user as unknown as EvaluateInput["user"], candidate: candidate as unknown as EvaluateInput["candidate"], ...(now ? { now } : {}), ...(flags ? { flags } : {}) };
 }
 
 /** The server as a function from one request to its response, or null for a notification. Exported so tests need no process. */

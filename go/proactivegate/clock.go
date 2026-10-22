@@ -313,12 +313,10 @@ func isoMillis(t time.Time) string {
 // parseInstant reads an ISO instant from a caller supplied field. An
 // unparseable value, such as a 23:59:60 leap second no runtime accepts, reads
 // as absent rather than as an error.
-func parseInstant(s *string) *time.Time {
-	if s == nil {
+func parseInstant(v any) *time.Time {
+	t, present, valid := instantOf(v)
+	if !present || !valid {
 		return nil
 	}
-	if t, err := time.Parse(time.RFC3339Nano, *s); err == nil {
-		return &t
-	}
-	return nil
+	return &t
 }

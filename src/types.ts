@@ -64,7 +64,7 @@ export interface UserState {
    */
   quietHours?: QuietWindow | QuietSchedule | null;
   /** When the user joined. Drives the trust ramp. */
-  createdAt?: Date | string;
+  createdAt?: Date | string | null;
   /** Surfaces the user allows, in preference order. Defaults to the candidate's surfaces. */
   surfaces?: Surface[];
   /** Named consents a preset can require, e.g. { ad: true, night: false }. */
@@ -75,10 +75,36 @@ export interface UserState {
   minor?: boolean;
   /** True when a soft opt-in for existing customers applies. */
   existingCustomer?: boolean;
+  /**
+   * IANA zone the device reports. When it is a valid zone it is the user's effective zone, ahead of
+   * `timezone`, for quiet hours, windows and budget days (SPEC 9.2).
+   */
+  deviceTimezone?: string;
+  /**
+   * True when the caller's consent lookup failed, so `consent` is unknown rather than false.
+   * `consent({ failMode })` then decides per surface (SPEC 9.3).
+   */
+  consentUnknown?: boolean;
+  /** Crisis-support quiet period. While it is after `now`, only `kind: "support"` candidates pass (crisisQuiet). */
+  crisisUntil?: Date | string | null;
+  /**
+   * Delivery and dismissal counts per local hour of day, keyed "0" to "23" in the user's effective zone.
+   * deadHours reads them ahead of the counters that `gate.record` writes.
+   */
+  hourStats?: Record<string, { acted: number; dismissed: number }>;
+  /** Pricing or service tier, used to pick a budget limit from `tiers`. */
+  tier?: string;
+  /** Explicit per-user daily limit. It overrides every tier and the check's own limit when it is a finite number of at least 0. */
+  dailyLimit?: number;
 }
 
 /** The thing the agent wants to say. */
 export interface Candidate {
+  /**
+   * Names the message in traces and logs. Reusing one does not merge two sends or hide a
+   * budget unit, because decision ids are unique per evaluation. To make one event deliver at
+   * most once, set `dedupeKey` and enable the `dedupe` check.
+   */
   id: string;
   /** A stable category such as "reminder", "insight", "follow_up". Used by mute and cooldown. */
   type: string;
@@ -103,6 +129,18 @@ export interface Candidate {
    * timestamp and so differs on every retry.
    */
   dedupeKey?: string;
+  /** The person asked for this message. trustRamp lets a requested candidate through during the ramp. */
+  requested?: boolean;
+  /** "commitment" for something the person set up, such as a reminder they asked for; "support" for crisis support. */
+  kind?: string;
+  /** True for a message the user's own action caused, such as a receipt. Exempt from consent when the consent check allows it. */
+  transactional?: boolean;
+  /** The instant after which the candidate is stale. freshness rejects it at or after this instant. */
+  freshUntil?: Date | string | null;
+  /** When the underlying content was created. freshness can reject content older than `maxAgeSeconds`. */
+  createdAt?: Date | string | null;
+  /** Caller-supplied evidence about the candidate. silence reads it; the gate never does. */
+  evidence?: { dataPoints?: number; confidence?: number; newSinceLast?: boolean };
   /** Free-form payload; the gate never reads it. */
   payload?: unknown;
 }
@@ -112,6 +150,8 @@ export interface EvaluateInput {
   candidate: Candidate;
   /** Injected clock for tests and replays. */
   now?: Date;
+  /** Operations flags, such as a kill switch that the caller flips at runtime. Every check reads them as `ctx.flags`. */
+  flags?: Record<string, boolean>;
 }
 
 /** What a single check may say. */
@@ -130,6 +170,8 @@ export interface CheckContext {
   store: Store;
   /** Surfaces still on the table after earlier checks. */
   surfaces: Surface[];
+  /** Operations flags the caller passed to evaluate. Absent when the caller passed none. */
+  flags?: Record<string, boolean>;
 }
 
 export interface Check {
@@ -152,6 +194,23 @@ export interface Check {
    * consume() in check order, once per decision.
    */
   consume?(ctx: CheckContext): Promise<boolean>;
+  /**
+   * Synchronous sibling of `run`, used by `gate.evaluateSync`. A check that reads the store must offer it, since
+   * the store is then read synchronously; a pure check does not need it when `run` returns a non-Promise.
+   */
+  runSync?(ctx: CheckContext): CheckOutcome;
+  /** Synchronous sibling of `consume`, used by `gate.commitSync`. */
+  consumeSync?(ctx: CheckContext): boolean;
+  /**
+   * Gives back the unit that `consume` took, when `gate.release` is called after a committed send that failed.
+   * It runs only for a decision that `commit` allowed, at most once per check and decision (the gate claims each check
+   * separately), and must never take a counter below zero.
+   *
+   * A wrapper that forwards `consume` must forward `release`, `runSync` and `consumeSync` too: a wrapper without
+   * `release` makes `gate.release` return false for every decision that consumed through it. `cnMinorMode` shows the
+   * shape (src/presets.ts).
+   */
+  release?(ctx: CheckContext): Promise<void>;
 }
 
 export interface TraceEntry {
@@ -164,7 +223,13 @@ export interface TraceEntry {
 }
 
 export interface Decision {
-  /** Unique per evaluation: userId, candidateId, the instant and a sequence number. commit() is idempotent on it. */
+  /**
+   * Unique per evaluation: userId, candidateId, the instant, then a token for the gate instance
+   * and a sequence number. Reusing `candidate.id` does not make two evaluations share an id, so
+   * two gates sharing one store never merge their commits; a reused candidate id does not hide a
+   * budget unit. commit() is idempotent on this id: a second commit of the same decision returns
+   * the first result. To make one event deliver at most once, set `dedupeKey` and enable `dedupe`.
+   */
   id: string;
   allowed: boolean;
   userId: string;
@@ -211,7 +276,25 @@ export interface Store {
   set(key: string, value: string, ttlSeconds?: number): Promise<void>;
   /** Atomic increment. Returns the new value. */
   incr(key: string, ttlSeconds?: number): Promise<number>;
+  /**
+   * Optional. Atomic increment by `delta` (INCRBY semantics; a negative delta decrements). The TTL, when
+   * given, is attached only when the call creates the key, as `incr` does. Without it, `gate.release`
+   * returns false and budget refunds are not possible (SPEC 5.9).
+   */
+  incrBy?(key: string, delta: number, ttlSeconds?: number): Promise<number>;
   del(key: string): Promise<void>;
+}
+
+/**
+ * A store that also answers synchronously, for `gate.evaluateSync`, `gate.commitSync` and `gate.decideSync`.
+ * `MemoryStore` implements it. The methods have the same semantics as their async counterparts.
+ */
+export interface SyncStore extends Store {
+  getSync(key: string): string | null;
+  setSync(key: string, value: string, ttlSeconds?: number): void;
+  incrSync(key: string, ttlSeconds?: number): number;
+  incrBySync?(key: string, delta: number, ttlSeconds?: number): number;
+  delSync(key: string): void;
 }
 
 /** Observation points. Hooks never change a decision; a throwing hook is reported to `error` and ignored. */
@@ -237,6 +320,12 @@ export interface GateOptions {
   keyPrefix?: string;
   /** Observation hooks, e.g. one OpenTelemetry span per check. */
   hooks?: GateHooks;
+  /**
+   * Insert the `inboundConsent` check right after the check whose id is "consent" (first in the list
+   * when there is none). Does nothing when the list already holds an `inboundConsent` check. The
+   * stops are written with `gate.inbound.handle`. Default off.
+   */
+  inboundConsent?: boolean;
 }
 
 /** A policy document: the same checks as data. See spec/schema/policy.schema.json. */

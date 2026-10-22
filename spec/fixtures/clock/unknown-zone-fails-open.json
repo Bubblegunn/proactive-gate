@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/unknown-zone-fails-open",
   "description": "A timezone string the platform does not know makes every local-time lookup throw. Under fail-open (3.5) each such check is recorded as a skip and the decision proceeds, so a profile pinned to a bogus zone is unreachable by quiet hours and budgets alike, and nothing refuses it. The control tests show the same policy resolving a real zone normally.",

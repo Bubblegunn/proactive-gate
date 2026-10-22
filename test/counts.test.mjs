@@ -28,6 +28,14 @@ const checkCounts = new Set([
   Object.keys(KNOWN_CHECKS).length - defaultChecks().length, // the ones that are off by default
   quietHoursPosition, // checks that ran when quietHours rejected
 ]);
+// The Go implementation has its own factory map, read from its source.
+const goKnownIds = () => {
+  const goBlock = /var knownChecks = map\[string\]func\(options\) \(Check, error\)\{([\s\S]*?)\n\}/.exec(read("go/proactivegate/policy.go"));
+  assert.ok(goBlock, "could not find knownChecks in go/proactivegate/policy.go");
+  return [...goBlock[1].matchAll(/^\t"(\w+)":/gm)].map((m) => m[1]);
+};
+const goCheckCount = goKnownIds().length;
+
 const presetCounts = new Set([
   Object.keys(presets).length,
   readdirSync(join(root, "spec/fixtures/presets")).length, // preset fixtures
@@ -65,8 +73,9 @@ const scan = (noun) => {
 test("every number written before 'checks' is a count the code produces", () => {
   const found = scan("checks");
   assert.ok(found.length >= 8, `the scan found only ${found.length} mentions; its pattern may have stopped matching`);
-  const bad = found.filter((f) => !checkCounts.has(f.n));
-  assert.deepEqual(bad, [], `counts the code does not produce (allowed: ${[...checkCounts].join(", ")})`);
+  // go/README.md describes the Go implementation, whose count is read from its own source.
+  const bad = found.filter((f) => !checkCounts.has(f.n) && !(f.file === "go/README.md" && f.n === goCheckCount));
+  assert.deepEqual(bad, [], `counts the code does not produce (allowed: ${[...checkCounts].join(", ")}, go: ${goCheckCount})`);
 });
 
 test("every number written before 'presets' is a count the code produces", () => {
@@ -80,12 +89,13 @@ test("the documented shape of the default and init policies is what the code bui
   const defaults = defaultChecks().map((c) => c.id);
   const init = buildPolicy().checks.map((c) => c.id);
   assert.deepEqual(defaults.filter((id) => !init.includes(id)), ["killSwitch", "adaptiveTiming"]);
-  assert.equal(Object.keys(KNOWN_CHECKS).length - defaults.length, 10);
+  // SPEC 1.6.0 adds freshness, silence, crisisQuiet and deadHours to the 10 that are off by default.
+  assert.equal(Object.keys(KNOWN_CHECKS).length - defaults.length, 14);
 });
 
 // README.tr.md is not in FILES: the scan above reads English number words and digits, and the
 // Turkish count sentences are written in Turkish words, so each one is pinned here by its value.
-const TR_WORDS = { 8: "sekiz", 10: "on", 12: "on iki" };
+const TR_WORDS = { 8: "sekiz", 10: "on", 12: "on iki", 13: "on üç", 14: "on dört" };
 const trWord = (n) => {
   assert.ok(TR_WORDS[n], `no Turkish word for ${n}; add it to TR_WORDS when the code produces it`);
   return TR_WORDS[n];
@@ -109,14 +119,11 @@ test("README.tr.md states the position at which quiet hours rejects, as the code
   );
 });
 
-// The Go implementation keeps its own factory map. Its entries are one tab deep, so nested
-// function bodies (two or more tabs deep) are not counted.
-test("the Go knownChecks map has one factory per KNOWN_CHECKS entry", () => {
-  const goBlock = /var knownChecks = map\[string\]func\(options\) \(Check, error\)\{([\s\S]*?)\n\}/.exec(
-    read("go/proactivegate/policy.go"),
-  );
-  assert.ok(goBlock, "could not find knownChecks in go/proactivegate/policy.go");
-  const goCount = [...goBlock[1].matchAll(/^\t"\w+":/gm)].length;
-  assert.ok(goCount > 0, "the Go factory scan found no entries");
-  assert.equal(goCount, Object.keys(KNOWN_CHECKS).length, "Go factory count differs from KNOWN_CHECKS");
+// The Go knownChecks entries are one tab deep, so nested function bodies (two or more tabs deep) are not counted.
+// Every KNOWN_CHECKS id has exactly one Go factory, and Go names no id that TypeScript does not know.
+test("the Go knownChecks map has exactly one factory per KNOWN_CHECKS entry", () => {
+  const goIds = goKnownIds();
+  assert.ok(goIds.length > 0, "the Go factory scan found no entries");
+  assert.equal(new Set(goIds).size, goIds.length, "a Go factory is named more than once");
+  assert.deepEqual([...goIds].sort(), Object.keys(KNOWN_CHECKS).sort(), "Go knownChecks and KNOWN_CHECKS name different ids");
 });

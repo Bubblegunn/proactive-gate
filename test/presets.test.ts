@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createGate, MemoryStore, presets, compilePolicy, KNOWN_CHECKS } from "../src/index.js";
-import type { Candidate, UserState } from "../src/index.js";
+import { createGate, MemoryStore, presets, compilePolicy, KNOWN_CHECKS, checks } from "../src/index.js";
+import type { Candidate, CheckContext, Priority, UserState } from "../src/index.js";
 
 const user = (o: Partial<UserState> = {}): UserState => ({ id: "u1", consent: true, timezone: "Europe/Istanbul", ...o });
 const candidate = (o: Partial<Candidate> = {}): Candidate => ({ id: "c1", type: "reminder", ...o });
@@ -15,7 +15,7 @@ test("every preset has sources, a note, and builds an ordered list", () => {
     assert.ok(list.length >= 1, `${name} builds nothing`);
     assert.ok(list.every((c) => typeof c.id === "string" && typeof c.run === "function"), `${name} is not a check list`);
   }
-  assert.equal(Object.keys(presets).length, 17);
+  assert.equal(Object.keys(presets).length, 18);
 });
 
 test("lineMessagingApi maps plans to monthly budgets and rejects unknown plans", () => {
@@ -116,4 +116,52 @@ test("policies: the example compiles in order, presets expand, unknown ids and v
   assert.throws(() => compilePolicy({ specVersion: "2.0.0", checks: [{ id: "consent" }] }), /not supported/);
   assert.throws(() => createGate({ policy: { specVersion: "1.0.0", checks: [{ id: "consent" }] }, checks: [] } as never), /either checks or policy/);
   assert.ok(Object.keys(KNOWN_CHECKS).length >= 20);
+});
+
+test("allowedWindow reports when the window next opens, across daylight-saving changes", async () => {
+  const gate = createGate({ checks: presets.usTcpa!() });
+  const ny = user({ timezone: "America/New_York" });
+  const nextAt = async (iso: string) => (await gate.evaluate({ user: ny, candidate: candidate(), now: new Date(iso) })).nextAllowedAt?.toISOString();
+  assert.equal(await nextAt("2026-03-08T06:30:00Z"), "2026-03-08T12:00:00.000Z"); // spring forward night: 01:30 EST
+  assert.equal(await nextAt("2026-11-01T06:30:00Z"), "2026-11-01T13:00:00.000Z"); // autumn, second 01:30 EST
+  assert.equal(await nextAt("2026-06-16T01:00:00Z"), "2026-06-16T12:00:00.000Z"); // 21:00 EDT
+});
+
+test("allowedWindow: a window that opens inside a spring-forward gap resolves to the first minute that exists", async () => {
+  const gate = createGate({ checks: [checks.allowedWindow({ start: "02:30", end: "09:00", timezone: "America/New_York" })] });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: new Date("2026-03-08T06:00:00Z") }); // 01:00 EST
+  assert.equal(d.nextAllowedAt?.toISOString(), "2026-03-08T07:00:00.000Z"); // 03:00 EDT
+});
+
+test("allowedWindow: a zone with a 45-minute offset opens at its own local 08:00", async () => {
+  const gate = createGate({ checks: [checks.allowedWindow({ start: "08:00", end: "21:00", timezone: "Asia/Kathmandu" })] });
+  const d = await gate.evaluate({ user: user(), candidate: candidate(), now: new Date("2026-06-16T15:15:00Z") }); // 21:00 local
+  assert.equal(d.nextAllowedAt?.toISOString(), "2026-06-17T02:15:00.000Z"); // 08:00 local the next day
+});
+
+test("allowedWindow.nextAllowedAt: a priority at or above the floor never waits for the window", async () => {
+  const daytime = checks.allowedWindow({ start: "08:00", end: "21:00", timezone: "Europe/Istanbul", priorityFloor: "high" });
+  const ctx = (priority: Priority): CheckContext => ({ user: user(), candidate: candidate(), now: new Date("2026-06-16T01:00:00Z"), priority, store: new MemoryStore(), surfaces: [] }); // 04:00 local, outside the window
+  assert.equal(await daytime.nextAllowedAt!(ctx("critical")), null);
+  assert.equal(await daytime.nextAllowedAt!(ctx("high")), null);
+  assert.equal((await daytime.nextAllowedAt!(ctx("normal")))?.toISOString(), "2026-06-16T05:00:00.000Z"); // 08:00 local
+});
+
+test("kakaoBrandMessage and krNetworkAct50 report their next instant of sending", async () => {
+  const kakao = createGate({ checks: presets.kakaoBrandMessage!() });
+  const kakaoDecision = await kakao.evaluate({ user: user({ timezone: "Asia/Seoul", consents: { ad: true } }), candidate: candidate(), now: new Date("2026-06-15T11:50:00Z") }); // 20:50 KST
+  assert.equal(kakaoDecision.rejectedBy, "window:kakao");
+  assert.equal(kakaoDecision.nextAllowedAt?.toISOString(), "2026-06-15T23:00:00.000Z");
+
+  const kr = createGate({ checks: presets.krNetworkAct50!() });
+  const krDecision = await kr.evaluate({ user: user({ timezone: "Asia/Seoul", consents: { ad: true } }), candidate: candidate(), now: new Date("2026-06-15T13:00:00Z") }); // 22:00 KST, no night consent
+  assert.equal(krDecision.rejectedBy, "consent:night");
+  assert.equal(krDecision.nextAllowedAt?.toISOString(), "2026-06-15T23:00:00.000Z"); // the night consent stops applying at 08:00 KST
+});
+
+test("requiresConsent without a window never says when it will stop rejecting", async () => {
+  const gate = createGate({ checks: [checks.requiresConsent({ name: "ad" })] });
+  const d = await gate.evaluate({ user: user({ timezone: "Asia/Seoul" }), candidate: candidate(), now: new Date("2026-06-15T13:00:00Z") });
+  assert.equal(d.rejectedBy, "consent:ad");
+  assert.equal(d.nextAllowedAt, undefined);
 });

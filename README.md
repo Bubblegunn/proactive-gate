@@ -12,21 +12,37 @@ npx proactive-gate simulate
 
 The recording is the real output of that command on a generated week (eight users, five time zones, seed 7), not anybody's traffic. It needs no key, no account and no configuration. Method and limits are under [What the simulation shows](#what-the-simulation-shows).
 
-Install it in your project:
+Install it in your project by one of three routes.
+
+Use the npm package in a Node project. It needs Node 22 or newer. Check with `node -v` first: an older Node installs the 0.7 line.
 
 ```
-npm install proactive-gate        # Node 22 or newer
-pip install proactive-gate        # Python 3.11 or newer
-go get github.com/Bubblegunn/proactive-gate/go@v0.2.0
+npm install proactive-gate
 ```
 
-To have Claude Code put the gate in front of an agent's messages for you, install the skill as a plugin (Claude Code 2.1.275 or later):
+Use the plugin when you want Claude Code to put the gate in front of an agent's messages for you (Claude Code 2.1.275 or later).
 
 ```
 /plugin install proactive-gate --marketplace Bubblegunn/proactive-gate
 ```
 
+Use the skill with any agent that reads skills, not only Claude Code.
+
+```
+npx skills add Bubblegunn/proactive-gate
+```
+
+Python and Go have their own packages (Python 3.11 or newer):
+
+```
+pip install proactive-gate
+go get github.com/Bubblegunn/proactive-gate/go@v0.2.0
+```
+
 The Python and Go packages are described in [Python](#python) and [Go](#go). The gate has [adapters](#adapters) for the Vercel AI SDK, Mastra, LangChain and OpenAI Agents, and a Claude Code hook. [Presets](#presets-platform-quotas-and-legal-limits-with-sources) hold platform quotas and legal limits.
+
+To write a policy file and the wiring for your framework in one command, run `npx proactive-gate init --minimal --legal us`: `--minimal` writes the short policy from the skill, and `--legal us` adds the US calling-hours preset. To start the gate for an assistant that messages users on its own, run `npx proactive-gate scaffold nudge --out .`: it writes a policy, a `notify.mjs` module to adapt, and its tests.
+
 
 [Docs](https://bubblegunn.github.io/proactive-gate/) · [Playground](https://bubblegunn.github.io/proactive-gate/playground/) · [FAQ](https://bubblegunn.github.io/proactive-gate/faq/) · English | [Türkçe](README.tr.md)
 
@@ -359,6 +375,8 @@ A check can `defer` instead of rejecting: the decision has `allowed: false`, `de
 `retryAt`, and the caller knows when to try again. `snooze({ defer: true })` is the built-in
 example.
 
+When a refusal carries `nextAllowedAt`, `gate.whenAllowed(input, { maxHops })` evaluates again at that instant, and again at each later `nextAllowedAt`, until the candidate may go out. It returns the first allowing instant with its decision, or `at: null` when a refusal has no instant or the hops run out (default 12). It consumes no budget, so call `commit` at the instant you send. `examples/hold-queue.mjs` is a small queue that retries at `nextAllowedAt`. In TypeScript, the windowed presets (`usTcpa`, `kakaoBrandMessage`, `cnMinorMode`, `krNetworkAct50`) and windowed `requiresConsent` report `nextAllowedAt`; Python and Go do not yet.
+
 A check with `shadow: true` runs and is traced with its real outcome, but cannot stop the
 message; its id lands in `decision.shadowed`. Ship a new rule in shadow for a week, count how
 often it would have fired, then turn it on.
@@ -596,6 +614,40 @@ as the safe default for [webhook
 deduplication](https://developer.nylas.com/docs/cookbook/agent-accounts/prevent-duplicate-replies/).
 Set `windowSeconds` from your own transport's retry horizon.
 
+## Inbound STOP and START
+
+A reply of STOP on a channel must stop the next message on that channel, and START must allow it again. `gate.inbound.handle` records the reply for one user and one channel, and the `inboundConsent` check reads it, so the gate refuses with no other code. A STOP on SMS leaves email open.
+
+```js
+import { createGate, defaultChecks, MemoryStore } from "proactive-gate";
+
+const gate = createGate({ store: new MemoryStore(), checks: defaultChecks(), inboundConsent: true });
+const user = { id: "ayse", consent: true, timezone: "Europe/Istanbul" };
+const sms = { id: "a2", type: "reminder", priority: "normal", channel: "sms" };
+const now = new Date("2026-09-04T09:00:00Z");
+
+await gate.inbound.handle({ userId: "ayse", channel: "sms", text: "STOP" });
+const stopped = await gate.evaluate({ user, candidate: sms, now });
+console.log(stopped.allowed, stopped.rejectedBy);
+
+await gate.inbound.handle({ userId: "ayse", channel: "sms", text: "start" });
+const started = await gate.evaluate({ user, candidate: sms, now });
+console.log(started.allowed, started.rejectedBy ?? "none");
+```
+
+Output:
+
+```
+false inboundConsent
+true none
+```
+
+- A reply counts only when the whole message is the keyword, after trimming and ignoring case and edge punctuation. `STOP.` and ` quit ` stop; `stop it` and `yes please` do not.
+- The stop words are STOP, STOPALL, UNSUBSCRIBE, CANCEL, END and QUIT. The start words are START, UNSTOP and YES. YES is a default, not a carrier rule. To use other words, call `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` with the gate's store and the gate's `keyPrefix` (default `pg:`), use its `handle` for replies, and pass its `check()` in `checks`. The gate's own `gate.inbound` always uses the default lists.
+- A stored STOP has no expiry. It lasts until a START arrives on the same channel.
+- If the store fails, the check follows `onStoreError`, which defaults to `"open"`. Where consent is legally required, set `onStoreError: "closed"`.
+- TypeScript only. Python and Go do not have this yet, and a JSON policy cannot name `inboundConsent`.
+
 ## Stores
 
 `MemoryStore` keeps values in process memory and is useful for a single instance. `RedisStore`
@@ -719,6 +771,12 @@ of users, per-tenant overrides, and an audit trail of who flipped what. Use flag
 whether the gate runs at all, and the gate to decide whether this message reaches this
 person now.
 
+## Head to head
+
+We measure this against Claude with no plugin, the Knock skills, on the same frozen tasks. The tasks, checkers, fairness rules and the one command that re-runs everything are in [docs/HEAD-TO-HEAD.md](docs/HEAD-TO-HEAD.md).
+
+Results: see docs/HEAD-TO-HEAD.md.
+
 ## Adapters
 
 | subpath | framework | where the gate sits |
@@ -812,7 +870,7 @@ reproduces exactly. The race property was checked against a mutant: rewriting
 [`spec/SPEC.md`](spec/SPEC.md) states the behaviour as numbered requirements, and
 [`spec/fixtures`](spec/fixtures) holds language-neutral cases: the DST edge in
 America/New_York, Pacific/Apia, a wall-clock case in 2031, atomic commit, the ISO week,
-deferral, shadow mode, the optional checks and nine of the seventeen presets. The `clock/` area is the
+deferral, shadow mode, the optional checks and nine of the eighteen presets. The `clock/` area is the
 adversarial clock suite: deleted and repeated DST hours, 23- and 25-hour local days, a
 mid-week timezone move, a skipped calendar day in Apia, weeks whose ISO year is not the
 calendar year, a rewound clock, and years below 1000, which both implementations got wrong
@@ -827,7 +885,7 @@ package's release tags, so an implementation in any language can pin it without 
 or PyPI:
 
 ```sh
-git clone --depth 1 --branch spec/v1.5.0 https://github.com/Bubblegunn/proactive-gate
+git clone --depth 1 --branch spec/v1.6.0 https://github.com/Bubblegunn/proactive-gate
 ```
 
 The npm package also ships it, so `node_modules/proactive-gate/spec/fixtures` exists after an
@@ -840,9 +898,9 @@ Generated by `npm run conformance-table`; CI fails when it is stale.
 
 | implementation | spec version | fixtures passed | declared skips |
 |---|---|---:|---|
-| TypeScript | 1.5.0 | 68 of 68 | none |
-| Python | 1.5.0 | 68 of 68 | none |
-| Go | 1.5.0 | 68 of 68 | none |
+| TypeScript | 1.6.0 | 81 of 81 | none |
+| Python | 1.6.0 | 68 of 81 | lessons/zone-device-wins (ported in the round-3 port task); lessons/zone-reject-missing (ported in the round-3 port task); lessons/consent-fail-mode (ported in the round-3 port task); lessons/kill-switch-flag (ported in the round-3 port task); lessons/commitment-bypass (ported in the round-3 port task); lessons/requested-pass (ported in the round-3 port task); lessons/cooldown-exempt (ported in the round-3 port task); lessons/transactional-exempt (ported in the round-3 port task); lessons/freshness (ported in the round-3 port task); lessons/silence (ported in the round-3 port task); lessons/crisis-quiet (ported in the round-3 port task); lessons/budget-tiers-override (ported in the round-3 port task); lessons/zone-budget-day (ported in the round-3 port task) |
+| Go | 1.6.0 | 68 of 81 | lessons/zone-device-wins (ported in the round-3 port task); lessons/zone-reject-missing (ported in the round-3 port task); lessons/consent-fail-mode (ported in the round-3 port task); lessons/kill-switch-flag (ported in the round-3 port task); lessons/commitment-bypass (ported in the round-3 port task); lessons/requested-pass (ported in the round-3 port task); lessons/cooldown-exempt (ported in the round-3 port task); lessons/transactional-exempt (ported in the round-3 port task); lessons/freshness (ported in the round-3 port task); lessons/silence (ported in the round-3 port task); lessons/crisis-quiet (ported in the round-3 port task); lessons/budget-tiers-override (ported in the round-3 port task); lessons/zone-budget-day (ported in the round-3 port task) |
 <!-- conformance:end -->
 
 ### What made this work elsewhere, and why it might not here
@@ -943,11 +1001,9 @@ inferred from what happens to be in it.
 
 ## Where it comes from
 
-This is the delivery gate from [LILA](https://efe-genc-portfolio.vercel.app/projects/lila/),
-a proactive assistant I have been building alone since February 2026, extracted and
-made framework-agnostic. The order of the twelve checks, the trust ramp, the
-three-in-thirty cooldown and the fail-open budget are all decisions that were made
-in production and defended in
+This is the delivery gate of a proactive assistant, extracted and made
+framework-agnostic. The order of the twelve checks, the trust ramp, the
+three-in-thirty cooldown and the fail-open budget are decisions defended in
 [The hardest part of a proactive assistant is knowing when not to speak](https://efe-genc-portfolio.vercel.app/writing/knowing-when-not-to-speak/).
 Tian Pan's
 [notification budget](https://tianpan.co/blog/2026-05-13-background-agents-notification-budget-attention-economy)

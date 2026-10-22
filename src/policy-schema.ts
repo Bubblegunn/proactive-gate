@@ -18,6 +18,7 @@ const BUDGET_OPTIONS: Record<string, JsonSchema> = {
   limit: number("Deliveries allowed per period.", { minimum: 0 }),
   bypassPriority: { ...PRIORITY, description: "Candidates at or above this priority are not counted." },
   nearLimit: number("Fraction of the limit at which a pass carries a nearLimit note.", { exclusiveMinimum: 0, maximum: 1 }),
+  tiers: { type: "object", additionalProperties: { type: "number", minimum: 0 }, description: "Limit per user tier. A user's explicit dailyLimit still wins for the daily budget." },
 };
 
 /**
@@ -26,8 +27,8 @@ const BUDGET_OPTIONS: Record<string, JsonSchema> = {
  * leave this table behind.
  */
 export const CHECK_DOCS: Record<string, CheckDoc> = {
-  killSwitch: { description: "Rejects every candidate while on is true.", options: { on: { type: "boolean", description: "True to silence everything." } } },
-  consent: { description: "Rejects users who have not consented to proactive behaviour.", options: {} },
+  killSwitch: { description: "Rejects every candidate while on is true, or while the named runtime flag is false.", options: { on: { type: "boolean", description: "True to silence everything. Not with flag." }, flag: { type: "string", description: "Name of a runtime flag. The check rejects while it is false. Not with on." } } },
+  consent: { description: "Rejects users who have not consented to proactive behaviour, or whose consent is unknown and no surface fails open.", options: { failMode: { type: "object", additionalProperties: { enum: ["open", "closed"] }, description: "Per-surface fail mode used when consent is unknown. A key default sets the rest; closed when unset." } } },
   enabled: { description: "Rejects profiles with proactive behaviour switched off.", options: {} },
   mode: { description: "Only these operating modes may receive proactive messages.", options: { allow: { type: "array", items: { type: "string" }, description: "Allowed modes. Default [\"normal\"]." } } },
   snooze: { description: "A global pause until user.snoozedUntil.", options: { defer: { type: "boolean", description: "True to defer with retryAt instead of rejecting." } } },
@@ -43,11 +44,11 @@ export const CHECK_DOCS: Record<string, CheckDoc> = {
       },
     },
   },
-  quietHours: { description: "Rejects inside the user's quiet hours, in the user's time zone.", options: { priorityFloor: { ...PRIORITY, description: "Candidates at or above this priority pass. Default critical." } } },
+  quietHours: { description: "Rejects inside the user's quiet hours, in the user's time zone.", options: { priorityFloor: { ...PRIORITY, description: "Candidates at or above this priority pass. Default critical." }, onMissingTimezone: { enum: ["skip", "reject"], description: "With no usable zone: skip (default) or reject." } } },
   trustRamp: { description: "For the first days after sign-up only high priority gets through.", options: { days: number("Length of the ramp in days.", { minimum: 0 }), minPriority: { ...PRIORITY, description: "Lowest priority allowed during the ramp." } } },
   dismissalCooldown: {
     description: "Silences a candidate type after repeated dismissals.",
-    options: { dismissals: number("Dismissals that trigger the silence.", { minimum: 1 }), withinDays: number("Window in which they are counted.", { minimum: 1 }), silenceDays: number("How long the type stays silent.", { minimum: 1 }) },
+    options: { dismissals: number("Dismissals that trigger the silence.", { minimum: 1 }), withinDays: number("Window in which they are counted.", { minimum: 1 }), silenceDays: number("How long the type stays silent.", { minimum: 1 }), exemptTypes: { type: "array", items: { type: "string" }, description: "Candidate types the cooldown never silences." } },
   },
   adaptiveTiming: { description: "Never rejects. Lets the caller move delivery to a better moment.", options: {} },
   dedupe: { description: "One delivery per event per window, claimed at commit.", options: { windowSeconds: number("Deduplication window in seconds.", { minimum: 1 }) } },
@@ -67,6 +68,7 @@ export const CHECK_DOCS: Record<string, CheckDoc> = {
     description: "Requires user.consents[name], always or only inside a local-time window.",
     options: {
       name: { type: "string", description: "Key in user.consents." },
+      exemptTransactional: { type: "boolean", description: "True to let a candidate that is not promotional through without the consent: transactional, requested or a commitment." },
       when: { type: "object", additionalProperties: false, required: ["start", "end", "timezone"], properties: { start: hhmm("Window start."), end: hhmm("Window end."), timezone: { type: "string" } }, description: "Only inside this window." },
     },
   },
@@ -76,12 +78,27 @@ export const CHECK_DOCS: Record<string, CheckDoc> = {
   },
   recentInteraction: { description: "The user wrote to the assistant within the last withinHours.", options: { withinHours: number("Hours since the last inbound message.", { minimum: 0 }) } },
   windowBudget: { description: "At most limit deliveries in the window that opened with the user's last message.", options: { limit: number("Deliveries per window.", { minimum: 0 }), withinHours: number("Window length in hours.", { minimum: 0 }) } },
+  freshness: { description: "Refuses content at or after its freshUntil instant, or older than maxAgeSeconds when that is set.", options: { maxAgeSeconds: number("Oldest content allowed, in seconds, counted from createdAt.", { minimum: 0 }) } },
+  silence: { description: "Refuses a candidate whose caller-supplied evidence is too thin or repeats nothing new.", options: { minDataPoints: number("Fewest data points the evidence must count.", { minimum: 0 }), minConfidence: number("Lowest confidence the evidence must carry.", { minimum: 0, maximum: 1 }), requireNew: { type: "boolean", description: "True to refuse a candidate that says nothing is new. Default true." } } },
+  deadHours: {
+    description: "Takes push off the table in an hour when the user acted on too little of what they were sent then. Never rejects.",
+    options: {
+      minSamples: number("Samples the hour needs before its rate counts.", { minimum: 0 }),
+      maxActRate: number("Acted share below which the hour is dead.", { minimum: 0, maximum: 1 }),
+      minPriority: { ...PRIORITY, description: "Candidates at or above this priority keep push. Default high." },
+    },
+  },
+  crisisQuiet: { description: "Only support candidates pass while the user is in a crisis-support quiet period.", options: {} },
 };
 
 /** The options a preset reads from its entry. Presets not listed read none. */
 export const PRESET_OPTIONS: Record<string, Record<string, JsonSchema>> = {
   lineMessagingApi: { plan: { enum: ["communication", "light", "standard"], description: "LINE pricing plan." } },
   whatsappBusiness: { template: { type: "boolean", description: "True for an approved template message, which may be sent outside the 24-hour window." } },
+  assistantNudge: {
+    dailyLimit: number("Deliveries a day before the budget refuses. Default 3.", { minimum: 0 }),
+    exemptTypes: { type: "array", items: { type: "string" }, description: "Candidate types the dismissal cooldown never silences." },
+  },
 };
 
 const firstSentence = (text: string): string => {

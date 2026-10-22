@@ -4,13 +4,15 @@ shadow mode, deferral, hooks and idempotent commit lives here."""
 from __future__ import annotations
 
 import json
+import os
 import time
+import uuid
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from .checks import Budget, Check, OnlyWhen, budget_key, dismissal_key
+from .checks import Budget, Check, OnlyWhen, budget_key, dismissal_key, effective_zone, hour_of_day, hours_key
 from .clock import DAY_SECONDS
 from .stores import AsyncStore, MemoryStore, Store
 from .types import (
@@ -32,6 +34,7 @@ from .types import (
 )
 
 COMMIT_TTL = 2 * DAY_SECONDS
+HOUR_TTL = 90 * DAY_SECONDS
 Values = Mapping[str, str | None]
 
 
@@ -45,13 +48,24 @@ class Hooks:
     finally_: Callable[[Decision], None] | None = None
 
 
-_sequence = 0
+class _DecisionIds:
+    """Issues the ``<token>-<sequence>`` tail of a decision id. Each gate has its own token and sequence, so two
+    gates sharing one store never produce the same id for the same user, candidate and instant. A process forked
+    after the gate was built (gunicorn --preload, Celery prefork, multiprocessing fork) would inherit both values,
+    so when the pid differs at issue time the token is replaced and the sequence restarts in the child."""
 
+    def __init__(self) -> None:
+        self._pid = os.getpid()
+        self._token = uuid.uuid4().hex
+        self._sequence = 0
 
-def _next_sequence() -> int:
-    global _sequence
-    _sequence += 1
-    return _sequence
+    def next(self) -> str:
+        if os.getpid() != self._pid:
+            self._pid = os.getpid()
+            self._token = uuid.uuid4().hex
+            self._sequence = 0
+        self._sequence += 1
+        return f"{self._token}-{self._sequence}"
 
 
 @dataclass(slots=True)
@@ -62,6 +76,7 @@ class Evaluation:
     input: EvaluateInput
     on_store_error: StoreErrorMode = "open"
     hooks: Hooks = field(default_factory=Hooks)
+    ids: _DecisionIds = field(default_factory=_DecisionIds)
     now: datetime = field(init=False)
     _index: int = 0
     _trace: list[TraceEntry] = field(default_factory=list)
@@ -76,7 +91,7 @@ class Evaluation:
         self._surfaces = surfaces_for(self.input.user, self.input.candidate)
 
     def context(self) -> Context:
-        return Context(self.input.user, self.input.candidate, self.now, self.input.candidate.priority, self._surfaces)
+        return Context(self.input.user, self.input.candidate, self.now, self.input.candidate.priority, self._surfaces, self.input.flags)
 
     def pending(self) -> Check | None:
         if self._result is not None or self._index >= len(self.checks):
@@ -184,7 +199,7 @@ class Evaluation:
     ) -> None:
         user, candidate = self.input.user, self.input.candidate
         self._result = Decision(
-            id=f"{user.id}:{candidate.id}:{iso_z(self.now)}#{_next_sequence()}",
+            id=f"{user.id}:{candidate.id}:{iso_z(self.now)}#{self.ids.next()}",
             allowed=allowed,
             user_id=user.id,
             candidate_id=candidate.id,
@@ -258,6 +273,7 @@ class Gate:
         self.on_decision = on_decision
         self.hooks = hooks or Hooks()
         self._consumers = _consumers(self.checks)
+        self._ids = _DecisionIds()
 
     @classmethod
     def from_policy(cls, policy: Mapping[str, Any], store: Store | None = None, on_decision: Callable[[Decision], None] | None = None, hooks: Hooks | None = None) -> "Gate":
@@ -267,7 +283,7 @@ class Gate:
         return cls(compiled.checks, store, compiled.on_store_error, compiled.key_prefix, on_decision, hooks)
 
     def evaluate(self, input: EvaluateInput) -> Decision:
-        ev = Evaluation(self.checks, input, self.on_store_error, self.hooks)
+        ev = Evaluation(self.checks, input, self.on_store_error, self.hooks, self._ids)
         while ev.pending() is not None:
             try:
                 values = {k: self.store.get(self._p.key(k)) for k in ev.keys()}
@@ -292,7 +308,7 @@ class Gate:
             if seen is not None:
                 return seen == "1"
             ok = True
-            ctx = Context(input.user, input.candidate, now, input.candidate.priority, decision.surfaces)
+            ctx = Context(input.user, input.candidate, now, input.candidate.priority, decision.surfaces, input.flags)
             for check in self._consumers:
                 plan = _plan(check, ctx)
                 if plan is None:
@@ -306,9 +322,14 @@ class Gate:
             return self.on_store_error == "open"
 
     def record(self, user: UserState, candidate: Candidate, event: OutcomeEvent, at: datetime | None = None) -> None:
-        if event != "dismissed":
+        if event not in ("acted", "dismissed"):
             return
         at = at or datetime.now(UTC)
+        if event == "acted" or event == "dismissed":
+            hour = hour_of_day(at, effective_zone(user))
+            self.store.incr(self._p.key(hours_key(user.id, hour, event)), HOUR_TTL)
+        if event != "dismissed":
+            return
         key = self._p.key(dismissal_key(user.id, candidate.type))
         raw = self.store.get(key)
         stamps: list[int] = json.loads(raw) if raw else []
@@ -318,7 +339,7 @@ class Gate:
 
     def inspect(self, user: UserState, now: datetime | None = None) -> dict[str, Any]:
         now = now or datetime.now(UTC)
-        used = int(self.store.get(self._p.key(budget_key(user.id, now, user.timezone))) or 0)
+        used = int(self.store.get(self._p.key(budget_key(user.id, now, effective_zone(user)))) or 0)
         dismissals: dict[str, int] = {}
         for type_ in user.muted_types:
             raw = self.store.get(self._p.key(dismissal_key(user.id, type_)))
@@ -345,6 +366,7 @@ class AsyncGate:
         self.on_decision = on_decision
         self.hooks = hooks or Hooks()
         self._consumers = _consumers(self.checks)
+        self._ids = _DecisionIds()
 
     @classmethod
     def from_policy(cls, policy: Mapping[str, Any], store: AsyncStore, on_decision: Callable[[Decision], None] | None = None, hooks: Hooks | None = None) -> "AsyncGate":
@@ -354,7 +376,7 @@ class AsyncGate:
         return cls(compiled.checks, store, compiled.on_store_error, compiled.key_prefix, on_decision, hooks)
 
     async def evaluate(self, input: EvaluateInput) -> Decision:
-        ev = Evaluation(self.checks, input, self.on_store_error, self.hooks)
+        ev = Evaluation(self.checks, input, self.on_store_error, self.hooks, self._ids)
         while ev.pending() is not None:
             try:
                 values = {k: await self.store.get(self._p.key(k)) for k in ev.keys()}
@@ -379,7 +401,7 @@ class AsyncGate:
             if seen is not None:
                 return seen == "1"
             ok = True
-            ctx = Context(input.user, input.candidate, now, input.candidate.priority, decision.surfaces)
+            ctx = Context(input.user, input.candidate, now, input.candidate.priority, decision.surfaces, input.flags)
             for check in self._consumers:
                 plan = _plan(check, ctx)
                 if plan is None:
@@ -393,9 +415,14 @@ class AsyncGate:
             return self.on_store_error == "open"
 
     async def record(self, user: UserState, candidate: Candidate, event: OutcomeEvent, at: datetime | None = None) -> None:
-        if event != "dismissed":
+        if event not in ("acted", "dismissed"):
             return
         at = at or datetime.now(UTC)
+        if event == "acted" or event == "dismissed":
+            hour = hour_of_day(at, effective_zone(user))
+            await self.store.incr(self._p.key(hours_key(user.id, hour, event)), HOUR_TTL)
+        if event != "dismissed":
+            return
         key = self._p.key(dismissal_key(user.id, candidate.type))
         raw = await self.store.get(key)
         stamps: list[int] = json.loads(raw) if raw else []
@@ -405,7 +432,7 @@ class AsyncGate:
 
     async def inspect(self, user: UserState, now: datetime | None = None) -> dict[str, Any]:
         now = now or datetime.now(UTC)
-        used = int(await self.store.get(self._p.key(budget_key(user.id, now, user.timezone))) or 0)
+        used = int(await self.store.get(self._p.key(budget_key(user.id, now, effective_zone(user)))) or 0)
         dismissals: dict[str, int] = {}
         for type_ in user.muted_types:
             raw = await self.store.get(self._p.key(dismissal_key(user.id, type_)))

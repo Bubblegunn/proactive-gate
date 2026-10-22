@@ -40,7 +40,7 @@ def _input(test: Mapping[str, Any]) -> EvaluateInput:
     now = to_datetime(raw["now"])
     if now is None:
         raise ValueError(f"bad now {raw['now']!r}")
-    return EvaluateInput(UserState.from_dict(raw["user"]), Candidate.from_dict(raw["candidate"]), now)
+    return EvaluateInput(UserState.from_dict(raw["user"]), Candidate.from_dict(raw["candidate"]), now, raw.get("flags"))
 
 
 def _compare(failures: list[str], at: str, decision: Decision, expect: Mapping[str, Any]) -> None:

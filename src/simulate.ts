@@ -33,7 +33,7 @@
  */
 import { createGate } from "./gate.js";
 import { compilePolicy } from "./policy.js";
-import { budgetKey, localClock, quietAt } from "./checks.js";
+import { budgetKey, effectiveZone, localClock, quietAt } from "./checks.js";
 import { explain } from "./explain.js";
 import { MemoryStore } from "./stores.js";
 import type { Candidate, Check, Decision, EvaluateInput, Policy, QuietSchedule, QuietWindow, UserState } from "./types.js";
@@ -357,7 +357,7 @@ export async function simulate(options: SimOptions): Promise<SimResult> {
   const differenceCounts: Record<SimDifference, number> = { outcome: 0, reason: 0, deliveryTime: 0 };
   const timeline: SimTimelineRow[] = ordered.map((event) => {
     const at = event.now ?? new Date(0);
-    const local = localOf(event.user.timezone, at);
+    const local = localOf(effectiveZone(event.user), at);
     const finals = byCandidate.map((m) => m.get(event.candidate.id));
     const cells = finals.map((record) => {
       if (!record) return { outcome: "held" as SimOutcome };
@@ -450,7 +450,7 @@ async function runOne(
 
   /** What the store now says this user has spent on this local day, kept as it happens. */
   const snapshotBudget = async (userId: string, user: UserState, at: Date) => {
-    const key = budgetKey(userId, at, user.timezone);
+    const key = budgetKey(userId, at, effectiveZone(user));
     const used = Number((await store.get(`pg:${key}`)) ?? 0);
     if (used <= 0) return;
     const localDay = key.slice(key.lastIndexOf(":") + 1);
@@ -461,7 +461,7 @@ async function runOne(
 
   /** Write the delivery facts on the record at the moment it happens, never afterwards. */
   const markDelivered = (record: SimRecord, user: UserState, at: Date, priority: string) => {
-    const local = localOf(user.timezone, at);
+    const local = localOf(effectiveZone(user), at);
     record.deliveredAt = iso(at);
     record.localDay = local.day;
     record.inQuietHours = insideOwnQuietHours(user.quietHours, local.day, local.minutes);
@@ -632,7 +632,7 @@ async function runOne(
 function baselineRun(label: string, ordered: EvaluateInput[], send: () => boolean, night: { start: number; end: number }): SimRun {
   const records: SimRecord[] = ordered.map((e) => {
     const at = e.now ?? new Date(0);
-    const local = localOf(e.user.timezone, at);
+    const local = localOf(effectiveZone(e.user), at);
     const sent = send();
     return {
       candidateId: e.candidate.id,

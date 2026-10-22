@@ -1,0 +1,555 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/dead-hours",
+  "description": "deadHours removes push in an hour where the user acted on too little of what they were sent, at priority below high. The hour is the local hour in the effective zone, or UTC with no zone. The user's hourStats for the hour win over the stored counters that gate.record writes. It never rejects.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "deadHours"
+      }
+    ]
+  },
+  "store_seed": {
+    "hours:u7:12:dismissed": "9",
+    "hours:u7:12:acted": "1",
+    "hours:u8:12:dismissed": "9",
+    "hours:u8:12:acted": "0",
+    "hours:u9:12:dismissed": "9",
+    "hours:u10:9:dismissed": "9",
+    "hours:u32:12:acted": "x",
+    "hours:u32:12:dismissed": "9"
+  },
+  "tests": [
+    {
+      "description": "no zone, so the UTC hour 12 is read; a dead hour (one acted, nine dismissed) removes push and keeps feed",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u1",
+          "hourStats": {
+            "12": {
+              "acted": 1,
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a high priority candidate keeps push in the same dead hour",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u2",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ],
+          "priority": "high"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a low priority candidate loses push in the dead hour",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u3",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ],
+          "priority": "low"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "an acted rate of exactly 0.2 (one of five) is not dead",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u4",
+          "hourStats": {
+            "12": {
+              "acted": 1,
+              "dismissed": 4
+            }
+          }
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "four samples is below the five-sample floor, so the hour is not dead",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u5",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 4
+            }
+          }
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "five samples with nothing acted is dead",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u6",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 5
+            }
+          }
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "with no hourStats entry for the hour, the stored counters for that hour decide",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u7"
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "the caller's hourStats entry for the hour wins over the stored counters",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u8",
+          "hourStats": {
+            "12": {
+              "acted": 9,
+              "dismissed": 1
+            }
+          }
+        },
+        "candidate": {
+          "id": "c8",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "the hour is read in the device zone: 09:30 UTC is 12:30 in Istanbul, where the counters are dead",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u9",
+          "deviceTimezone": "Europe/Istanbul"
+        },
+        "candidate": {
+          "id": "c9",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "the counters at UTC hour 9 are not read for a user whose zone puts the instant at hour 12",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u10",
+          "deviceTimezone": "Europe/Istanbul"
+        },
+        "candidate": {
+          "id": "c10",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T09:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a candidate that is not on push is not touched and the check passes",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u11",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c11",
+          "type": "insight",
+          "surfaces": [
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "when push was the only surface it is removed, and the decision is allowed with no surfaces",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u12",
+          "hourStats": {
+            "12": {
+              "acted": 0,
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c12",
+          "type": "insight",
+          "surfaces": [
+            "push"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a missing acted count counts as zero, so nine dismissed is dead and removes push",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u30",
+          "hourStats": {
+            "12": {
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c30",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a non-numeric acted count gives a total that is not finite, so the hour is not judged dead and push stays",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u31",
+          "hourStats": {
+            "12": {
+              "acted": "x",
+              "dismissed": 9
+            }
+          }
+        },
+        "candidate": {
+          "id": "c31",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a non-numeric stored counter is not judged dead either: push stays",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u32"
+        },
+        "candidate": {
+          "id": "c32",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    },
+    {
+      "description": "a missing dismissed count with no samples is no evidence at all, so push stays",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u33",
+          "hourStats": {
+            "12": {
+              "acted": 0
+            }
+          }
+        },
+        "candidate": {
+          "id": "c33",
+          "type": "insight",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "deadHours"
+        ]
+      }
+    }
+  ]
+}

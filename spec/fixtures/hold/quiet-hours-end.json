@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.5.0",
   "name": "hold/quiet-hours-end",
   "description": "A quiet-hours rejection carries the minute the window ends, in the user's zone, including zones whose offset is not a whole hour.",

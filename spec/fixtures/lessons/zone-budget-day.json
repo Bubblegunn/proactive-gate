@@ -1,0 +1,133 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/zone-budget-day",
+  "description": "dailyBudget is keyed by the effective zone: the device zone when it is valid. Asia/Tokyo is UTC+9 with no daylight saving; America/New_York is UTC-4 in September. 16:00Z on 2026-09-04 is 01:00 on 2026-09-05 in Tokyo and 12:00 on 2026-09-04 in New York. 01:00Z on 2026-09-05 is still 2026-09-05 in Tokyo. The store is seeded with one use under 2026-09-04, the day New York and UTC share, so a budget keyed by the stored timezone would refuse the first test.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "dailyBudget",
+        "limit": 1
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u1:2026-09-04": "1"
+  },
+  "tests": [
+    {
+      "description": "16:00Z is 2026-09-05 in Tokyo, which has no use yet: allowed and committed under the Tokyo day",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "deviceTimezone": "Asia/Tokyo",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-04T16:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ],
+        "commit": true,
+        "store_after": {
+          "budget:u1:2026-09-05": "1"
+        }
+      }
+    },
+    {
+      "description": "01:00Z on 2026-09-05 is still 2026-09-05 in Tokyo, where the one use is spent: rejected, though the UTC day is new",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "deviceTimezone": "Asia/Tokyo",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T01:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "16:00Z on 2026-09-05 is 2026-09-06 in Tokyo, a new day: allowed",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "proactiveEnabled": true,
+          "mode": "normal",
+          "intensity": "normal",
+          "timezone": "America/New_York",
+          "deviceTimezone": "Asia/Tokyo",
+          "createdAt": "2026-01-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "reminder",
+          "priority": "normal",
+          "surfaces": [
+            "push",
+            "feed"
+          ]
+        },
+        "now": "2026-09-05T16:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "push",
+          "feed"
+        ],
+        "trace": [
+          "consent",
+          "dailyBudget"
+        ]
+      }
+    }
+  ]
+}

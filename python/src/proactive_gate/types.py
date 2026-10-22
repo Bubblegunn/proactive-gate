@@ -24,7 +24,11 @@ def to_datetime(value: object) -> datetime | None:
     if isinstance(value, datetime):
         return value if value.tzinfo else value.replace(tzinfo=UTC)
     if isinstance(value, (int, float)) and not isinstance(value, bool):
-        return datetime.fromtimestamp(value / 1000, tz=UTC)
+        # An epoch that cannot be read (NaN, infinite, or out of the platform's range) is no instant, not an error.
+        try:
+            return datetime.fromtimestamp(value / 1000, tz=UTC)
+        except (OverflowError, OSError, ValueError):
+            return None
     if isinstance(value, str):
         try:
             parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
@@ -42,6 +46,17 @@ def iso_z(value: datetime) -> str:
 
 def epoch_ms(value: datetime) -> int:
     return int(round(value.timestamp() * 1000))
+
+
+def at_least(priority: str, floor: str) -> bool:
+    """True when ``priority`` is at or above ``floor``. A priority that is not one of the four is below every floor."""
+    rank = PRIORITY_RANK.get(priority)
+    return rank is not None and rank >= PRIORITY_RANK[floor]
+
+
+def is_count(value: object) -> bool:
+    """True for a JSON number that is not a boolean."""
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 @dataclass(frozen=True, slots=True)
@@ -102,6 +117,12 @@ class UserState:
     last_inbound_at: datetime | None = None
     minor: bool | None = None
     existing_customer: bool | None = None
+    device_timezone: str | None = None
+    consent_unknown: bool | None = None
+    crisis_until: datetime | None = None
+    hour_stats: Mapping[str, Any] | None = None
+    tier: str | None = None
+    daily_limit: float | None = None
 
     @staticmethod
     def from_dict(data: Mapping[str, Any]) -> "UserState":
@@ -109,6 +130,12 @@ class UserState:
         return UserState(
             id=str(data["id"]),
             consent=bool(data.get("consent", False)),
+            device_timezone=data.get("deviceTimezone"),
+            consent_unknown=data.get("consentUnknown"),
+            crisis_until=to_datetime(data.get("crisisUntil")),
+            hour_stats=data.get("hourStats"),
+            tier=data.get("tier"),
+            daily_limit=data.get("dailyLimit"),
             proactive_enabled=data.get("proactiveEnabled"),
             mode=data.get("mode"),
             snoozed_until=to_datetime(data.get("snoozedUntil")),
@@ -137,6 +164,14 @@ class Candidate:
     p_need: float | None = None
     dedupe_key: str | None = None
     payload: Any = None
+    requested: bool | None = None
+    kind: str | None = None
+    transactional: bool | None = None
+    fresh_until: Any = None
+    """The raw ``freshUntil`` value; ``None`` means absent. Freshness reads it as an instant (SPEC 9.8)."""
+    created_at: Any = None
+    """The raw ``createdAt`` value; ``None`` means absent. Read by freshness only."""
+    evidence: Mapping[str, Any] | None = None
 
     @staticmethod
     def from_dict(data: Mapping[str, Any]) -> "Candidate":
@@ -151,6 +186,12 @@ class Candidate:
             p_need=data.get("pNeed"),
             dedupe_key=data.get("dedupeKey"),
             payload=data.get("payload"),
+            requested=data.get("requested"),
+            kind=data.get("kind"),
+            transactional=data.get("transactional"),
+            fresh_until=data.get("freshUntil"),
+            created_at=data.get("createdAt"),
+            evidence=data.get("evidence"),
         )
 
 
@@ -194,6 +235,7 @@ class Context:
     now: datetime
     priority: Priority
     surfaces: tuple[str, ...]
+    flags: Mapping[str, bool] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -242,6 +284,8 @@ class EvaluateInput:
     user: UserState
     candidate: Candidate
     now: datetime | None = None
+    flags: Mapping[str, bool] | None = None
+    """Operations flags. Every check reads them as ``ctx.flags``; the flag kill switch reads them (SPEC 9.13)."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -251,10 +295,6 @@ class ConsumePlan:
     key: str
     ttl_seconds: int
     limit: int
-
-
-def at_least(priority: str, floor: str) -> bool:
-    return PRIORITY_RANK[priority] >= PRIORITY_RANK[floor]
 
 
 def surfaces_for(user: UserState, candidate: Candidate) -> tuple[str, ...]:

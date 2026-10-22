@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/timestamps-from-the-future",
   "description": "Caller-supplied timestamps can sit ahead of now: a skewed client clock, a migrated row, a hand-edited profile. The suite pins what each check does with one. A snooze ending in the future defers to exactly that instant. A future lastInboundAt reads as a negative age, which is inside any lookback window. Dismissal stamps from the future are inside every lookback window too, so they silence until their own stamp plus silenceDays. A future createdAt yields a negative ramp age, reported as day 0.",

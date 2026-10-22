@@ -33,6 +33,7 @@ const gate = createGate({ checks: [checks.consent(), ...presets.usTcpa()] });
 | `euEprivacy` | `consents.marketing`, soft opt-in for `existingCustomer` | Directive 2002/58/EC art. 13 |
 | `telegramBot` | 1 a second and 20 a minute per `candidate.channel` | Telegram bots FAQ |
 | `slackApp` | 1 a second per `candidate.channel` | Slack rate limits |
+| `assistantNudge({ dailyLimit, exemptTypes })` | kill switch flag, crisis quiet, `consents.marketing` unless the candidate is not promotional, quiet hours that reject a missing zone, 7-day trust ramp, dismissal cooldown, freshness, silence, dedupe, dead hours, daily limit 3 | Apple 4.5.4, Android notification permission, 47 CFR 64.1200, GDPR Art. 7(3) |
 | `whatsappBusiness({ template })` | `consents.whatsappOptIn`, free-form inside the 24-hour customer service window, 600 an hour per user | WhatsApp Business Platform docs |
 
 The exact URLs are in

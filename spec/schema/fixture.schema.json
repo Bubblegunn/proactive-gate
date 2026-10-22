@@ -28,7 +28,8 @@
             "properties": {
               "user": { "type": "object", "required": ["id", "consent"] },
               "candidate": { "type": "object", "required": ["id", "type"] },
-              "now": { "type": "string", "pattern": "Z$" }
+              "now": { "type": "string", "pattern": "Z$" },
+              "flags": { "type": "object", "additionalProperties": { "type": "boolean" } }
             }
           },
           "commit": { "type": "boolean" },

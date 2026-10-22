@@ -32,3 +32,20 @@ test("the sample is the first code block after the recording and the command", (
   const firstFence = readme.indexOf("```");
   assert.equal(readme.slice(firstFence, firstFence + 40).startsWith("```\nnpx proactive-gate simulate\n```"), true, "the first code block must be the one command");
 });
+
+test("the inbound STOP and START sample runs as pasted and prints what the README says it prints", () => {
+  const section = /## Inbound STOP and START[\s\S]*?```js\n([\s\S]*?)```[\s\S]*?Output:\n\n```\n([\s\S]*?)```/.exec(readme);
+  assert.ok(section, "README.md has no '## Inbound STOP and START' section with a js block and an Output block");
+  const [, code, expected] = section;
+  const base = join(root, "dist", "readme-smoke");
+  mkdirSync(base, { recursive: true });
+  const dir = mkdtempSync(join(base, "inbound-"));
+  try {
+    writeFileSync(join(dir, "inbound.mjs"), code);
+    const r = spawnSync(process.execPath, ["inbound.mjs"], { cwd: dir, encoding: "utf8" });
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(r.stdout.trimEnd(), expected.trimEnd());
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

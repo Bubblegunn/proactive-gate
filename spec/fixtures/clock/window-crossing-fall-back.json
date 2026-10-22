@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/window-crossing-fall-back",
   "description": "A 22:00 to 02:00 window opens on 2026-10-31 in New York and is still open when the clock falls back at 06:00 UTC on Nov 1. The tail is defined on local minutes, so the repeated 01:00 to 01:59:59 stays quiet through both passes: a nominally four-hour window silences five real hours, 02:00Z to 07:00Z.",

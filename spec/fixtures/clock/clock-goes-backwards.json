@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/clock-goes-backwards",
   "description": "The wall clock rewinds an hour between evaluations, as happens when an NTP correction or a manual change moves the system time back. Records written at 12:00 are still records at 11:00: the dedupe claim made before the rewind still blocks the retry, and the budget spent at 12:00 is already spent at 11:00. The suite pins that a backwards now cannot un-spend or un-claim anything.",

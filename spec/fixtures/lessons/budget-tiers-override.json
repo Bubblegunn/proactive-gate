@@ -1,0 +1,339 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/budget-tiers-override",
+  "description": "dailyBudget, weeklyBudget and monthlyBudget take tiers. A user's tier limit replaces the check's limit; an explicit dailyLimit wins over the tier for the daily budget only; a negative dailyLimit is ignored; a tier with no entry, or a name like an object property, takes the check's limit.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "dailyBudget",
+        "limit": 1,
+        "tiers": {
+          "pro": 2,
+          "free": 1
+        }
+      },
+      {
+        "id": "weeklyBudget",
+        "limit": 5,
+        "tiers": {
+          "pro": 3
+        }
+      },
+      {
+        "id": "monthlyBudget",
+        "limit": 9,
+        "tiers": {
+          "pro": 4
+        }
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u1:2026-09-04": "2",
+    "budget:u2:2026-09-04": "1",
+    "budget:u3:2026-09-04": "1",
+    "budget:u5:2026-09-04": "1",
+    "budget:u6:2026-09-04": "1",
+    "budget:u7:2026-09-04": "2",
+    "weeklyBudget:u8:2026-W36": "3",
+    "weeklyBudget:u9:2026-W36": "3",
+    "monthlyBudget:u10:2026-09": "4",
+    "monthlyBudget:u11:2026-09": "9",
+    "weeklyBudget:u12:2026-W36": "2"
+  },
+  "tests": [
+    {
+      "description": "tier pro allows two a day, so two used is refused with the tier's limit named",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "tier": "pro"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "of 2 used",
+        "trace": [
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "tier pro with one used has room, and the commit takes the second unit",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "tier": "pro"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ],
+        "commit": true,
+        "store_after": {
+          "budget:u2:2026-09-04": "2"
+        }
+      },
+      "commit": true
+    },
+    {
+      "description": "an explicit dailyLimit of 1 overrides tier pro's 2",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "tier": "pro",
+          "dailyLimit": 1
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "of 1 used",
+        "trace": [
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a free tier with nothing used is allowed",
+      "input": {
+        "user": {
+          "id": "u4",
+          "consent": true,
+          "tier": "free"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ]
+      }
+    },
+    {
+      "description": "no tier takes the check's own limit of 1",
+      "input": {
+        "user": {
+          "id": "u5",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "of 1 used",
+        "trace": [
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a tier named constructor is not a limit, so the check's limit of 1 applies",
+      "input": {
+        "user": {
+          "id": "u6",
+          "consent": true,
+          "tier": "constructor"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "of 1 used",
+        "trace": [
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a negative dailyLimit is not an override, so tier pro's 2 applies and two used is refused",
+      "input": {
+        "user": {
+          "id": "u7",
+          "consent": true,
+          "tier": "pro",
+          "dailyLimit": -1
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "of 2 used",
+        "trace": [
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a weekly tier pro limit of three is reached at three used, and the tier named, not the check's five, is the limit",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u8",
+          "tier": "pro"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "weeklyBudget",
+        "reason_pattern": "of 3 used",
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget"
+        ]
+      }
+    },
+    {
+      "description": "with no tier the weekly limit is the check's five, so three used has room and the commit takes the fourth",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u9"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ],
+        "commit": true,
+        "store_after": {
+          "weeklyBudget:u9:2026-W36": "4"
+        }
+      },
+      "commit": true
+    },
+    {
+      "description": "a monthly tier pro limit of four is reached at four used",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u10",
+          "tier": "pro"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "monthlyBudget",
+        "reason_pattern": "of 4 used",
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ]
+      }
+    },
+    {
+      "description": "with no tier the monthly limit is the check's nine, so nine used is refused",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u11"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "monthlyBudget",
+        "reason_pattern": "of 9 used",
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ]
+      }
+    },
+    {
+      "description": "an explicit dailyLimit of one does not set the weekly limit: tier pro's three applies, so two used has room",
+      "input": {
+        "user": {
+          "consent": true,
+          "id": "u12",
+          "tier": "pro",
+          "dailyLimit": 1
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "dailyBudget",
+          "weeklyBudget",
+          "monthlyBudget"
+        ]
+      }
+    }
+  ]
+}

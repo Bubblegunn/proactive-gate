@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/year-under-1000-week",
   "description": "The weekly key for an instant in year 1 is weeklyBudget:u1:0001-W22 in the spec's padded format (5.1). This case exists to report, not to demand: one implementation derives 1-W22 (ISO arithmetic on an unpadded date string), the other derives NaN-WNaN (the unpadded date string no longer parses), and neither reads the seeded spec-format key. The fixture pins the spec format as expected so the disagreement is visible in the conformance table rather than silently tolerated.",

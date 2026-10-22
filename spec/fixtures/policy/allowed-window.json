@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.2",
   "name": "policy/allowed-window",
   "description": "allowedWindow is the check eight of the presets are built on, including the US TCPA calling hours, Korea's Network Act night window and Kakao's 08:00 to 20:50, and until 1.4.2 no fixture exercised it at all. A window is [start, end): the opening minute is inside the allowed window and the closing minute is outside it. An implementation that treated the window as closed at both ends passed the whole suite.",

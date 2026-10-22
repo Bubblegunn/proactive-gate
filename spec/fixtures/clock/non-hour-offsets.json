@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/non-hour-offsets",
   "description": "Three zones that break whole-hour assumptions. Kathmandu sits at +5:45, so its weekday turns at 18:15 UTC and a Saturday window covers instants UTC still calls Friday (6.6: the weekday comes from the local date, not the instant). Chatham Islands springs forward from +12:45 to +13:45 at 02:45 local, so a window running through the jump loses its middle 60 minutes and silences only its first 15. Etc/GMT+5 is UTC-5: the POSIX-style name inverts the sign.",

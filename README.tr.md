@@ -14,21 +14,37 @@ npx proactive-gate simulate
 
 Kayıt, bu komutun gerçek çıktısıdır: üretilmiş bir hafta (sekiz kullanıcı, beş saat dilimi, tohum 7), kimsenin gerçek trafiği değil. Anahtar, hesap ya da ayar gerekmez. Yöntem ve sınırlar aşağıdaki "Simülasyonun gösterdikleri" bölümünde.
 
-Projenize kurun:
+Projenize üç yoldan biriyle kurun.
+
+Node'lu bir projede npm paketini kullanın. Node 22 veya üstü gerekir. Önce `node -v` ile kontrol edin: eski bir Node 0.7 sürümünü kurar.
 
 ```
-npm install proactive-gate        # Node 22 veya üstü
-pip install proactive-gate        # Python 3.11 veya üstü
-go get github.com/Bubblegunn/proactive-gate/go@v0.2.0
+npm install proactive-gate
 ```
 
-Claude Code'un bir ajanın mesajlarının önüne gate'i sizin yerinize koymasını isterseniz, skill'i eklenti olarak kurun (Claude Code 2.1.275 veya sonrası):
+Claude Code'un bir ajanın mesajlarının önüne gate'i sizin yerinize koymasını isterseniz eklentiyi kurun (Claude Code 2.1.275 veya sonrası).
 
 ```
 /plugin install proactive-gate --marketplace Bubblegunn/proactive-gate
 ```
 
+Skill okuyan herhangi bir ajanla kullanın; yalnızca Claude Code ile değil.
+
+```
+npx skills add Bubblegunn/proactive-gate
+```
+
+Python ve Go'nun kendi paketleri var (Python 3.11 veya üstü):
+
+```
+pip install proactive-gate
+go get github.com/Bubblegunn/proactive-gate/go@v0.2.0
+```
+
 Gate'in Vercel AI SDK, Mastra, LangChain ve OpenAI Agents için adaptörleri ve bir Claude Code kancası var. Hazır paketler platform kotalarını ve yasal sınırları tutar.
+
+Tek komutla bir politika dosyası ve çerçeveniz için bağlantı satırları yazmak için `npx proactive-gate init --minimal --legal us` çalıştırın: `--minimal` skill'deki kısa politikayı yazar, `--legal us` ABD arama saatleri ön ayarını ekler. Asistanın kendiliğinden mesaj gönderdiği durumlar için kapıyı başlatmak üzere `npx proactive-gate scaffold nudge --out .` çalıştırın: bir politika, uyarlamanız için bir `notify.mjs` modülü ve testlerini yazar.
+
 
 [Dokümantasyon](https://bubblegunn.github.io/proactive-gate/) · [Oyun alanı](https://bubblegunn.github.io/proactive-gate/playground/) · [SSS](https://bubblegunn.github.io/proactive-gate/faq/)
 
@@ -116,7 +132,7 @@ npx proactive-gate simulate kendi-adaylarim.jsonl      # üretilmiş hafta deği
 ## Bu kütüphanenin yapmayacağı şeyler
 
 - **Gönderilen kontroller politika yüzeyinin tamamıdır:** `defaultChecks()` içinde on iki, bir
-  politika ya da hazır paket adlandırdığında çalışan on tane daha. Yenisi, bunların ifade edemediği
+  politika ya da hazır paket adlandırdığında çalışan on dört tane daha. Yenisi, bunların ifade edemediği
   bir kuralı olan gerçek bir kurulum gerekir.
 - **Preset kataloğu birleşmiş hâliyle donduruldu.** Yeni bir preset için, o kanala ya da o mevzuata
   göre gerçekten ürün gönderen ve bunu issue'da söyleyen birine ihtiyaç var. "Bu ülkenin de bir
@@ -293,6 +309,8 @@ Bir kontrol reddetmek yerine `defer` diyebilir: karar `allowed: false`, `deferre
 `retryAt` taşır, çağıran ne zaman tekrar deneyeceğini bilir. `snooze({ defer: true })` yerleşik
 örnektir.
 
+`gate.whenAllowed(input, { maxHops })` bir red `nextAllowedAt` taşıdığında o ana kadar yeniden değerlendirir, sonraki her `nextAllowedAt`'te de tekrarlar; adayın gönderilebileceği ilk anı ve o anın kararını döndürür. Hiçbir red bir zaman taşımıyorsa ya da atlamalar (varsayılan 12) biterse `at: null` döner. Bütçe harcamaz; göndermeden hemen önce `commit` çağırın. `examples/hold-queue.mjs`, `nextAllowedAt`'te yeniden deneyen küçük bir kuyruktur. TypeScript'te pencereli hazır paketler (`usTcpa`, `kakaoBrandMessage`, `cnMinorMode`, `krNetworkAct50`) ve pencereli `requiresConsent` `nextAllowedAt` bildirir; Python ve Go henüz bildirmiyor.
+
 `shadow: true` işaretli bir kontrol çalışır ve izde gerçek sonucuyla görünür, ama mesajı
 durduramaz; id'si `decision.shadowed` listesine düşer. Yeni bir kuralı bir hafta gölgede
 çalıştırın, kaç kez ateşleyeceğini sayın, sonra açın.
@@ -457,6 +475,12 @@ Schedule-II'deki dokuz bandın dördü, yani 00:00-10:00 ve 21:00-24:00 arasın�
 abone o bandı açmadıkça her müşteri için kapalıdır. `inTcccp` bu bantları sabit bir pencere
 yerine bant başına birer opt-in rızası olarak kodlar.
 
+## Eklenti olmadan Claude ve Knock skill'leri ile karşılaştırma
+
+Aynı, önceden dondurulmuş görevleri eklenti olmadan Claude, Knock skill'leri ile karşılaştırıyoruz. Görevler, denetleyiciler, adil olma kuralları ve tek komutla yeniden çalıştırma [docs/HEAD-TO-HEAD.md](docs/HEAD-TO-HEAD.md) dosyasında.
+
+Sonuçlar: docs/HEAD-TO-HEAD.md dosyasında.
+
 ## Adaptörler
 
 | alt yol | framework | kapı nerede durur |
@@ -578,6 +602,40 @@ sonra"](https://docs.stripe.com/api/idempotent_requests) siliyor, Nylas da webho
 için aynı rakamı güvenli varsayılan olarak veriyor. `windowSeconds` değerini kendi
 taşımanızın yeniden deneme ufkundan seçin.
 
+## Gelen STOP ve START
+
+Bir kanalda STOP yanıtı verilen kullanıcıya o kanaldaki bir sonraki mesaj gitmemeli; START yanıtı ise yeniden izin vermeli. `gate.inbound.handle` bir kullanıcının bir kanaldaki yanıtını kaydeder, `inboundConsent` kontrolü de bunu okur; ek kod gerekmez. SMS'te gelen bir STOP e-postayı kapatmaz.
+
+```js
+import { createGate, defaultChecks, MemoryStore } from "proactive-gate";
+
+const gate = createGate({ store: new MemoryStore(), checks: defaultChecks(), inboundConsent: true });
+const user = { id: "ayse", consent: true, timezone: "Europe/Istanbul" };
+const sms = { id: "a2", type: "reminder", priority: "normal", channel: "sms" };
+const now = new Date("2026-09-04T09:00:00Z");
+
+await gate.inbound.handle({ userId: "ayse", channel: "sms", text: "STOP" });
+const stopped = await gate.evaluate({ user, candidate: sms, now });
+console.log(stopped.allowed, stopped.rejectedBy);
+
+await gate.inbound.handle({ userId: "ayse", channel: "sms", text: "start" });
+const started = await gate.evaluate({ user, candidate: sms, now });
+console.log(started.allowed, started.rejectedBy ?? "none");
+```
+
+Çıktı:
+
+```
+false inboundConsent
+true none
+```
+
+- Yanıt, yalnızca bütün mesaj anahtar kelimeyse sayılır; baştaki ve sondaki boşluk ile noktalama yok sayılır, büyük-küçük harf fark etmez. `STOP.` ve ` quit ` durdurur; `stop it` ve `yes please` durdurmaz.
+- Durdurma kelimeleri STOP, STOPALL, UNSUBSCRIBE, CANCEL, END ve QUIT; başlatma kelimeleri START, UNSTOP ve YES. YES bir varsayılandır, taşıyıcı kuralı değildir. Başka kelimeler kullanmak için, kapınızın deposu ve `keyPrefix` değeriyle (varsayılan `pg:`) `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` çağırın, yanıtlar için onun `handle` fonksiyonunu kullanın ve `check()` sonucunu `checks` içine koyun. Kapının kendi `gate.inbound` nesnesi her zaman varsayılan listeleri kullanır.
+- Kayıtlı bir STOP'un süresi yok; aynı kanalda START gelene kadar sürer.
+- Depo hata verirse kontrol `onStoreError` değerini izler; varsayılan `"open"`tır. Rıza yasal olarak zorunluysa `onStoreError: "closed"` yazın.
+- Yalnızca TypeScript. Python ve Go'da bu henüz yok; JSON politikası `inboundConsent` adını kullanamaz.
+
 ## Bilerek açık başarısız olur
 
 Depoya bağlı bir kontrol hata fırlattığında (Redis düştü), varsayılan adayı geçirir ve ize
@@ -638,12 +696,11 @@ ayarlı olup olmadığını söyleyen üç sayıdır.
 
 ## Nereden geliyor
 
-Bu, Şubat 2026'dan beri tek başıma geliştirdiğim proaktif asistan
-[LILA](https://efe-genc-portfolio.vercel.app/projects/lila/)'nın teslim kapısıdır; çıkarılıp
-framework'ten bağımsız hâle getirildi. On iki kontrolün sırası, güven rampası, otuzda üç
-soğuması ve açık başarısız olan bütçe, üretimde verilmiş ve
-[The hardest part of a proactive assistant is knowing when not to speak](https://efe-genc-portfolio.vercel.app/writing/knowing-when-not-to-speak/)
-yazısında savunulmuş kararlardır. Tian Pan'ın
+Bu, bir proaktif asistanın teslim kapısıdır; çıkarılıp framework'ten bağımsız hâle
+getirildi. On iki kontrolün sırası, güven rampası, otuzda üç soğuması ve açık başarısız
+olan bütçe şu yazıda savunulan kararlardır:
+[The hardest part of a proactive assistant is knowing when not to speak](https://efe-genc-portfolio.vercel.app/writing/knowing-when-not-to-speak/).
+Tian Pan'ın
 [bildirim bütçesi](https://tianpan.co/blog/2026-05-13-background-agents-notification-budget-attention-economy)
 yazısı aynı davayı ürün tarafından savunur ve günde üç ile beş arası bir tavan önerir;
 `defaultChecks({ dailyLimit })` varsayılanı beştir.

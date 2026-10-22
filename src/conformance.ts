@@ -27,7 +27,7 @@ export interface FixtureExpect {
 
 export interface FixtureTest {
   description: string;
-  input: { user: UserState; candidate: Candidate; now: string };
+  input: { user: UserState; candidate: Candidate; now: string; flags?: Record<string, boolean> };
   commit?: boolean;
   expect: FixtureExpect;
 }
@@ -80,7 +80,7 @@ export async function runFixture(fixture: Fixture): Promise<string[]> {
   const gate = createGate({ policy: fixture.policy, store });
   for (const [i, t] of fixture.tests.entries()) {
     const at = `${fixture.name} [${i}] ${t.description}`;
-    const input = { user: t.input.user, candidate: t.input.candidate, now: new Date(t.input.now) };
+    const input = { user: t.input.user, candidate: t.input.candidate, now: new Date(t.input.now), ...(t.input.flags ? { flags: t.input.flags } : {}) };
     const decision: Decision = await gate.evaluate(input);
     const e = t.expect;
     const check = (field: string, actual: unknown, expected: unknown) => {

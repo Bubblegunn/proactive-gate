@@ -6,7 +6,7 @@
  * decide for your own deployment.
  */
 import * as c from "./checks.js";
-import type { Check } from "./types.js";
+import type { Check, CheckContext, CheckOutcome } from "./types.js";
 
 export interface Preset {
   (options?: Record<string, unknown>): Check[];
@@ -68,7 +68,7 @@ export const presets: Record<string, Preset> = {
   ),
   krNetworkAct50: define(
     () => [c.requiresConsent({ name: "ad" }), c.requiresConsent({ name: "night", when: { start: "21:00", end: "08:00", timezone: "user" } })],
-    ["https://www.law.go.kr", "https://developers.fingerpush.com/biz-message/console/ads-guide"],
+    ["https://www.law.go.kr"],
     "Network Act article 50: prior consent for advertising, and a separate consent for 21:00 to 08:00 (email is exempt). Without user.timezone the night consent cannot be placed in the day and skips; the advertising consent still applies. The two-year re-confirmation is not encoded.",
   ),
   jpAntiSpamLaw: define(
@@ -80,10 +80,19 @@ export const presets: Record<string, Preset> = {
     () => {
       const window = c.allowedWindow({ start: "06:00", end: "22:00", timezone: "Asia/Shanghai", id: "window:minor" });
       const budget = c.dailyBudget({ limit: 1 });
-      const adult: Check["run"] = () => ({ kind: "pass", reason: "not a minor" });
+      const adult = (_ctx?: CheckContext): CheckOutcome => ({ kind: "pass", reason: "not a minor" });
       return [
         { id: window.id, run: (ctx) => (ctx.user.minor ? window.run(ctx) : adult(ctx)) },
-        { id: budget.id, limit: budget.limit, run: (ctx) => (ctx.user.minor ? budget.run(ctx) : adult(ctx)), consume: (ctx) => (ctx.user.minor ? budget.consume(ctx) : Promise.resolve(true)) },
+        // A wrapper forwards every optional member of the budget it wraps, or release, runSync and consumeSync silently do nothing (Check.release).
+        {
+          id: budget.id,
+          limit: budget.limit,
+          run: (ctx) => (ctx.user.minor ? budget.run(ctx) : adult(ctx)),
+          runSync: (ctx) => (ctx.user.minor ? budget.runSync!(ctx) : adult(ctx)),
+          consume: (ctx) => (ctx.user.minor ? budget.consume(ctx) : Promise.resolve(true)),
+          consumeSync: (ctx) => (ctx.user.minor ? budget.consumeSync!(ctx) : true),
+          release: (ctx) => (ctx.user.minor ? budget.release!(ctx) : Promise.resolve()),
+        },
       ];
     },
     ["https://www.cac.gov.cn/2024-11/15/c_1733364304749288.htm", "https://www.cac.gov.cn/2022-01/04/c_1642894606364259.htm"],
@@ -120,7 +129,7 @@ export const presets: Record<string, Preset> = {
   brLgpd: define(
     () => {
       const parental = c.requiresConsent({ name: "parental" });
-      const adult: Check["run"] = () => ({ kind: "pass", reason: "not a minor" });
+      const adult = (_ctx?: CheckContext): CheckOutcome => ({ kind: "pass", reason: "not a minor" });
       return [
         c.requiresConsent({ name: "marketing" }),
         { id: parental.id, run: (ctx) => (ctx.user.minor ? parental.run(ctx) : adult(ctx)) },
@@ -175,5 +184,44 @@ export const presets: Record<string, Preset> = {
       "https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/per-user-limits",
     ],
     "WhatsApp Business Platform: the recipient's opt-in is required before any business message (consents.whatsappOptIn), and a free-form service message may be sent only inside the 24-hour customer service window the user's last message or call opened (user.lastInboundAt; each inbound resets it). Pass { template: true } for an approved template message, the only kind allowed outside the window; template approval is out of scope. The pair rate limit is encoded as 600 messages an hour to the same user, the sustained bound Meta documents; the real mechanism is a six-second bucket that also allows a 45-message burst, which a fixed window cannot express; the approximation errs looser, since a 3,600-second bucket lets all 600 leave in the first second and turns over at a fixed boundary rather than a moving one, so it is inside-the-hour looser than the platform and boundary-looser still. Not encoded: the business portfolio messaging limit (250 unique recipient phone numbers per moving 24 hours, rising to 2,000, 10,000, 100,000 or unlimited by quality-based scaling), because it counts distinct recipients sender-side rather than messages; the per-user marketing template cap, for which Meta publishes no number; the current non-delivery of marketing templates to +1 numbers and the EEA, UK, Japan and Korea exclusions; and free entry point windows, which change pricing rather than permission. Sources read 2026-09-12.",
+  ),
+  // An assistant that messages a user without being asked (SPEC 9.14). The sources are the platform and regulation
+  // pages the rules come from, read 2026-10-22. The defaults are a starting point, not findings.
+  assistantNudge: define(
+    (o) => {
+      const dailyLimit: unknown = o.dailyLimit ?? 3;
+      if (typeof dailyLimit !== "number" || !Number.isFinite(dailyLimit) || dailyLimit < 0) {
+        throw new Error(`assistantNudge: dailyLimit must be a number of at least 0, got ${JSON.stringify(dailyLimit)}`);
+      }
+      const exemptTypes: unknown = o.exemptTypes ?? [];
+      if (!Array.isArray(exemptTypes) || !exemptTypes.every((t) => typeof t === "string")) {
+        throw new Error("assistantNudge: exemptTypes must be an array of candidate types");
+      }
+      return [
+        c.killSwitchFlag("proactiveEnabled"),
+        c.crisisQuiet(),
+        c.consent({ failMode: { push: "closed", feed: "open" } }),
+        c.requiresConsent({ name: "marketing", exemptTransactional: true }),
+        c.enabled(),
+        c.mode({ allow: ["normal"] }),
+        c.snooze({ defer: true }),
+        c.mute(),
+        c.quietHours({ onMissingTimezone: "reject" }),
+        c.trustRamp({ days: 7, minPriority: "high" }),
+        c.dismissalCooldown({ dismissals: 3, withinDays: 30, silenceDays: 7, exemptTypes: exemptTypes as string[] }),
+        c.freshness(),
+        c.silence(),
+        c.dedupe(),
+        c.deadHours(),
+        c.dailyBudget({ limit: dailyLimit }),
+      ];
+    },
+    [
+      "https://developer.apple.com/app-store/review/guidelines/",
+      "https://developer.android.com/develop/ui/views/notifications/notification-permission",
+      "https://www.ecfr.gov/current/title-47/part-64/section-64.1200",
+      "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+    ],
+    "An assistant that messages a user unprompted, checked in this order: the kill switch flag proactiveEnabled, crisis quiet, consent (push closed and feed open when consent is unknown), marketing consent unless the candidate is not promotional (transactional, requested or a commitment), quiet hours that reject a user with no time zone, a seven-day trust ramp that lets only high priority through unless the person requested the message, a cooldown of three dismissals in thirty days silencing a type for seven days, freshness, silence, dedupe, dead hours, and a daily limit (dailyLimit, default 3). The numbers are a starting point and a product's own choice, not findings. quietHours needs a window from the caller: with no user.quietHours it passes at any hour, so the caller supplies one (the scaffold uses 22:00 to 08:00). Candidate surfaces default to feed; a candidate lists push for deadHours to act on it. Not encoded: the 8 a.m. to 9 p.m. local-time window of 47 CFR 64.1200 (for calls, add usTcpa), the operating system's notification permission (the caller checks it before sending), and the ease of withdrawing consent under GDPR Article 7(3), which is a product flow rather than a send-time check.",
   ),
 };

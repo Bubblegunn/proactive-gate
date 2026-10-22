@@ -44,6 +44,7 @@
     "dist/src",
     "spec",
     "skills",
+    "hooks",
     ".claude-plugin",
     "README.md",
     "LICENSE"
@@ -51,7 +52,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js dist/test/dedupe.test.js dist/test/simulate.test.js dist/test/simulate-fidelity.test.js dist/test/monotonicity.test.js dist/test/clock-year-padding.test.js dist/test/explain.test.js dist/test/hold.test.js dist/test/mcp.test.js dist/test/policy-schema.test.js test/main-imports.test.mjs test/compare-upstream.test.mjs test/skill.test.mjs test/npm-pack.test.mjs test/release.test.mjs test/examples.test.mjs test/example-imports.test.mjs test/naive.test.mjs test/replay-bundle.test.mjs test/playground-render.test.mjs test/playground-scenarios.test.mjs test/snippet.test.mjs test/suite.test.mjs test/counts.test.mjs test/first-run.test.mjs test/policy-tests.test.mjs test/category.test.mjs test/llms-txt.test.mjs test/docs-evidence.test.mjs test/demo-gif.test.mjs test/readme-sample.test.mjs test/readme-claims.test.mjs test/listings.test.mjs test/postgres.test.mjs test/redis.test.mjs",
+    "test": "npm run build && node test/spec-lint.mjs && node --test dist/test/gate.test.js dist/test/conformance.test.js dist/test/presets.test.js dist/test/adapters.test.js dist/test/init.test.js dist/test/properties.test.js dist/test/dedupe.test.js dist/test/inbound.test.js dist/test/simulate.test.js dist/test/simulate-fidelity.test.js dist/test/monotonicity.test.js dist/test/clock-year-padding.test.js dist/test/explain.test.js dist/test/explain-check-coverage.test.js dist/test/explain-local.test.js dist/test/explain-no-iso.test.js dist/test/hold.test.js dist/test/mcp.test.js dist/test/policy-schema.test.js dist/test/spec-1-6-types.test.js dist/test/spec-1-6-zone.test.js dist/test/spec-1-6-consent.test.js dist/test/spec-1-6-kill-switch.test.js dist/test/spec-1-6-commitments.test.js dist/test/spec-1-6-exemptions.test.js dist/test/spec-1-6-freshness-silence-crisis.test.js dist/test/spec-1-6-budget-tiers.test.js dist/test/spec-1-6-dead-hours.test.js dist/test/spec-1-6-assistant-nudge.test.js dist/test/refund.test.js dist/test/sync-path.test.js test/main-imports.test.mjs test/compare-upstream.test.mjs test/skill.test.mjs test/trigger-hook.test.mjs test/npm-pack.test.mjs test/release.test.mjs test/examples.test.mjs test/example-imports.test.mjs test/naive.test.mjs test/replay-bundle.test.mjs test/playground-render.test.mjs test/playground-scenarios.test.mjs test/snippet.test.mjs test/suite.test.mjs test/counts.test.mjs test/first-run.test.mjs test/scaffold.test.mjs test/policy-tests.test.mjs test/category.test.mjs test/llms-txt.test.mjs test/docs-evidence.test.mjs test/demo-gif.test.mjs test/readme-sample.test.mjs test/readme-claims.test.mjs test/listings.test.mjs test/postgres.test.mjs test/redis.test.mjs test/sqlite-multiprocess.test.mjs test/sqlite-lock-wait.test.mjs test/sqlite-release-multiprocess.test.mjs",
     "lint": "tsc -p tsconfig.json --noEmit",
     "coverage": "npm run build && node scripts/coverage.mjs",
     "spec-lint": "node test/spec-lint.mjs",

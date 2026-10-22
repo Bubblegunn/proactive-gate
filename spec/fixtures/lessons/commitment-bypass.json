@@ -1,0 +1,77 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/commitment-bypass",
+  "description": "A commitment (kind commitment) skips the trust ramp, mute and every budget, and spends nothing when committed. Consent still applies. A normal candidate on the same budget is refused and does spend.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      { "id": "consent" },
+      { "id": "mute" },
+      { "id": "trustRamp" },
+      { "id": "dailyBudget", "limit": 1 }
+    ]
+  },
+  "store_seed": {
+    "budget:u2:2026-09-04": "1"
+  },
+  "tests": [
+    {
+      "description": "a commitment on a muted type in the first day passes every check and spends nothing",
+      "input": {
+        "user": { "id": "u1", "consent": true, "createdAt": "2026-09-03T12:00:00Z", "mutedTypes": ["reminder"] },
+        "candidate": { "id": "c1", "type": "reminder", "kind": "commitment", "priority": "low" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "commit": true,
+      "expect": { "allowed": true, "trace": ["consent", "mute", "trustRamp", "dailyBudget"], "commit": true, "store_after": { "budget:u2:2026-09-04": "1" } }
+    },
+    {
+      "description": "the same muted type without kind commitment is refused by mute",
+      "input": {
+        "user": { "id": "u1", "consent": true, "createdAt": "2026-09-03T12:00:00Z", "mutedTypes": ["reminder"] },
+        "candidate": { "id": "c2", "type": "reminder", "priority": "low" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "mute", "reason_pattern": "muted", "trace": ["consent", "mute"] }
+    },
+    {
+      "description": "a commitment on an exhausted daily budget passes, and the counter stays at 1",
+      "input": {
+        "user": { "id": "u2", "consent": true, "createdAt": "2026-07-01T00:00:00Z" },
+        "candidate": { "id": "c3", "type": "insight", "kind": "commitment" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "commit": true,
+      "expect": { "allowed": true, "trace": ["consent", "mute", "trustRamp", "dailyBudget"], "commit": true, "store_after": { "budget:u2:2026-09-04": "1" } }
+    },
+    {
+      "description": "a normal candidate on the same exhausted budget is refused by dailyBudget",
+      "input": {
+        "user": { "id": "u2", "consent": true, "createdAt": "2026-07-01T00:00:00Z" },
+        "candidate": { "id": "c4", "type": "insight" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "dailyBudget", "reason_pattern": "daily budget", "trace": ["consent", "mute", "trustRamp", "dailyBudget"] }
+    },
+    {
+      "description": "a commitment still needs consent",
+      "input": {
+        "user": { "id": "u3", "consent": false, "createdAt": "2026-07-01T00:00:00Z" },
+        "candidate": { "id": "c5", "type": "reminder", "kind": "commitment" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "consent", "reason_pattern": "has not consented", "trace": ["consent"] }
+    },
+    {
+      "description": "a normal candidate with room spends one unit",
+      "input": {
+        "user": { "id": "u4", "consent": true, "createdAt": "2026-07-01T00:00:00Z" },
+        "candidate": { "id": "c6", "type": "insight" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "commit": true,
+      "expect": { "allowed": true, "trace": ["consent", "mute", "trustRamp", "dailyBudget"], "commit": true, "store_after": { "budget:u4:2026-09-04": "1" } }
+    }
+  ]
+}

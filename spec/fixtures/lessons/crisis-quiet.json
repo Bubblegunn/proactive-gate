@@ -1,0 +1,135 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/crisis-quiet",
+  "description": "crisisQuiet runs first. While the user's crisisUntil is after now only support candidates pass; the refusal names the instant the quiet period ends. Commitments are refused too. It spends nothing.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "crisisQuiet"
+      },
+      {
+        "id": "consent"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a normal candidate during the quiet period is refused, and the refusal names when it ends",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "crisisUntil": "2026-09-05T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "crisisQuiet",
+        "reason_pattern": "crisis",
+        "nextAllowedAt": "2026-09-05T12:00:00.000Z",
+        "trace": [
+          "crisisQuiet"
+        ]
+      }
+    },
+    {
+      "description": "a support candidate passes during the quiet period",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "crisisUntil": "2026-09-05T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "support",
+          "kind": "support"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "crisisQuiet",
+          "consent"
+        ]
+      }
+    },
+    {
+      "description": "a commitment is refused during the quiet period",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "crisisUntil": "2026-09-05T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "reminder",
+          "kind": "commitment"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "crisisQuiet",
+        "reason_pattern": "crisis",
+        "trace": [
+          "crisisQuiet"
+        ]
+      }
+    },
+    {
+      "description": "crisisUntil exactly now is over",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "crisisUntil": "2026-09-04T12:00:00Z"
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "crisisQuiet",
+          "consent"
+        ]
+      }
+    },
+    {
+      "description": "no crisis period: the later check still refuses without consent",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": false
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent",
+        "reason_pattern": "has not consented",
+        "trace": [
+          "crisisQuiet",
+          "consent"
+        ]
+      }
+    }
+  ]
+}

@@ -45,3 +45,10 @@ test("every doc link in llms.txt points at a file that exists", () => {
     assert.doesNotThrow(() => readFileSync(join(root, m[1]), "utf8").length || readFileSync(join(root, m[1])), `broken link: ${m[1]}`);
   }
 });
+
+test("llms.txt gives the npx skills route next to the npm, pip and go lines and the plugin line", () => {
+  for (const line of ["npm install proactive-gate", "pip install proactive-gate", "npx skills add Bubblegunn/proactive-gate", "/plugin install proactive-gate --marketplace Bubblegunn/proactive-gate"]) {
+    assert.ok(llms.includes(line), `llms.txt lacks ${line}`);
+  }
+  assert.ok(llms.includes("whenAllowed"), "llms.txt does not name gate.whenAllowed");
+});

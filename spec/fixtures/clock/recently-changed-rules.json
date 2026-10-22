@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/recently-changed-rules",
   "description": "Three zones whose rules were rewritten recently enough that an old timezone table gets them wrong. Mexico abolished DST in 2022, so the first Sunday of April 2026 is an ordinary day. Turkey has not observed a fall-back since 2016, so the last Sunday of October 2026 has no repeated hour. Morocco keeps its offset at +0 through Ramadan 1448 (February 2027): the instants chosen sit inside the window where every shipped tzdb vintage agrees.",

@@ -11,7 +11,7 @@ import (
 // SpecVersion is the version of spec/SPEC.md this implementation targets.
 // The test suite asserts it equals the vendored spec/SPEC_VERSION, so a suite
 // update cannot silently move the contract.
-const SpecVersion = "1.5.0"
+const SpecVersion = "1.6.0"
 
 // ConformanceTarget adapts this implementation to the runner's Target
 // interface. The runner owns the fixtures; this type owns the gate.
@@ -53,7 +53,11 @@ func (s *conformanceSession) Evaluate(input conformance.Input) (*conformance.Dec
 	if err != nil {
 		return nil, fmt.Errorf("now: %w", err)
 	}
-	d := s.gate.Evaluate(EvaluateInput{User: &user, Candidate: &candidate, Now: now})
+	flags, err := decodeFlags(input.Flags)
+	if err != nil {
+		return nil, fmt.Errorf("flags: %w", err)
+	}
+	d := s.gate.Evaluate(EvaluateInput{User: &user, Candidate: &candidate, Now: now, Flags: flags})
 	view := &conformance.Decision{
 		Allowed:    d.Allowed,
 		Reason:     d.Reason,
@@ -112,5 +116,32 @@ func (s *conformanceSession) Commit(d *conformance.Decision, input conformance.I
 	if err != nil {
 		return false, err
 	}
-	return s.gate.Commit(decision, EvaluateInput{User: &user, Candidate: &candidate, Now: now}), nil
+	flags, err := decodeFlags(input.Flags)
+	if err != nil {
+		return false, err
+	}
+	return s.gate.Commit(decision, EvaluateInput{User: &user, Candidate: &candidate, Now: now, Flags: flags}), nil
+}
+
+// decodeFlags reads a fixture's flags object. An absent or null object is no
+// flags at all, and every flag reads as absent.
+// decodeFlags reads the fixture's flags object. Only a literal true or false is a flag. Any other value, such as
+// null or "no", is not false, so the flag stops nothing (SPEC 9.13; D5).
+func decodeFlags(raw json.RawMessage) (map[string]bool, error) {
+	if len(raw) == 0 || string(raw) == "null" {
+		return nil, nil
+	}
+	var all map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &all); err != nil {
+		return nil, err
+	}
+	flags := make(map[string]bool, len(all))
+	for name, value := range all {
+		if isTrueLiteral(value) {
+			flags[name] = true
+		} else if isFalseLiteral(value) {
+			flags[name] = false
+		}
+	}
+	return flags, nil
 }

@@ -1,0 +1,666 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/preset-assistant-nudge",
+  "description": "The assistantNudge preset in order: the kill switch flag, crisis quiet first, consent with a push fail-closed mode, marketing consent unless transactional, quiet hours that reject a missing zone, the trust ramp with request, the dismissal cooldown, freshness, silence, dedupe, dead hours and the daily limit. A commitment passes the budget and spends nothing.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "preset": "assistantNudge"
+      }
+    ]
+  },
+  "store_seed": {
+    "budget:u7:2026-09-04": "3",
+    "budget:u6:2026-09-04": "3",
+    "budget:u51:2026-09-04": "3",
+    "dedupe:u51:order-51-shipped": "1"
+  },
+  "tests": [
+    {
+      "description": "a non-transactional candidate without marketing consent is rejected by consent:marketing",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
+        "reason_pattern": "marketing",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing"
+        ]
+      }
+    },
+    {
+      "description": "the same user with a transactional candidate passes the marketing consent, and the whole nudge runs",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "transactional": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a user with no time zone of any kind is rejected by quietHours, which names the time zone",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "quietHours",
+        "reason_pattern": "time zone",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours"
+        ]
+      }
+    },
+    {
+      "description": "a requested message on a new account passes the trust ramp",
+      "input": {
+        "user": {
+          "id": "u4",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-09-04T11:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "priority": "low",
+          "requested": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "the same new account without a request is held by trustRamp at low priority",
+      "input": {
+        "user": {
+          "id": "u5",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-09-04T11:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight",
+          "priority": "low"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "trustRamp",
+        "reason_pattern": "trust ramp",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp"
+        ]
+      }
+    },
+    {
+      "description": "a commitment passes the exhausted daily budget and spends nothing",
+      "input": {
+        "user": {
+          "id": "u6",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "insight",
+          "kind": "commitment"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "commit": true,
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ],
+        "commit": true,
+        "store_after": {
+          "budget:u6:2026-09-04": "3"
+        }
+      }
+    },
+    {
+      "description": "a normal candidate on the same exhausted budget is refused by dailyBudget",
+      "input": {
+        "user": {
+          "id": "u7",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dailyBudget",
+        "reason_pattern": "daily budget of 3 used",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "crisis quiet refuses first, before consent or the missing zone are looked at",
+      "input": {
+        "user": {
+          "id": "u8",
+          "consent": true,
+          "crisisUntil": "2026-09-04T18:00:00Z",
+          "createdAt": "2026-07-01T00:00:00Z"
+        },
+        "candidate": {
+          "id": "c8",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "crisisQuiet",
+        "reason_pattern": "crisis",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet"
+        ]
+      }
+    },
+    {
+      "description": "a support candidate passes crisis quiet during the same period",
+      "input": {
+        "user": {
+          "id": "u9",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          },
+          "crisisUntil": "2026-09-04T18:00:00Z"
+        },
+        "candidate": {
+          "id": "c9",
+          "type": "insight",
+          "kind": "support"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a candidate past its freshUntil is expired",
+      "input": {
+        "user": {
+          "id": "u10",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c10",
+          "type": "insight",
+          "freshUntil": "2026-09-04T11:00:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "proactiveEnabled set to false in the runtime flags stops the nudge at the kill switch",
+      "input": {
+        "user": {
+          "id": "u11",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c11",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z",
+        "flags": {
+          "proactiveEnabled": false
+        }
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "killSwitch",
+        "reason_pattern": "kill switch",
+        "trace": [
+          "killSwitch"
+        ]
+      }
+    },
+    {
+      "description": "with consent unknown, the preset keeps feed and drops push, so a feed candidate goes through",
+      "input": {
+        "user": {
+          "id": "u12",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          },
+          "consentUnknown": true
+        },
+        "candidate": {
+          "id": "c12",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "with consent unknown, a push-only candidate has no surface left and is refused by consent",
+      "input": {
+        "user": {
+          "id": "u13",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          },
+          "consentUnknown": true
+        },
+        "candidate": {
+          "id": "c13",
+          "type": "insight",
+          "surfaces": [
+            "push"
+          ]
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent",
+        "reason_pattern": "could not be determined",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent"
+        ]
+      }
+    },
+    {
+      "description": "a commitment the user set up passes without marketing consent, since it is not promotional",
+      "input": {
+        "user": {
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {},
+          "id": "u14"
+        },
+        "candidate": {
+          "id": "c14",
+          "type": "reminder",
+          "kind": "commitment"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a requested notice on a new account passes without marketing consent, since it is not promotional",
+      "input": {
+        "user": {
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-09-04T11:00:00Z",
+          "consents": {},
+          "id": "u15"
+        },
+        "candidate": {
+          "id": "c15",
+          "type": "notice",
+          "priority": "low",
+          "requested": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "a user with a zone and no quietHours field passes quiet hours at any hour: the preset does not supply a window, so the caller must (documented, SPEC 9.14)",
+      "input": {
+        "user": {
+          "id": "u50",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c50",
+          "type": "insight"
+        },
+        "now": "2026-09-04T01:30:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe",
+          "deadHours",
+          "dailyBudget"
+        ]
+      }
+    },
+    {
+      "description": "dedupe runs before the daily budget: a repeated event is refused by dedupe while the budget is already spent, and the budget is never reached",
+      "input": {
+        "user": {
+          "id": "u51",
+          "consent": true,
+          "deviceTimezone": "Europe/Istanbul",
+          "createdAt": "2026-07-01T00:00:00Z",
+          "consents": {
+            "marketing": true
+          }
+        },
+        "candidate": {
+          "id": "c51",
+          "type": "insight",
+          "dedupeKey": "order-51-shipped"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "dedupe",
+        "reason_pattern": "already delivered",
+        "trace": [
+          "killSwitch",
+          "crisisQuiet",
+          "consent",
+          "consent:marketing",
+          "enabled",
+          "mode",
+          "snooze",
+          "mute",
+          "quietHours",
+          "trustRamp",
+          "dismissalCooldown",
+          "freshness",
+          "silence",
+          "dedupe"
+        ]
+      }
+    }
+  ]
+}

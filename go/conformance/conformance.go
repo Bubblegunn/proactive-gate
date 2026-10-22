@@ -41,6 +41,8 @@ type Input struct {
 	User      json.RawMessage
 	Candidate json.RawMessage
 	Now       string
+	// Flags is the fixture's flags object, or nil when the fixture has none.
+	Flags json.RawMessage
 }
 
 // Decision is the runner's view of an evaluation result: exactly the fields
@@ -111,6 +113,7 @@ type Test struct {
 		User      json.RawMessage `json:"user"`
 		Candidate json.RawMessage `json:"candidate"`
 		Now       string          `json:"now"`
+		Flags     json.RawMessage `json:"flags"`
 	} `json:"input"`
 	Commit bool   `json:"commit"`
 	Expect Expect `json:"expect"`
@@ -238,7 +241,7 @@ func RunFixture(f *Fixture, target Target) []string {
 	}
 	for i, t := range f.Tests {
 		at := fmt.Sprintf("%s [%d] %s", f.Name, i, t.Description)
-		input := Input{User: t.Input.User, Candidate: t.Input.Candidate, Now: t.Input.Now}
+		input := Input{User: t.Input.User, Candidate: t.Input.Candidate, Now: t.Input.Now, Flags: t.Input.Flags}
 		decision, err := session.Evaluate(input)
 		if err != nil {
 			failures = append(failures, fmt.Sprintf("%s: evaluate: %s", at, err))

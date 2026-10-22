@@ -1,0 +1,203 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/silence",
+  "description": "silence reads the caller's evidence. Thin data, low confidence or nothing new refuses a candidate with a reason that says so. The thresholds are inclusive: exactly the minimum passes. Without evidence the check skips.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "silence"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "exactly five data points and confidence 0.5 pass",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 5,
+            "confidence": 0.5,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "four data points is not enough",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 4,
+            "confidence": 0.9,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "confidence 0.49 is not enough",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 10,
+            "confidence": 0.49,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "nothing new since the last message is refused",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 10,
+            "confidence": 0.9,
+            "newSinceLast": false
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "nothing new",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "no evidence: the check skips",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "evidence without dataPoints counts as zero data points, so it is not enough",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "insight",
+          "evidence": {
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "confidence 0.9 without dataPoints: the missing data points count as zero, so it is not enough data",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "insight",
+          "evidence": {
+            "confidence": 0.9,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough data",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    }
+  ]
+}

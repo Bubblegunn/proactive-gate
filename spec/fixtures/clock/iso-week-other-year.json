@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/iso-week-other-year",
   "description": "The weekly budget key is the local ISO week (5.1), and the ISO week-year is not the calendar year. The last days of December can belong to next year's week 1, and the first days of January can belong to a week 53 of the year just ended. A naive year-plus-week key would bill these deliveries to a week that does not exist.",

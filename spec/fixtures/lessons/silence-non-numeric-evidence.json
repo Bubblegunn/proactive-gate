@@ -1,0 +1,101 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/silence-non-numeric-evidence",
+  "description": "silence reads dataPoints and confidence as numbers. A value that is not a finite JSON number, such as a string, counts as zero and refuses (SPEC 9.9).",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "silence"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a string dataPoints counts as zero and refuses",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": "9",
+            "confidence": 0.9,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "a string confidence counts as zero and refuses",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 10,
+            "confidence": "0.9",
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "silence",
+        "reason_pattern": "not enough",
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    },
+    {
+      "description": "numeric evidence at the thresholds still passes",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "evidence": {
+            "dataPoints": 10,
+            "confidence": 0.9,
+            "newSinceLast": true
+          }
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "silence"
+        ]
+      }
+    }
+  ]
+}

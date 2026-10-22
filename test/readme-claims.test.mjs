@@ -161,3 +161,33 @@ test("start.md carries the same runnable sample as the README", () => {
   const sample = (text) => /```js\n([\s\S]*?)```/.exec(text)[1];
   assert.equal(sample(read("docs/site/src/content/docs/start.md")), sample(section(readme, "## First decision")));
 });
+
+test("the README offers the three install routes, npm, the plugin and npx skills, in that order, before the Python and Go lines", () => {
+  const routes = ["npm install proactive-gate", "/plugin install proactive-gate --marketplace Bubblegunn/proactive-gate", "npx skills add Bubblegunn/proactive-gate"];
+  for (const text of [readme, read("README.tr.md")]) {
+    const at = routes.map((r) => text.indexOf(`\n${r}\n`));
+    for (const [i, p] of at.entries()) assert.ok(p > 0, `no code block with ${routes[i]}`);
+    assert.deepEqual([...at].sort((a, b) => a - b), at, "the three routes are not in the order npm, plugin, skills");
+    const pip = text.indexOf("pip install proactive-gate");
+    assert.ok(pip > at[2], "the Python line does not follow the three routes");
+  }
+});
+
+test("the README has the head-to-head section, which links the page and carries no result numbers", () => {
+  const section_ = section(readme, "## Head to head");
+  assert.ok(section_.includes("Results: see docs/HEAD-TO-HEAD.md"));
+  assert.ok(section_.includes("(docs/HEAD-TO-HEAD.md)"));
+  assert.ok(!/\d/.test(section_), "the section carries a digit; results belong in docs/HEAD-TO-HEAD.md");
+});
+
+test("the Turkish README has the same install routes and the same head-to-head link", () => {
+  const tr = read("README.tr.md");
+  assert.ok(tr.includes("npx skills add Bubblegunn/proactive-gate"));
+  assert.ok(tr.includes("(docs/HEAD-TO-HEAD.md)"));
+});
+
+test("both READMEs name the one-command init that the skill guide opens with, in code", () => {
+  const command = /npx proactive-gate init --minimal --legal [a-z]+/.exec(read("skills/proactive-gate/references/guide.md"))?.[0];
+  assert.ok(command, "the guide names the one-command init");
+  for (const text of [readme, read("README.tr.md")]) assert.ok(text.includes(`\`${command}\``), `a README lacks \`${command}\``);
+});

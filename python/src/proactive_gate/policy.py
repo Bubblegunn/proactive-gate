@@ -17,20 +17,43 @@ SUPPORTED_MAJOR = 1
 
 
 def _budget(cls: type[c.Budget]) -> Factory:
-    return lambda o: cls(limit=o.get("limit"), bypass_priority=o.get("bypassPriority"), near_limit=o.get("nearLimit", 0.8))
+    return lambda o: cls(limit=o.get("limit"), bypass_priority=o.get("bypassPriority"), near_limit=o.get("nearLimit", 0.8), tiers=o.get("tiers"))
+
+
+def _kill_switch(o: Options) -> Check:
+    """``{"on": bool}`` or ``{"flag": name}`` (SPEC 9.13); giving both is a compile error."""
+    if "flag" in o:
+        if "on" in o:
+            raise ValueError('killSwitch takes "on" or "flag", not both')
+        if not isinstance(o["flag"], str):
+            raise ValueError('killSwitch "flag" must be a string')
+        return c.KillSwitchFlag(o["flag"])
+    return c.KillSwitch(bool(o.get("on", False)))
+
+
+def _missing_timezone(o: Options) -> str:
+    """quietHours ``onMissingTimezone``: "skip" (default) or "reject"; any other value is a compile error (SPEC 9.2.1)."""
+    value = o.get("onMissingTimezone", "skip")
+    if value not in ("skip", "reject"):
+        raise ValueError(f'quietHours onMissingTimezone must be "skip" or "reject", not {value!r}')
+    return str(value)
 
 
 KNOWN_CHECKS: dict[str, Factory] = {
-    "killSwitch": lambda o: c.KillSwitch(bool(o.get("on", False))),
-    "consent": lambda o: c.Consent(),
+    "killSwitch": _kill_switch,
+    "consent": lambda o: c.Consent(o.get("failMode")),
     "enabled": lambda o: c.Enabled(),
     "mode": lambda o: c.Mode(o.get("allow", ["normal"])),
     "snooze": lambda o: c.Snooze(defer=bool(o.get("defer", False))),
     "mute": lambda o: c.Mute(),
     "intensity": lambda o: c.Intensity(o.get("floors")),
-    "quietHours": lambda o: c.QuietHours(o.get("priorityFloor", "critical")),
+    "quietHours": lambda o: c.QuietHours(o.get("priorityFloor", "critical"), _missing_timezone(o)),
     "trustRamp": lambda o: c.TrustRamp(o.get("days", 7), o.get("minPriority", "high")),
-    "dismissalCooldown": lambda o: c.DismissalCooldown(o.get("dismissals", 3), o.get("withinDays", 30), o.get("silenceDays", 7)),
+    "dismissalCooldown": lambda o: c.DismissalCooldown(o.get("dismissals", 3), o.get("withinDays", 30), o.get("silenceDays", 7), o.get("exemptTypes")),
+    "crisisQuiet": lambda o: c.CrisisQuiet(),
+    "freshness": lambda o: c.Freshness(o.get("maxAgeSeconds")),
+    "silence": lambda o: c.Silence(o.get("minDataPoints", 5), o.get("minConfidence", 0.5), o.get("requireNew", True)),
+    "deadHours": lambda o: c.DeadHours(o.get("minSamples", 5), o.get("maxActRate", 0.2), o.get("minPriority", "high")),
     "adaptiveTiming": lambda o: c.AdaptiveTiming(),
     "dedupe": lambda o: c.Dedupe(int(o.get("windowSeconds", 86400))),
     "dailyBudget": _budget(c.DailyBudget),
@@ -39,7 +62,7 @@ KNOWN_CHECKS: dict[str, Factory] = {
     "utilityFloor": lambda o: c.UtilityFloor(o.get("costFalseAlarm", 1), o.get("costMissedHelp", 1)),
     "boundedDeferral": lambda o: c.BoundedDeferral(o.get("lambda", 1 / 43), o.get("interruptCost", 1), o.get("staleness", 0.0001), o.get("boundSeconds", 240)),
     "allowedWindow": lambda o: c.AllowedWindow(o.get("start", "08:00"), o.get("end", "21:00"), o.get("timezone", "user"), o.get("priorityFloor"), o.get("id", "allowedWindow")),
-    "requiresConsent": lambda o: c.RequiresConsent(o.get("name", "consent"), o.get("when"), o.get("id")),
+    "requiresConsent": lambda o: c.RequiresConsent(o.get("name", "consent"), o.get("when"), o.get("id"), bool(o.get("exemptTransactional", False))),
     "rateLimit": lambda o: c.RateLimit(o.get("limit", 1), o.get("perSeconds", 1), o.get("keyBy", "user"), o.get("id")),
     "recentInteraction": lambda o: c.RecentInteraction(o.get("withinHours", 48)),
     "windowBudget": lambda o: c.WindowBudget(o.get("limit", 1), o.get("withinHours", 48)),

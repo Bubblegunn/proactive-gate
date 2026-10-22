@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/local-day-not-utc",
   "description": "The daily budget key is the user's local day (5.1), not the UTC day. At 15:00 UTC it is already 00:00 on 2026-09-05 in Tokyo, so a UTC-keyed counter would roll nine hours early or late. Kathmandu (+5:45) turns its day at 18:15 UTC, on no hour boundary at all.",

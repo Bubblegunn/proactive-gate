@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { createGate, MemoryStore, SqliteStore, defaultChecks, checks, localClock, inWindow } from "../src/index.js";
-import type { Candidate, Store, UserState } from "../src/index.js";
+import { createGate, MemoryStore, SqliteStore, defaultChecks, checks, presets, localClock, inWindow } from "../src/index.js";
+import type { Candidate, Check, Store, UserState } from "../src/index.js";
 import { replay, summarize } from "../src/cli.js";
 
 const user = (overrides: Partial<UserState> = {}): UserState => ({
@@ -444,6 +444,37 @@ test("commit is idempotent on decision.id: the second call returns the first res
   assert.match(d.id, /^u1:c1:2026-09-04T09:00:00\.000Z/);
 });
 
+test("two gates sharing one store never share a decision id, so each commit consumes its own unit", async () => {
+  const store = new MemoryStore();
+  const input = { user: user(), candidate: candidate(), now: noon };
+  const first = createGate({ checks: [checks.dailyBudget({ limit: 5 })], store });
+  const second = createGate({ checks: [checks.dailyBudget({ limit: 5 })], store });
+  const d1 = await first.evaluate(input);
+  const d2 = await second.evaluate(input);
+  assert.notEqual(d1.id, d2.id);
+  assert.equal(await first.commit(d1, input), true);
+  assert.equal(await second.commit(d2, input), true);
+  assert.equal((await first.inspect(user(), noon)).budgetUsed, 2);
+});
+
+test("five gate instances on one store, same user, candidate and instant: five units consumed", async () => {
+  const store = new MemoryStore();
+  const input = { user: user(), candidate: candidate(), now: noon };
+  const gates = Array.from({ length: 5 }, () => createGate({ checks: [checks.dailyBudget({ limit: 5 })], store }));
+  const decisions = await Promise.all(gates.map((gate) => gate.evaluate(input)));
+  for (const [i, gate] of gates.entries()) assert.equal(await gate.commit(decisions[i]!, input), true);
+  assert.equal((await gates[0]!.inspect(user(), noon)).budgetUsed, 5);
+});
+
+test("two evaluations of the same candidate on two gates produce different decision ids with the same prefix", async () => {
+  const input = { user: user(), candidate: candidate(), now: noon };
+  const a = await createGate({ checks: [] }).evaluate(input);
+  const b = await createGate({ checks: [] }).evaluate(input);
+  const prefix = `${input.user.id}:${input.candidate.id}:${noon.toISOString()}`;
+  assert.ok(a.id.startsWith(prefix) && b.id.startsWith(prefix));
+  assert.notEqual(a.id, b.id);
+});
+
 /* ---------------------------------------------------------------- v2: optional checks */
 
 test("utilityFloor: tau = cFA / (cFA + pNeed * cFN); below rejects, above passes, missing pAccept skips", async () => {
@@ -586,4 +617,142 @@ test("quiet hours: a window that crosses midnight silences the next morning, and
   // The carry does not leak into a day whose predecessor had no window.
   const sundayEarly = await at("2026-09-05T22:30:00Z"); // 01:30 Sunday, Saturday had none
   assert.equal(sundayEarly.allowed, true);
+});
+
+test("whenAllowed: two budgets full on a Thursday, the daily reset first and the weekly reset on Monday", async () => {
+  const inner = new MemoryStore();
+  const writes: string[] = [];
+  const store: Store = {
+    get: (key) => inner.get(key),
+    set: (key, value, ttl) => { writes.push(key); return inner.set(key, value, ttl); },
+    incr: (key, ttl) => { writes.push(key); return inner.incr(key, ttl); },
+    del: (key) => { writes.push(key); return inner.del(key); },
+  };
+  const gate = createGate({ store, checks: [checks.dailyBudget({ limit: 3 }), checks.weeklyBudget({ limit: 7 })] });
+  const u = user();
+  const commitAt = async (iso: string) => {
+    const input = { user: u, candidate: candidate(), now: new Date(iso) };
+    const d = await gate.evaluate(input);
+    assert.equal(d.allowed, true);
+    assert.equal(await gate.commit(d, input), true);
+  };
+  for (const iso of ["2026-09-07T09:00:00Z", "2026-09-07T09:10:00Z", "2026-09-07T09:20:00Z", "2026-09-09T09:00:00Z"]) await commitAt(iso); // Mon x3, Wed x1
+  const thursday = new Date("2026-09-10T09:00:00Z"); // 12:00 Thursday in Istanbul
+  for (const minute of [0, 10, 20]) await commitAt(new Date(thursday.getTime() + minute * 60_000).toISOString()); // Thu x3: daily full, weekly 7 of 7
+
+  const before = await gate.inspect(u, thursday);
+  writes.length = 0;
+  const { at, decision } = await gate.whenAllowed({ user: u, candidate: candidate(), now: thursday });
+  assert.equal(at?.toISOString(), "2026-09-13T21:00:00.000Z"); // Monday 00:00 Istanbul, not Friday's midnight
+  assert.equal(decision.allowed, true);
+  assert.deepEqual(await gate.inspect(u, thursday), before, "evaluating at future instants does not change the counters");
+  assert.deepEqual(writes, [], "whenAllowed writes nothing to the store");
+});
+
+test("whenAllowed: quiet hours and the TCPA window combine, and the later instant wins", async () => {
+  const gate = createGate({ checks: [checks.quietHours(), ...presets.usTcpa!()] });
+  const ny = user({ timezone: "America/New_York", quietHours: { start: "22:00", end: "06:00" } });
+  const { at, decision } = await gate.whenAllowed({ user: ny, candidate: candidate({ type: "sms" }), now: new Date("2026-09-04T09:00:00Z") }); // 05:00 EDT
+  assert.equal(at?.toISOString(), "2026-09-04T12:00:00.000Z"); // quiet ends 06:00 EDT, the window opens 08:00 EDT
+  assert.equal(decision.allowed, true);
+});
+
+test("whenAllowed: a refusal without nextAllowedAt has no instant, and the last refusal is returned", async () => {
+  const gate = createGate({ checks: [checks.requiresConsent({ name: "marketing" })] });
+  const { at, decision } = await gate.whenAllowed({ user: user({ consents: {} }), candidate: candidate(), now: noon });
+  assert.equal(at, null);
+  assert.equal(decision.allowed, false);
+  assert.equal(decision.rejectedBy, "consent:marketing");
+});
+
+test("whenAllowed: stops after maxHops re-evaluations and reports the refusal it stopped on", async () => {
+  let calls = 0;
+  const stubborn: Check = {
+    id: "stubborn",
+    run: () => { calls++; return { kind: "reject", reason: "never yet" }; },
+    nextAllowedAt: (ctx) => new Date(ctx.now.getTime() + 60_000),
+  };
+  const gate = createGate({ checks: [stubborn] });
+  const { at, decision } = await gate.whenAllowed({ user: user(), candidate: candidate(), now: noon }, { maxHops: 3 });
+  assert.equal(at, null);
+  assert.equal(decision.rejectedBy, "stubborn");
+  assert.equal(calls, 4, "the first evaluation plus one per hop");
+});
+
+const HOUR_MS = 60 * 60_000;
+/** A check that refuses until `opens`, and names one hour after `now` as the next instant to ask again. */
+const untilAt = (opens: Date, counter = { calls: 0 }): Check => ({
+  id: "untilAt",
+  run: ({ now }) => {
+    counter.calls++;
+    return now.getTime() >= opens.getTime() ? { kind: "pass" } : { kind: "reject", reason: "not yet" };
+  },
+  nextAllowedAt: ({ now }) => new Date(now.getTime() + HOUR_MS),
+});
+
+test("whenAllowed: a candidate allowed at once is returned at the evaluation instant exactly", async () => {
+  const gate = createGate({ checks: [checks.dailyBudget({ limit: 3 })] });
+  const { at, decision } = await gate.whenAllowed({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(decision.allowed, true);
+  assert.equal(at?.getTime(), noon.getTime());
+});
+
+test("whenAllowed: maxHops 0 evaluates once and reports no instant for a refusal", async () => {
+  const counter = { calls: 0 };
+  const gate = createGate({ checks: [untilAt(new Date(noon.getTime() + 5 * HOUR_MS), counter)] });
+  const { at, decision } = await gate.whenAllowed({ user: user(), candidate: candidate(), now: noon }, { maxHops: 0 });
+  assert.equal(at, null);
+  assert.equal(decision.rejectedBy, "untilAt");
+  assert.equal(counter.calls, 1);
+});
+
+test("whenAllowed: the default is twelve hops", async () => {
+  const within = createGate({ checks: [untilAt(new Date(noon.getTime() + 12 * HOUR_MS))] });
+  const twelve = await within.whenAllowed({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(twelve.at?.getTime(), noon.getTime() + 12 * HOUR_MS);
+  assert.equal(twelve.decision.allowed, true);
+
+  const beyond = createGate({ checks: [untilAt(new Date(noon.getTime() + 13 * HOUR_MS))] });
+  const thirteen = await beyond.whenAllowed({ user: user(), candidate: candidate(), now: noon });
+  assert.equal(thirteen.at, null);
+});
+
+test("whenAllowed: without input.now it reads the clock, and returns a Date or null without throwing", async () => {
+  const open = createGate({ checks: [checks.dailyBudget({ limit: 3 })] });
+  const allowed = await open.whenAllowed({ user: user(), candidate: candidate() });
+  assert.equal(allowed.decision.allowed, true);
+  assert.ok(allowed.at instanceof Date);
+  assert.ok(Math.abs(allowed.at.getTime() - Date.now()) < 60_000);
+
+  const closed = createGate({ checks: [checks.requiresConsent({ name: "marketing" })] });
+  const refused = await closed.whenAllowed({ user: user({ consents: {} }), candidate: candidate() });
+  assert.equal(refused.at, null);
+});
+
+test("whenAllowed: each hop is one evaluation, so onDecision fires maxHops + 1 times with distinct ids", async () => {
+  const seen: string[] = [];
+  const gate = createGate({ checks: [untilAt(new Date(noon.getTime() + 99 * HOUR_MS))], onDecision: (d) => { seen.push(d.id); } });
+  await gate.whenAllowed({ user: user(), candidate: candidate(), now: noon }, { maxHops: 3 });
+  assert.equal(seen.length, 4);
+  assert.equal(new Set(seen).size, 4);
+});
+
+test("whenAllowed: a non-finite maxHops means the default, and a fractional one rounds down", async () => {
+  const input = () => ({ user: user(), candidate: candidate(), now: noon });
+  const thirteen = () => createGate({ checks: [untilAt(new Date(noon.getTime() + 13 * HOUR_MS))] });
+  for (const maxHops of [Number.NaN, Number.POSITIVE_INFINITY]) {
+    assert.equal((await thirteen().whenAllowed(input(), { maxHops })).at, null, `maxHops ${maxHops} keeps the default bound of 12`);
+  }
+  const twelve = createGate({ checks: [untilAt(new Date(noon.getTime() + 12 * HOUR_MS))] });
+  assert.equal((await twelve.whenAllowed(input(), { maxHops: Number.NaN })).decision.allowed, true);
+
+  const counter = { calls: 0 };
+  const fractional = createGate({ checks: [untilAt(new Date(noon.getTime() + 99 * HOUR_MS), counter)] });
+  await fractional.whenAllowed(input(), { maxHops: 2.5 });
+  assert.equal(counter.calls, 3, "2.5 becomes 2 hops: three evaluations");
+
+  const negative = { calls: 0 };
+  const below = createGate({ checks: [untilAt(new Date(noon.getTime() + 99 * HOUR_MS), negative)] });
+  assert.equal((await below.whenAllowed(input(), { maxHops: -1 })).at, null);
+  assert.equal(negative.calls, 1, "a negative bound is zero hops: one evaluation");
 });

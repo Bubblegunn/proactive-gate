@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/autumn-back-repeated-hour",
   "description": "On 2026-11-01 New York falls back at 06:00 UTC, so local 01:00 to 01:59:59 happens twice, once as EDT and once as EST. A quiet window of 00:30 to 01:30 is defined on local minutes, so it covers both passes through the repeated hour: a 60-minute window silences 90 real minutes, from 04:30Z to 06:30Z.",

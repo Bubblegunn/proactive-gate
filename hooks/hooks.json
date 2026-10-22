@@ -1,0 +1,16 @@
+{
+  "description": "proactive-gate: when a prompt is about an agent or job that sends messages under limits, quiet hours, consent or legal windows, point the agent at the proactive-gate skill",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/trigger.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

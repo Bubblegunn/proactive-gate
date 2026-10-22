@@ -36,7 +36,7 @@
         "oneOf": [
           {
             "title": "killSwitch",
-            "description": "Rejects every candidate while on is true.",
+            "description": "Rejects every candidate while on is true, or while the named runtime flag is false.",
             "type": "object",
             "additionalProperties": false,
             "required": [
@@ -52,13 +52,17 @@
               },
               "on": {
                 "type": "boolean",
-                "description": "True to silence everything."
+                "description": "True to silence everything. Not with flag."
+              },
+              "flag": {
+                "type": "string",
+                "description": "Name of a runtime flag. The check rejects while it is false. Not with on."
               }
             }
           },
           {
             "title": "consent",
-            "description": "Rejects users who have not consented to proactive behaviour.",
+            "description": "Rejects users who have not consented to proactive behaviour, or whose consent is unknown and no surface fails open.",
             "type": "object",
             "additionalProperties": false,
             "required": [
@@ -71,6 +75,16 @@
               "shadow": {
                 "type": "boolean",
                 "description": "True to record what the check would do without letting it decide."
+              },
+              "failMode": {
+                "type": "object",
+                "additionalProperties": {
+                  "enum": [
+                    "open",
+                    "closed"
+                  ]
+                },
+                "description": "Per-surface fail mode used when consent is unknown. A key default sets the rest; closed when unset."
               }
             }
           },
@@ -210,6 +224,13 @@
               "priorityFloor": {
                 "$ref": "#/$defs/priority",
                 "description": "Candidates at or above this priority pass. Default critical."
+              },
+              "onMissingTimezone": {
+                "enum": [
+                  "skip",
+                  "reject"
+                ],
+                "description": "With no usable zone: skip (default) or reject."
               }
             }
           },
@@ -270,6 +291,13 @@
                 "type": "number",
                 "description": "How long the type stays silent.",
                 "minimum": 1
+              },
+              "exemptTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Candidate types the cooldown never silences."
               }
             }
           },
@@ -344,6 +372,14 @@
                 "description": "Fraction of the limit at which a pass carries a nearLimit note.",
                 "exclusiveMinimum": 0,
                 "maximum": 1
+              },
+              "tiers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "description": "Limit per user tier. A user's explicit dailyLimit still wins for the daily budget."
               }
             }
           },
@@ -377,6 +413,14 @@
                 "description": "Fraction of the limit at which a pass carries a nearLimit note.",
                 "exclusiveMinimum": 0,
                 "maximum": 1
+              },
+              "tiers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "description": "Limit per user tier. A user's explicit dailyLimit still wins for the daily budget."
               }
             }
           },
@@ -410,6 +454,14 @@
                 "description": "Fraction of the limit at which a pass carries a nearLimit note.",
                 "exclusiveMinimum": 0,
                 "maximum": 1
+              },
+              "tiers": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "description": "Limit per user tier. A user's explicit dailyLimit still wins for the daily budget."
               }
             }
           },
@@ -529,6 +581,10 @@
                 "type": "string",
                 "description": "Key in user.consents."
               },
+              "exemptTransactional": {
+                "type": "boolean",
+                "description": "True to let a candidate that is not promotional through without the consent: transactional, requested or a commitment."
+              },
               "when": {
                 "type": "object",
                 "additionalProperties": false,
@@ -637,6 +693,113 @@
                 "type": "number",
                 "description": "Window length in hours.",
                 "minimum": 0
+              }
+            }
+          },
+          {
+            "title": "freshness",
+            "description": "Refuses content at or after its freshUntil instant, or older than maxAgeSeconds when that is set.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "freshness"
+              },
+              "shadow": {
+                "type": "boolean",
+                "description": "True to record what the check would do without letting it decide."
+              },
+              "maxAgeSeconds": {
+                "type": "number",
+                "description": "Oldest content allowed, in seconds, counted from createdAt.",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "title": "silence",
+            "description": "Refuses a candidate whose caller-supplied evidence is too thin or repeats nothing new.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "silence"
+              },
+              "shadow": {
+                "type": "boolean",
+                "description": "True to record what the check would do without letting it decide."
+              },
+              "minDataPoints": {
+                "type": "number",
+                "description": "Fewest data points the evidence must count.",
+                "minimum": 0
+              },
+              "minConfidence": {
+                "type": "number",
+                "description": "Lowest confidence the evidence must carry.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "requireNew": {
+                "type": "boolean",
+                "description": "True to refuse a candidate that says nothing is new. Default true."
+              }
+            }
+          },
+          {
+            "title": "crisisQuiet",
+            "description": "Only support candidates pass while the user is in a crisis-support quiet period.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "crisisQuiet"
+              },
+              "shadow": {
+                "type": "boolean",
+                "description": "True to record what the check would do without letting it decide."
+              }
+            }
+          },
+          {
+            "title": "deadHours",
+            "description": "Takes push off the table in an hour when the user acted on too little of what they were sent then. Never rejects.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "const": "deadHours"
+              },
+              "shadow": {
+                "type": "boolean",
+                "description": "True to record what the check would do without letting it decide."
+              },
+              "minSamples": {
+                "type": "number",
+                "description": "Samples the hour needs before its rate counts.",
+                "minimum": 0
+              },
+              "maxActRate": {
+                "type": "number",
+                "description": "Acted share below which the hour is dead.",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minPriority": {
+                "$ref": "#/$defs/priority",
+                "description": "Candidates at or above this priority keep push. Default high."
               }
             }
           },
@@ -955,6 +1118,36 @@
               "template": {
                 "type": "boolean",
                 "description": "True for an approved template message, which may be sent outside the 24-hour window."
+              }
+            }
+          },
+          {
+            "title": "assistantNudge",
+            "description": "An assistant that messages a user unprompted, checked in this order: the kill switch flag proactiveEnabled, crisis quiet, consent (push closed and feed open when consent is unknown), marketing consent unless the candidate is not promotional (transactional, requested or a commitment), quiet hours that reject a user with no time zone, a seven-day trust ramp that lets only high priority through unless the person requested the message, a cooldown of three dismissals in thirty days silencing a type for seven days, freshness, silence, dedupe, dead hours, and a daily limit (dailyLimit, default 3).",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "preset"
+            ],
+            "properties": {
+              "preset": {
+                "const": "assistantNudge"
+              },
+              "shadow": {
+                "type": "boolean",
+                "description": "True to record what the check would do without letting it decide."
+              },
+              "dailyLimit": {
+                "type": "number",
+                "description": "Deliveries a day before the budget refuses. Default 3.",
+                "minimum": 0
+              },
+              "exemptTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Candidate types the dismissal cooldown never silences."
               }
             }
           }

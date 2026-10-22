@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/spring-forward-deleted-hour",
   "description": "On 2026-03-08 New York jumps from 01:59:59 EST to 03:00 EDT at 07:00 UTC, so local times 02:00 to 02:59:59 never occur. A quiet window of 02:00 to 03:00 names an hour that does not exist that morning; no instant resolves inside it, and the same window bites again on the next ordinary day.",

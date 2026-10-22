@@ -26,7 +26,11 @@ export type {
   PolicyEntry,
   Priority,
   Store,
+  SyncStore,
   Surface,
   TraceEntry,
   UserState,
 } from "./types.js";
+
+export { createInboundConsent, parseKeyword, STOP_KEYWORDS, START_KEYWORDS } from "./inbound.js";
+export type { InboundConsent, InboundConsentOptions, InboundKeywords, InboundResult, InboundAction, InboundInput } from "./inbound.js";

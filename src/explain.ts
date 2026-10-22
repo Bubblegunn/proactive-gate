@@ -12,7 +12,8 @@
  * `decision.reason` is unchanged: the plain sentence and the machine reason
  * sit side by side and neither replaces the other.
  */
-import type { Decision, TraceEntry } from "./types.js";
+import { localClock } from "./checks.js";
+import type { Decision, TraceEntry, UserState } from "./types.js";
 
 /** Fields a parser pulled out of a machine reason; a template reads them. */
 export type SentenceFacts = Record<string, string | undefined>;
@@ -34,6 +35,10 @@ export interface Sentences {
   "summary.allowed": SentenceTemplate;
   /** Allowed with an empty trace. */
   "summary.allowedEmpty": SentenceTemplate;
+  /** Held decision with a known zone: the clock now, the clock at which it can go out, and the day that is. */
+  "summary.localClock": SentenceTemplate;
+  /** Allowed, but a check removed every surface, so nothing is delivered. */
+  "summary.noSurface": SentenceTemplate;
   /** Not allowed but no stopping entry found; the decision was built by hand. */
   "summary.heldUnknown": SentenceTemplate;
   "note.deliverAt": SentenceTemplate;
@@ -46,6 +51,8 @@ export interface Sentences {
   "killSwitch.reject": SentenceTemplate;
   "consent.pass": SentenceTemplate;
   "consent.reject": SentenceTemplate;
+  "inboundConsent.pass": SentenceTemplate;
+  "inboundConsent.reject": SentenceTemplate;
   "enabled.pass": SentenceTemplate;
   "enabled.reject": SentenceTemplate;
   "mode.pass": SentenceTemplate;
@@ -94,6 +101,16 @@ export interface Sentences {
   "requiresConsent.skip": SentenceTemplate;
   "recentInteraction.pass": SentenceTemplate;
   "recentInteraction.reject": SentenceTemplate;
+  "freshness.pass": SentenceTemplate;
+  "freshness.reject": SentenceTemplate;
+  "freshness.skip": SentenceTemplate;
+  "silence.pass": SentenceTemplate;
+  "silence.reject": SentenceTemplate;
+  "silence.skip": SentenceTemplate;
+  "crisisQuiet.pass": SentenceTemplate;
+  "crisisQuiet.reject": SentenceTemplate;
+  "deadHours.pass": SentenceTemplate;
+  "deadHours.adjust": SentenceTemplate;
 
   /** The gate's own trace reasons, not any check's: store failures and ignored non-rejecting stops. */
   "gate.failOpen": SentenceTemplate;
@@ -120,6 +137,12 @@ export interface Explanation {
   summary: string;
   /** One sentence per check that ran, in the order it ran. */
   checks: CheckSentence[];
+  /** Set when a held decision and a known zone were given: the user's clock now, "HH:MM" in 24 hours. */
+  localNow?: string;
+  /** Set with `localNow`: the user's clock when the decision can go out, "HH:MM". */
+  localAvailableAt?: string;
+  /** Set with `localNow`: whether that is on the user's current local day, the next one, or later. */
+  when?: "today" | "tomorrow" | "later";
 }
 
 export interface ExplainOptions {
@@ -130,6 +153,13 @@ export interface ExplainOptions {
    */
   language?: string;
   catalogs?: Record<string, Partial<Sentences>>;
+  /**
+   * The user, for the local-time clause. The zone is `deviceTimezone` when valid, else `timezone`. With no
+   * valid zone the clause is left out and the text is unchanged.
+   */
+  user?: Pick<UserState, "timezone" | "deviceTimezone">;
+  /** The instant the clock is read at. Defaults to `decision.evaluatedAt`. */
+  now?: Date;
 }
 
 /* English ---------------------------------------------------------------- */
@@ -159,9 +189,11 @@ const secondsWords = (text: string): string => {
 
 /** The spend note is true only when the pass really read the counter: a bypassed budget returns a bare pass, a near-limit pass cannot be a bypass. */
 const budgetPass = (label: string): SentenceTemplate => (f) =>
-  f.used !== undefined
-    ? `the ${label} had room, but only just: ${f.used} of ${f.limit} already used; the unit is spent when the message actually goes out`
-    : `the ${label} did not stop it`;
+  f.why === "commitment"
+    ? `a commitment the person set up, so the ${label} is not counted`
+    : f.used !== undefined
+      ? `the ${label} had room, but only just: ${f.used} of ${f.limit} already used; the unit is spent when the message actually goes out`
+      : `the ${label} did not stop it`;
 
 const budgetReject = (label: string): SentenceTemplate => (f) => `the ${label} of ${f.limit} was already spent (${f.used} used)`;
 
@@ -170,6 +202,8 @@ export const en: Sentences = {
   "summary.allowed": (f) => `allowed at ${f.at} because no check stopped it${f.notes ?? ""}`,
   "summary.allowedEmpty": () => "allowed; no checks ran",
   "summary.heldUnknown": () => "held; the trace does not name the check that stopped it",
+  "summary.localClock": (f) => `It is ${f.now} for the user; it could go out at ${f.at} ${f.day}.`,
+  "summary.noSurface": () => "not sent: the checks allowed it, but every surface was taken off the table, so there is nowhere to deliver it",
   "note.deliverAt": (f) => `delivery waits until ${f.at}`,
   "note.nearLimit": (f) => `${f.check} was close to its limit (${f.used} of ${f.limit} used)`,
   "note.shadowed": (f) => `${f.check} would have stopped it but ran in shadow mode`,
@@ -179,6 +213,8 @@ export const en: Sentences = {
   "killSwitch.reject": () => "the kill switch is on, which stops every message",
   "consent.pass": () => "the user has agreed to proactive messages",
   "consent.reject": () => "the user has not agreed to proactive messages",
+  "inboundConsent.pass": () => "the user has not replied STOP on this channel",
+  "inboundConsent.reject": (f) => `the user replied STOP on ${f.channel ?? "this channel"} and has not sent START since, so messages on that channel are blocked`,
   "enabled.pass": () => "proactive messages are switched on for this profile",
   "enabled.reject": () => "proactive messages are switched off on this user's profile",
   "mode.pass": () => "the user's operating mode did not block it",
@@ -193,10 +229,20 @@ export const en: Sentences = {
   "quietHours.reject": (f) =>
     `the user's quiet hours run ${f.start} to ${f.end} ${f.tz}${f.from ? `, a window belonging to ${f.from},` : ""} and ${f.priority} priority is below the ${f.floor} floor needed to override them`,
   "quietHours.skip": () => "the user has quiet hours but no time zone, so the check could not run",
-  "trustRamp.pass": () => "the new-user trust period did not block it",
+  "trustRamp.pass": (f) =>
+    f.why === "requested"
+      ? "the person asked for this message, so the new-user trust period does not apply"
+      : f.why === "commitment"
+        ? "the person set this up, so the new-user trust period does not apply"
+        : "the new-user trust period did not block it",
   "trustRamp.reject": (f) => `the user is on day ${f.day} of a ${f.days}-day trust period for new users, which allows only ${f.floor} priority and above, and the message was ${f.priority}`,
   "trustRamp.skip": () => "the user's sign-up date is not on record, so the new-user trust period could not be checked",
-  "dismissalCooldown.pass": () => "the user has not dismissed this type enough to silence it",
+  "dismissalCooldown.pass": (f) =>
+    f.type !== undefined
+      ? `the "${f.type}" type is exempt from the dismissal cooldown`
+      : f.why === "commitment"
+        ? "the person set this up, so the dismissal cooldown does not apply"
+        : "the user has not dismissed this type enough to silence it",
   "dismissalCooldown.reject": (f) => `the user has dismissed "${f.type}" messages ${f.count} times in ${f.within} days, so this type stays silent until ${f.until}`,
   "adaptiveTiming.pass": () => "the timing check left the message as it was",
   "adaptiveTiming.adjust": (f) =>
@@ -229,7 +275,9 @@ export const en: Sentences = {
   "allowedWindow.reject": (f) => `messages may only go out between ${f.start} and ${f.end} (${f.zone}), and the local time was outside that window`,
   "allowedWindow.skip": () => "the user has no time zone, so the allowed window could not be checked",
   "requiresConsent.pass": (f) =>
-    f.start
+    f.why
+      ? `the message is ${WHY_PHRASE[f.why] ?? f.why}, not a promotion, so the "${f.name}" consent is not needed`
+      : f.start
       ? `the ${f.name ? `"${f.name}" ` : ""}consent is only needed between ${f.start} and ${f.end}, and it was outside those hours`
       : f.name
         ? `the "${f.name}" consent the check needs was in place`
@@ -239,6 +287,22 @@ export const en: Sentences = {
   "recentInteraction.pass": () => "the user had written to the assistant recently enough",
   "recentInteraction.reject": (f) =>
     f.age ? `the user's last message to the assistant was ${f.age} h ago, outside the ${f.within} h window` : "the user has never written to the assistant, and this rule allows messages only after they do",
+
+  "freshness.pass": () => "the content was still within its freshness limits",
+  "freshness.reject": () => "the content is out of date, so it is not sent",
+  "freshness.skip": () => "the message gave no expiry or age limit to test, so freshness was not checked",
+  "silence.pass": () => "the evidence behind the message was strong enough, and something new had happened",
+  "silence.reject": (f) =>
+    f.points !== undefined
+      ? `there is too little evidence to send this: ${f.points} data points, and at least ${f.need} are needed`
+      : f.confidence !== undefined
+        ? `the evidence behind this is not strong enough: confidence ${f.confidence}, and at least ${f.need} is needed`
+        : "nothing new has happened since the last message, so there is no reason to send it",
+  "silence.skip": () => "the message carried no evidence, so the evidence check did not run",
+  "crisisQuiet.pass": () => "the crisis-support quiet period did not block it",
+  "crisisQuiet.reject": (f) => `the user is in a crisis-support quiet period until ${f.until}, so only support messages go out`,
+  "deadHours.pass": () => "this hour was not a quiet one for the user, or push was not in question",
+  "deadHours.adjust": (f) => `at ${f.hour}:00 local time the user acted on only ${f.acted} of the ${f.total} messages sent then, so push was left off this one`,
 
   "gate.failOpen": (f) => `the "${f.id}" check failed with "${f.error}", and the gate is set to let messages through when a check fails`,
   "gate.failClosed": (f) => `the "${f.id}" check failed with "${f.error}", and the gate is set to stop messages when a check fails`,
@@ -251,6 +315,18 @@ export const en: Sentences = {
 };
 
 /* Reading the machine reasons back into facts ----------------------------- */
+
+/** The "why" a pass carries when a candidate is not promotional, in words a reader can follow. */
+const WHY_PHRASE: Record<string, string> = {
+  transactional: "a transactional message, caused by the user's own action",
+  requested: "a message the user asked for",
+  commitment: "something the user set up",
+};
+
+/** The reasons a pass gives when a candidate is the person's own doing, and the budget pass that spends nothing. */
+const COMMITMENT_BUDGET = "a commitment the person set up; it spends no budget";
+const commitmentWhy: Parser = (reason) => (reason.startsWith("a commitment") ? { why: "commitment" } : null);
+const predicate = (test: RegExp): Parser => (reason) => (test.test(reason) ? {} : null);
 
 type Parser = (reason: string) => SentenceFacts | null;
 
@@ -277,6 +353,7 @@ const first = (...parsers: Parser[]): Parser => (reason) => {
 
 const BUDGET_STOP = match(/^.* of (\d+) used \((\d+)\)$/, ["limit", "used"]);
 const BUDGET_NEAR = match(/^(\d+) of (\d+) used$/, ["used", "limit"]);
+const BUDGET_PASS = first(BUDGET_NEAR, (reason) => (reason === COMMITMENT_BUDGET ? { why: "commitment" } : null));
 
 const parseQuietHours: Parser = (reason) => {
   const m = /^quiet hours (\S+) to (\S+)(?: \((\w+) (\S+)\))? (\S+); priority (\w+) is below the floor \((\w+)\)$/.exec(reason);
@@ -303,22 +380,45 @@ const PARSERS: Record<string, Parsers> = {
   killSwitch: { stop: fixed("engine kill switch is on") },
   consent: { stop: fixed("user has not consented to proactive behaviour") },
   enabled: { stop: fixed("proactive behaviour is disabled on this profile") },
+  inboundConsent: { stop: match(/^user replied STOP on (.+); they have not sent START since$/, ["channel"]) },
   mode: { stop: match(/^operating mode "(.+)" does not allow proactive messages$/, ["mode"]) },
   snooze: { stop: match(/^snoozed until (.+)$/, ["until"]) },
   mute: { stop: match(/^type "(.+)" is muted by the user$/, ["type"]) },
   intensity: { stop: match(/^priority (\w+) is below the "(\w+)" intensity floor \((\w+)\)$/, ["priority", "level", "floor"]) },
   quietHours: { stop: parseQuietHours, skip: fixed("quiet hours set but no timezone on the user; cannot evaluate") },
-  trustRamp: { stop: match(/^trust ramp: day (\d+) of (\S+), priority (\w+) is below (\w+)$/, ["day", "days", "priority", "floor"]), skip: fixed("no createdAt on the user; ramp cannot be evaluated") },
+  trustRamp: {
+    stop: match(/^trust ramp: day (\d+) of (\S+), priority (\w+) is below (\w+)$/, ["day", "days", "priority", "floor"]),
+    passReason: (reason) => (reason.startsWith("requested by the person") ? { why: "requested" } : commitmentWhy(reason)),
+    skip: fixed("no createdAt on the user; ramp cannot be evaluated"),
+  },
   // The instant is an ISO timestamp, so \S+: with (.+) the type and the
   // instant could both absorb a crafted reason and the match went quadratic.
-  dismissalCooldown: { stop: match(/^(\d+) dismissals of "(.+)" in (\S+) days; silent until (\S+)$/, ["count", "type", "within", "until"]) },
+  dismissalCooldown: {
+    stop: match(/^(\d+) dismissals of "(.+)" in (\S+) days; silent until (\S+)$/, ["count", "type", "within", "until"]),
+    passReason: first(match(/^type "(.+)" is exempt from the dismissal cooldown$/, ["type"]), commitmentWhy),
+  },
   adaptiveTiming: { adjust: first(match(/^deliver at (\S+); surfaces (.+)$/, ["at", "surfaces"]), match(/^deliver at (\S+)$/, ["at"]), match(/^surfaces (.+)$/, ["surfaces"])) },
   dedupe: { stop: match(/^already delivered within the last (.+)$/, ["window"]), skip: fixed("no dedupeKey on the candidate; deduplication cannot be evaluated") },
-  dailyBudget: { stop: BUDGET_STOP, passReason: BUDGET_NEAR },
-  weeklyBudget: { stop: BUDGET_STOP, passReason: BUDGET_NEAR },
-  monthlyBudget: { stop: BUDGET_STOP, passReason: BUDGET_NEAR },
-  windowBudget: { stop: BUDGET_STOP, passReason: BUDGET_NEAR },
-  rateLimit: { stop: match(/^rate limit (\d+) per (\d+) s of \d+ used \((\d+)\)$/, ["limit", "per", "used"]), passReason: BUDGET_NEAR },
+  dailyBudget: { stop: BUDGET_STOP, passReason: BUDGET_PASS },
+  weeklyBudget: { stop: BUDGET_STOP, passReason: BUDGET_PASS },
+  monthlyBudget: { stop: BUDGET_STOP, passReason: BUDGET_PASS },
+  windowBudget: { stop: BUDGET_STOP, passReason: BUDGET_PASS },
+  rateLimit: { stop: match(/^rate limit (\d+) per (\d+) s of \d+ used \((\d+)\)$/, ["limit", "per", "used"]), passReason: BUDGET_PASS },
+  freshness: {
+    // The reasons name the expiry instant or the age limit; the sentence says only that the content is out of date.
+    stop: predicate(/^expired at |^expired: |not a valid instant/),
+    skip: predicate(/^no freshUntil or createdAt|^no maxAgeSeconds set/),
+  },
+  silence: {
+    stop: first(
+      match(/^not enough data: (\d+) data points, need (\d+)$/, ["points", "need"]),
+      match(/^not enough confidence: (\S+), need (\S+)$/, ["confidence", "need"]),
+      predicate(/^nothing new since the last message$/),
+    ),
+    skip: fixed("no evidence on the candidate; silence cannot be evaluated"),
+  },
+  crisisQuiet: { stop: match(/^crisis quiet period until (\S+); only support messages pass$/, ["until"]) },
+  deadHours: { adjust: match(/^dead hour (\d+):00: (\d+) of (\d+) acted on; push removed for .+$/, ["hour", "acted", "total"]) },
   utilityFloor: { stop: match(/^pAccept (\S+) < tau (\S+)$/, ["pAccept", "tau"]), skip: fixed("no pAccept on the candidate; utility floor cannot be evaluated") },
   boundedDeferral: { adjust: match(/^user busy; deliver at (\S+) \(t\* (\d+) s\)$/, ["at", "tStar"]) },
   allowedWindow: {
@@ -328,7 +428,10 @@ const PARSERS: Record<string, Parsers> = {
   },
   requiresConsent: {
     stop: match(/^consent "(.+)" is missing(?: \(required (\S+) to (\S+)\))?$/, ["name", "start", "end"]),
-    passReason: match(/^outside the consent window (\S+) to (\S+)$/, ["start", "end"]),
+    passReason: first(
+      match(/^outside the consent window (\S+) to (\S+)$/, ["start", "end"]),
+      match(/^(transactional|requested|commitment); not promotional, so consent "(.+)" is not required$/, ["why", "name"]),
+    ),
     idFacts: (id) => (id.startsWith("consent:") ? { name: id.slice("consent:".length) } : {}),
     skip: fixed("no timezone on the user; consent window cannot be evaluated"),
   },
@@ -358,9 +461,9 @@ const GATE_ENTRIES: Array<{ key: string; parse: Parser }> = [
  * check's reason, so an unmatched id falls back to recognizing the reason's
  * shape. Order is distinctiveness: each pattern names the check it sounds like.
  */
-const STOP_SCAN = ["quietHours", "allowedWindow", "requiresConsent", "rateLimit", "dismissalCooldown", "snooze", "mute", "mode", "intensity", "trustRamp", "dedupe", "utilityFloor", "recentInteraction", "killSwitch", "consent", "enabled"] as const;
-const SKIP_SCAN = ["quietHours", "trustRamp", "dedupe", "utilityFloor", "allowedWindow", "requiresConsent"] as const;
-const ADJUST_SCAN = ["adaptiveTiming", "boundedDeferral"] as const;
+const STOP_SCAN = ["quietHours", "allowedWindow", "requiresConsent", "rateLimit", "dismissalCooldown", "snooze", "mute", "mode", "intensity", "trustRamp", "dedupe", "utilityFloor", "recentInteraction", "killSwitch", "consent", "enabled", "crisisQuiet", "silence", "freshness"] as const;
+const SKIP_SCAN = ["quietHours", "trustRamp", "dedupe", "utilityFloor", "allowedWindow", "requiresConsent", "freshness"] as const;
+const ADJUST_SCAN = ["adaptiveTiming", "boundedDeferral", "deadHours"] as const;
 
 const BUDGET_LABELS: Record<string, string> = { "daily budget": "dailyBudget", "weekly budget": "weeklyBudget", "monthly budget": "monthlyBudget", "window budget": "windowBudget" };
 
@@ -462,6 +565,7 @@ function explainEntry(entry: TraceEntry, s: Sentences): CheckSentence {
 function summarize(decision: Decision, s: Sentences): string {
   if (decision.allowed) {
     if (!decision.trace.length) return sentenceOf(t(s, "summary.allowedEmpty", {}));
+    if (!decision.surfaces.length) return sentenceOf(t(s, "summary.noSurface", {}));
     const notes: string[] = [];
     if (decision.deliverAt) notes.push(t(s, "note.deliverAt", { at: decision.deliverAt.toISOString() }));
     for (const n of decision.nearLimit) notes.push(t(s, "note.nearLimit", { check: n.check, used: String(n.used), limit: String(n.limit) }));
@@ -489,9 +593,75 @@ function summarize(decision: Decision, s: Sentences): string {
   return sentenceOf(t(s, "summary.held", { clause, ...(until ? { until } : {}) }));
 }
 
+/** "HH:MM" on the zone's clock for an instant, 24 hours, zero padded. */
+const clockText = (at: Date, zone: string): { day: string; text: string } => {
+  const { minutes, day } = localClock(at, zone);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return { day, text: `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}` };
+};
+
+/** The calendar day after a "YYYY-MM-DD" day, computed on the date alone so no zone or offset can shift it. */
+const dayAfter = (day: string): string => {
+  const [y, m, d] = day.split("-").map(Number) as [number, number, number];
+  return new Date(Date.UTC(y, m - 1, d + 1)).toISOString().slice(0, 10);
+};
+
+/** The user's-clock clause for a held decision, when the zone is known. Undefined otherwise. */
+function localClause(decision: Decision, zone: string | undefined, now: Date, s: Sentences): { sentence: string; localNow: string; localAvailableAt: string; when: "today" | "tomorrow" | "later" } | undefined {
+  const at = decision.nextAllowedAt ?? decision.retryAt;
+  if (decision.allowed || !at || !zone) return undefined;
+  const nowClock = clockText(now, zone);
+  const atClock = clockText(at, zone);
+  const when: "today" | "tomorrow" | "later" = atClock.day === nowClock.day ? "today" : atClock.day === dayAfter(nowClock.day) ? "tomorrow" : "later";
+  const dayPhrase = when === "later" ? `on ${new Intl.DateTimeFormat("en-GB", { timeZone: zone, day: "numeric", month: "long" }).format(at)}` : when;
+  const sentence = t(s, "summary.localClock", { now: nowClock.text, at: atClock.text, day: dayPhrase });
+  return { sentence, localNow: nowClock.text, localAvailableAt: atClock.text, when };
+}
+
+/** The zone the user's clock is read in: a valid device zone, else a valid stored zone that is not the UTC placeholder. */
+const knownZone = (user: Pick<UserState, "timezone" | "deviceTimezone">): string | undefined => {
+  const valid = (zone: string | undefined): zone is string => {
+    if (!zone) return false;
+    try {
+      new Intl.DateTimeFormat("en-US", { timeZone: zone });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  if (valid(user.deviceTimezone)) return user.deviceTimezone;
+  if (valid(user.timezone) && user.timezone !== "UTC") return user.timezone;
+  return undefined;
+};
+
+const ISO_INSTANT = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?/g;
+
+/** An instant on the user's clock: "15:00" today, "09:30 tomorrow", or "08:00 on 25 October". */
+const whenText = (iso: string, zone: string, now: Date): string => {
+  const at = new Date(iso);
+  if (Number.isNaN(at.getTime())) return iso;
+  const a = clockText(at, zone);
+  const n = clockText(now, zone);
+  const day = a.day === n.day ? "" : a.day === dayAfter(n.day) ? " tomorrow" : ` on ${new Intl.DateTimeFormat("en-GB", { timeZone: zone, day: "numeric", month: "long" }).format(at)}`;
+  return a.text + day;
+};
+
+/** Every template, with each string fact's ISO instants rendered by `render`, so no template can leak one. */
+function localized(s: Sentences, render: (iso: string) => string): Sentences {
+  const scrub = (text: string) => text.replace(ISO_INSTANT, render);
+  const out: Sentences = { ...s };
+  for (const key of Object.keys(s)) {
+    const template = s[key];
+    if (!template) continue;
+    out[key] = (facts) => template(Object.fromEntries(Object.entries(facts).map(([k, v]) => [k, typeof v === "string" ? scrub(v) : v])));
+  }
+  return out;
+}
+
 /**
  * Render a decision as sentences. Deterministic: the same decision always
- * produces the same explanation, and nothing outside the decision is read.
+ * produces the same explanation, and nothing outside the decision and the
+ * options is read.
  */
 export function explain(decision: Decision, options: ExplainOptions = {}): Explanation {
   const language = options.language ?? "en";
@@ -499,6 +669,14 @@ export function explain(decision: Decision, options: ExplainOptions = {}): Expla
   if (language !== "en" && !overlay) {
     throw new Error(`no sentence catalog for language "${language}"; pass one with the catalogs option`);
   }
-  const s: Sentences = { ...en, ...overlay };
-  return { summary: summarize(decision, s), checks: decision.trace.map((entry) => explainEntry(entry, s)) };
+  const base: Sentences = { ...en, ...overlay };
+  const now = options.now ?? decision.evaluatedAt;
+  // With a known zone every instant in the text is written on the user's clock; with none the text keeps the ISO instant.
+  const zone = options.user ? knownZone(options.user) : undefined;
+  const s = zone ? localized(base, (iso) => whenText(iso, zone, now)) : base;
+  const summary = summarize(decision, s);
+  const local = localClause(decision, zone, now, s);
+  const checks = decision.trace.map((entry) => explainEntry(entry, s));
+  if (!local) return { summary, checks };
+  return { summary: `${summary} ${local.sentence}`, checks, localNow: local.localNow, localAvailableAt: local.localAvailableAt, when: local.when };
 }

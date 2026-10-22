@@ -1,0 +1,561 @@
+{
+ "h1": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks returned send/holdUntil/reason for US SMS around the 21:00 and 08:00 edges, as the prompt specifies."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks hold instants and required 47 CFR text on DST days and window edges."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks the 'later of' hold rule and reason words the prompt requires.",
+   "concern": "Also demands 'quiet hours' be absent from a legal-only reason; the prompt only says to mention both when both apply, so a reason mentioning an inactive rule would fail."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks scope of rules by channel, priority, country and zone as the prompt states.",
+   "concern": "Demands '47 CFR 64.1200' be absent from a quiet-only reason; the prompt does not forbid it literally."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks half-hour and quarter-hour zones give correct holds and sends."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks invalid or missing time zone gives send false, null hold, and 'time zone' in reason."
+  }
+ },
+ "h2": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks three-per-local-day cap across channels with correct hold and reason.",
+   "concern": "Requires each refusal reason to omit the names of caps that are not full; the prompt only requires naming each full cap, so a reason also mentioning another cap would fail."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks weekly cap of seven, Monday-midnight reset and reason.",
+   "concern": "Requires each refusal reason to omit the names of caps that are not full; the prompt only requires naming each full cap, so a reason also mentioning another cap would fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks both caps full: both named, hold is the later reset."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks monthly cap of twelve and reset at local month start.",
+   "concern": "Requires each refusal reason to omit the names of caps that are not full; the prompt only requires naming each full cap, so a reason also mentioning another cap would fail."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks 23-hour and 25-hour local days and week across spring forward.",
+   "concern": "Requires each refusal reason to omit the names of caps that are not full; the prompt only requires naming each full cap, so a reason also mentioning another cap would fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks exactly three sends when two processes race, nothing recorded on refusal, and restart persistence."
+  }
+ },
+ "h3": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks eight keyword spellings stop SMS despite consent true, with 'stop' in the reason."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks a stop on one channel leaves the others sending."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks seven non-keyword texts change nothing."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks START, UNSTOP, YES re-enable and 'yes please' does not."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks state survives separate and concurrent processes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks snooze exclusive end on every channel and consent false on every channel with required words."
+  }
+ },
+ "h4": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks at most 5 sends per user with 50 concurrent workers, counted from the send log.",
+   "concern": "Requires every refusal to say 'daily cap'; fine here since only the cap can refuse."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks one send and 'already delivered' for the rest when 10 workers get the same event."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks redelivery later or days later does not send again."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks a send killed mid-way is not repeated after restart."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks the interrupted send still counts toward the 5 for that day."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks cap resets at the user's local midnight, not UTC midnight."
+  }
+ },
+ "h5": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks replay counts for policy A against an independent reference."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks decisions in processing order with shuffled input and that the input is not mutated."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks replay under policies B and C against the reference."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks reason words and holdUntil per outcome as the prompt requires."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks compare counts and changed list in processing order."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks critical vs cap, quiet-before-cap, and tie order as the prompt states."
+  }
+ },
+ "h6": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks US SMS 08:00-21:00 local window incl. DST edges, and US email unrestricted."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks Korea ad and night consent rules, with email exempt from night."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks India promotional consent and the four time bands."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks DE and FR consent or existing-customer rule for email and SMS."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks sources returned are official-host URLs for applicable rules and empty for other countries; the prompt requires this.",
+   "concern": "Source host allowlist is narrow: it rejects other official legislator or official-journal sites (for example legifrance.gouv.fr, gesetze-im-internet.de, federalregister.gov, egazette.nic.in, elaw.klri.re.kr), and each country must hit a specific host pattern, so a correct solution citing those could fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks missing or invalid time zone refuses with 'time zone' where a local-time rule applies, and not elsewhere.",
+   "concern": "Also re-applies the sources allowlist to allowed cases (same narrow-host concern as criterion 5)."
+  }
+ },
+ "x1": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks switched-off channels are skipped, order kept, all-off gives 'opted out'."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks quiet hours 22:00-08:00 in the user's zone with DST edges and security exempt."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks cap of 3 per local day, security neither counted nor stopped."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks fallback on throw, failed notifications not counted, off channels not attempted."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks exactly 3 deliveries per user under cross-process concurrency."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks state survives restart and each reason carries its required word."
+  }
+ },
+ "x2": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks opt-out, quiet hours 21:00-08:00, and per-agent-per-user daily cap of 5 with required reason words."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks audit.jsonl record shape, key order, seq, at, decision, reason, links as the prompt specifies."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks the hash chain recomputed independently over mixed decisions."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks verifyAudit result on intact and tampered files.",
+   "concern": "brokenAt for a deleted or swapped line is demanded as the expected position (4 and 5), but the prompt says 'seq of the first record whose seq, link or hash does not match'; a solution reporting the stored seq (5 and 6) is equally defensible and would fail. Empty or missing file returning ok:true, records:0 is not specified by the prompt."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks 40 records with seq 1..40 and an intact chain under concurrent processes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks send runs once per allowed call only and a new process continues the chain."
+  }
+ },
+ "y1": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks allowed/refused, holdUntil and sources presence for the US federal window incl. DST, as stated in the prompt."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks the FL/OK/MD 08:00-20:00 window and TX federal-only behaviour required by rules (1)-(2)."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks holdUntil null for consent-only blocks and next 08:00 local for time windows, as the prompt specifies.",
+   "concern": "KR sms inside the 21:00-08:00 night window without consents.night is expected to have holdUntil null; the prompt calls the night rule a time-of-day condition that needs consent, so a solution returning the next 08:00 as a hold is arguably consistent with 'when a time window blocks' yet fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks GB/EU consent or existingCustomer rule, no time window, and other countries allowed."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that sources are present/empty and official URLs for the rule, which the prompt explicitly requires.",
+   "concern": "Official-host check is a hard-coded allowlist plus .gov/.gov.uk/.gouv.fr/.go.kr/.europa.eu suffixes; genuine regulator/legislator sites not listed (e.g. cnil.fr, bundesnetzagentur.de, kisa.or.kr, legislation of other EU states) would fail a correct solution. It also demands a jurisdiction-matching host (GB/EU/KR/US) that the prompt does not literally require, and applies to every case in all groups so any single unlisted URL fails the whole criterion."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that a missing/invalid time zone refuses with 'time zone' in the reason where a local-time rule applies, as required, and allows where none applies."
+  }
+ },
+ "y2": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks rule precedence and that snoozedUntil at or before now does not snooze, per the stated rule order."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks quiet-hours sendAt and the required local times and today/tomorrow wording, including DST and half-hour zones."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks snoozed sendAt and the required local-time wording in the reason."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks daily-limit sendAt as next local midnight and required wording on 23/25-hour days."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks the prompt's explicit text rules: one sentence and no undefined/null/NaN/[object/ISO date.",
+   "concern": "The one-sentence test is a heuristic (terminator + whitespace + capital letter); a correct sentence containing such a pattern would fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks boundary behaviour (non-crossing window, null quietHours, exact start/end, sentToday 2) from the stated rules."
+  }
+ },
+ "y3": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks replay counts and byRule against a reference derived from the prompt rules."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks decisions in processing order from shuffled input and that input is not modified, both stated requirements."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks replay results for policies B and C, including the all-sent case with empty byRule."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks local ISO-week weekly cap across DST weeks, as the prompt defines the week."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks compare output (counts, byRule, changed in order, from/to strings) and non-mutation as specified."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks rule order and that critical ignores only quiet hours, plus holdUntil for held events.",
+   "concern": "Quiet-end holdUntil is expected as an exact instant found by minute scan; the checker also calls functions synchronously and treats a returned promise as failure, which the prompt does not say (though 'function' not 'async function' is given)."
+  }
+ },
+ "y4": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks deliver return values and rule precedence over the scenario, as specified."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks whyNothing blocked list, byRule, delivered count and verdict phrases required by the prompt."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks from-inclusive/to-exclusive range semantics and the 'no messages' verdict."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks state survives across separate processes and that reading changes nothing (durability requirement)."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that concurrent processes lose, duplicate or over-deliver nothing, the prompt's explicit concurrency requirement."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks the per-local-day cap in Istanbul and New York rather than UTC date."
+  }
+ },
+ "y5": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks memory and sqlite give identical answers equal to the cap-of-3-per-local-day reference."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks memory senders start empty and do not share state, as stated."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks sqlite state is shared across sender objects and survives a new process."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks the cap of 3 holds under simultaneous multi-process calls, an explicit requirement."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks local-day boundaries incl. DST day and that refused calls record nothing, under both stores."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks unknown store throws an Error containing 'store' and memory ignores a path.",
+   "concern": "Also requires throwing for {} and store:'' (missing store); the prompt only says 'any other store value', which a solution defaulting a missing store to memory could reasonably read otherwise."
+  }
+ },
+ "y6": {
+  "1": {
+   "label": "outcome",
+   "why": "Node program output compared to the rule reference on generated cases."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Python program output compared to the rule reference on generated cases."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Go program output compared to the rule reference on generated cases.",
+   "concern": "Depends on go run reaching the Go module proxy (GOPROXY set, -mod=mod) and a toolchain being installed; an environment fault could fail a correct solution."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks the policy is read at run time by swapping policy.json and comparing all three programs."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks edge cases (quiet boundaries, repeated hour, odd offsets, null rules) agree across all three."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks missing/invalid policy.json gives non-zero exit and 'policy' on stderr, as required."
+  }
+ },
+ "z1": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks the returned send value and non-empty reason for each consent shape (true, false, missing, empty, analytics only)."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks that after optOut the user is refused, another user is not, and a fresh process sees the opt-out."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks the returned send decision at 03:00 and 12:00 Tokyo local time when timezone is missing or UTC, and no send with no usable zone.",
+   "concern": "Prompt gives no allowed hours; a hidden 'no send at 03:00 local' rule is assumed, and a bot with a late-morning-only window would fail the 12:00 case only if it were narrower than noon. Refusal for 'UTC and no device zone' is inferred from the placeholder remark, not stated."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks one send per local day (including a UTC date change) and exactly one send under 2 processes x 12 concurrent calls, with next-day send allowed.",
+   "concern": "'One check-in per user per day' is not stated in the prompt; it follows from 'daily check-in' and 'not annoying'. Cross-process test shares one candidate id, so a bot that dedupes by candidate id passes without a per-day cap."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that three dismissals of checkin refuse the next check-in while a tip and a no-dismissal user are still sent.",
+   "concern": "The threshold of three dismissals is not in the prompt; a bot that suppresses after 5 dismissals, or after any decayed count, fails even though the prompt only says 'not annoying'."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that proactiveEnabled false refuses with a reason and true sends again in the same process."
+  }
+ },
+ "z2": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks the returned sent value at exact 08:00/21:00 local edges in New York across both DST changes and in Phoenix.",
+   "concern": "The 08:00 to 21:00 window is a TCPA rule not stated in the prompt, and the exact edges 08:00 and 20:59 fail any solution with a safety margin or a stricter window (for example 09:00 to 20:00)."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks that STOP-word replies in various cases and punctuation revoke the digest and ordinary replies do not.",
+   "concern": "'stopping' and 'I will not stop by' must not revoke; ambiguous phrasing, and the exact keyword list comes from the TCPA text, not the prompt. A solution that revokes on 'stopping' or treats any text containing the word as revocation fails."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks that a revocation made in one process is refused in a second process and after restart."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks that optOut(userId, 'sms') refuses the next trySend, leaves other users alone, and persists to a new process."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that the same message id offered by 10 concurrent processes, then again after restart, is sent exactly once."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that a digest created three days before now is refused and one created 10 minutes before is sent.",
+   "concern": "The prompt never states a staleness limit; it only says redelivery can happen. A solution with a 1-day or 7-day limit gives different results for the 3-day case."
+  }
+ },
+ "z3": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks that five dismissals of the 'suggestion' type do not stop the briefing push."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks push and in-app results and transport calls for categories missing, briefing true and briefing false.",
+   "concern": "The prompt does not say that the in-app item must still be produced when push is withheld for missing categories; that is an inferred requirement."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks that two transport.push calls returning false leave the day's allowance unspent, the third pushes and a fourth the same day does not.",
+   "concern": "The prompt never mentions a daily allowance or one briefing per day; a solution without a cap pushes on attempt 4 and fails. The one-push-per-day rule is inferred."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks that a throwing consentStore gives push false, inApp true, no push call and no thrown exception.",
+   "concern": "In-app is required even though the prompt does not say what to do with the in-app item when consent is unknown."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that android with notificationsPermitted false gives no push and a reason, while permitted android pushes.",
+   "concern": "Reason must match /permission|permitted|disabled|settings/; a plain sentence such as 'Notifications are turned off' fails. Wording is not required by the prompt."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks push false before the snooze end, push true at the end instant, and resumeAt equal to the snooze end.",
+   "concern": "The pushes are tested at 08:30 and 09:30 Istanbul; a solution that restricts briefings to a narrow wake-up window ending at or before 09:30 local would fail the exclusive-end case. The prompt says 'time people wake up' without a window."
+  }
+ },
+ "z4": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks that an inferred suggestion is held for a 2-day account even though the profile is new, and sent for a 30-day account.",
+   "concern": "The new-account threshold is not in the prompt; any ramp between 2 and 30 days passes, but one longer than 30 days fails."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks that a requested notice passes for a 2-day account."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks that a requested notice at 03:00 local is held and sent at 12:00 local.",
+   "concern": "The prompt never mentions quiet hours; the hold at 03:00 is an inferred requirement (ENG 10) and a solution without quiet hours fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks that dailyNudgeCap of 2 and of 3 bounds inferred suggestions per local day and resets the next local day."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that 20 reminders are all sent, and neither use nor are blocked by the nudge cap.",
+   "concern": "The prompt only describes reminders as set by the user; that they bypass the cap is inferred. A per-user reminder rate limit would fail 20 reminders in 20 minutes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that every refusal has a reasonCode string listed in the non-empty REASON_CODES array and not containing 'error'."
+  }
+ },
+ "z5": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks that a 1 to 2 day account with fewer than 5 data points gets send false and a mature account gets a message with valid surfaces.",
+   "concern": "The prompt gives no thresholds for account age or data points; this tests a hidden 5-point and 2-day limit, so a solution that requires 10 points or 3 days would fail the baseline only if it were stricter than the mature case, but one allowing 4 points fails."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks that focusMode true with confidence 0.42 gets nothing and a mature account at confidence 0.9 gets a message.",
+   "concern": "Does not discriminate focusMode (0.42 is silenced by confidence alone), and a solution with a lower confidence threshold, for example 0.4, would send and fail even if it honours focusMode."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks that the same insight key twice on a local day is shown once and shown again on the next local day.",
+   "concern": "Showing the key again on the next day is a defensible but unstated choice; a bot that never repeats a key fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks that ten candidates during a crisis are all refused and that two normal candidates 6 hours apart are shown after it clears.",
+   "concern": "Requires two shown messages on the same day after the crisis; a bot with a daily limit of one proactive message fails."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that every silence has a non-empty reason without the word 'error' and shown messages carry null/absent reason.",
+   "concern": "The ban on the word 'error' is not in the Z5 prompt (only in Z4's)."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that at an hour where the user mostly dismissed, surfaces has no push but keeps inApp, and where mostly acted, push is included.",
+   "concern": "The prompt gives hourStats but not the rule or ratio; 1/9 and 8/1 are clear cases but the push-at-09:00 requirement depends on an unstated policy."
+  }
+ },
+ "z6": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks whyNotReceived entries: one per considered notification in order, blocked ones with a ruleCode, correct 'at', inclusive from and exclusive to, empty arrays for empty range and unknown user."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks availableAt: next local midnight or end of quiet hours for a cap block, end of quiet hours for a quiet-hours block, null for delivered and consent entries.",
+   "concern": "The prompt asks for 'earliest moment it could have been delivered'; the expected values for the cap block accept two readings, but a solution that returns the next day's first allowed moment with another convention (for example next day 08:00 minus a margin) fails."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks the text of each entry: no ISO date-time, no UTC/GMT, and the local HH:MM of the decision and availableAt.",
+   "concern": "The prompt only asks for 'one sentence support can read to the customer'; the local-time and no-UTC rules come from an unstated requirement. A correct sentence without times, such as 'You had already received 3 notifications that day', fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks dryRun counts for two policies (6/6 and 11/1) and that live decisions afterward are unaffected and no log is written.",
+   "concern": "Counts depend on unstated semantics: consent still applies under dryRun, cap counts only delivered events, quiet hours start inclusive and end exclusive; a different but reasonable reading changes the counts."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks that dryRun with the live policy equals the live outcomes for the same events and is repeatable."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks that the log is readable across processes and that 24 concurrent decisions over 2 processes log 24 entries with 3 delivered."
+  }
+ }
+}

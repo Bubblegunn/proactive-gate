@@ -1,0 +1,209 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/transactional-exempt",
+  "description": "requiresConsent with exemptTransactional lets a transactional candidate through without that consent. The exemption covers only the consent it is set on, and a non-transactional candidate still needs it.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "requiresConsent",
+        "name": "marketing",
+        "exemptTransactional": true
+      },
+      {
+        "id": "requiresConsent",
+        "name": "newsletter"
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a receipt passes the marketing consent it is exempt from, and the newsletter consent is still needed",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true,
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "receipt",
+          "transactional": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:newsletter",
+        "reason_pattern": "newsletter",
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    },
+    {
+      "description": "a transactional candidate with the newsletter consent is allowed",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "consents": {
+            "newsletter": true
+          }
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "receipt",
+          "transactional": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    },
+    {
+      "description": "a non-transactional candidate without the marketing consent is refused by the marketing consent",
+      "input": {
+        "user": {
+          "id": "u2",
+          "consent": true,
+          "consents": {
+            "newsletter": true
+          }
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "promo"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:marketing",
+        "reason_pattern": "marketing",
+        "trace": [
+          "consent:marketing"
+        ]
+      }
+    },
+    {
+      "description": "a transactional candidate passes the marketing consent when it is given",
+      "input": {
+        "user": {
+          "id": "u3",
+          "consent": true,
+          "consents": {
+            "marketing": true,
+            "newsletter": true
+          }
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "receipt",
+          "transactional": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    },
+    {
+      "description": "a requested message that is not a receipt passes the marketing consent, since the person asked for it",
+      "input": {
+        "user": {
+          "id": "u40",
+          "consent": true,
+          "consents": {
+            "newsletter": true
+          }
+        },
+        "candidate": {
+          "id": "c40",
+          "type": "promo",
+          "requested": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    },
+    {
+      "description": "a commitment the person set up passes the marketing consent, since it is not promotional",
+      "input": {
+        "user": {
+          "id": "u41",
+          "consent": true,
+          "consents": {
+            "newsletter": true
+          }
+        },
+        "candidate": {
+          "id": "c41",
+          "type": "reminder",
+          "kind": "commitment"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "surfaces": [
+          "feed"
+        ],
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    },
+    {
+      "description": "a requested message still needs the newsletter consent, which the exemption does not cover",
+      "input": {
+        "user": {
+          "id": "u42",
+          "consent": true,
+          "consents": {}
+        },
+        "candidate": {
+          "id": "c42",
+          "type": "promo",
+          "requested": true
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "consent:newsletter",
+        "trace": [
+          "consent:marketing",
+          "consent:newsletter"
+        ]
+      }
+    }
+  ]
+}

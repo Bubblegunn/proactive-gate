@@ -2,6 +2,7 @@ package proactivegate
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -26,8 +27,64 @@ func must(c Check, err error) Check {
 	return c
 }
 
+// assistantNudge builds the assistantNudge preset: an assistant that messages
+// the user unprompted (SPEC 9.14). dailyLimit and exemptTypes are its only
+// options. The numbers are a starting point, not findings.
+func assistantNudge(o map[string]any) ([]Check, error) {
+	dailyLimit := 3.0
+	if raw, ok := o["dailyLimit"]; ok {
+		n, isNumber := raw.(float64)
+		if !isNumber || math.IsNaN(n) || math.IsInf(n, 0) || n < 0 {
+			return nil, fmt.Errorf("assistantNudge: dailyLimit must be a number of at least 0, got %v", raw)
+		}
+		dailyLimit = n
+	}
+	exemptTypes := []string{}
+	if raw, ok := o["exemptTypes"]; ok {
+		list, isList := raw.([]any)
+		if !isList {
+			return nil, fmt.Errorf("assistantNudge: exemptTypes must be an array of candidate types")
+		}
+		for _, v := range list {
+			s, isString := v.(string)
+			if !isString {
+				return nil, fmt.Errorf("assistantNudge: exemptTypes must be an array of candidate types")
+			}
+			exemptTypes = append(exemptTypes, s)
+		}
+	}
+	return []Check{
+		killSwitchFlag("proactiveEnabled"),
+		crisisQuiet(),
+		consent(map[string]string{"push": "closed", "feed": "open"}),
+		must(requiresConsentExempt("marketing", nil, "", "", true)),
+		enabled(),
+		mode([]string{"normal"}),
+		snooze(true),
+		mute(),
+		quietHours(PriorityCritical, "reject"),
+		trustRamp(7, PriorityHigh),
+		dismissalCooldown(3, 30, 7, exemptTypes),
+		freshness(nil),
+		silence(5, 0.5, true),
+		dedupe(0),
+		deadHours(5, 0.2, PriorityHigh),
+		dailyBudget(budgetOptions{Limit: limitAt(dailyLimit)}),
+	}, nil
+}
+
 // Presets is the vocabulary a JSON policy may name under "preset" (7.2).
 var Presets = map[string]Preset{
+	"assistantNudge": {
+		Build: assistantNudge,
+		Sources: []string{
+			"https://developer.apple.com/app-store/review/guidelines/",
+			"https://developer.android.com/develop/ui/views/notifications/notification-permission",
+			"https://www.ecfr.gov/current/title-47/part-64/section-64.1200",
+			"https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+		},
+		Note: "An assistant that messages a user unprompted, checked in this order: the kill switch flag proactiveEnabled, crisis quiet, consent (push closed and feed open when consent is unknown), marketing consent unless the candidate is transactional, requested or a commitment, enabled, mode normal, snooze deferred, mute, quiet hours that reject a user with no time zone, a seven-day trust ramp at high priority, a dismissal cooldown of three in thirty days with a seven-day silence, freshness, silence, dedupe, dead hours, and a daily budget of dailyLimit (default 3). The numbers are a starting point, not findings. The preset supplies no quiet-hours window: the caller adds one. Not encoded: the local-time window of 47 CFR 64.1200 (use usTcpa for calls), the operating system's notification permission, and the ease of withdrawing consent under GDPR Article 7(3).",
+	},
 	"lineMessagingApi": {
 		Build: func(o map[string]any) ([]Check, error) {
 			plan := "communication"
@@ -43,7 +100,7 @@ var Presets = map[string]Preset{
 				sort.Strings(names)
 				return nil, fmt.Errorf("lineMessagingApi: unknown plan %q, known: %v", plan, names)
 			}
-			return []Check{consent(), monthlyBudget(budgetOptions{Limit: limit, NearLimit: 0.9})}, nil
+			return []Check{consent(nil), monthlyBudget(budgetOptions{Limit: limitAt(float64(limit)), NearLimit: 0.9})}, nil
 		},
 		Sources: []string{"https://developers.line.biz/en/docs/messaging-api/pricing/", "https://developers.line.biz/en/reference/messaging-api/"},
 		Note:    "Monthly push messages per plan for Japan: communication 200, light 5,000, standard 30,000; replies are free and not counted. Multicast and broadcast request rates are not encoded.",
@@ -87,7 +144,7 @@ var Presets = map[string]Preset{
 	},
 	"kakaoAlimtalk": {
 		Build: func(o map[string]any) ([]Check, error) {
-			return []Check{consent()}, nil
+			return []Check{consent(nil)}, nil
 		},
 		Sources: []string{"https://kakaobusiness.gitbook.io/main/ad/infotalk"},
 		Note:    "AlimTalk is informational and carries no time-of-day limit; consent is the only gate.",
@@ -109,7 +166,7 @@ var Presets = map[string]Preset{
 				must(requiresConsent("night", &QuietWindow{Start: "21:00", End: "08:00"}, "user", "")),
 			}, nil
 		},
-		Sources: []string{"https://www.law.go.kr", "https://developers.fingerpush.com/biz-message/console/ads-guide"},
+		Sources: []string{"https://www.law.go.kr"},
 		Note:    "Network Act article 50: prior consent for advertising, and a separate consent for 21:00 to 08:00 (email is exempt). Without user.timezone the night consent cannot be placed in the day and skips; the advertising consent still applies. The two-year re-confirmation is not encoded.",
 	},
 	"jpAntiSpamLaw": {
@@ -122,7 +179,7 @@ var Presets = map[string]Preset{
 	"cnMinorMode": {
 		Build: func(o map[string]any) ([]Check, error) {
 			window := must(allowedWindow("06:00", "22:00", "Asia/Shanghai", "", "window:minor"))
-			budg := dailyBudget(budgetOptions{Limit: 1})
+			budg := dailyBudget(budgetOptions{Limit: limitAt(1)})
 			adult := func(ctx *CheckContext) (Outcome, error) {
 				return passReason("not a minor"), nil
 			}

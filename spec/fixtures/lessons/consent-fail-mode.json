@@ -1,0 +1,59 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/consent-fail-mode",
+  "description": "consent with failMode. When consentUnknown is true each surface on the table is kept only if its mode is open; a surface with no entry is closed. A known consent is unaffected.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      { "id": "consent", "failMode": { "push": "closed", "feed": "open" } }
+    ]
+  },
+  "tests": [
+    {
+      "description": "unknown consent keeps only the open surface, feed",
+      "input": {
+        "user": { "id": "u1", "consent": true, "consentUnknown": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["feed"], "trace": ["consent"] }
+    },
+    {
+      "description": "unknown consent with only a closed surface rejects",
+      "input": {
+        "user": { "id": "u1", "consent": true, "consentUnknown": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "consent", "reason_pattern": "could not be determined", "trace": ["consent"] }
+    },
+    {
+      "description": "a surface with no entry takes the default, closed",
+      "input": {
+        "user": { "id": "u1", "consent": true, "consentUnknown": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["email", "feed"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["feed"], "trace": ["consent"] }
+    },
+    {
+      "description": "a known refusal is still a refusal",
+      "input": {
+        "user": { "id": "u1", "consent": false, "consentUnknown": false },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "consent", "reason_pattern": "has not consented", "trace": ["consent"] }
+    },
+    {
+      "description": "a known consent keeps every surface",
+      "input": {
+        "user": { "id": "u1", "consent": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["push", "feed"], "trace": ["consent"] }
+    }
+  ]
+}

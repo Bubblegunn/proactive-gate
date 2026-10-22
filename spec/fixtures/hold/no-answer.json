@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.5.0",
   "name": "hold/no-answer",
   "description": "A check that cannot say when it would stop denying gives no nextAllowedAt, and the field is absent rather than a guess.",

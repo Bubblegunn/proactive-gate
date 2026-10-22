@@ -59,6 +59,32 @@ export function storeContract(name: string, factory: StoreContractFactory, optio
     });
   });
 
+  // incrBy is optional (SPEC 5.9). A store without it reports these cases as skipped, not as passed.
+  test(`${name}: incrBy adds a signed delta and keeps the value`, testOptions, async (t) => {
+    await withStore(undefined, async (store) => {
+      if (!store.incrBy) return t.skip("this store does not implement the optional incrBy");
+      assert.equal(await store.incrBy("counter", 3), 3);
+      assert.equal(await store.incrBy("counter", -1), 2);
+      assert.equal(await store.get("counter"), "2");
+    });
+  });
+
+  test(`${name}: incrBy attaches its TTL when it creates the key and keeps it afterwards`, expiryOptions, async (t) => {
+    let now = 0;
+    const clock = () => now;
+    await withStore(clock, async (store) => {
+      if (!store.incrBy) return t.skip("this store does not implement the optional incrBy");
+      await store.incrBy("counter", 2, 2);
+      now = 1000;
+      await store.incrBy("counter", 1, 9);
+      assert.equal(await store.get("counter"), "3");
+      now = 1999;
+      assert.equal(await store.get("counter"), "3");
+      now = 2000;
+      assert.equal(await store.get("counter"), null);
+    });
+  });
+
   test(`${name}: set and incr TTLs expire at the same boundary`, expiryOptions, async () => {
     let now = 0;
     const clock = () => now;

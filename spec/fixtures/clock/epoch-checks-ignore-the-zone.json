@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/epoch-checks-ignore-the-zone",
   "description": "Not every clock-reading check works in local time: rateLimit buckets floor the epoch second, windowBudget keys on the instant the user last wrote, and boundedDeferral only ever moves an instant forward. The suite pins that the zone cannot move any of them: the same instant is the same rate bucket in Kiritimati and New York, and a deferral that lands past a deleted local hour still lands on a real instant.",

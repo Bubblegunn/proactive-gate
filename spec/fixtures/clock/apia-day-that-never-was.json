@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/apia-day-that-never-was",
   "description": "Samoa skipped Friday 2011-12-30 entirely when it moved across the date line: 10:00 UTC jumps local time from Thursday 23:59:59 to Saturday 00:00. No instant resolves to the 30th, so a dates entry or Friday window for it is dead configuration, and the first daily-budget key written after the skip is the 31st. The plain-window case shows quiet hours do not notice the missing day at all, since they work on local minutes.",

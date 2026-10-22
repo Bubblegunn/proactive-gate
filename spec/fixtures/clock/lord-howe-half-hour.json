@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/lord-howe-half-hour",
   "description": "Lord Howe Island springs forward thirty minutes on 2026-10-04: 02:00 +10:30 becomes 02:30 +11:00 at 15:30 UTC, deleting local 02:00 to 02:29:59. A 01:30 to 02:30 window silences its first thirty real minutes and then dies mid-window, which exercises an HH:MM boundary finer than the usual whole-hour grain.",

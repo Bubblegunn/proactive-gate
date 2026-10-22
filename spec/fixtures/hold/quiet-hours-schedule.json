@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.5.0",
   "name": "hold/quiet-hours-schedule",
   "description": "With a schedule the answer follows the chain of windows: a window that ends where the next begins does not open the gate.",

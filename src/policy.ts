@@ -12,23 +12,28 @@ const prio = (o: Options, key: string): Priority | undefined => str(o, key) as P
 const strs = (o: Options, key: string): string[] | undefined => (Array.isArray(o[key]) ? (o[key] as string[]) : undefined);
 const opt = <T>(value: T | undefined, key: string): Record<string, T> => (value === undefined ? {} : { [key]: value });
 
-const budgetOptions = (o: Options) => ({ ...opt(num(o, "limit"), "limit"), ...opt(prio(o, "bypassPriority"), "bypassPriority"), ...opt(num(o, "nearLimit"), "nearLimit") });
+const budgetOptions = (o: Options) => ({ ...opt(num(o, "limit"), "limit"), ...opt(prio(o, "bypassPriority"), "bypassPriority"), ...opt(num(o, "nearLimit"), "nearLimit"), ...(o.tiers !== undefined && typeof o.tiers === "object" && o.tiers !== null ? { tiers: o.tiers as Record<string, number> } : {}) });
 
 /** Every check a JSON policy may name, with the options it reads. */
 export const KNOWN_CHECKS: Record<string, Factory> = {
   killSwitch: (o) => {
+    const flag = str(o, "flag");
+    if (flag !== undefined) {
+      if (bool(o, "on") !== undefined) throw new Error(`killSwitch takes "on" or "flag", not both`);
+      return checks.killSwitchFlag(flag);
+    }
     const on = bool(o, "on") === true;
     return checks.killSwitch(() => on);
   },
-  consent: () => checks.consent(),
+  consent: (o) => checks.consent(o.failMode ? { failMode: o.failMode as Record<string, "open" | "closed"> } : {}),
   enabled: () => checks.enabled(),
   mode: (o) => checks.mode({ allow: strs(o, "allow") ?? ["normal"] }),
   snooze: (o) => checks.snooze({ ...opt(bool(o, "defer"), "defer") }),
   mute: () => checks.mute(),
   intensity: (o) => (o.floors ? checks.intensity(o.floors as Record<"low" | "normal" | "high", Priority>) : checks.intensity()),
-  quietHours: (o) => checks.quietHours({ ...opt(prio(o, "priorityFloor"), "priorityFloor") }),
+  quietHours: (o) => checks.quietHours({ ...opt(prio(o, "priorityFloor"), "priorityFloor"), ...opt(missingTimezone(o), "onMissingTimezone") }),
   trustRamp: (o) => checks.trustRamp({ ...opt(num(o, "days"), "days"), ...opt(prio(o, "minPriority"), "minPriority") }),
-  dismissalCooldown: (o) => checks.dismissalCooldown({ ...opt(num(o, "dismissals"), "dismissals"), ...opt(num(o, "withinDays"), "withinDays"), ...opt(num(o, "silenceDays"), "silenceDays") }),
+  dismissalCooldown: (o) => checks.dismissalCooldown({ ...opt(num(o, "dismissals"), "dismissals"), ...opt(num(o, "withinDays"), "withinDays"), ...opt(num(o, "silenceDays"), "silenceDays"), ...opt(strs(o, "exemptTypes"), "exemptTypes") }),
   adaptiveTiming: () => checks.adaptiveTiming(),
   dedupe: (o) => checks.dedupe({ ...opt(num(o, "windowSeconds"), "windowSeconds") }),
   dailyBudget: (o) => checks.dailyBudget(budgetOptions(o)),
@@ -37,11 +42,23 @@ export const KNOWN_CHECKS: Record<string, Factory> = {
   utilityFloor: (o) => checks.utilityFloor({ costFalseAlarm: num(o, "costFalseAlarm") ?? 1, costMissedHelp: num(o, "costMissedHelp") ?? 1 }),
   boundedDeferral: (o) => checks.boundedDeferral({ ...opt(num(o, "lambda"), "lambda"), ...opt(num(o, "interruptCost"), "interruptCost"), ...opt(num(o, "staleness"), "staleness"), ...opt(num(o, "boundSeconds"), "boundSeconds") }),
   allowedWindow: (o) => checks.allowedWindow({ start: str(o, "start") ?? "08:00", end: str(o, "end") ?? "21:00", timezone: str(o, "timezone") ?? "user", ...opt(prio(o, "priorityFloor"), "priorityFloor"), ...opt(str(o, "id"), "id") }),
-  requiresConsent: (o) => checks.requiresConsent({ name: str(o, "name") ?? "consent", ...(o.when ? { when: o.when as { start: string; end: string; timezone: string } } : {}), ...opt(str(o, "id"), "id") }),
+  requiresConsent: (o) => checks.requiresConsent({ name: str(o, "name") ?? "consent", ...(o.when ? { when: o.when as { start: string; end: string; timezone: string } } : {}), ...opt(str(o, "id"), "id"), ...opt(bool(o, "exemptTransactional"), "exemptTransactional") }),
   rateLimit: (o) => checks.rateLimit({ limit: num(o, "limit") ?? 1, perSeconds: num(o, "perSeconds") ?? 1, ...opt(str(o, "keyBy") as "user" | "channel" | undefined, "keyBy"), ...opt(str(o, "id"), "id") }),
   recentInteraction: (o) => checks.recentInteraction({ withinHours: num(o, "withinHours") ?? 48 }),
   windowBudget: (o) => checks.windowBudget({ limit: num(o, "limit") ?? 1, withinHours: num(o, "withinHours") ?? 48 }),
+  freshness: (o) => checks.freshness({ ...opt(num(o, "maxAgeSeconds"), "maxAgeSeconds") }),
+  silence: (o) => checks.silence({ ...opt(num(o, "minDataPoints"), "minDataPoints"), ...opt(num(o, "minConfidence"), "minConfidence"), ...opt(bool(o, "requireNew"), "requireNew") }),
+  crisisQuiet: () => checks.crisisQuiet(),
+  deadHours: (o) => checks.deadHours({ ...opt(num(o, "minSamples"), "minSamples"), ...opt(num(o, "maxActRate"), "maxActRate"), ...opt(prio(o, "minPriority"), "minPriority") }),
 };
+
+/** quietHours' onMissingTimezone: absent, "skip" or "reject". Any other value is a policy error, not a silent skip. */
+function missingTimezone(o: Options): "skip" | "reject" | undefined {
+  const value = o.onMissingTimezone;
+  if (value === undefined) return undefined;
+  if (value === "skip" || value === "reject") return value;
+  throw new Error(`quietHours onMissingTimezone must be "skip" or "reject", not ${JSON.stringify(value)}`);
+}
 
 const SUPPORTED_MAJOR = 1;
 

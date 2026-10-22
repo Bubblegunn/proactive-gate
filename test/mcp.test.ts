@@ -67,11 +67,11 @@ for (const fixture of fixtures) {
     const library = await viaLibrary();
     const handle = createMcpServer(await viaLibrary(), info);
     for (const [i, t] of fixture.tests.entries()) {
-      const input = { user: t.input.user, candidate: t.input.candidate, now: new Date(t.input.now) };
+      const input = { user: t.input.user, candidate: t.input.candidate, now: new Date(t.input.now), ...(t.input.flags ? { flags: t.input.flags } : {}) };
       const decision = await library.evaluate(input);
       const expected = decisionToJson(decision);
       if (t.commit) await library.commit(decision, input);
-      const response = (await handle(tool(i, "decide", { user: t.input.user, candidate: t.input.candidate, now: t.input.now, ...(t.commit ? { commit: true } : {}) }))) as ToolResponse;
+      const response = (await handle(tool(i, "decide", { user: t.input.user, candidate: t.input.candidate, now: t.input.now, ...(t.input.flags ? { flags: t.input.flags } : {}), ...(t.commit ? { commit: true } : {}) }))) as ToolResponse;
       const got = response.result.structuredContent;
       assert.equal(got.allowed, t.expect.allowed, `${t.description}: allowed`);
       assert.equal(got.rejectedBy, t.expect.rejectedBy, `${t.description}: rejectedBy`);

@@ -1,0 +1,209 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/freshness",
+  "description": "freshness refuses content at or after its freshUntil instant, and content older than maxAgeSeconds by its createdAt. Exactly maxAgeSeconds old is still fresh. Without either field the check skips. It applies to commitments too.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "freshness",
+        "maxAgeSeconds": 3600
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "fresh by freshUntil and exactly one hour old by createdAt",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "freshUntil": "2026-09-04T13:00:00Z",
+          "createdAt": "2026-09-04T11:00:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "one second older than maxAgeSeconds is expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "createdAt": "2026-09-04T10:59:59Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "freshUntil exactly now is expired, not fresh",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "freshUntil": "2026-09-04T12:00:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "freshUntil in the past is expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "freshUntil": "2026-09-04T11:30:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "neither field: the check skips and the candidate goes on",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c5",
+          "type": "insight"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a commitment past its freshUntil is still expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c6",
+          "type": "reminder",
+          "kind": "commitment",
+          "freshUntil": "2026-09-04T11:00:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "an unreadable freshUntil is treated as expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c7",
+          "type": "insight",
+          "freshUntil": "not-a-date"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "with maxAgeSeconds set, an unreadable createdAt is treated as expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c8",
+          "type": "insight",
+          "createdAt": "not-a-date"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    }
+  ]
+}

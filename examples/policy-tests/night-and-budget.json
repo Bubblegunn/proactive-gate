@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "name": "my-policy/night-and-budget",
   "description": "Our policy: no normal messages 22:00 to 08:00 Istanbul time, at most 2 a day.",
   "policy": {

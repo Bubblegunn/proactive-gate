@@ -26,7 +26,7 @@ task. The one category sentence is in `docs/category-sentence.txt`.
 ## skills.sh
 
 - Name: `proactive-gate`
-- Description (quoted from `skills/proactive-gate/SKILL.md`): Before an AI agent or background job sends a message nobody asked for (a push, chat message, email, reminder or alert), put proactive-gate in front of it so quiet hours, daily caps, consent and snooze are enforced and every refusal has a reason. Use when the user asks for quiet hours, a message limit, a notification budget, or "do not message people at night" in an agent.
+- Description (quoted from `skills/proactive-gate/SKILL.md`): Use when you need to send reminders, texts, emails or pushes to users from an agent, cron job or webhook and must limit how many messages they get, respect quiet hours, do not message people at night, handle opt-out and STOP, keep to legal contact hours, explain why a user got nothing, or replay last week under a new policy. The proactive-gate library checks consent, time zone, quiet hours, snooze and budgets before each unsolicited message and gives every refusal a reason and a retry time.
 - Install (unverified, not checked against skills.sh): `npx skills add Bubblegunn/proactive-gate`. The command form is the one documented in https://github.com/vercel-labs/skills/blob/main/README.md. Whether skills.sh lists this repository and detects `skills/proactive-gate/SKILL.md` has not been checked.
 - Keywords: quiet hours, notification budget, proactive agent, consent, daily limit, agent skill.
 

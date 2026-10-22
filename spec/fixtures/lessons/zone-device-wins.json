@@ -1,0 +1,51 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/zone-device-wins",
+  "description": "A valid deviceTimezone is the effective zone for quiet hours, ahead of timezone. 01:00Z is 21:00 in New York (quiet hours not running) and 04:00 in Istanbul (quiet). 06:00Z is 02:00 in New York (quiet) and 09:00 in Istanbul (not quiet). An invalid deviceTimezone is ignored, so timezone decides.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      { "id": "consent" },
+      { "id": "quietHours" }
+    ]
+  },
+  "tests": [
+    {
+      "description": "device zone New York at 01:00Z is outside quiet hours, though Istanbul is inside them",
+      "input": {
+        "user": { "id": "u1", "consent": true, "proactiveEnabled": true, "mode": "normal", "intensity": "normal", "timezone": "Europe/Istanbul", "deviceTimezone": "America/New_York", "quietHours": { "start": "22:00", "end": "08:00" }, "createdAt": "2026-01-01T00:00:00Z" },
+        "candidate": { "id": "c1", "type": "reminder", "priority": "normal", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T01:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["push", "feed"], "trace": ["consent", "quietHours"] }
+    },
+    {
+      "description": "device zone New York at 06:00Z is inside quiet hours, though Istanbul is outside them",
+      "input": {
+        "user": { "id": "u1", "consent": true, "proactiveEnabled": true, "mode": "normal", "intensity": "normal", "timezone": "Europe/Istanbul", "deviceTimezone": "America/New_York", "quietHours": { "start": "22:00", "end": "08:00" }, "createdAt": "2026-01-01T00:00:00Z" },
+        "candidate": { "id": "c1", "type": "reminder", "priority": "normal", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T06:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "quietHours", "reason_pattern": "quiet hours 22:00 to 08:00", "trace": ["consent", "quietHours"] }
+    },
+    {
+      "description": "without a device zone, 06:00Z is Istanbul 09:00 and passes",
+      "input": {
+        "user": { "id": "u1", "consent": true, "proactiveEnabled": true, "mode": "normal", "intensity": "normal", "timezone": "Europe/Istanbul", "quietHours": { "start": "22:00", "end": "08:00" }, "createdAt": "2026-01-01T00:00:00Z" },
+        "candidate": { "id": "c1", "type": "reminder", "priority": "normal", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T06:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["push", "feed"], "trace": ["consent", "quietHours"] }
+    },
+    {
+      "description": "an invalid device zone is ignored and timezone decides: 01:00Z is 04:00 in Istanbul (quiet)",
+      "input": {
+        "user": { "id": "u1", "consent": true, "proactiveEnabled": true, "mode": "normal", "intensity": "normal", "timezone": "Europe/Istanbul", "deviceTimezone": "Mars/Olympus", "quietHours": { "start": "22:00", "end": "08:00" }, "createdAt": "2026-01-01T00:00:00Z" },
+        "candidate": { "id": "c1", "type": "reminder", "priority": "normal", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T01:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "quietHours", "reason_pattern": "quiet hours 22:00 to 08:00", "trace": ["consent", "quietHours"] }
+    }
+  ]
+}

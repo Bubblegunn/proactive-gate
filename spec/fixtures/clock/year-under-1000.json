@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/year-under-1000",
   "description": "The spec's calendar fields are written YYYY-MM-DD (5.1), which reads as zero-padded to four digits, so the local day of an instant in year 1 is 0001-06-01 and Friday June 1 of that year is a real Friday. This fixture is adversarial in a different way: it exercises date-string construction itself, where the two implementations historically disagree about padding. The expected behaviour is the spec format; an implementation that derives 1-06-01 or a weekday from a remapped year diverges here.",

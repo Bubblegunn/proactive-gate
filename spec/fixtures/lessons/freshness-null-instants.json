@@ -1,0 +1,112 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/freshness-null-instants",
+  "description": "A JSON null for freshUntil or createdAt is absent (SPEC 9.1.1, 9.8), the same as the field missing. A null freshUntil does not reject, so freshness skips, or judges by createdAt alone when that is present.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      {
+        "id": "consent"
+      },
+      {
+        "id": "freshness",
+        "maxAgeSeconds": 3600
+      }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a null freshUntil with no createdAt is absent and freshness skips",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c1",
+          "type": "insight",
+          "freshUntil": null
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a null createdAt is absent, so freshness skips even with maxAgeSeconds set",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c2",
+          "type": "insight",
+          "createdAt": null
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a null freshUntil beside a createdAt exactly one hour old is fresh",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c3",
+          "type": "insight",
+          "freshUntil": null,
+          "createdAt": "2026-09-04T11:00:00Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": true,
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    },
+    {
+      "description": "a null freshUntil beside a createdAt one second older than an hour is expired",
+      "input": {
+        "user": {
+          "id": "u1",
+          "consent": true
+        },
+        "candidate": {
+          "id": "c4",
+          "type": "insight",
+          "freshUntil": null,
+          "createdAt": "2026-09-04T10:59:59Z"
+        },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": {
+        "allowed": false,
+        "rejectedBy": "freshness",
+        "reason_pattern": "expired",
+        "trace": [
+          "consent",
+          "freshness"
+        ]
+      }
+    }
+  ]
+}

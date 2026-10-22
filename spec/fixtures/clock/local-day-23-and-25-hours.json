@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/local-day-23-and-25-hours",
   "description": "A local-day budget key (5.1) lives exactly as long as the local day, which in New York is 23 UTC hours on 2026-03-08 and 25 on 2026-11-01. The key does not care how long the day runs: 2026-03-08 is spent from 05:00Z to 04:00Z the next UTC day, and a delivery in the second pass through the repeated autumn hour draws on the same counter as the first pass.",

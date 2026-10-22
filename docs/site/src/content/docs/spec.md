@@ -13,7 +13,7 @@ tests with an input and the expected decision fields: `allowed`, `trace`, `rejec
 `deferredBy`, `retryAt`, `deliverAt`, `surfaces`, `shadowed`, `nearLimit`, a `reason_pattern`,
 and after `commit`, `store_after`. They cover the DST edge in America/New_York, Pacific/Apia,
 a wall-clock case in 2031, atomic commit, the ISO week, deferral, shadow mode, the optional
-checks and nine of the seventeen presets. The `clock/` area is the adversarial clock suite: deleted and
+checks and nine of the eighteen presets. The `clock/` area is the adversarial clock suite: deleted and
 repeated DST hours, 23- and 25-hour local days, a mid-week timezone move, a skipped
 calendar day in Apia, weeks whose ISO year is not the calendar year, a rewound clock, and
 years below 1000, which both implementations got wrong until the suite asked.

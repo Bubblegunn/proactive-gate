@@ -1,0 +1,44 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/kill-switch-flag",
+  "description": "killSwitch with a flag rejects while the named runtime flag is false. An absent flag stops nothing.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      { "id": "killSwitch", "flag": "proactiveEnabled" },
+      { "id": "consent" }
+    ]
+  },
+  "tests": [
+    {
+      "description": "flag false rejects at the kill switch",
+      "input": {
+        "user": { "id": "u1", "consent": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z",
+        "flags": { "proactiveEnabled": false }
+      },
+      "expect": { "allowed": false, "rejectedBy": "killSwitch", "reason_pattern": "kill switch", "trace": ["killSwitch"] }
+    },
+    {
+      "description": "flag true passes every check",
+      "input": {
+        "user": { "id": "u1", "consent": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z",
+        "flags": { "proactiveEnabled": true }
+      },
+      "expect": { "allowed": true, "surfaces": ["push", "feed"], "trace": ["killSwitch", "consent"] }
+    },
+    {
+      "description": "no flags at all stops nothing",
+      "input": {
+        "user": { "id": "u1", "consent": true },
+        "candidate": { "id": "c1", "type": "reminder", "surfaces": ["push", "feed"] },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "surfaces": ["push", "feed"], "trace": ["killSwitch", "consent"] }
+    }
+  ]
+}

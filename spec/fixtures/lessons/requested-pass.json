@@ -1,0 +1,60 @@
+{
+  "spec_version": "1.6.0",
+  "since": "1.6.0",
+  "name": "lessons/requested-pass",
+  "description": "trustRamp passes a candidate the person requested, at any priority, during the ramp. Without the request the ramp still refuses below its floor, and consent still applies.",
+  "policy": {
+    "specVersion": "1.0.0",
+    "checks": [
+      { "id": "consent" },
+      { "id": "trustRamp" }
+    ]
+  },
+  "tests": [
+    {
+      "description": "a requested low priority candidate in the first week passes the ramp",
+      "input": {
+        "user": { "id": "u1", "consent": true, "createdAt": "2026-09-03T12:00:00Z" },
+        "candidate": { "id": "c1", "type": "insight", "priority": "low", "requested": true },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "trace": ["consent", "trustRamp"] }
+    },
+    {
+      "description": "the same candidate not requested is refused by the ramp",
+      "input": {
+        "user": { "id": "u1", "consent": true, "createdAt": "2026-09-03T12:00:00Z" },
+        "candidate": { "id": "c2", "type": "insight", "priority": "low" },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "trustRamp", "reason_pattern": "trust ramp", "trace": ["consent", "trustRamp"] }
+    },
+    {
+      "description": "a requested candidate passes even when the account has no creation date",
+      "input": {
+        "user": { "id": "u2", "consent": true },
+        "candidate": { "id": "c3", "type": "insight", "priority": "low", "requested": true },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "trace": ["consent", "trustRamp"] }
+    },
+    {
+      "description": "a requested candidate after the ramp, at normal priority, passes",
+      "input": {
+        "user": { "id": "u3", "consent": true, "createdAt": "2026-07-01T00:00:00Z" },
+        "candidate": { "id": "c4", "type": "insight", "priority": "normal", "requested": true },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": true, "trace": ["consent", "trustRamp"] }
+    },
+    {
+      "description": "a requested candidate still needs consent",
+      "input": {
+        "user": { "id": "u4", "consent": false, "createdAt": "2026-09-03T12:00:00Z" },
+        "candidate": { "id": "c5", "type": "insight", "priority": "low", "requested": true },
+        "now": "2026-09-04T12:00:00Z"
+      },
+      "expect": { "allowed": false, "rejectedBy": "consent", "reason_pattern": "has not consented", "trace": ["consent"] }
+    }
+  ]
+}

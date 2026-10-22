@@ -1,5 +1,71 @@
 # Changelog
 
+## Unreleased
+
+**Changed (Go, breaking): the Go instant and evidence fields accept more kinds, and four user fields are now `any`.** `UserState.SnoozedUntil`, `CreatedAt`, `LastInboundAt` and `CrisisUntil` are typed `any`, as `Candidate.FreshUntil` and `CreatedAt` already were, so an instant can be an RFC 3339 string, an offset-less string (read as UTC), a `YYYY-MM-DD` date (00:00 UTC), epoch milliseconds or a `time.Time`. A `*string` still compiles and reads. Code that reads these fields as `*string` must change. `Gate.Record` (the signature changed in the 1.6.0 port) now returns an error for a nil user, or for a dismissal with no candidate, instead of panicking. 
+
+**Fixed: the three packages agree on 1.6.0 instants, nulls and counts.** A JSON `null` for `freshUntil`, `createdAt`, `snoozedUntil` or `crisisUntil` is absent, so freshness skips (TypeScript used to reject it). An offset-less instant such as `2026-09-04T12:00:01` is read as UTC in every package (TypeScript used to read it in the host zone, so the result depended on the machine). Evidence `dataPoints` and `confidence` count as zero unless they are a finite JSON number; a string such as `"9"` now counts as zero in TypeScript and Python, so all three packages read it the same way. The hour-counter expiry is 90 days from when the counter key is created, as the stores have always done; SPEC 9.11 said "after their last increment".
+
+**Fixed (Go): a flag that is not a boolean stops nothing, and a wrong-typed boolean is not true.** `"flags": {"x": null}` used to read as false and fire a kill switch. A `requested: "yes"` used to fail the whole decode. Both now match TypeScript and Python. Go's `Candidate.Busy`, `Requested`, `Transactional` and `UserState.ConsentUnknown` read only the literal `true`.
+
+**Fixed (Go): an explicit limit of 0 allows nothing for `rateLimit` and `windowBudget`.** Go used to read 0 as the default and allow one unit, as TypeScript and Python refuse every request at a limit of 0.
+
+**Fixed (Python): an unknown priority is below every floor.** A priority such as `"urgent"` used to raise inside `quietHours`, and the gate failed open, so the message passed. It is now refused as TypeScript and Go refuse it.
+
+**Added: `proactive-gate scaffold nudge` writes a notification gate for an assistant.** It writes `proactive-gate.policy.json` (the assistantNudge preset with a daily limit, `--daily`, and a 24-hour freshness age), `notify.mjs` (169 lines) and `notify.test.mjs`, which runs with `node --test`. The app's data is mapped in one function, `toInput()`: consent (a flag or a marketing consent), requests, reminders, insights as evidence, message ids as dedupe keys, account age, crisis, focus mode, permissions and categories. Its exports are decide, deliver (with the app's push and in-app calls), recordDismissal, recordAct, optOut (a type or a channel), handleInbound, whyNotReceived (a decision log per user), dryRun (last week under another policy) and REASON_CODES. STATE_DIR is created when missing. It refuses to overwrite files without `--force`.
+
+**Added: `explain` says when a held message can go out, on the user's clock.** Given `{ user, now }`, a held decision ends with "It is 23:15 for the user; it can go out at 08:00 tomorrow." The zone is the device zone when valid, else the stored zone; with no valid zone the text is unchanged. The result also carries `localNow`, `localAvailableAt` and `when`.
+
+**Fixed: `explain` has sentences for freshness, silence, crisisQuiet and deadHours.** Before, these checks were quoted from their raw reasons. A pass for a requested, transactional or commitment candidate now says why it passed, and a summary that allows a message with no surface left says it is not sent.
+
+**Fixed: `deadHours` treats a missing count as zero and a non-numeric count as no evidence.** A missing or non-numeric count in `hourStats` or the stored counters used to make the total not finite and remove push. Now push stays, and a missing acted count counts as zero.
+
+**Changed: `skills/proactive-gate/SKILL.md` is a 35-line front page.** The full guide moved to `references/guide.md`, and `references/checks.md` names every check id, the gate functions and the assistantNudge preset.
+
+**Added: `gate.release` gives back a committed unit after a failed send.** A send that fails after `commit` can call `gate.release(decision, input)`. Each budget-like check (daily, weekly, monthly, rate limit, window budget) returns its unit and the dedupe check removes its claim, so the retry is not blocked by the send that failed. It returns true when it refunded at least one check, claims each check separately so a retry after a failed refund finishes the rest, and never takes a counter below zero. A preset that wraps a budget (`cnMinorMode`) forwards the release, so its unit comes back too. The store needs an optional `incrBy` method; the four built-in stores have it. SPEC 5.9 and 10.1 describe it, with the trade-off between committing before and after the send.
+
+**Added: a synchronous path, `evaluateSync`, `commitSync` and `decideSync`.** For a caller that cannot await, such as a synchronous hook or a request handler that must not yield. It runs the same decision logic as `evaluate` and `commit`, and a property test compares the two on random inputs. It needs a store with synchronous methods (`MemoryStore` has them). Every built-in check and preset in this release has a synchronous path, and a test runs each one through `decideSync`; `killSwitch` and `adaptiveTiming` with an async callback are the exception and throw. A custom async check throws a TypeError whose message says "synchronous", and `commitSync` throws it before any unit is spent. SPEC 10.2.
+
+**Changed: a budget unit refused at commit is no longer counted.** Before, a commit that a concurrent delivery beat to the last unit left the counter one above its limit, so the next `inspect` reported more sends than were made. The counter now counts committed units only. Stores without `incrBy` keep the old count, because the refusal cannot be undone there. Python and Go are not changed and may keep the old count. SPEC 10.1.
+
+**Added: spec 1.6.0, implemented in TypeScript first; Python and Go will follow.** SPEC.md 1.6.0 adds an effective time zone (`deviceTimezone`, 9.2), a consent fail mode for when the consent lookup fails (`consent({ failMode })`, 9.3), a kill switch read from a runtime flag (`{ "id": "killSwitch", "flag": ... }`, 9.13), commitments that bypass the trust ramp, cooldown, mute and budgets (9.4), `requested` passing the trust ramp (9.5), cooldown exempt types and a transactional consent exemption (9.6, 9.7), freshness (9.8), silence (9.9), crisis quiet (9.10) and budget tiers (9.12). The Python and Go suites declare the twelve `lessons/` fixtures as skipped until they are ported. The dead-hours check (9.11) and the `assistantNudge` preset (9.14) are placeholders in SPEC.md and are not implemented.
+
+**Changed: an invalid time zone string alone now skips quiet hours instead of throwing (TypeScript).** A `timezone` that is not an IANA zone name, with no valid `deviceTimezone`, counts as no zone. The default `quietHours` skips the check, and `onMissingTimezone: "reject"` rejects. Before, the check threw.
+
+**Changed: `quietHours` with `onMissingTimezone: "reject"` rejects a user with no zone whether or not the user has quiet hours (SPEC 9.2.1).** Before, a user without quiet hours passed.
+
+**Fixed: `compilePolicy` throws on an unknown `onMissingTimezone`.** Any value other than `"skip"` or `"reject"` is an error. Before, a typo such as `"rejct"` compiled to the default skip.
+
+**Added: `proactive-gate init --minimal`, `--legal` and a repeatable `--preset`.** `--minimal` writes the short policy from the skill (consent, dedupe, snooze with defer, quiet hours and a daily budget) instead of the twelve-check order. `--legal us,kr` appends the legal presets of the listed jurisdictions: us, eu, kr, in and br. `--preset` takes a comma list or a repeated flag, and `--daily <n>` sets the daily budget. The wiring text for the `none` framework is now twelve lines or fewer and ends with the replay commands.
+
+**Added: a ten-line integration in the skill.** SKILL.md opens its code with one `init` command and a ten-line module that builds the gate on a SQLite store, evaluates, commits and returns `nextAllowedAt` with a one-sentence summary. The skill test runs that module against the built library.
+
+**Fixed: decision ids are unique per gate instance in TypeScript, Go and Python.** Two processes that evaluated the same user, candidate id and instant could both get the id `#1`. `commit` stores its marker under that id in a shared store and returns the stored result, so the second process consumed nothing. The id now carries a per-instance token before the sequence number. The prefix is unchanged.
+
+In Python each gate has its own token and sequence; a gate used in a process forked after the gate was built takes a new token and restarts its sequence in the child. Before, a forked worker repeated its parent's ids.
+
+**Fixed: `SqliteStore` works when several processes share one file.** It waits up to 30 seconds on a locked file instead of failing with "database is locked", and it runs in WAL mode, which keeps `-wal` and `-shm` files next to the database. Before, 30 processes at once could commit more sends than the daily budget allowed.
+
+**Fixed: `isStopped` reads an empty channel as `default`, as `handle` writes it (TypeScript).** A STOP recorded with no channel was not seen by `isStopped(userId, "")`.
+
+**Added: `nextAllowedAt` on a time window and on windowed consent (TypeScript only).** `allowedWindow` and windowed `requiresConsent` now report when they reopen, so `usTcpa`, `kakaoBrandMessage`, `cnMinorMode` and `krNetworkAct50` return a retry time. Python and Go do not report it yet.
+
+**Added: `gate.whenAllowed(input, { maxHops })` (TypeScript only).** It evaluates again at each `nextAllowedAt` and returns the first instant that allows the candidate, with that decision, or `at: null` when no instant is named or the hops run out. It consumes no budget; call `commit` when you send.
+
+**Added: inbound STOP and START per channel (TypeScript only).** `createInboundConsent`, `parseKeyword`, `STOP_KEYWORDS`, `START_KEYWORDS` and `gate.inbound` record a whole-message STOP or START for one user and one channel. A STOP on SMS leaves email open, and a START reopens its channel. A stored STOP has no expiry. The `inboundConsent` check reads it; a JSON policy cannot name that check yet. A store error follows `onStoreError`, which defaults to `"open"`.
+
+**Changed: `Gate` gains two required members, `whenAllowed` and `inbound` (TypeScript types).** A `Gate` object written by hand, such as a test double that does not spread a real gate, must now provide both, or it stops type-checking. Gates from `createGate` have them.
+
+**Changed: SPEC.md 3.7 is reworded on which checks name an instant.** The file now says that a check not listed in 3.7 MAY leave `nextAllowedAt` absent, and that the TypeScript implementation also names the opening of a legal window (`allowedWindow`) and the end of a windowed consent, which other implementations MAY omit. The `spec/v1.5.0` tag has one sentence in that place instead: "No other check names an instant in this version, and a check not listed here leaves `nextAllowedAt` absent." Whether this needs a patch version is the owner's decision.
+
+**Changed: the `proactive-gate` agent skill is rewritten.** It now says to check the Node version, gives a working policy, covers inbound consent, and explains how to replay a decision.
+
+**Changed: `krNetworkAct50` cites its official source only.** It no longer lists a vendor guide among its sources, in TypeScript, Python and Go.
+
+**Changed: the README install section gives three routes.** `npm install proactive-gate` (Node 22 or newer), the Claude Code plugin, and `npx skills add Bubblegunn/proactive-gate` for any agent that reads skills. The README also gains an inbound STOP and START section and a head-to-head section.
+
+**Added: a head-to-head harness and its protocol.** `bench/head-to-head/` and `docs/HEAD-TO-HEAD.md` hold six frozen tasks, the competitor arms (Claude with no plugin, Knock's skills, and Vaara), the criterion labels, and one command that re-runs everything. The results are not in this release.
+
 ## 0.9.0 (2026-10-21)
 
 **A denied decision can say when to ask again.** A decision that quiet hours, a snooze or a budget refused now carries `nextAllowedAt`, the earliest instant that check would stop refusing, in TypeScript (`nextAllowedAt`), Python (`next_allowed_at`) and Go (`NextAllowedAt`). It is a lower bound: the next check can still refuse then, so the caller evaluates again. The spec moves to 1.5.0 and the `hold/*` fixtures cover each source, including the hour a daylight-saving change skips and the hour it repeats; all three implementations pass 68 of 68 fixtures with no skips. `examples/hold-queue.mjs` is a small in-memory queue that waits for `nextAllowedAt`. The Go module is @LouisDeconinck's work (#41); this release carries his implementation up to spec 1.5.0, tagged `go/v0.2.0` (`go get github.com/Bubblegunn/proactive-gate/go@v0.2.0`).
@@ -624,4 +690,4 @@ Mastra example, a real decision trace in the README, a "Writing your own check" 
 
 ## 0.1.0 (2026-09-05)
 
-First release: createGate, twelve checks in the LILA order, MemoryStore and RedisStore, commit-time atomic budget, fail-open or fail-closed on store errors, record/inspect, and the `replay` CLI.
+First release: createGate, twelve checks in the default order, MemoryStore and RedisStore, commit-time atomic budget, fail-open or fail-closed on store errors, record/inspect, and the `replay` CLI.

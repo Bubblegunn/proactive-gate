@@ -13,8 +13,9 @@
  * hook reads a Claude Code PreToolUse event on stdin and prints a permission
  * decision for the matching tool.
  */
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 import { createRequire } from "node:module";
@@ -27,16 +28,18 @@ import { LOCAL_STREAM_NOTE, formatSimulation } from "./simulate-report.js";
 import { DEMO_WEEK_NOTE, demoWeek, demoWeekPeople } from "./demo-week.js";
 import { FRAMEWORKS, listText, plan } from "./init.js";
 import { policySchema } from "./policy-schema.js";
+import { nudgeFiles } from "./scaffold.js";
 import { serveStdio } from "./mcp.js";
 import type { Framework } from "./init.js";
 import type { Gate } from "./gate.js";
 import type { Decision, EvaluateInput, Policy } from "./types.js";
 
 const HELP = `usage: proactive-gate simulate [events.jsonl] [--policy <file>]... [--seed <n>]
-       proactive-gate init [--preset <name>] [--framework <name>] [--out <file>]
+       proactive-gate init [--minimal] [--legal <codes>] [--preset <names>] [--daily <n>] [--framework <name>] [--out <file>]
        proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
        proactive-gate replay --fixtures <dir> [--skip <file>]
        proactive-gate hook --policy <file> [--tool <name>]
+       proactive-gate scaffold nudge [--out DIR] [--daily N] [--force]
        proactive-gate schema
        proactive-gate mcp [--policy <file>]
 
@@ -59,11 +62,19 @@ same gate runs twice.
 
 init writes a policy you can read and edit, and prints the lines that wire it in.
 
-  --preset <name>    a platform or legal preset to append (see --list)
+  --minimal          the short policy from the skill: consent, dedupe, snooze (deferred), quiet
+                     hours and a daily budget. Without it, the full twelve-check order
+  --legal <codes>    the legal presets of the listed jurisdictions, comma separated: us (usTcpa),
+                     eu (euEprivacy), kr (krNetworkAct50), in (inTcccp), br (brLgpd)
+  --preset <names>   platform or legal presets to append, comma separated; repeat the flag to add more
+                     (see --list)
+  --daily <n>        the daily budget per user (default 3 with --minimal, 5 without)
   --framework <name> ${FRAMEWORKS.join(", ")} (default none)
   --out <file>       where to write (default proactive-gate.policy.json)
   --force            overwrite an existing file
   --list             print the presets and frameworks and exit
+
+  npx proactive-gate init --minimal --legal us
 
 replay reports what was allowed and why not.
 
@@ -85,6 +96,13 @@ built from --policy, or the default check order, and keeps its counters in memor
 of the process. Register it with a client, for Claude Code:
 
   claude mcp add proactive-gate -- npx proactive-gate mcp --policy policy.json
+
+scaffold nudge writes an assistant's notification gate into DIR (default the current folder): a policy
+with the assistantNudge preset and a daily limit (--daily, default 3), notify.mjs, and notify.test.mjs,
+which runs with node --test. notify.mjs maps the app's data in toInput(), and exports decide (send,
+reason, reasonCode, surfaces), deliver (push, inApp, reason, resumeAt), recordDismissal, recordAct, optOut
+(a type or a channel), handleInbound, whyNotReceived (one user's log over a time range), dryRun (last
+week under a policy) and REASON_CODES. It refuses to overwrite files unless --force is given.
 
 schema prints the JSON Schema for policy files, generated from the checks and presets this
 version knows. Point an editor at it for completion and typo errors; it rejects unknown check
@@ -170,6 +188,10 @@ const argValues = (argv: string[], flag: string): string[] => {
   for (const [i, a] of argv.entries()) if (a === flag && argv[i + 1] !== undefined) out.push(argv[i + 1] as string);
   return out;
 };
+
+/** "a,b" and "c" become ["a", "b", "c"]; empty pieces are dropped. */
+const splitList = (values: string[]): string[] =>
+  values.flatMap((v) => v.split(",")).map((s) => s.trim()).filter((s) => s !== "");
 
 /** One JSONL line per candidate, the same shape `replay` reads. */
 export function parseEvents(text: string): EvaluateInput[] {
@@ -307,10 +329,13 @@ async function main(argv: string[]) {
       return;
     }
     const out = argValue(argv, "--out") ?? "proactive-gate.policy.json";
-    const presetName = argValue(argv, "--preset");
     const frameworkName = argValue(argv, "--framework");
+    const dailyArg = argValue(argv, "--daily");
     const { policy, message } = plan({
-      ...(presetName === undefined ? {} : { preset: presetName }),
+      preset: splitList(argValues(argv, "--preset")),
+      legal: splitList(argValues(argv, "--legal")),
+      minimal: argv.includes("--minimal"),
+      ...(dailyArg === undefined ? {} : { daily: Number(dailyArg) }),
       ...(frameworkName === undefined ? {} : { framework: frameworkName as Framework }),
       out,
     });
@@ -325,6 +350,28 @@ async function main(argv: string[]) {
   if (command === "mcp") {
     // stdout carries the protocol and nothing else; diagnostics go to stderr.
     await serveStdio(await loadPolicy(argValue(argv, "--policy")), { name: "proactive-gate", version: VERSION });
+    return;
+  }
+  if (command === "scaffold") {
+    if (file !== "nudge") {
+      console.error("usage: proactive-gate scaffold nudge [--out DIR] [--daily N] [--force]");
+      process.exit(2);
+    }
+    const daily = Number(argValue(argv, "--daily") ?? 3);
+    if (!Number.isInteger(daily) || daily < 0) {
+      console.error("--daily takes a whole number of 0 or more");
+      process.exit(2);
+    }
+    const dir = resolve(argValue(argv, "--out") ?? ".");
+    const files = nudgeFiles(daily);
+    const clash = Object.keys(files).filter((name) => existsSync(join(dir, name)));
+    if (clash.length && !argv.includes("--force")) {
+      console.error(`${clash.join(", ")} already exist in ${dir}; pass --force to overwrite them`);
+      process.exit(1);
+    }
+    await mkdir(dir, { recursive: true });
+    for (const [name, text] of Object.entries(files)) await writeFile(join(dir, name), text);
+    console.log(`wrote ${Object.keys(files).join(", ")} to ${dir}; run: node --test notify.test.mjs`);
     return;
   }
   if (command === "schema") {

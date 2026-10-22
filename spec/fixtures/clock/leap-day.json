@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/leap-day",
   "description": "2028-02-29 exists once every four years, and every calendar edge has to reach it: a window that opens on the 29th still silences the first hours of March 1 through the yesterday rule, the daily key budget:u:2028-02-29 is a real key, and a trust ramp that began on the 28th ends in the middle of the leap day.",

@@ -57,6 +57,21 @@ func (o options) strs(key string) []string {
 	return out
 }
 
+// failMode reads consent's failMode object (SPEC 9.3). A value that is not a
+// string is kept as "", which is not "open", so it stays closed.
+func (o options) failMode() map[string]string {
+	raw, ok := o["failMode"].(map[string]any)
+	if !ok {
+		return nil
+	}
+	out := make(map[string]string, len(raw))
+	for surface, v := range raw {
+		s, _ := v.(string)
+		out[surface] = s
+	}
+	return out
+}
+
 func (o options) prio(key string) Priority {
 	if v, ok := o[key].(string); ok {
 		return Priority(v)
@@ -64,19 +79,46 @@ func (o options) prio(key string) Priority {
 	return ""
 }
 
+// numOr is the number under key, or def when the key is absent or not a number.
+func (o options) numOr(key string, def float64) float64 {
+	if v, ok := o[key].(float64); ok {
+		return v
+	}
+	return def
+}
+
 func (o options) budgetOptions() budgetOptions {
-	return budgetOptions{
-		Limit:          int64(o.num("limit")),
+	out := budgetOptions{
 		BypassPriority: o.prio("bypassPriority"),
 		NearLimit:      o.num("nearLimit"),
 	}
+	if n, ok := o["limit"].(float64); ok {
+		out.Limit = limitAt(n)
+	}
+	if tiers, ok := o["tiers"].(map[string]any); ok {
+		out.Tiers = tiers
+	}
+	return out
 }
 
 // knownChecks is every check a JSON policy may name, with the options it reads.
 var knownChecks = map[string]func(options) (Check, error){
-	"killSwitch": func(o options) (Check, error) { return killSwitch(o.bool("on")), nil },
-	"consent":    func(o options) (Check, error) { return consent(), nil },
-	"enabled":    func(o options) (Check, error) { return enabled(), nil },
+	"killSwitch": func(o options) (Check, error) {
+		raw, hasFlag := o["flag"]
+		if !hasFlag {
+			return killSwitch(o.bool("on")), nil
+		}
+		if _, hasOn := o["on"]; hasOn {
+			return Check{}, fmt.Errorf(`killSwitch takes "on" or "flag", not both`)
+		}
+		name, isString := raw.(string)
+		if !isString {
+			return Check{}, fmt.Errorf(`killSwitch "flag" must be a string, not %v`, raw)
+		}
+		return killSwitchFlag(name), nil
+	},
+	"consent": func(o options) (Check, error) { return consent(o.failMode()), nil },
+	"enabled": func(o options) (Check, error) { return enabled(), nil },
 	"mode": func(o options) (Check, error) {
 		allow := o.strs("allow")
 		if allow == nil {
@@ -98,12 +140,44 @@ var knownChecks = map[string]func(options) (Check, error){
 		}
 		return intensity(floors), nil
 	},
-	"quietHours": func(o options) (Check, error) { return quietHours(o.prio("priorityFloor")), nil },
+	"quietHours": func(o options) (Check, error) {
+		missing := "skip"
+		if raw, ok := o["onMissingTimezone"]; ok {
+			s, isString := raw.(string)
+			if !isString || (s != "skip" && s != "reject") {
+				return Check{}, fmt.Errorf(`quietHours onMissingTimezone must be "skip" or "reject", not %v`, raw)
+			}
+			missing = s
+		}
+		return quietHours(o.prio("priorityFloor"), missing), nil
+	},
 	"trustRamp": func(o options) (Check, error) {
 		return trustRamp(o.num("days"), o.prio("minPriority")), nil
 	},
 	"dismissalCooldown": func(o options) (Check, error) {
-		return dismissalCooldown(int64(o.num("dismissals")), o.num("withinDays"), o.num("silenceDays")), nil
+		return dismissalCooldown(int64(o.num("dismissals")), o.num("withinDays"), o.num("silenceDays"), o.strs("exemptTypes")), nil
+	},
+	"crisisQuiet": func(o options) (Check, error) { return crisisQuiet(), nil },
+	"freshness": func(o options) (Check, error) {
+		var maxAge *float64
+		if v, ok := o["maxAgeSeconds"].(float64); ok {
+			maxAge = &v
+		}
+		return freshness(maxAge), nil
+	},
+	"silence": func(o options) (Check, error) {
+		requireNew := true
+		if v, ok := o["requireNew"].(bool); ok {
+			requireNew = v
+		}
+		return silence(o.numOr("minDataPoints", 5), o.numOr("minConfidence", 0.5), requireNew), nil
+	},
+	"deadHours": func(o options) (Check, error) {
+		minPriority := o.prio("minPriority")
+		if minPriority == "" {
+			minPriority = PriorityHigh
+		}
+		return deadHours(o.numOr("minSamples", 5), o.numOr("maxActRate", 0.2), minPriority), nil
 	},
 	"adaptiveTiming": func(o options) (Check, error) { return adaptiveTiming(), nil },
 	"dedupe":         func(o options) (Check, error) { return dedupe(int64(o.num("windowSeconds"))), nil },
@@ -148,13 +222,11 @@ var knownChecks = map[string]func(options) (Check, error){
 			when = &QuietWindow{Start: wo.str("start"), End: wo.str("end")}
 			whenZone = wo.str("timezone")
 		}
-		return requiresConsent(name, when, whenZone, o.str("id"))
+		return requiresConsentExempt(name, when, whenZone, o.str("id"), o.bool("exemptTransactional"))
 	},
 	"rateLimit": func(o options) (Check, error) {
-		limit, perSeconds := int64(o.num("limit")), int64(o.num("perSeconds"))
-		if limit == 0 {
-			limit = 1
-		}
+		// An absent limit is 1; an explicit 0 allows nothing (SPEC 9.12, as in TypeScript and Python).
+		limit, perSeconds := int64(o.numOr("limit", 1)), int64(o.num("perSeconds"))
 		if perSeconds == 0 {
 			perSeconds = 1
 		}
@@ -168,10 +240,8 @@ var knownChecks = map[string]func(options) (Check, error){
 		return recentInteraction(within), nil
 	},
 	"windowBudget": func(o options) (Check, error) {
-		limit, within := int64(o.num("limit")), o.num("withinHours")
-		if limit == 0 {
-			limit = 1
-		}
+		// An absent limit is 1; an explicit 0 allows nothing, as in TypeScript and Python.
+		limit, within := int64(o.numOr("limit", 1)), o.num("withinHours")
 		if within == 0 {
 			within = 48
 		}

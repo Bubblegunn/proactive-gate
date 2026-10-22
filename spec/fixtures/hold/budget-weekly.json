@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.5.0",
   "name": "hold/budget-weekly",
   "description": "An exhausted weekly budget carries the start of the next ISO week, Monday 00:00 local.",

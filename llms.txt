@@ -2,7 +2,7 @@
 
 > proactive-gate is a library that decides whether an AI agent may message a user right now (quiet hours, daily limit, consent, snooze) and records the reason when it may not.
 
-Install: `npm install proactive-gate` (Node 22+), `pip install proactive-gate` (Python 3.11+), or `go get github.com/Bubblegunn/proactive-gate/go@v0.2.0`. Claude Code plugin: `/plugin install proactive-gate --marketplace Bubblegunn/proactive-gate`. Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
+Install: `npm install proactive-gate` (Node 22+), `pip install proactive-gate` (Python 3.11+), or `go get github.com/Bubblegunn/proactive-gate/go@v0.2.0`. Claude Code plugin: `/plugin install proactive-gate --marketplace Bubblegunn/proactive-gate`. Any agent that reads skills: `npx skills add Bubblegunn/proactive-gate`. Licence: MIT. Repository: https://github.com/Bubblegunn/proactive-gate
 npm: https://www.npmjs.com/package/proactive-gate
 PyPI: https://pypi.org/project/proactive-gate/
 Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt is served there too)
@@ -17,6 +17,7 @@ Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt
 - [README](README.md): the first decision, how this differs from Cue, notifkit and tcpa-quiet-hours, the checks, policy as data, defer and shadow mode, presets, adapters, stores, replay
 - [Spec](spec/SPEC.md): the behaviour contract; fixtures under spec/fixtures, schemas under spec/schema
 - [Comparison with other tools](docs/COMPARISON.md): the same inputs run through Cue, notifkit and tcpa-quiet-hours, with versions and a run date
+- [Head to head](docs/HEAD-TO-HEAD.md): the same frozen tasks run against Claude with no plugin, Knock skills and Vaara; protocol, fairness rules and the re-run command
 - [FAQ](https://bubblegunn.github.io/proactive-gate/faq/): questions developers ask, answered
 - [Test your own policy](https://bubblegunn.github.io/proactive-gate/testing/): `proactive-gate replay --fixtures` in CI
 - [Python](python/README.md): Gate, AsyncGate, from_policy, stores, conformance
@@ -25,7 +26,7 @@ Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt
 
 ## API (value exports of `src/index.ts`)
 
-- `createGate`: builds a gate from `{ store, checks }` or `{ store, policy }`; `evaluate` decides, `commit` consumes the budget right before you send
+- `createGate`: builds a gate from `{ store, checks }` or `{ store, policy }`; `evaluate` decides, `commit` consumes the budget right before you send, `whenAllowed` returns the earliest instant a candidate may go out (it follows `nextAllowedAt`, up to `maxHops`)
 - `defaultChecks`: the twelve default checks in order
 - `checks`: the check factories (`consent`, `quietHours`, `dailyBudget`, and the rest) as a namespace
 - `KNOWN_CHECKS`: the check ids a JSON policy may name
@@ -36,6 +37,7 @@ Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt
 - `MemoryStore`, `SqliteStore`, `RedisStore`, `PostgresStore`: the stores; Python also has `AsyncMemoryStore` and `AsyncSqliteStore`
 - `localClock`, `inWindow`: local-time helpers used by quiet hours
 - `budgetKey`, `weeklyBudgetKey`, `monthlyBudgetKey`, `dismissalKey`: the store keys the budgets and the dismissal cooldown use
+- `createInboundConsent`, `parseKeyword`, `STOP_KEYWORDS`, `START_KEYWORDS`: STOP and START replies kept per channel; `handle` records them, and the `inboundConsent` check reads them (TypeScript only, not a JSON policy id)
 - `PRIORITY_RANK`: the order of `low`, `normal`, `high`, `critical`
 
 ## CLI (`HELP` in `src/cli.ts`)
@@ -44,6 +46,7 @@ Docs and playground: https://bubblegunn.github.io/proactive-gate/ (llms-full.txt
 - `proactive-gate init`: writes a policy file and prints the lines that wire it into a framework
 - `proactive-gate replay`: runs events or fixtures through a policy; `--fixtures <dir>` exits 1 when a fixture fails
 - `proactive-gate hook`: a Claude Code hook that gates a tool call
+- `proactive-gate scaffold`: with `nudge`, writes an assistant's policy (the assistantNudge preset), notify.mjs and its tests into a folder
 - `proactive-gate schema`: prints the strict policy JSON Schema
 - `proactive-gate mcp`: an MCP server over stdio with the tools `decide` and `explain`
 

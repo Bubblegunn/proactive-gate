@@ -3,13 +3,14 @@ TypeScript presets. Reviewable defaults, not legal advice; every number sits
 next to its source."""
 from __future__ import annotations
 
+import math
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
 from . import checks as c
 from .checks import Check
-from .types import Context, Outcome
+from .types import Context, Outcome, is_count
 
 Options = Mapping[str, Any]
 
@@ -48,6 +49,34 @@ def _whatsapp_business(o: Options) -> list[Check]:
     return checks
 
 
+def _assistant_nudge(o: Options) -> list[Check]:
+    """An assistant that messages unprompted (SPEC 9.14). The numbers are a starting point, not findings."""
+    daily_limit = o.get("dailyLimit", 3)
+    if not is_count(daily_limit) or not math.isfinite(daily_limit) or daily_limit < 0:
+        raise ValueError(f"assistantNudge: dailyLimit must be a number of at least 0, got {daily_limit!r}")
+    exempt_types = o.get("exemptTypes", [])
+    if not isinstance(exempt_types, list) or not all(isinstance(t, str) for t in exempt_types):
+        raise ValueError("assistantNudge: exemptTypes must be an array of candidate types")
+    return [
+        c.KillSwitchFlag("proactiveEnabled"),
+        c.CrisisQuiet(),
+        c.Consent({"push": "closed", "feed": "open"}),
+        c.RequiresConsent("marketing", exempt_transactional=True),
+        c.Enabled(),
+        c.Mode(["normal"]),
+        c.Snooze(defer=True),
+        c.Mute(),
+        c.QuietHours("critical", "reject"),
+        c.TrustRamp(7, "high"),
+        c.DismissalCooldown(3, 30, 7, exempt_types),
+        c.Freshness(),
+        c.Silence(),
+        c.Dedupe(),
+        c.DeadHours(),
+        c.DailyBudget(limit=daily_limit),
+    ]
+
+
 def _br_lgpd(o: Options) -> list[Check]:
     is_minor = lambda ctx: bool(ctx.user.minor)  # noqa: E731
     return [c.RequiresConsent("marketing"), c.OnlyWhen(c.RequiresConsent("parental"), is_minor, "not a minor")]
@@ -66,6 +95,16 @@ class _SoftOptIn(c.BaseCheck):
 
 
 presets: dict[str, Preset] = {
+    "assistantNudge": Preset(
+        _assistant_nudge,
+        (
+            "https://developer.apple.com/app-store/review/guidelines/",
+            "https://developer.android.com/develop/ui/views/notifications/notification-permission",
+            "https://www.ecfr.gov/current/title-47/part-64/section-64.1200",
+            "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+        ),
+        "An assistant that messages a user unprompted, checked in this order: the kill switch flag proactiveEnabled, crisis quiet, consent (push closed and feed open when consent is unknown), marketing consent unless the candidate is transactional, requested or a commitment, enabled, mode normal, snooze deferred, mute, quiet hours that reject a user with no time zone, a seven-day trust ramp at high priority, a dismissal cooldown of three in thirty days with a seven-day silence, freshness, silence, dedupe, dead hours, and a daily budget of dailyLimit (default 3). The numbers are a starting point, not findings. The preset supplies no quiet-hours window: the caller adds one. Not encoded: the local-time window of 47 CFR 64.1200 (use usTcpa for calls), the operating system's notification permission, and the ease of withdrawing consent under GDPR Article 7(3).",
+    ),
     "lineMessagingApi": Preset(
         _line,
         ("https://developers.line.biz/en/docs/messaging-api/pricing/", "https://developers.line.biz/en/reference/messaging-api/"),
@@ -103,7 +142,7 @@ presets: dict[str, Preset] = {
     ),
     "krNetworkAct50": Preset(
         lambda o: [c.RequiresConsent("ad"), c.RequiresConsent("night", when={"start": "21:00", "end": "08:00", "timezone": "user"})],
-        ("https://www.law.go.kr", "https://developers.fingerpush.com/biz-message/console/ads-guide"),
+        ("https://www.law.go.kr",),
         "Network Act article 50: prior consent for advertising, and a separate consent for 21:00 to 08:00 (email is exempt). Without user.timezone the night consent cannot be placed in the day and skips; the advertising consent still applies. The two-year re-confirmation is not encoded.",
     ),
     "jpAntiSpamLaw": Preset(

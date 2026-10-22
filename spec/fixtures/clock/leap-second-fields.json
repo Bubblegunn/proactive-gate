@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/leap-second-fields",
   "description": "No mainstream runtime exposes a 23:59:60 leap second: JavaScript's Date and Python's datetime both refuse to parse one. The suite pins what that refusal does to each field that accepts a timestamp. An unparseable snoozedUntil reads as absent, so the snooze does not hold. An unparseable createdAt reads as absent, so the ramp skips rather than rejects. An unparseable lastInboundAt reads as no inbound on record, which is the conservative refusal.",

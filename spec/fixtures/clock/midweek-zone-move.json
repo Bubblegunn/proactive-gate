@@ -1,5 +1,5 @@
 {
-  "spec_version": "1.5.0",
+  "spec_version": "1.6.0",
   "since": "1.4.1",
   "name": "clock/midweek-zone-move",
   "description": "A user flies from New York to Apia mid-week with a partially spent weekly budget. The weekly key is the local ISO week of the instant under evaluation (5.1), so the move does not carry the counter: Sunday 16:00 EDT and the same instant Monday 09:00 in Apia resolve to different weeks, and the budget that followed the user home is still spent when they are back on New York time.",
