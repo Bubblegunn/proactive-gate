@@ -90,6 +90,13 @@ function prepare(job) {
   return work;
 }
 
+// Only what `claude -p` needs. The parent shell may carry CLAUDE_* and MAX_THINKING_TOKENS settings of a host app that a
+// model rejects or that change thinking and effort; every arm must see the same environment.
+function cleanEnv(home, arm) {
+  const keep = ["ANTHROPIC_API_KEY", "LANG", "LC_ALL", "TERM", "TMPDIR", "SHELL", "USER", "LOGNAME"];
+  return { ...Object.fromEntries(keep.filter((k) => process.env[k]).map((k) => [k, process.env[k]])), HOME: home, PATH: pathFor(arm) };
+}
+
 function runJob(job) {
   assertUnchanged(`before ${job.name}`);
   const work = prepare(job);
@@ -99,7 +106,7 @@ function runJob(job) {
   return new Promise((done) => {
     const started = Date.now();
     const child = spawn("claude", ["-p", prompt, "--setting-sources", "project", "--settings", join(out, "_home", `${job.name}.settings.json`), "--plugin-dir", dirFor(job.arm), "--model", model, "--dangerously-skip-permissions", "--strict-mcp-config", "--output-format", "stream-json", "--verbose"],
-      { cwd: work, env: { ...process.env, HOME: fakeHome(job.name), PATH: pathFor(job.arm) }, stdio: ["ignore", "pipe", "pipe"] });
+      { cwd: work, env: cleanEnv(fakeHome(job.name), job.arm), stdio: ["ignore", "pipe", "pipe"] });
     let text = "";
     child.stdout.on("data", (d) => (text += d));
     child.stderr.on("data", (d) => (text += d));
