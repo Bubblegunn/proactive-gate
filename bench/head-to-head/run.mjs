@@ -91,10 +91,11 @@ function prepare(job) {
 }
 
 // Only what `claude -p` needs. The parent shell may carry CLAUDE_* and MAX_THINKING_TOKENS settings of a host app that a
-// model rejects or that change thinking and effort; every arm must see the same environment.
+// model rejects or that change thinking and effort; every arm must see the same environment. CLAUDE_CONFIG_DIR keeps
+// the real user-level skills and settings out of the run (the throw-away HOME alone did not).
 function cleanEnv(home, arm) {
   const keep = ["ANTHROPIC_API_KEY", "LANG", "LC_ALL", "TERM", "TMPDIR", "SHELL", "USER", "LOGNAME"];
-  return { ...Object.fromEntries(keep.filter((k) => process.env[k]).map((k) => [k, process.env[k]])), HOME: home, PATH: pathFor(arm) };
+  return { ...Object.fromEntries(keep.filter((k) => process.env[k]).map((k) => [k, process.env[k]])), HOME: home, CLAUDE_CONFIG_DIR: join(home, ".claude"), PATH: pathFor(arm) };
 }
 
 function runJob(job) {
