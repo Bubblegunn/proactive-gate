@@ -23,6 +23,7 @@ Run `npx proactive-gate scaffold nudge --out .` (add `--legal` with the value us
 
 - Call `gate.record` on every "acted" and every "dismissed" event, so the cooldown and the hour counts learn.
 - Mark a candidate `requested`, `transactional`, or `kind` "commitment" when it is one. Never mark a promotion that way.
+- A digest, briefing or reminder the user signed up for is requested. The app often has no consent field for it, so set `requested` in toInput(); without that the gate holds every send for missing consent.
 - Pass the app's own per-call limit as config.dailyNudgeCap to the notify.mjs functions, and set the STATE_DIR environment variable for state that outlives the process; it is read at first use.
 - Never leave the time zone empty. Pass `deviceTimezone` as well when the device reports one, because it is read first.
 
