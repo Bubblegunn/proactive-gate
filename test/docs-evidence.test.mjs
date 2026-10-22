@@ -43,7 +43,7 @@ test("the head-to-head page gives the re-run command and the commits rerun.sh pi
   const page = read("docs/HEAD-TO-HEAD.md");
   assert.ok(page.includes("bash bench/head-to-head/rerun.sh --model claude-sonnet-5-5 --reps 3"), "no re-run command");
   const pins = [...script.matchAll(/^clone (\S+) \S+ ([0-9a-f]{40})$/gm)].map((m) => ({ url: m[1], sha: m[2] }));
-  assert.equal(pins.length, 1, "rerun.sh should pin the one competitor it still runs (Knock)");
+  assert.equal(pins.length, 2, "rerun.sh should pin the two competitors it still runs (Knock and Courier)");
   assert.ok(!/vaara/i.test(script), "rerun.sh must not run Vaara (see the Rulings section)");
   for (const p of pins) assert.ok(page.includes(p.sha), `the page does not name the pinned commit ${p.sha}`);
   assert.ok(page.includes("npm pack"), "the page does not say the build is packed with npm pack");

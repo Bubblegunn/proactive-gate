@@ -186,7 +186,7 @@ const result = await gate.inbound.handle({ userId, channel: "sms", text: body })
 
 Set the `inboundConsent` option to true to add the check right after `consent`. The `handle` method of `gate.inbound` writes to the gate's own store under its key prefix, so the check reads what `handle` wrote. Set `channel` on each candidate ("sms", "email", and so on); the check reads it, else the first surface, else "default".
 
-- Matching: the whole message only, ignoring case, surrounding spaces and trailing punctuation. STOP, STOPALL, UNSUBSCRIBE, CANCEL, END and QUIT switch the channel off; START, UNSTOP and YES switch it on. "stop it" is not a keyword. A stop on one channel does not silence another.
+- Matching: the whole message only, ignoring case, surrounding spaces and trailing punctuation. STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE and OPT OUT (also OPT-OUT, OPTOUT) switch the channel off; START, UNSTOP and YES switch it on. "stop it" is not a keyword. A stop on one channel does not silence another.
 - The state persists in the store. A `MemoryStore` forgets stops on restart, and then the gate messages people who replied STOP. Use `SqliteStore`, `RedisStore` or `PostgresStore` in production.
 - Where consent is legally required, set `onStoreError` to "closed". `handle` does not catch store errors, so answer the carrier with a non-200 status and let it retry.
 - Do not set `user.consent` from an inbound message. The store keeps the STOP and START state.

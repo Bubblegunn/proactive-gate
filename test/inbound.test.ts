@@ -29,9 +29,9 @@ const sqliteAvailable = (() => {
 })();
 
 test("parseKeyword matches only a whole message, after trimming and dropping trailing punctuation", () => {
-  const stop = ["STOP", "stop", "  Stop.  ", "UNSUBSCRIBE!", "end", "Quit", "STOPALL", "cancel"];
+  const stop = ["STOP", "stop", "  Stop.  ", "UNSUBSCRIBE!", "end", "Quit", "STOPALL", "cancel", "REVOKE", "revoke.", "OPT OUT", "Opt-out.", "OPTOUT", "  opt   out  "];
   const start = ["START", "unstop", "Yes."];
-  const none = ["please stop by tomorrow", "thanks", "HELP", "stopping", "end of month", "stop it", "yes please"];
+  const none = ["please stop by tomorrow", "thanks", "HELP", "stopping", "end of month", "stop it", "yes please", "opt in", "opting out", "revoked", "opt out now"];
   for (const text of stop) assert.equal(parseKeyword(text), "stop", text);
   for (const text of start) assert.equal(parseKeyword(text), "start", text);
   for (const text of none) assert.equal(parseKeyword(text), "none", text);

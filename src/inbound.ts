@@ -2,7 +2,7 @@ import { inboundConsent, inboundKeyFor } from "./checks.js";
 import type { Check, Store } from "./types.js";
 
 /** Replies that switch a channel off for a user. Matched on the whole message only. */
-export const STOP_KEYWORDS: readonly string[] = ["STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT"];
+export const STOP_KEYWORDS: readonly string[] = ["STOP", "STOPALL", "UNSUBSCRIBE", "CANCEL", "END", "QUIT", "REVOKE", "OPT OUT", "OPT-OUT", "OPTOUT"];
 
 /**
  * Replies that switch a channel back on. Matched on the whole message only.
@@ -72,7 +72,7 @@ const EDGE = /[\s\p{P}\p{Cf}\p{S}]/u;
 const normalise = (text: string): string => {
   const trimmed = text.trim();
   if (trimmed.length > MAX_MESSAGE_LENGTH) return "";
-  const points = Array.from(trimmed.normalize("NFKC").toUpperCase());
+  const points = Array.from(trimmed.normalize("NFKC").toUpperCase().replace(/\s+/g, " "));
   let from = 0;
   let to = points.length;
   while (from < to && EDGE.test(points[from]!)) from++;
@@ -81,7 +81,7 @@ const normalise = (text: string): string => {
 };
 
 /**
- * Classifies a whole message as a stop, a start, or neither. "STOP." and "  quit  " are stops;
+ * Classifies a whole message as a stop, a start, or neither. "STOP.", "  quit  " and "Opt-out." are stops;
  * "stop it", "stopping" and "yes please" are not. A non-string, or a message too long to be a keyword,
  * is "none" and does not throw.
  */

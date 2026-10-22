@@ -42,13 +42,16 @@ const call = (args) => ({ ...args, now: args.now ?? new Date() });
 
 // EDIT HERE. The app's shapes become the gate's input, and this is the only function that reads them.
 // origin "requested" is a request, "reminder" is something the user set up, anything else is an inferred nudge.
-// A consent flag or consents.marketing counts as consent. insight is { key, dataPoints, confidence }.
+// A consent flag or consents.marketing counts as consent; a requested message with neither counts as consented. insight is { key, dataPoints, confidence }.
 // Returns { input, pushOff }: pushOff is { code, reason } when push is taken off the table, else undefined.
 export function toInput({ user, candidate = {}, context = {}, message = {}, notification = {}, flags = {}, now = new Date() }) {
   const type = candidate.type ?? "notification";
   const explicitId = message.id ?? notification.id ?? candidate.id;
   const id = explicitId ?? randomUUID();
-  const granted = user.consent === true || user.consents?.marketing === true;
+  const requested = candidate.origin === "requested" || candidate.requested === true;
+  // A request needs no opt-in: with no consent information at all, a requested message counts as consented.
+  const noConsentData = user.consent === undefined && user.consents?.marketing === undefined && user.consentUnknown !== true;
+  const granted = user.consent === true || user.consents?.marketing === true || (requested && noConsentData);
   const zone = checks.effectiveZone(user);
   const day = zone ? checks.localClock(now, zone).day : now.toISOString().slice(0, 10);
   const { insight } = candidate;
@@ -73,7 +76,7 @@ export function toInput({ user, candidate = {}, context = {}, message = {}, noti
       },
       candidate: {
         ...candidate, id, type, surfaces, channel: message.channel ?? candidate.channel,
-        requested: candidate.origin === "requested" || candidate.requested === true,
+        requested,
         ...(candidate.origin === "reminder" ? { kind: "commitment" } : {}),
         ...(insight ? { evidence: { dataPoints: insight.dataPoints, confidence: insight.confidence, newSinceLast: true } } : {}),
         // A redelivered message id is sent once. An insight is sent once per local day, whatever its attempts.
@@ -126,7 +129,8 @@ export async function decide(args) {
   record(args, v.sent, v.code ?? null, v.sent ? "delivered" : v.reason, v.availableAt);
   return v.sent ? { send: true, reason: null, reasonCode: null, surfaces: v.surfaces } : { send: false, reason: v.reason, reasonCode: v.code, surfaces: [] };
 }
-// decide(), then the app's transport: push(user, candidate) and inApp(user, candidate). A unit is given back when the
+// decide(), then the app's transport: push(user, candidate) and inApp(user, candidate). push counts as sent when it
+// returns true; inApp counts as stored when it resolves, unless it returns exactly false. A unit is given back when the
 // push was refused or nothing was delivered. Returns { push, inApp, reason, resumeAt }; resumeAt is the ISO time it can go out.
 export async function deliver(args) {
   args = call(args);
@@ -142,7 +146,7 @@ export async function deliver(args) {
   let inApp = false;
   try {
     if (v.surfaces.includes("push")) push = Boolean(await args.transport.push(args.user, v.input.candidate));
-    if (v.surfaces.includes("feed")) inApp = Boolean(await args.transport.inApp(args.user, v.input.candidate));
+    if (v.surfaces.includes("feed")) inApp = (await args.transport.inApp(args.user, v.input.candidate)) !== false;
   } catch (error) {
     if (!push && !inApp) await v.gate.release(v.decision, v.input);
     throw error;

@@ -168,6 +168,56 @@ console.log(JSON.stringify([a.push, b.push, c.push, d.push]));`;
   });
 });
 
+test("a store is made once per STATE_DIR: switching away and back sees the first directory's opt-out, and a new directory starts clean", () => {
+  withTempDir((dir) => {
+    assert.equal(scaffold(dir).status, 0);
+    linkLibrary(dir);
+    const a = join(dir, "state-a");
+    const b = join(dir, "state-b");
+    const code = `import { decide, optOut } from "./notify.mjs";
+const ask = () => decide({ user: { id: "u1", consent: true, timezone: "Europe/Istanbul", createdAt: "2026-01-01T00:00:00Z" }, candidate: { id: "m" + Math.random(), type: "nudge", origin: "requested" }, now: new Date("2026-10-21T10:00:00Z") });
+process.env.STATE_DIR = ${JSON.stringify(a)}; await optOut("u1", "nudge"); const one = (await ask()).send;
+process.env.STATE_DIR = ${JSON.stringify(b)}; const two = (await ask()).send;
+process.env.STATE_DIR = ${JSON.stringify(a)}; const three = (await ask()).send;
+console.log(JSON.stringify([one, two, three]));`;
+    const run = runModule(dir, code);
+    assert.equal(run.status, 0, run.stderr);
+    assert.deepEqual(JSON.parse(run.stdout), [false, true, false]);
+  });
+});
+
+test("an in-app transport that resolves with nothing stored the item; only an exact false means it did not", () => {
+  withTempDir((dir) => {
+    assert.equal(scaffold(dir, "--daily", "1").status, 0);
+    linkLibrary(dir);
+    const code = `import { deliver } from "./notify.mjs"; const user = { id: "u1", consent: true, timezone: "Europe/Istanbul", createdAt: "2026-01-01T00:00:00Z" };
+const go = (id, inApp) => deliver({ user, candidate: { id, type: "briefing", origin: "requested", surfaces: ["feed"] }, transport: { inApp }, now: new Date("2026-10-21T10:00:00Z") });
+const a = await go("a", async () => {}); const b = await go("b", async () => true); const c = await go("c", async () => false);
+console.log(JSON.stringify([a.inApp, b.inApp, c.inApp]));`;
+    const run = runModule(dir, code);
+    assert.equal(run.status, 0, run.stderr);
+    assert.deepEqual(JSON.parse(run.stdout), [true, false, false], "a stored item spends the daily unit of 1, so the second send is held; a false gives the unit back");
+  });
+});
+
+test("a requested message with no consent information counts as consented; a user who said no stays unconsented", () => {
+  withTempDir((dir) => {
+    assert.equal(scaffold(dir).status, 0);
+    linkLibrary(dir);
+    const code = `import { toInput } from "./notify.mjs";
+const granted = (user, candidate) => toInput({ user: { id: "u", ...user }, candidate }).input.user.consent;
+const req = { origin: "requested" };
+console.log(JSON.stringify([
+  granted({}, req), granted({ consents: {} }, req), granted({}, { requested: true }),
+  granted({}, { type: "promo" }), granted({ consentUnknown: true }, req),
+  granted({ consent: false }, req), granted({ consents: { marketing: false } }, req), granted({ consent: true }, {}),
+]));`;
+    const run = runModule(dir, code);
+    assert.equal(run.status, 0, run.stderr);
+    assert.deepEqual(JSON.parse(run.stdout), [true, true, true, false, false, false, false, true]);
+  });
+});
+
 test("--legal us adds the US calling hours to the policy, and an 21:00 text is refused in the user's zone", () => {
   withTempDir((dir) => {
     assert.equal(scaffold(dir, "--legal", "us").status, 0);

@@ -78,7 +78,7 @@ function problems(text) {
   for (const [, token] of text.matchAll(/(?<!`)`([^`\n]+)`(?!`)/g)) {
     if (/^(npx|npm|pip|claude|node) /.test(token) || /\.(json|jsonl|ts|md|mjs)$/.test(token) || /^\{.*\}$/.test(token) || token.includes("(")) continue;
     if (/^\w+\.\w+$/.test(token) || /^presets\.\w+\.(note|sources)$/.test(token)) continue; // checked above as gate./decision./presets. members
-    if (/^--/.test(token)) { note("flag", token, flags.has(token)); continue; }
+    if (/^--/.test(token)) { note("flag", token.split(" ")[0], flags.has(token.split(" ")[0])); continue; } // "--legal us": the flag, then its value
     if (token === tcpaRejection) { note("name", token, true); continue; }
     if (/^"/.test(token) || words.has(token) || token in api.KNOWN_CHECKS) continue;
     if (/^\w+$/.test(token)) note("name", token, token in api || fields.has(token) || tools.has(token) || ["commit", "evaluate", "whenAllowed", "handle"].includes(token) || ["MemoryStore"].includes(token) || inboundIds.has(token) || gateOptions.has(token) || token in api.presets || subcommands.has(token) || policySchemaText.includes(`"${token}"`));
@@ -447,10 +447,19 @@ test("SKILL.md points to both reference files, and both exist", () => {
   }
 });
 
-test("the front page opens with the Node check and the scaffold command, and states the three standing rules", () => {
-  assert.ok(skill.includes("node -v"), "step 1 checks the Node version");
-  assert.ok(skill.includes("npx proactive-gate scaffold nudge --out ."), "step 2 runs the scaffold");
-  for (const rule of ["gate.record", "requested", "transactional", "commitment", "deviceTimezone"]) assert.ok(skill.includes(rule), `a standing rule names ${rule}`);
+test("the front page opens with the inline checklist of ten rules, then the library section with the Node check and the scaffold command", () => {
+  const inline = skill.indexOf("## Default: write the gate inline");
+  const library = skill.indexOf("## Use the library instead when");
+  assert.ok(inline >= 0 && library > inline, "the inline checklist comes first, the library section second");
+  const checklist = skill.slice(inline, library);
+  const rules = [...checklist.matchAll(/^(\d+)\. /gm)].map((m) => Number(m[1]));
+  assert.deepEqual(rules, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "the checklist states ten numbered rules");
+  for (const word of ["STATE_DIR", "message id", "STOP", "REVOKE", "OPT OUT"]) assert.ok(checklist.includes(word), `a rule names ${word}`);
+  const section = skill.slice(library);
+  assert.ok(section.includes("node -v"), "the library section checks the Node version");
+  assert.ok(section.includes("npx proactive-gate scaffold nudge --out ."), "the library section runs the scaffold");
+  assert.ok(section.indexOf("node -v") < section.indexOf("scaffold nudge"), "the Node check comes before the scaffold command");
+  for (const rule of ["requested", "transactional", "commitment"]) assert.ok(section.includes(rule), `the library section names ${rule}`);
 });
 
 test("references/checks.md names every check id in KNOWN_CHECKS, in backticks", () => {

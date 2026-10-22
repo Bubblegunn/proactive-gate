@@ -631,7 +631,7 @@ true none
 ```
 
 - Yanıt, yalnızca bütün mesaj anahtar kelimeyse sayılır; baştaki ve sondaki boşluk ile noktalama yok sayılır, büyük-küçük harf fark etmez. `STOP.` ve ` quit ` durdurur; `stop it` ve `yes please` durdurmaz.
-- Durdurma kelimeleri STOP, STOPALL, UNSUBSCRIBE, CANCEL, END ve QUIT; başlatma kelimeleri START, UNSTOP ve YES. YES bir varsayılandır, taşıyıcı kuralı değildir. Başka kelimeler kullanmak için, kapınızın deposu ve `keyPrefix` değeriyle (varsayılan `pg:`) `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` çağırın, yanıtlar için onun `handle` fonksiyonunu kullanın ve `check()` sonucunu `checks` içine koyun. Kapının kendi `gate.inbound` nesnesi her zaman varsayılan listeleri kullanır.
+- Durdurma kelimeleri STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE ve OPT OUT (OPT-OUT ve OPTOUT dahil); başlatma kelimeleri START, UNSTOP ve YES. YES bir varsayılandır, taşıyıcı kuralı değildir. Başka kelimeler kullanmak için, kapınızın deposu ve `keyPrefix` değeriyle (varsayılan `pg:`) `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` çağırın, yanıtlar için onun `handle` fonksiyonunu kullanın ve `check()` sonucunu `checks` içine koyun. Kapının kendi `gate.inbound` nesnesi her zaman varsayılan listeleri kullanır.
 - Kayıtlı bir STOP'un süresi yok; aynı kanalda START gelene kadar sürer.
 - Depo hata verirse kontrol `onStoreError` değerini izler; varsayılan `"open"`tır. Rıza yasal olarak zorunluysa `onStoreError: "closed"` yazın.
 - Yalnızca TypeScript. Python ve Go'da bu henüz yok; JSON politikası `inboundConsent` adını kullanamaz.

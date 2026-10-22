@@ -643,7 +643,7 @@ true none
 ```
 
 - A reply counts only when the whole message is the keyword, after trimming and ignoring case and edge punctuation. `STOP.` and ` quit ` stop; `stop it` and `yes please` do not.
-- The stop words are STOP, STOPALL, UNSUBSCRIBE, CANCEL, END and QUIT. The start words are START, UNSTOP and YES. YES is a default, not a carrier rule. To use other words, call `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` with the gate's store and the gate's `keyPrefix` (default `pg:`), use its `handle` for replies, and pass its `check()` in `checks`. The gate's own `gate.inbound` always uses the default lists.
+- The stop words are STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE and OPT OUT (also written OPT-OUT or OPTOUT). The start words are START, UNSTOP and YES. YES is a default, not a carrier rule. To use other words, call `createInboundConsent({ store, keyPrefix, keywords: { stop, start } })` with the gate's store and the gate's `keyPrefix` (default `pg:`), use its `handle` for replies, and pass its `check()` in `checks`. The gate's own `gate.inbound` always uses the default lists.
 - A stored STOP has no expiry. It lasts until a START arrives on the same channel.
 - If the store fails, the check follows `onStoreError`, which defaults to `"open"`. Where consent is legally required, set `onStoreError: "closed"`.
 - TypeScript only. Python and Go do not have this yet, and a JSON policy cannot name `inboundConsent`.

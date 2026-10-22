@@ -13,27 +13,26 @@ Put a gate in front of every message your agent sends on its own initiative. The
 - The user asks for quiet hours, a message limit, a pause, consent checks or opt-out handling.
 - The message leaves from a loop, a schedule or a webhook, not as the answer to something the user just wrote.
 
-## Step 1: check Node
+## Default: write the gate inline
 
-Run `node -v`. It must print 22 or newer. npm on an older Node installs proactive-gate 0.7.3, an older API, without a warning, so tell the user to upgrade Node first.
+Write the gate in ONE file, the file the task names. No install, no scaffold, no reading of library source. Write the file, run one self-check script, answer. Aim at 6 turns. The gate must follow these rules:
 
-## Step 2: scaffold the gate
+1. Data. Use only the fields the task or the app gives. Never invent a field, a key or a purpose name. A missing field is unknown, not "no".
+2. Consent. When the data carries a consent field, false or absent means off. When it carries no consent field at all: a message the user signed up for or asked for (digest, briefing, reminder) is allowed; a promotion needs an explicit opt-in; any other unknown case is held. Say the assumption in one sentence in your answer.
+3. Never hold everything. Before you finish, call the exported function with exactly the fields the task lists and confirm that one message is allowed.
+4. State. Read STATE_DIR inside every call, not at import and not once and cached. Create it. Keep one record per user and per message id. Every worker process shares it and it survives a restart. Write with an atomic step (temp file then rename, or an exclusive create) so two workers cannot both win.
+5. Redelivery. Key every send by message id: the same id gets the same answer and spends nothing twice. Claim before sending. Give the claim back only when the send definitely did not happen (the gate refused it, or it failed before leaving). When the outcome is unknown, keep the claim.
+6. Time. Use the recipient's local time (Intl with the IANA zone; the device zone first when the data has one). An unknown or invalid zone is held, never guessed. A window includes its start minute and excludes its end minute, across DST; a window whose start is later than its end wraps past midnight. A local day or week is the recipient's own.
+7. Opt-out. Match STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE, OPT OUT, OPT-OUT and OPTOUT as the whole message, any case, outer punctuation and extra spaces ignored; "stopping" is not STOP. Opt-out is per channel, holds in every process at once and beats every other rule for unsolicited and promotional messages. START or UNSTOP turns it back on. The account-page opt-out writes the same record.
+8. Refusals. Return a plain sentence that names the rule and gives the retry time when there is one, never an internal code alone.
+9. Time-critical messages. Something the user asked to be told at a time may use a reserved budget. Opt-out, quiet hours and legal hours still apply to it.
+10. Numbers you chose (hours, caps, cooldowns) go in your answer, one line each.
 
-Run `npx proactive-gate scaffold nudge --out .` (add `--legal` with the value us for texts or calls to people in the US: it adds the 08:00 to 21:00 local calling hours). It writes `proactive-gate.policy.json`, `notify.mjs` and `notify.test.mjs`. Keep these rules:
+## Use the library instead when
 
-- Call `gate.record` on every "acted" and every "dismissed" event, so the cooldown and the hour counts learn.
-- Mark a candidate `requested`, `transactional`, or `kind` "commitment" when it is one. Never mark a promotion that way.
-- A digest, briefing or reminder the user signed up for is requested. The app often has no consent field for it, so set `requested` in toInput(); without that the gate holds every send for missing consent.
-- Pass the app's own per-call limit as config.dailyNudgeCap to the notify.mjs functions, and set the STATE_DIR environment variable for state that outlives the process; it is read at first use.
-- Never leave the time zone empty. Pass `deviceTimezone` as well when the device reports one, because it is read first.
-
-## Step 3: adapt and test
-
-Change the mapping in `toInput()` in `notify.mjs` to your app's shapes, then run `node --test notify.test.mjs`. Every test must pass before `decide()` or `deliver()` goes into a send path.
+The project already imports proactive-gate, or the user asks for a policy file, a scaffold, a log of why a user got nothing, or replay. Run `node -v` first: it must print 22 or newer (npm on an older Node installs proactive-gate 0.7.3, an older API, without a warning). Then run `npx proactive-gate scaffold nudge --out .` (add `--legal us` for texts to people in the US). Mark a candidate `requested`, `transactional` or kind "commitment" when it is one, and never mark a promotion that way. Set STATE_DIR for state that outlives the process. Call `gate.record` on every "acted" and "dismissed" event so the cooldown learns, and pass `deviceTimezone` when the device reports one. Change `toInput()` in `notify.mjs` to the app's shapes and run `node --test notify.test.mjs` before `decide()` or `deliver()` goes into a send path.
 notify.mjs exports decide (send, reason, reasonCode, surfaces), deliver (calls the app's push and inApp, returns push, inApp, reason, resumeAt), recordDismissal, recordAct and optOut (a type or a channel).
 It also exports handleInbound, whyNotReceived (one user's log over a time range), dryRun (last week under another policy) and REASON_CODES, the closed list of reasonCode values.
-
-## Step 4: the details
 
 - `references/guide.md`: the policy format, the decision loop, stores, inbound STOP and START, legal presets and replay.
 - `references/checks.md`: one line per check id, the gate functions, and the `assistantNudge` preset.
