@@ -807,3 +807,23 @@ folder after the gate.
    authentication error, or the shim's "credit guard" refusal (exit 3), stops everything and is reported. A cell lost to a rate limit or API error is deleted and run again, never graded.
 9. Claim scope: only the arms, tasks, models and date that were run. "First" is claimed only when the full gate passed, with its scope. Evidence folder per
    `EVIDENCE-SPEC.md` (11 items), development gate in its own section.
+
+## Results, round 6 (held-out set c on Haiku only; Sonnet and public set not run)
+
+Date 2026-10-23. Build under test `671b716` (protocol frozen in `6179934`, best-rival analysis `e8f53b3`/`2a09dfd`, before any code change). Held-out set c: five tasks
+g1 to g5 (6 outcome criteria each) written by a fresh Sonnet agent that saw only the README user problem and the task format (local branch `heldout-2026-10-c`,
+`87db60a`, never pushed; published in the evidence folder now that it has been used). Haiku, six arms, 3 runs per cell, 90 cells, SDK path, no cell reused, scored by
+the task checkers. Evidence: `bench/head-to-head/results/round6-heldout-c/` (`python3 score.py --check SUMMARY.md` passes; `SHA256SUMS` verifies).
+
+| model | ours | baseline | knock | knock-inv | courier | courier-inv |
+|---|---|---|---|---|---|---|
+| Haiku (30 max) | 29.00 | 28.00 | 27.00 | 26.00 | 27.00 | 27.00 |
+
+Per task (ours / best other): g1 6.00 / 5.67; g2 6.00 / 5.67; g3 5.00 / 6.00 (baseline); g4 6.00 all; g5 6.00 / 6.00.
+Rule A passes (lost 1.00, limit 1.60); cost rule passes (0.84 times the baseline); Rule B fails on g3; Rule B-prime fails (one exception task, deficit 1.00, limit 0.34).
+The gate is not passed. Sonnet (about 9.5 USD) and the public set Z1 to Z6 were not run because the session's hard spending cap left no room; F6 and F9 were not run.
+Development gate (ours x3 on the seen round-5 set): iteration 1 (`62c1340`) Haiku 29.33, Sonnet 30.00; iteration 2 (`671b716`) 30.00 on both; passed at iteration 2
+(`results/round6-devgate-iter1`, `-iter2`, kept out of every score table).
+Post-hoc (not a rule): in the failing g3 cell, ours returned sentence refusals although the task asks for snake_case codes (skill rule 8 conflicts with a requested return shape)
+and invented an "EU opt-in" block (rule 2(d) default). Candidate general fixes for a next round: the requested return shape beats rule 8; a promotion default may not cite a law the request does not name.
+Claim scope: no claim of "first" or "best". On this one set and one model ours has the highest total, ahead of baseline by 1.00, and loses one task.
