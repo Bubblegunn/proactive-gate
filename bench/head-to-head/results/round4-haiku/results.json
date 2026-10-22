@@ -1,0 +1,3134 @@
+[
+ {
+  "arm": "courier-inv",
+  "task": "z1",
+  "rep": 1,
+  "name": "courier-inv-z1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z1-1",
+  "code": 0,
+  "seconds": 259,
+  "costUsd": 0.16449924999999999,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 186,
+  "locAll": 186,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z1",
+  "rep": 2,
+  "name": "courier-inv-z1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z1-2",
+  "code": 0,
+  "seconds": 108,
+  "costUsd": 0.25797315000000004,
+  "turns": 12,
+  "skillCalls": 0,
+  "loc": 179,
+  "locAll": 179,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z1",
+  "rep": 3,
+  "name": "courier-inv-z1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z1-3",
+  "code": 0,
+  "seconds": 78,
+  "costUsd": 0.17202805,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 162,
+  "locAll": 162,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z2",
+  "rep": 1,
+  "name": "courier-inv-z2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z2-1",
+  "code": 0,
+  "seconds": 251,
+  "costUsd": 0.21812739999999997,
+  "turns": 12,
+  "skillCalls": 1,
+  "loc": 192,
+  "locAll": 192,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": false,
+    "why": "FAIL three-day-old digest: {\"sent\":true,\"reason\":null}"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z2",
+  "rep": 2,
+  "name": "courier-inv-z2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z2-2",
+  "code": 0,
+  "seconds": 204,
+  "costUsd": 0.1574477,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 169,
+  "locAll": 169,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": false,
+    "why": "FAIL three-day-old digest: {\"sent\":true,\"reason\":null}"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z2",
+  "rep": 3,
+  "name": "courier-inv-z2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z2-3",
+  "code": 0,
+  "seconds": 71,
+  "costUsd": 0.15665235,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 169,
+  "locAll": 169,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z3",
+  "rep": 1,
+  "name": "courier-inv-z3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z3-1",
+  "code": 0,
+  "seconds": 272,
+  "costUsd": 0.26105980000000006,
+  "turns": 12,
+  "skillCalls": 0,
+  "loc": 243,
+  "locAll": 243,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": false,
+    "why": "FAIL briefing after five suggestion dismissals: push false, reason \"You have not agreed to notifications, so nothing was sent.\""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: in-app item not produced; categories.briefing true: push false"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 3 at 08:32: push false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": false,
+    "why": "FAIL reason does not name the permission (permission, permitted, disabled or settings): \"You have not agreed to notifications, so nothing was sent.\"; android permitted: push false"
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": false,
+    "why": "FAIL resumeAt null is not the snooze end; at the snooze end (09:30 local): push false, want true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z3",
+  "rep": 2,
+  "name": "courier-inv-z3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z3-2",
+  "code": 0,
+  "seconds": 586,
+  "costUsd": 0.34152625,
+  "turns": 24,
+  "skillCalls": 0,
+  "loc": 149,
+  "locAll": 149,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z3",
+  "rep": 3,
+  "name": "courier-inv-z3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z3-3",
+  "code": 0,
+  "seconds": 239,
+  "costUsd": 0.1357457,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 102,
+  "locAll": 102,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: push true; categories missing: transport.push was called"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 4 at 08:33: push true, want false"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z4",
+  "rep": 1,
+  "name": "courier-inv-z4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z4-1",
+  "code": 0,
+  "seconds": 260,
+  "costUsd": 0.1478178,
+  "turns": 11,
+  "skillCalls": 0,
+  "loc": 140,
+  "locAll": 140,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"ONBOARDING_GRACE\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"TOO_SOON_AFTER_NUDGE\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"TOO_SOON_AFTER_NUDGE\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"TOO_SOON_AFTER_NUDGE\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"TOO_SOON_AFTER_NUDGE\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z4",
+  "rep": 2,
+  "name": "courier-inv-z4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z4-2",
+  "code": 1,
+  "seconds": 333,
+  "costUsd": 0,
+  "turns": 0,
+  "skillCalls": 1,
+  "loc": 140,
+  "locAll": 140,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"NEW_USER\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z4",
+  "rep": 3,
+  "name": "courier-inv-z4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z4-3",
+  "code": 0,
+  "seconds": 247,
+  "costUsd": 0.22121835,
+  "turns": 15,
+  "skillCalls": 1,
+  "loc": 148,
+  "locAll": 148,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"NEW_USER_GRACE\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z5",
+  "rep": 1,
+  "name": "courier-inv-z5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z5-1",
+  "code": 0,
+  "seconds": 170,
+  "costUsd": 0.1570451,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 104,
+  "locAll": 104,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown within the last week.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses messages at this hour.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z5",
+  "rep": 2,
+  "name": "courier-inv-z5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z5-2",
+  "code": 1,
+  "seconds": 237,
+  "costUsd": 0,
+  "turns": 0,
+  "skillCalls": 1,
+  "loc": 111,
+  "locAll": 111,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown to the user recently.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses proactive messages at this time of day.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z5",
+  "rep": 3,
+  "name": "courier-inv-z5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z5-3",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.09636940000000002,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 119,
+  "locAll": 119,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown in the last 7 days.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses messages at this hour.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z6",
+  "rep": 1,
+  "name": "courier-inv-z6-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z6-1",
+  "code": 1,
+  "seconds": 296,
+  "costUsd": 0,
+  "turns": 0,
+  "skillCalls": 1,
+  "loc": 310,
+  "locAll": 310,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n1 text says UTC or GMT: This notification was sent at Sep 4, 12:00 PM GMT+3.; n2 text says UTC or GMT: This notification was sent at Sep 4, 1:00 PM GMT+3.; n3 text says UTC or GMT: This notification was sent at Sep 4, 2:00 PM GMT+3.; n4 text says UTC or GMT: This notification was held because you have already received 3 notifications today and can be sent from Sep 5, 8:00 AM GMT+3.; n4 text lacks local decision time 15:00: This notification was held because you have already received 3 notifications today and can be sent from Sep 5, 8:00 AM GMT+3.; n6 text lacks local decision time 12:00: This notification was not sent because you have not agreed to receive it.; n5 text says UTC or GMT: This notification was held because it arrived during quiet hours (10 PM to 8 AM local time) and can be sent from Sep 5, 8:00 AM GMT+3.; n5 text lacks local decision time 22:30: This notification was held because it arrived during quiet hours (10 PM to 8 AM local time) and can be sent from Sep 5, 8:00 AM GMT+3.; n4 text lacks 15:00: This notification was held because you have already received 3 notifications today and can be sent from Sep 5, 8:00 AM GMT+3.; n5 text lacks 22:30: This notification was held because it arrived during quiet hours (10 PM to 8 AM local time) and can be sent from Sep 5, 8:00 AM GMT+3.; n6 text lacks 12:00: This notification was not sent because you have not agreed to receive it."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z6",
+  "rep": 2,
+  "name": "courier-inv-z6-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z6-2",
+  "code": 1,
+  "seconds": 358,
+  "costUsd": 0,
+  "turns": 0,
+  "skillCalls": 0,
+  "loc": 293,
+  "locAll": 293,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: This notification was held because you already received the maximum of 3 notifications today (your local day) and can go out from 08:00 on 5 Sep.; n6 text lacks local decision time 12:00: This notification was not sent because you have not agreed to receive notifications.; n5 text lacks local decision time 22:30: This notification was held because it arrived during your quiet hours (22:00 to 08:00, your local time) and can go out from 08:00 on 5 Sep.; n4 text lacks 15:00: This notification was held because you already received the maximum of 3 notifications today (your local day) and can go out from 08:00 on 5 Sep.; n5 text lacks 22:30: This notification was held because it arrived during your quiet hours (22:00 to 08:00, your local time) and can go out from 08:00 on 5 Sep.; n6 text lacks 12:00: This notification was not sent because you have not agreed to receive notifications."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "z6",
+  "rep": 3,
+  "name": "courier-inv-z6-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-inv-z6-3",
+  "code": 0,
+  "seconds": 365,
+  "costUsd": 0.3939707500000001,
+  "turns": 18,
+  "skillCalls": 1,
+  "loc": 328,
+  "locAll": 328,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: We did not send this notification because you had already received 3 notifications that day, and the earliest it could have been sent was Sep 5, 2026, 8:00 AM (your local time).; n6 text lacks local decision time 12:00: We did not send this notification because you have not agreed to receive it, so it will not be sent unless you opt in.; n5 text lacks local decision time 22:30: We did not send this notification because it arrived during quiet hours (22:00 to 08:00, your local time), and the earliest it could have been sent was Sep 5, 2026, 8:00 AM (your local time).; n4 text lacks 15:00: We did not send this notification because you had already received 3 notifications that day, and the earliest it could have been sent was Sep 5, 2026, 8:00 AM (your local time).; n5 text lacks 22:30: We did not send this notification because it arrived during quiet hours (22:00 to 08:00, your local time), and the earliest it could have been sent was Sep 5, 2026, 8:00 AM (your local time).; n6 text lacks 12:00: We did not send this notification because you have not agreed to receive it, so it will not be sent unless you opt in."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z1",
+  "rep": 1,
+  "name": "courier-z1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z1-1",
+  "code": 0,
+  "seconds": 85,
+  "costUsd": 0.1672776,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 242,
+  "locAll": 242,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": false,
+    "why": "FAIL marketing false: send true, want false; consents missing: send true, want false; consents empty: send true, want false; only analytics true: send true, want false"
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z1",
+  "rep": 2,
+  "name": "courier-z1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z1-2",
+  "code": 0,
+  "seconds": 129,
+  "costUsd": 0.29071480000000005,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 259,
+  "locAll": 259,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z1",
+  "rep": 3,
+  "name": "courier-z1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z1-3",
+  "code": 0,
+  "seconds": 103,
+  "costUsd": 0.21606925,
+  "turns": 11,
+  "skillCalls": 0,
+  "loc": 218,
+  "locAll": 218,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z2",
+  "rep": 1,
+  "name": "courier-z2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z2-1",
+  "code": 0,
+  "seconds": 71,
+  "costUsd": 0.12723459999999998,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 178,
+  "locAll": 178,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z2",
+  "rep": 2,
+  "name": "courier-z2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z2-2",
+  "code": 0,
+  "seconds": 120,
+  "costUsd": 0.26035375,
+  "turns": 13,
+  "skillCalls": 0,
+  "loc": 223,
+  "locAll": 223,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z2",
+  "rep": 3,
+  "name": "courier-z2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z2-3",
+  "code": 0,
+  "seconds": 83,
+  "costUsd": 0.20781355,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 180,
+  "locAll": 180,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"Revoke\" did not revoke ({\"sent\":true,\"reason\":null}); \"opt out\" did not revoke ({\"sent\":true,\"reason\":null})"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z3",
+  "rep": 1,
+  "name": "courier-z3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z3-1",
+  "code": 0,
+  "seconds": 115,
+  "costUsd": 0.20582434999999996,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 299,
+  "locAll": 299,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 4 at 08:33: push true, want false"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z3",
+  "rep": 2,
+  "name": "courier-z3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z3-2",
+  "code": 0,
+  "seconds": 140,
+  "costUsd": 0.30162215000000003,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 241,
+  "locAll": 241,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 4 at 08:33: push true, want false"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z3",
+  "rep": 3,
+  "name": "courier-z3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z3-3",
+  "code": 0,
+  "seconds": 127,
+  "costUsd": 0.25122419999999995,
+  "turns": 12,
+  "skillCalls": 0,
+  "loc": 272,
+  "locAll": 272,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: push true; categories missing: transport.push was called"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 4 at 08:33: push true, want false"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z4",
+  "rep": 1,
+  "name": "courier-z4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z4-1",
+  "code": 0,
+  "seconds": 68,
+  "costUsd": 0.13375795,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 159,
+  "locAll": 159,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"new_profile_grace\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"too_soon\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"too_soon\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"too_soon\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"too_soon\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z4",
+  "rep": 2,
+  "name": "courier-z4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z4-2",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.1570837,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 165,
+  "locAll": 165,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"NEW_PROFILE_COOLDOWN\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"NUDGE_TOO_SOON\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z4",
+  "rep": 3,
+  "name": "courier-z4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z4-3",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.17012290000000002,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 146,
+  "locAll": 146,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"NEW_PROFILE\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": false,
+    "why": "FAIL cap 2, suggestion 2: got {\"send\":false,\"reasonCode\":\"INFERRED_SPACING\"}, want send true; cap 3, suggestion 2: got {\"send\":false,\"reasonCode\":\"INFERRED_SPACING\"}, want send true; cap 3, suggestion 3: got {\"send\":false,\"reasonCode\":\"INFERRED_SPACING\"}, want send true; cap 2 user, next local day 12:00: got {\"send\":false,\"reasonCode\":\"INFERRED_SPACING\"}, want send true"
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": false,
+    "why": "FAIL suggestion 2 after 20 reminders: got {\"send\":false,\"reasonCode\":\"INFERRED_SPACING\"}, want send true"
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z5",
+  "rep": 1,
+  "name": "courier-z5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z5-1",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.10781595000000001,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 132,
+  "locAll": 132,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown to the user in the last 14 days.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses proactive messages at this time of day.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z5",
+  "rep": 2,
+  "name": "courier-z5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z5-2",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.12988134999999998,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 158,
+  "locAll": 158,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown within the last 7 days.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user has mostly dismissed proactive messages at this time of day.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z5",
+  "rep": 3,
+  "name": "courier-z5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z5-3",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.11337544999999999,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 132,
+  "locAll": 132,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown to the user in the last 14 days.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses proactive messages at this hour.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z6",
+  "rep": 1,
+  "name": "courier-z6-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z6-1",
+  "code": 0,
+  "seconds": 197,
+  "costUsd": 0.34490400000000004,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 509,
+  "locAll": 509,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: We did not send this notification because you had already received the limit of 3 notifications for that day, and it could be sent from 08:00 on 2026-09-05 (your local time).; n6 text lacks local decision time 12:00: We did not send this notification because you have not agreed to receive notifications.; n5 text lacks local decision time 22:30: We did not send this notification because it fell in your quiet hours, and it could be sent from 08:00 on 2026-09-05 (your local time).; n4 text lacks 15:00: We did not send this notification because you had already received the limit of 3 notifications for that day, and it could be sent from 08:00 on 2026-09-05 (your local time).; n5 text lacks 22:30: We did not send this notification because it fell in your quiet hours, and it could be sent from 08:00 on 2026-09-05 (your local time).; n6 text lacks 12:00: We did not send this notification because you have not agreed to receive notifications."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z6",
+  "rep": 2,
+  "name": "courier-z6-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z6-2",
+  "code": 0,
+  "seconds": 142,
+  "costUsd": 0.28341225000000003,
+  "turns": 10,
+  "skillCalls": 0,
+  "loc": 292,
+  "locAll": 292,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: This notification was not sent because you had already received 3 notifications that day (your local time); it could have been sent from 2026-09-05 08:00 (Europe/Istanbul).; n6 text lacks local decision time 12:00: This notification was not sent because you have not given consent to receive notifications.; n5 text lacks local decision time 22:30: This notification was not sent because it arrived during quiet hours (22:00 to 08:00 your local time); it could have been sent from 2026-09-05 08:00 (Europe/Istanbul).; n4 text lacks 15:00: This notification was not sent because you had already received 3 notifications that day (your local time); it could have been sent from 2026-09-05 08:00 (Europe/Istanbul).; n5 text lacks 22:30: This notification was not sent because it arrived during quiet hours (22:00 to 08:00 your local time); it could have been sent from 2026-09-05 08:00 (Europe/Istanbul).; n6 text lacks 12:00: This notification was not sent because you have not given consent to receive notifications."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "z6",
+  "rep": 3,
+  "name": "courier-z6-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/courier-z6-3",
+  "code": 0,
+  "seconds": 170,
+  "costUsd": 0.33960075,
+  "turns": 10,
+  "skillCalls": 0,
+  "loc": 302,
+  "locAll": 302,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: Notification n4 was not sent because the daily limit of 3 notifications was already reached that day and it can be sent from 5 Sept 2026, 08:00 (your local time).; n6 text lacks local decision time 12:00: Notification n6 was not sent because you have not agreed to receive notifications.; n5 text lacks local decision time 22:30: Notification n5 was held because it fell in quiet hours (22:00 to 08:00 local time) and can be sent from 5 Sept 2026, 08:00 (your local time).; n4 text lacks 15:00: Notification n4 was not sent because the daily limit of 3 notifications was already reached that day and it can be sent from 5 Sept 2026, 08:00 (your local time).; n5 text lacks 22:30: Notification n5 was held because it fell in quiet hours (22:00 to 08:00 local time) and can be sent from 5 Sept 2026, 08:00 (your local time).; n6 text lacks 12:00: Notification n6 was not sent because you have not agreed to receive notifications."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z1",
+  "rep": 1,
+  "name": "ours-z1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z1-1",
+  "code": 0,
+  "seconds": 205,
+  "costUsd": 0.6711223999999999,
+  "turns": 22,
+  "skillCalls": 1,
+  "loc": 95,
+  "locAll": 95,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z1",
+  "rep": 2,
+  "name": "ours-z1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z1-2",
+  "code": 0,
+  "seconds": 143,
+  "costUsd": 0.37766115,
+  "turns": 25,
+  "skillCalls": 1,
+  "loc": 91,
+  "locAll": 91,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": false,
+    "why": "FAIL second process allowed the opted-out user: {\"send\":true,\"reason\":null}"
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z1",
+  "rep": 3,
+  "name": "ours-z1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z1-3",
+  "code": 0,
+  "seconds": 124,
+  "costUsd": 0.3777439,
+  "turns": 19,
+  "skillCalls": 1,
+  "loc": 97,
+  "locAll": 97,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+    "pass": false,
+    "why": "FAIL second process allowed the opted-out user: {\"send\":true,\"reason\":null}"
+   },
+   {
+    "n": "3",
+    "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z2",
+  "rep": 1,
+  "name": "ours-z2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z2-1",
+  "code": 0,
+  "seconds": 94,
+  "costUsd": 0.2654185,
+  "turns": 18,
+  "skillCalls": 1,
+  "loc": 85,
+  "locAll": 85,
+  "full": 1,
+  "outcome": 1,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-15T12:00:00Z: sent false, want true; America/New_York 2026-06-16T00:59:00Z: sent false, want true; America/New_York 2026-03-08T12:00:00Z: sent false, want true; America/New_York 2026-11-01T13:00:00Z: sent false, want true; America/Phoenix 2026-06-15T15:00:00Z: sent false, want true; America/Phoenix 2026-06-16T03:59:00Z: sent false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"please stop by tomorrow\" revoked the digest (false); \"thanks\" revoked the digest (false); \"stopping\" revoked the digest (false); \"I will not stop by\" revoked the digest (false)"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": false,
+    "why": "FAIL other user affected by optOut: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": false,
+    "why": "FAIL repeat 1: 10 concurrent processes sent 0 times, want 1"
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": false,
+    "why": "FAIL ten-minute-old digest: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z2",
+  "rep": 2,
+  "name": "ours-z2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z2-2",
+  "code": 0,
+  "seconds": 100,
+  "costUsd": 0.31460365,
+  "turns": 20,
+  "skillCalls": 1,
+  "loc": 62,
+  "locAll": 62,
+  "full": 1,
+  "outcome": 1,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-15T12:00:00Z: sent false, want true; America/New_York 2026-06-16T00:59:00Z: sent false, want true; America/New_York 2026-03-08T12:00:00Z: sent false, want true; America/New_York 2026-11-01T13:00:00Z: sent false, want true; America/Phoenix 2026-06-15T15:00:00Z: sent false, want true; America/Phoenix 2026-06-16T03:59:00Z: sent false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"please stop by tomorrow\" revoked the digest (false); \"thanks\" revoked the digest (false); \"stopping\" revoked the digest (false); \"I will not stop by\" revoked the digest (false)"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": false,
+    "why": "FAIL other user affected by optOut: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": false,
+    "why": "FAIL repeat 1: 10 concurrent processes sent 0 times, want 1"
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": false,
+    "why": "FAIL ten-minute-old digest: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z2",
+  "rep": 3,
+  "name": "ours-z2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z2-3",
+  "code": 0,
+  "seconds": 134,
+  "costUsd": 0.40595815,
+  "turns": 22,
+  "skillCalls": 1,
+  "loc": 91,
+  "locAll": 91,
+  "full": 1,
+  "outcome": 1,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-15T12:00:00Z: sent false, want true; America/New_York 2026-06-16T00:59:00Z: sent false, want true; America/New_York 2026-03-08T12:00:00Z: sent false, want true; America/New_York 2026-11-01T13:00:00Z: sent false, want true; America/Phoenix 2026-06-15T15:00:00Z: sent false, want true; America/Phoenix 2026-06-16T03:59:00Z: sent false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+    "pass": false,
+    "why": "FAIL \"please stop by tomorrow\" revoked the digest (false); \"thanks\" revoked the digest (false); \"stopping\" revoked the digest (false); \"I will not stop by\" revoked the digest (false)"
+   },
+   {
+    "n": "3",
+    "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+    "pass": false,
+    "why": "FAIL other user affected by optOut: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   },
+   {
+    "n": "5",
+    "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+    "pass": false,
+    "why": "FAIL repeat 1: 10 concurrent processes sent 0 times, want 1"
+   },
+   {
+    "n": "6",
+    "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+    "pass": false,
+    "why": "FAIL ten-minute-old digest: {\"sent\":false,\"reason\":\"Held because the user has not agreed to proactive messages.\"}"
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z3",
+  "rep": 1,
+  "name": "ours-z3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z3-1",
+  "code": 0,
+  "seconds": 183,
+  "costUsd": 0.5122253,
+  "turns": 30,
+  "skillCalls": 1,
+  "loc": 132,
+  "locAll": 132,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: push true; categories missing: transport.push was called"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 3 at 08:32: push false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": false,
+    "why": "FAIL reason does not name the permission (permission, permitted, disabled or settings): \"Push is off because notifications are not allowed on this phone, so it went to the in-app feed only.\""
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z3",
+  "rep": 2,
+  "name": "ours-z3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z3-2",
+  "code": 0,
+  "seconds": 152,
+  "costUsd": 0.42606960000000005,
+  "turns": 19,
+  "skillCalls": 1,
+  "loc": 116,
+  "locAll": 116,
+  "full": 1,
+  "outcome": 1,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": false,
+    "why": "FAIL briefing after five suggestion dismissals: push false, reason \"Held because the user has not agreed to proactive messages.\""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: in-app item not produced; categories.briefing true: push false"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 3 at 08:32: push false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": false,
+    "why": "FAIL reason does not name the permission (permission, permitted, disabled or settings): \"Held because the user has not agreed to proactive messages.\"; android permitted: push false"
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": false,
+    "why": "FAIL resumeAt null is not the snooze end; at the snooze end (09:30 local): push false, want true"
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z3",
+  "rep": 3,
+  "name": "ours-z3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z3-3",
+  "code": 0,
+  "seconds": 161,
+  "costUsd": 0.47998114999999997,
+  "turns": 24,
+  "skillCalls": 1,
+  "loc": 109,
+  "locAll": 109,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+    "pass": false,
+    "why": "FAIL briefing after five suggestion dismissals: push false, reason \"You have not agreed to notifications, so nothing was sent.\""
+   },
+   {
+    "n": "2",
+    "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+    "pass": false,
+    "why": "FAIL categories missing: in-app item not produced; categories.briefing true: push false"
+   },
+   {
+    "n": "3",
+    "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+    "pass": false,
+    "why": "FAIL attempt 3 at 08:32: push false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+    "pass": false,
+    "why": "FAIL inApp false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+    "pass": false,
+    "why": "FAIL reason does not name the permission (permission, permitted, disabled or settings): \"You have not agreed to notifications, so nothing was sent.\"; android permitted: push false"
+   },
+   {
+    "n": "6",
+    "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+    "pass": false,
+    "why": "FAIL resumeAt null is not the snooze end; at the snooze end (09:30 local): push false, want true"
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z4",
+  "rep": 1,
+  "name": "ours-z4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z4-1",
+  "code": 0,
+  "seconds": 111,
+  "costUsd": 0.24145545000000002,
+  "turns": 19,
+  "skillCalls": 1,
+  "loc": 85,
+  "locAll": 85,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"new_user_grace\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z4",
+  "rep": 2,
+  "name": "ours-z4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z4-2",
+  "code": 0,
+  "seconds": 112,
+  "costUsd": 0.3092341,
+  "turns": 22,
+  "skillCalls": 1,
+  "loc": 120,
+  "locAll": 120,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"new_user_period\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z4",
+  "rep": 3,
+  "name": "ours-z4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z4-3",
+  "code": 0,
+  "seconds": 112,
+  "costUsd": 0.2736236,
+  "turns": 15,
+  "skillCalls": 1,
+  "loc": 103,
+  "locAll": 103,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+    "pass": false,
+    "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"NEW_USER_PERIOD\"}, want send true"
+   },
+   {
+    "n": "2",
+    "name": "2 new account: a requested notice passes the new-account hold",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+    "pass": false,
+    "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":null}, want send false"
+   },
+   {
+    "n": "4",
+    "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z5",
+  "rep": 1,
+  "name": "ours-z5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z5-1",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.1225306,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 139,
+  "locAll": 139,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown recently.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses proactive messages at this time of day.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z5",
+  "rep": 2,
+  "name": "ours-z5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z5-2",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.13958345,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 122,
+  "locAll": 122,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown within the last week.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses messages at this hour.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z5",
+  "rep": 3,
+  "name": "ours-z5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z5-3",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.14874665,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 137,
+  "locAll": 137,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+    "pass": false,
+    "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"This finding was already shown within the last seven days.\"}, want send true"
+   },
+   {
+    "n": "4",
+    "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+    "pass": false,
+    "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user usually dismisses proactive messages at this time of day.\"}, want send true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z6",
+  "rep": 1,
+  "name": "ours-z6-1",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z6-1",
+  "code": 0,
+  "seconds": 143,
+  "costUsd": 0.31064785000000006,
+  "turns": 16,
+  "skillCalls": 1,
+  "loc": 171,
+  "locAll": 171,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text has an ISO date-time: The notification was not sent because the user had already received 3 notifications on this local calendar day and can be sent from 2026-09-05T05:00:00.000Z.; n4 text lacks local decision time 15:00: The notification was not sent because the user had already received 3 notifications on this local calendar day and can be sent from 2026-09-05T05:00:00.000Z.; n4 text lacks local availableAt time 08:00: The notification was not sent because the user had already received 3 notifications on this local calendar day and can be sent from 2026-09-05T05:00:00.000Z.; n6 text lacks local decision time 12:00: The notification was not sent because the user has not agreed to receive these notifications.; n5 text has an ISO date-time: The notification was not sent because it fell in the user's quiet hours (22:00 to 08:00 local time) and can be sent from 2026-09-05T05:00:00.000Z.; n5 text lacks local decision time 22:30: The notification was not sent because it fell in the user's quiet hours (22:00 to 08:00 local time) and can be sent from 2026-09-05T05:00:00.000Z.; n4 text lacks 15:00: The notification was not sent because the user had already received 3 notifications on this local calendar day and can be sent from 2026-09-05T05:00:00.000Z.; n5 text lacks 22:30: The notification was not sent because it fell in the user's quiet hours (22:00 to 08:00 local time) and can be sent from 2026-09-05T05:00:00.000Z.; n6 text lacks 12:00: The notification was not sent because the user has not agreed to receive these notifications."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z6",
+  "rep": 2,
+  "name": "ours-z6-2",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z6-2",
+  "code": 0,
+  "seconds": 136,
+  "costUsd": 0.32401009999999997,
+  "turns": 16,
+  "skillCalls": 1,
+  "loc": 155,
+  "locAll": 155,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": false,
+    "why": "FAIL n4 text lacks local decision time 15:00: You already received 3 notifications today, so this one was held until 5 Sept 2026, 08:00.; n6 text lacks local decision time 12:00: You have not agreed to receive these notifications, so this one was not sent.; n5 text lacks local decision time 22:30: Notifications are not sent between 22:00 and 08:00 your local time, so this one was held until 5 Sept 2026, 08:00.; n4 text lacks 15:00: You already received 3 notifications today, so this one was held until 5 Sept 2026, 08:00.; n5 text lacks 22:30: Notifications are not sent between 22:00 and 08:00 your local time, so this one was held until 5 Sept 2026, 08:00.; n6 text lacks 12:00: You have not agreed to receive these notifications, so this one was not sent."
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "z6",
+  "rep": 3,
+  "name": "ours-z6-3",
+  "model": "claude-haiku-5-5",
+  "work": "/Users/efe/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round4-haiku/work/ours-z6-3",
+  "code": 0,
+  "seconds": 238,
+  "costUsd": 0.524986,
+  "turns": 19,
+  "skillCalls": 1,
+  "loc": 210,
+  "locAll": 210,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+    "pass": false,
+    "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z"
+   },
+   {
+    "n": "3",
+    "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ }
+]
