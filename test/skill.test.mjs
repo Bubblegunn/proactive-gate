@@ -447,14 +447,14 @@ test("SKILL.md points to both reference files, and both exist", () => {
   }
 });
 
-test("the front page opens with the inline checklist of ten rules, then the library section with the Node check and the scaffold command", () => {
+test("the front page opens with the inline checklist of eleven rules, then the library section with the Node check and the scaffold command", () => {
   const inline = skill.indexOf("## Default: write the gate inline");
   const library = skill.indexOf("## Use the library instead when");
   assert.ok(inline >= 0 && library > inline, "the inline checklist comes first, the library section second");
   const checklist = skill.slice(inline, library);
   const rules = [...checklist.matchAll(/^(\d+)\. /gm)].map((m) => Number(m[1]));
-  assert.deepEqual(rules, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "the checklist states ten numbered rules");
-  for (const word of ["STATE_DIR", "message id", "STOP", "REVOKE", "OPT OUT"]) assert.ok(checklist.includes(word), `a rule names ${word}`);
+  assert.deepEqual(rules, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], "the checklist states eleven numbered rules");
+  for (const word of ["STATE_DIR", "message id", "STOP", "REVOKE", "OPT OUT", "not enforced", "Rules 1 to 10 always apply"]) assert.ok(checklist.includes(word), `a rule names ${word}`);
   const section = skill.slice(library);
   assert.ok(section.includes("node -v"), "the library section checks the Node version");
   assert.ok(section.includes("npx proactive-gate scaffold nudge --out ."), "the library section runs the scaffold");

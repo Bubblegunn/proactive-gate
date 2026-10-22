@@ -15,7 +15,7 @@ Put a gate in front of every message your agent sends on its own initiative. The
 
 ## Default: write the gate inline
 
-Write the gate in ONE file, the file the task names. No install, no scaffold, no reading of library source. Write the file, run one self-check script, answer. Aim at 6 turns. The gate must follow these rules:
+Write the gate in ONE file, the file the task names. No install, no scaffold, no reading of library source, no separate test file. Write the file, then run one self-check as a single inline command (`node -e` or a heredoc), then answer. Aim at 5 turns after this skill loads; the one inline check covers rules 3 to 6, and your answer says which rule it did not check. The gate must follow these rules:
 
 1. Data. Use only the fields the task or the app gives. Never invent a field, a key or a purpose name. A missing field is unknown, not "no".
 2. Consent. When the data carries a consent field, false or absent means off. When it carries no consent field at all: a message the user signed up for or asked for (digest, briefing, reminder) is allowed; a promotion needs an explicit opt-in; any other unknown case is held. Say the assumption in one sentence in your answer.
@@ -23,10 +23,11 @@ Write the gate in ONE file, the file the task names. No install, no scaffold, no
 4. State. Read STATE_DIR inside every call, not at import and not once and cached. Create it. Keep one record per user and per message id. Every worker process shares it and it survives a restart. Write with an atomic step (temp file then rename, or an exclusive create) so two workers cannot both win.
 5. Redelivery. Key every send by message id: the same id gets the same answer and spends nothing twice. Claim before sending. Give the claim back only when the send definitely did not happen (the gate refused it, or it failed before leaving). When the outcome is unknown, keep the claim.
 6. Time. Use the recipient's local time (Intl with the IANA zone; the device zone first when the data has one). An unknown or invalid zone is held, never guessed. A window includes its start minute and excludes its end minute, across DST; a window whose start is later than its end wraps past midnight. A local day or week is the recipient's own.
-7. Opt-out. Match STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE, OPT OUT, OPT-OUT and OPTOUT as the whole message, any case, outer punctuation and extra spaces ignored; "stopping" is not STOP. Opt-out is per channel, holds in every process at once and beats every other rule for unsolicited and promotional messages. START or UNSTOP turns it back on. The account-page opt-out writes the same record.
+7. Opt-out. Match STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT, REVOKE, OPT OUT, OPT-OUT and OPTOUT as the whole message, any case, outer punctuation and extra spaces ignored; "stopping" is not STOP. Opt-out is per channel, holds in every process at once and beats every other rule for unsolicited and promotional messages. It acts on the opt-out the data carries (a field or an inbound STOP), never on whether the outgoing message body holds an opt-out notice. START or UNSTOP turns it back on. The account-page opt-out writes the same record.
 8. Refusals. Return a plain sentence that names the rule and gives the retry time when there is one, never an internal code alone.
 9. Time-critical messages. Something the user asked to be told at a time may use a reserved budget. Opt-out, quiet hours and legal hours still apply to it.
 10. Numbers you chose (hours, caps, cooldowns) go in your answer, one line each.
+11. Blocks. Rules 1 to 10 always apply: consent, opt-out, recipient-local legal and quiet hours, a valid zone and the caps still block. Rule 11 stops you from adding a block that is not in them. Add a new block only when the request states it, or when a law or policy text the request names requires it of the sender before sending. A check on the body of the outgoing message (a required notice, a word, a length) is a recommendation unless the request or a named law requires it: allow the message and write one line "not enforced: (the check)" in your answer. When unsure whether such a check is required, do not block. Do not refuse a valid send for a body check.
 
 ## Use the library instead when
 
