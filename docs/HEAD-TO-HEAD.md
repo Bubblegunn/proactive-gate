@@ -543,6 +543,38 @@ claim of "the only one" is made.
 5. Spending: the sum of `total_cost_usd` over all headless runs of this session is capped at 30 USD; no new run starts
    at 24.0 USD.
 
+## Results, round 4 (Haiku only; Sonnet not run)
+
+Date 2026-10-22. Model `claude-haiku-5-5`, tasks Z1 to Z6, outcome criteria (all criteria are "outcome"), protocol above.
+Build 1 is commit `53700e7` (tables in `results/round4-haiku/`: ours, courier, courier-inv, 3 runs per cell). Build 2 is
+commit `c47f693`, which only adds one line to the skill (tables in `results/round4-haiku-b/`: ours only). The runner got
+two harness fixes before these results: a minimal environment for `claude -p` and `CLAUDE_CONFIG_DIR`, because with only a
+throw-away `HOME` the first 3 runs still loaded 43 user-level skills of the machine owner; those 3 runs were deleted and
+are not used. Cells marked "r3 reused" come from round 3 and were run in a Linux cloud container.
+
+| task (max 6) | baseline (r3 reused) | knock-inv (r3 reused) | knock (r3 reused) | courier-inv | courier | ours build 1 | ours build 2 |
+|---|---|---|---|---|---|---|---|
+| z1 | 5.67 | 4.00 | 5.67 | 6.00 | 5.67 | 5.33 | 5.33 |
+| z2 | 4.00 | 4.67 | 4.67 | 4.33 | 5.00 | 1.00 | 2.00 |
+| z3 | 4.00 | 5.00 | 3.67 | 2.67 | 4.00 | 1.33 | 3.00 |
+| z4 | 3.33 | 2.67 | 2.00 | 2.00 | 2.00 | 4.00 | 4.00 |
+| z5 | 4.00 | 4.00 | 4.00 | 4.00 | 4.00 | 4.00 | 4.00 |
+| z6 | 4.33 | 4.00 | 4.33 | 4.33 | 4.00 | 4.33 | 4.33 |
+| total of means (36) | 25.33 | 24.33 | 24.33 | 23.33 | 24.67 | 20.00 | 22.67 |
+
+Gate (final build, build 2): not passed.
+- Rule B: only Z4 (4.00 against 3.33). Z1, Z2, Z3 are lost, Z5 and Z6 are ties.
+- Rule A: lost points 13.33 against 10.67 for the baseline; the limit is 8.53. Fails.
+- Cost rule: not decidable. Ours cost 0.374 USD per run in this environment; the reused baseline cost (0.020) was measured
+  in a different environment, and the courier arm in the same environment as ours cost 0.212. The two numbers are not
+  comparable and no cost claim is made.
+- The Z2 and Z3 losses of build 1 came from one cause: the data of a digest or a briefing has no consent field, and the
+  generated gate held every message for missing consent. Build 2 added one skill line about it; Z2 stays at 2.00 and Z3
+  rises to 3.00 (one run scored 1).
+- Sonnet was not run: the spending rule of the protocol (no new run at 24.0 USD, 30 USD in all) leaves no room for 18 more
+  runs of ours on Sonnet after the two Haiku builds. No Sonnet claim is made.
+- No "first" or "best" claim is supported. Courier skills, as run, score at or above ours on this model.
+
 ## Rulings
 
 - 2026-10-21, Vaara is not run. It is listed as "not run: rewrites the global Claude Code config, unsafe to execute
