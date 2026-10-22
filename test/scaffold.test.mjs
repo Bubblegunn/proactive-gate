@@ -78,7 +78,7 @@ test("the notify module is short and imports only the library and Node", () => {
   withTempDir((dir) => {
     assert.equal(scaffold(dir).status, 0);
     const source = readFileSync(join(dir, "notify.mjs"), "utf8");
-    assert.ok(source.split("\n").length <= 170, "at most about 170 lines");
+    assert.ok(source.split("\n").length <= 180, "at most about 180 lines");
     for (const [, specifier] of source.matchAll(/from "([^"]+)"/g)) assert.ok(specifier.startsWith("node:") || specifier === "proactive-gate", specifier);
   });
 });
@@ -110,6 +110,28 @@ test("with STATE_DIR set, the module creates the directory, and each decision is
     const lines = readFileSync(join(state, "decisions.jsonl"), "utf8").trim().split("\n");
     assert.equal(lines.length, 1);
     assert.equal(JSON.parse(lines[0]).delivered, true);
+  });
+});
+
+test("STATE_DIR is read at first use: set after the import, switched between cases, and opt-out is shared by a second process", () => {
+  withTempDir((dir) => {
+    assert.equal(scaffold(dir).status, 0);
+    linkLibrary(dir);
+    const a = join(dir, "state-a");
+    const b = join(dir, "state-b");
+    const user = `{ id: "u1", consent: true, timezone: "Europe/Istanbul", createdAt: "2026-01-01T00:00:00Z" }`;
+    const ask = `decide({ user: ${user}, candidate: { type: "nudge", origin: "requested" }, now: new Date("2026-10-21T10:00:00Z") })`;
+    const late = `import { decide, optOut } from "./notify.mjs"; process.env.STATE_DIR = ${JSON.stringify(a)}; await optOut("u1", "nudge"); const first = await ${ask}; process.env.STATE_DIR = ${JSON.stringify(b)}; const second = await ${ask}; console.log(JSON.stringify([first.send, second.send]));`;
+    const env = { ...process.env };
+    delete env.STATE_DIR;
+    const run = spawnSync(process.execPath, ["--input-type=module", "-e", late], { cwd: dir, encoding: "utf8", env });
+    assert.equal(run.status, 0, run.stderr);
+    assert.deepEqual(JSON.parse(run.stdout), [false, true], "opt-out holds in directory a and does not leak into directory b");
+    assert.ok(existsSync(join(a, "gate.db")) && existsSync(join(b, "gate.db")));
+    const again = `import { decide } from "./notify.mjs"; console.log(JSON.stringify((await ${ask}).send));`;
+    const second = spawnSync(process.execPath, ["--input-type=module", "-e", again], { cwd: dir, encoding: "utf8", env: { ...env, STATE_DIR: a } });
+    assert.equal(second.status, 0, second.stderr);
+    assert.equal(JSON.parse(second.stdout), false, "a new process sees the opt-out from the shared directory");
   });
 });
 

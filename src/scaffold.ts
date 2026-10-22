@@ -16,12 +16,17 @@ import { randomUUID } from "node:crypto";
 import { checks, createGate, explain, MemoryStore, SqliteStore } from "proactive-gate";
 const DAY = 24 * 60 * 60 * 1000;
 const policy = JSON.parse(readFileSync(new URL("./proactive-gate.policy.json", import.meta.url), "utf8"));
-// STATE_DIR survives restarts and is shared by every worker. It is created when missing.
-const STATE_DIR = process.env.STATE_DIR;
-if (STATE_DIR) mkdirSync(STATE_DIR, { recursive: true });
-const LOG_FILE = STATE_DIR ? STATE_DIR + "/decisions.jsonl" : null;
-const memoryLog = []; // without STATE_DIR the decision log lives for this process only
-const store = STATE_DIR ? new SqliteStore(STATE_DIR + "/gate.db") : new MemoryStore();
+// STATE_DIR survives restarts and is shared by every worker. It is read at first use, not at import (a host may set it
+// later); each directory gets its own store, created when missing. Without it the log and the store live for this process.
+const stores = new Map();
+const memoryLog = [];
+const logFile = () => (process.env.STATE_DIR ? process.env.STATE_DIR + "/decisions.jsonl" : null);
+const current = () => {
+  const dir = process.env.STATE_DIR || null;
+  if (!stores.has(dir)) stores.set(dir, dir ? (mkdirSync(dir, { recursive: true }), new SqliteStore(dir + "/gate.db")) : new MemoryStore());
+  return stores.get(dir);
+};
+const store = { get: (...a) => current().get(...a), set: (...a) => current().set(...a), incr: (...a) => current().incr(...a), incrBy: (...a) => current().incrBy(...a), del: (...a) => current().del(...a) };
 export const gate = createGate({ policy, store, inboundConsent: true });
 // Every code decide() and deliver() can return: each check the policy can stop with, and the few this module adds.
 export const REASON_CODES = [...new Set([...gate.checks.map((c) => c.id), "surface", "commit", "transport", "optOut", "permission", "category"])];
@@ -105,7 +110,8 @@ async function admit(args) {
 function record(args, delivered, code, text, availableAt = null) {
   const id = args.message?.id ?? args.notification?.id ?? args.candidate?.id ?? args.candidate?.type;
   const line = JSON.stringify({ notificationId: id, userId: args.user.id, at: args.now.toISOString(), delivered, ruleCode: code, availableAt, text: String(text).slice(0, 1000) });
-  if (LOG_FILE) appendFileSync(LOG_FILE, line + "\\n");
+  const file = logFile();
+  if (file) appendFileSync(file, line + "\\n");
   else memoryLog.push(line);
 }
 // Returns { send, reason, reasonCode, surfaces }. reasonCode is one of REASON_CODES, and reason is null when sent.
@@ -146,7 +152,8 @@ export async function deliver(args) {
 export function whyNotReceived({ userId, from, to }) {
   const lo = new Date(from).getTime();
   const hi = new Date(to).getTime();
-  const lines = LOG_FILE ? (existsSync(LOG_FILE) ? readFileSync(LOG_FILE, "utf8").split("\\n").filter(Boolean) : []) : memoryLog;
+  const file = logFile();
+  const lines = file ? (existsSync(file) ? readFileSync(file, "utf8").split("\\n").filter(Boolean) : []) : memoryLog;
   return lines
     .map((line) => JSON.parse(line))
     .filter((e) => e.userId === userId && new Date(e.at).getTime() >= lo && new Date(e.at).getTime() < hi)
