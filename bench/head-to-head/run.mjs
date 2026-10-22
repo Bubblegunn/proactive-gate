@@ -120,14 +120,14 @@ function runJob(job) {
       clearTimeout(timer);
       assertUnchanged(`after ${job.name}`);
       writeFileSync(log, text);
-      if (/You've hit your limit|"is_error":true,"duration_ms":\d+,"duration_api_ms":0/.test(text)) {
+      if (/You've hit your limit|"is_error":\s*true,\s*"duration_ms":\s*\d+,\s*"duration_api_ms":\s*0\b/.test(text)) {
         console.error(`STOP: ${job.name} failed because of an account limit or API error, not because of the task. Nothing else is run; delete runs/${job.name}.jsonl and run again.`);
         process.exit(4);
       }
-      const cost = [...text.matchAll(/"total_cost_usd":([0-9.eE-]+)/g)].pop()?.[1];
-      const turns = [...text.matchAll(/"num_turns":(\d+)/g)].pop()?.[1];
+      const cost = [...text.matchAll(/"total_cost_usd":\s*([0-9.eE-]+)/g)].pop()?.[1];
+      const turns = [...text.matchAll(/"num_turns":\s*(\d+)/g)].pop()?.[1];
       const meta = { ...job, model, work, code, seconds: Math.round((Date.now() - started) / 1000), costUsd: cost ? Number(cost) : null, turns: turns ? Number(turns) : null,
-        skillCalls: (text.match(/"name":"Skill"/g) ?? []).length };
+        skillCalls: (text.match(/"name":\s*"Skill"/g) ?? []).length };
       writeFileSync(join(out, "runs", `${job.name}.meta.json`), JSON.stringify(meta));
       console.log(JSON.stringify(meta));
       done(meta);
