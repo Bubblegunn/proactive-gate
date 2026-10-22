@@ -1,0 +1,26 @@
+We run several worker processes that send messages on their own initiative (reminders and nudges over push, sms and email). We keep getting burned by the same things: two workers both think a person is under their daily cap and both send, a worker dies right after the vendor accepted a message and the retry sends it again and counts it twice, and someone replies STOP and still gets one more text. I need a dispatcher that fixes this. Node 22, ESM, no build step, no database server, no new dependencies unless you really need one. Project is this folder.
+
+What is here:
+- provider.mjs: our vendor client stub. send(message, { idempotencyKey }) returns { providerId }. The real vendor ignores a second call that carries an Idempotency-Key it has already seen within 24 hours and returns the original providerId. It can also fail or time out after it has already delivered, and you cannot tell which.
+- data/users.json: id, tz, quiet ({start,end} "HH:MM" local, or null), consent per channel, phone
+- data/policy.json: { caps: { rolling24h: 3 } }
+- data/inbound.jsonl: a few sample inbound sms replies
+
+Write src/dispatcher.mjs exporting
+  createDispatcher({ stateDir, provider, users, policy }) -> { dispatch(msg), handleInbound(event), usage(userId, at) }
+All three return promises. provider is any object with the same send signature (I will pass my own test double). users is an array like users.json. stateDir is a directory the dispatcher may use to persist whatever it needs. Several dispatchers, in one process or in different ones, may be created on the same stateDir at the same time and must agree.
+
+dispatch(msg), msg = { id, userId, channel, body, at, priority }. "at" is the instant we mean to send (use it, not the wall clock, for every time rule and window). Pass msg through to provider.send unchanged. Resolve to
+  { status: "sent" | "already_sent" | "blocked", providerId?, reasons: [{ code, detail }] }
+- blocked reasons, all that apply, in this order: no_consent (user.consent[channel] is not true), sms_stopped (the person replied STOP), quiet_hours (user.quiet in user.tz, start inclusive, end exclusive, may wrap midnight; priority "critical" skips this and nothing else), rolling_24h_cap. detail is a readable sentence; quiet_hours names the zone and the local time as HH:MM, the cap names the count and the limit.
+- The cap counts every message of that person that was sent or is in flight, across channels, with at instants t where (at - 24h) < t <= at. A message blocked for any reason costs nothing and never reaches the vendor.
+- Each message id is delivered at most once, ever. Submitting an id again (concurrently, later, or after a restart) must not deliver it again and must not count it again. If the earlier attempt died after the vendor may have accepted it, retrying has to settle that without a second delivery, and a message that already holds a slot must not be blocked by the cap because of its own slot. If a message may have been delivered but we never saw the answer, it keeps its slot in the cap.
+- Do not make unrelated people wait for each other: 50 different recipients with a 40 ms vendor call should finish in well under a second.
+
+handleInbound({ userId, channel, body, at }) -> { action: "stop" | "start" | "none" }
+- Only channel "sms". Ignore case, surrounding whitespace and trailing . ! ? Then STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT mean stop; START and UNSTOP mean start. Any other text ("please do not stop sending", "endless") means none.
+- STOP turns off sms to that person only; push and email stay as they were. It survives restarts. Once handleInbound has resolved for a STOP, no call to provider.send for an sms to that person may begin, including messages that were already queued behind other work. START turns sms back on.
+
+usage(userId, at) -> { rolling24h, rolling7d } counting the same sent or in flight messages with t in (at - 24h, at] and (at - 7d, at].
+
+Test it yourself with 50 concurrent dispatches, with a vendor double that fails after delivering, and with two dispatchers on one stateDir, before you tell me it is done.

@@ -1,0 +1,32 @@
+Product wants to change our messaging policy and asked me: "if we had run last week's 2,000 candidate messages under the new policy, how many would have been blocked, and why, and what changes compared with today's policy?" I need an answer I can defend, message by message. Node 22, ESM, no build step, no new dependencies unless you really need one. Project is this folder.
+
+Data in data/:
+- users.json: id, tz, state (may be null), phone, consent per channel, optedOut, snoozedUntil (ISO or null), quiet ({start,end} "HH:MM" local, or null = this person chose no quiet hours, or the key is missing = they never chose, so the policy default applies)
+- area-codes.json: US area code -> { tz, state }
+- policy.current.json and policy.proposed.json: { quietDefault, legal, caps }. quietDefault is {start,end} or null. legal maps a state to {start,end} with a "default". caps has rolling24h, rolling7d and channel24h (per channel).
+- candidates.jsonl: { id, userId, channel, priority, at, body }. "at" is the instant we intended to send, in ISO 8601 with Z or a numeric offset. The file is unordered and has duplicate rows for the same id (retries from the queue).
+- events.jsonl: what happened during the week: { at, userId, type } with type "stop" (sms consent off), "start" (sms consent on), "snooze" (with "until", replaces the user's snoozedUntil, null clears it), "optout" (opted out of everything from then on).
+- history-before.jsonl: { id, userId, channel, at, status } messages sent before the week; only status "sent" counts toward caps.
+
+Replay rules, to be applied identically to each policy, each starting from the same initial state:
+- Unique ids only: sort by instant, then id; keep the first row of an id, drop the rest (report how many dropped).
+- Process in that order. Before judging a message, apply every event with an instant <= the message instant (so an event at the same instant applies first; events with the same instant apply in file order).
+- A message that is allowed counts as sent and enters the history for later messages of that policy run; a blocked one does not. So a stricter rule can free capacity later, and a looser one can use it up.
+- Reasons, all that apply, in this order: opted_out, no_consent (consent[channel] not true), snoozed (instant < snoozedUntil), quiet_hours, legal_window, rolling_24h_cap, rolling_7d_cap, channel_24h_cap.
+  quiet hours: the user's own quiet if the key exists (null = none), else policy.quietDefault (null = none); in user.tz, start inclusive, end exclusive, may wrap midnight; priority "critical" skips quiet hours only.
+  legal_window: sms to +1 numbers only; must be inside the window in the saved zone (user.tz, user.state) AND in the area code's zone (with that area code's state); window = policy.legal[state] else default; start inclusive, end exclusive; unknown area code uses the saved zone only. Never bypassed.
+  caps: count sent messages of that user with (instant - window) < t <= instant, rolling, not calendar days; blocked when count >= limit.
+  detail text for each reason: quiet_hours and legal_window name the time zone and the recipient local time as HH:MM; snoozed names the snooze end; caps give the count and the limit.
+- The first reason in that order is the "primary reason" used when counting by reason.
+
+Build
+1) src/replay.mjs exporting compareWeek({ candidates, events, history, users, areaCodes, baselinePolicy, proposedPolicy }) (sync or async) returning
+   { total, duplicatesDropped,
+     baseline: { sent, blocked, byReason },
+     proposed: { sent, blocked, byReason },
+     messages: [{ id, at, userId, channel, baseline: { outcome, reasons }, proposed: { outcome, reasons } }],
+     newlyBlocked: [ids], newlyAllowed: [ids] }
+   outcome is "sent" or "blocked"; reasons is [{ code, detail }] with every applicable reason (empty when sent); byReason counts primary reasons of blocked messages, so it sums to blocked. messages follow the processing order. newlyBlocked = sent under baseline and blocked under proposed; newlyAllowed = the reverse. Both in processing order. Do not mutate the inputs.
+2) src/report.mjs: `node src/report.mjs data/policy.current.json data/policy.proposed.json` loads the data, prints a plain text answer (unique messages replayed and duplicates dropped, sent and blocked under each policy, the proposed policy's blocked count per primary reason, one "code: count" per line, and how many are newly blocked and newly allowed), and writes out/per-message.jsonl with one line per unique message: { id, outcome, reasons, baselineOutcome } for the proposed policy.
+
+The week crosses the US clock change on 8 March. Check your numbers with a small hand-made case before you trust the big one.

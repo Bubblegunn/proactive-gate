@@ -1,0 +1,158 @@
+[
+ {
+  "id": "u001",
+  "tz": "America/Los_Angeles",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551000"
+ },
+ {
+  "id": "u002",
+  "tz": "America/New_York",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551001"
+ },
+ {
+  "id": "u003",
+  "tz": "Europe/London",
+  "quiet": null,
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551002"
+ },
+ {
+  "id": "u004",
+  "tz": "America/Chicago",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false
+  },
+  "phone": "+14155551003"
+ },
+ {
+  "id": "u005",
+  "tz": "UTC",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551004"
+ },
+ {
+  "id": "u006",
+  "tz": "America/Los_Angeles",
+  "quiet": null,
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551005"
+ },
+ {
+  "id": "u007",
+  "tz": "America/New_York",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551006"
+ },
+ {
+  "id": "u008",
+  "tz": "Europe/London",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false
+  },
+  "phone": "+14155551007"
+ },
+ {
+  "id": "u009",
+  "tz": "America/Chicago",
+  "quiet": null,
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551008"
+ },
+ {
+  "id": "u010",
+  "tz": "UTC",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551009"
+ },
+ {
+  "id": "u011",
+  "tz": "America/Los_Angeles",
+  "quiet": {
+   "start": "21:00",
+   "end": "08:00"
+  },
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true
+  },
+  "phone": "+14155551010"
+ },
+ {
+  "id": "u012",
+  "tz": "America/New_York",
+  "quiet": null,
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false
+  },
+  "phone": "+14155551011"
+ }
+]

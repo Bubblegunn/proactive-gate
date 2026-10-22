@@ -1,0 +1,58 @@
+{
+ "202": {
+  "tz": "America/New_York",
+  "state": "DC"
+ },
+ "206": {
+  "tz": "America/Los_Angeles",
+  "state": "WA"
+ },
+ "212": {
+  "tz": "America/New_York",
+  "state": "NY"
+ },
+ "303": {
+  "tz": "America/Denver",
+  "state": "CO"
+ },
+ "305": {
+  "tz": "America/New_York",
+  "state": "FL"
+ },
+ "310": {
+  "tz": "America/Los_Angeles",
+  "state": "CA"
+ },
+ "312": {
+  "tz": "America/Chicago",
+  "state": "IL"
+ },
+ "405": {
+  "tz": "America/Chicago",
+  "state": "OK"
+ },
+ "410": {
+  "tz": "America/New_York",
+  "state": "MD"
+ },
+ "415": {
+  "tz": "America/Los_Angeles",
+  "state": "CA"
+ },
+ "602": {
+  "tz": "America/Phoenix",
+  "state": "AZ"
+ },
+ "713": {
+  "tz": "America/Chicago",
+  "state": "TX"
+ },
+ "808": {
+  "tz": "Pacific/Honolulu",
+  "state": "HI"
+ },
+ "850": {
+  "tz": "America/Chicago",
+  "state": "FL"
+ }
+}

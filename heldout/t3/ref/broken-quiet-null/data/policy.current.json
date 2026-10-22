@@ -1,0 +1,38 @@
+{
+ "quietDefault": {
+  "start": "23:00",
+  "end": "06:00"
+ },
+ "legal": {
+  "default": {
+   "start": "08:00",
+   "end": "21:00"
+  },
+  "FL": {
+   "start": "08:00",
+   "end": "20:00"
+  },
+  "OK": {
+   "start": "08:00",
+   "end": "20:00"
+  },
+  "MD": {
+   "start": "08:00",
+   "end": "20:45"
+  }
+ },
+ "caps": {
+  "rolling24h": 3,
+  "rolling7d": 8,
+  "channel24h": {
+   "sms": 2
+  }
+ },
+ "notes": [
+  "Federal default: TCPA, 47 CFR 64.1200(c)(1), no telephone solicitation before 8am or after 9pm at the called party location.",
+  "Florida: Fla. Stat. 501.059(8)(a), 8am to 8pm.",
+  "Oklahoma: Telephone Solicitation Act, 8am to 8pm.",
+  "Maryland: Stop the Spam Calls Act, Md. Code Com. Law 14-4501 and following, 8am to 8:45pm.",
+  "Windows are start inclusive, end exclusive. Figures are as supplied by the product owner for this exercise; counsel must confirm before production use."
+ ]
+}

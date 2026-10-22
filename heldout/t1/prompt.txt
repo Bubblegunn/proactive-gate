@@ -1,0 +1,28 @@
+Our reminder bot messages people on its own (push, sms, email, chat) and right now nothing stops it from texting someone at 2am or a fourth time in a day. I need a gate in front of send(). Node 22, ESM, no build step, no new dependencies unless you really need one. The project is this folder.
+
+What is in it:
+- data/users.json: id, tz (saved IANA zone), state (may be null), phone (E.164), consent per channel, optedOut, snoozedUntil (ISO or null), quiet ({start,end} as "HH:MM" local, or null)
+- data/area-codes.json: US area code -> { tz, state }
+- data/policy.json: contact windows by state, and the caps
+- data/candidates.jsonl: this week's messages the bot wants to send: { id, userId, channel, priority, at, body }. "at" is the instant we intend to send. The file is not in time order.
+- data/history-before.jsonl: messages already sent before this week: { id, userId, channel, at, status }
+- send.mjs: stub of our sender. It appends to out/sent.jsonl.
+
+Build two things.
+
+1) src/gate.mjs exporting
+   evaluate(candidate, { user, policy, areaCodes, history }) -> { allowed, reasons, retryAt }
+   Synchronous or async, I will await it. It must not mutate its arguments. history holds entries for all users.
+
+   Rules:
+   - Quiet hours: user.quiet in user.tz, start inclusive, end exclusive, may wrap past midnight, null means none. Applies to every channel. priority "critical" skips quiet hours and nothing else.
+   - Legal contact window, sms only, and only for +1 numbers. The message must fall inside the window in the saved zone (user.tz with user.state) AND in the zone of the phone's area code (areaCodes, with that entry's state). People move and keep their number, so those two can disagree and both must pass. The window for a state is policy.legal[state], else policy.legal.default. Start inclusive, end exclusive. Unknown area code: use the saved zone only. Never bypassed, not even by critical. The numbers in policy.json came from our lawyer (federal TCPA 8am to 9pm; Florida, Oklahoma and Maryland are stricter). Use the file, not your memory.
+   - opted_out if user.optedOut is true. no_consent if user.consent[channel] is not true. snoozed if the send instant is before snoozedUntil (the end instant itself is allowed).
+   - Caps count only history entries with status "sent" for this user, at instants t with (at - window) < t <= at. A window is a rolling span before the message, not a calendar day. A send exactly 24 hours earlier no longer counts. rolling_24h_cap when the count across all channels is >= policy.caps.rolling24h. rolling_7d_cap likewise with 7 days. channel_24h_cap when the count of that channel in 24h is >= policy.caps.channel24h[channel].
+   - reasons: every rule that applies, in this order: opted_out, no_consent, snoozed, quiet_hours, legal_window, rolling_24h_cap, rolling_7d_cap, channel_24h_cap. Each is { code, detail } and detail is a sentence a support person can read. For quiet_hours and legal_window it must name the time zone used and the recipient's local time as HH:MM (24 hour). For snoozed it names the snooze end as written in the data. For caps it states how many were counted and the limit.
+   - allowed is true exactly when reasons is empty.
+   - retryAt: only when every reason is quiet_hours or legal_window. Then it is the earliest UTC instant, on a whole minute and strictly after the candidate time, where neither of those two rules would block (assume everything else stays the same), as a string from Date.prototype.toISOString(). Otherwise null.
+
+2) src/run.mjs, run with `node src/run.mjs` from the project root. It loads the data, walks the candidates in order of "at" (ties by id), asks the gate, calls send(candidate) for allowed ones, and counts what it sent when judging later candidates (so caps build up through the week). Start from clean out/sent.jsonl and out/blocked.jsonl. For every blocked candidate write one line to out/blocked.jsonl: { id, reasons, retryAt }.
+
+The week crosses the US clock change on 8 March, so test around it. Test your own work before telling me it is done.

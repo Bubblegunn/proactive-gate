@@ -1,0 +1,8 @@
+{
+ "name": "policy-replay",
+ "private": true,
+ "type": "module",
+ "engines": {
+  "node": ">=22"
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "caps": {
+  "rolling24h": 3
+ },
+ "notes": [
+  "One rolling 24 hour cap across all channels. STOP applies to sms only."
+ ]
+}

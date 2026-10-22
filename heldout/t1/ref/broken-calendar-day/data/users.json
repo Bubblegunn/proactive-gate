@@ -1,0 +1,683 @@
+[
+ {
+  "id": "u001",
+  "tz": "America/Los_Angeles",
+  "state": "CA",
+  "phone": "+14155557864",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u002",
+  "tz": "Europe/Berlin",
+  "state": null,
+  "phone": "+4955814824",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u003",
+  "tz": "America/Chicago",
+  "state": "TX",
+  "phone": "+17135556529",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u004",
+  "tz": "America/Chicago",
+  "state": "FL",
+  "phone": "+18505557656",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u005",
+  "tz": "Pacific/Honolulu",
+  "state": "HI",
+  "phone": "+18085555544",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": false,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u006",
+  "tz": "Europe/Berlin",
+  "state": null,
+  "phone": "+4918826778",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u007",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+12025554056",
+  "consent": {
+   "push": false,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u008",
+  "tz": "America/New_York",
+  "state": "FL",
+  "phone": "+13055557193",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": "2026-03-05T17:44:43.277Z",
+  "quiet": null
+ },
+ {
+  "id": "u009",
+  "tz": "America/Denver",
+  "state": "CO",
+  "phone": "+13035556452",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u010",
+  "tz": "America/Chicago",
+  "state": "FL",
+  "phone": "+18505556871",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u011",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+13125555777",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u012",
+  "tz": "America/Phoenix",
+  "state": "AZ",
+  "phone": "+16025553972",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u013",
+  "tz": "Europe/Berlin",
+  "state": null,
+  "phone": "+4963361289",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u014",
+  "tz": "America/Los_Angeles",
+  "state": "CA",
+  "phone": "+14155552045",
+  "consent": {
+   "push": false,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": "2026-03-09T12:59:10.379Z",
+  "quiet": null
+ },
+ {
+  "id": "u015",
+  "tz": "America/New_York",
+  "state": "FL",
+  "phone": "+13055559499",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u016",
+  "tz": "America/Chicago",
+  "state": "TX",
+  "phone": "+17135554322",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u017",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+14105552274",
+  "consent": {
+   "push": false,
+   "email": false,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": true,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u018",
+  "tz": "America/Los_Angeles",
+  "state": "CA",
+  "phone": "+14155553129",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u019",
+  "tz": "America/Chicago",
+  "state": "FL",
+  "phone": "+18505557308",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u020",
+  "tz": "America/Chicago",
+  "state": "TX",
+  "phone": "+17135557683",
+  "consent": {
+   "push": false,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u021",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+14055556021",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": "2026-03-09T23:43:35.703Z",
+  "quiet": null
+ },
+ {
+  "id": "u022",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+14055555651",
+  "consent": {
+   "push": false,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u023",
+  "tz": "America/New_York",
+  "state": "NY",
+  "phone": "+12125554654",
+  "consent": {
+   "push": false,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u024",
+  "tz": "Pacific/Honolulu",
+  "state": "HI",
+  "phone": "+18085551034",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u025",
+  "tz": "Pacific/Honolulu",
+  "state": "HI",
+  "phone": "+18085559655",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u026",
+  "tz": "America/Los_Angeles",
+  "state": "CA",
+  "phone": "+13055558425",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u027",
+  "tz": "America/New_York",
+  "state": "NY",
+  "phone": "+13105553159",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u028",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+14105559689",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u029",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+12025557302",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u030",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+13125559549",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u031",
+  "tz": "America/Chicago",
+  "state": "FL",
+  "phone": "+18505552829",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": "2026-03-09T11:18:15.919Z",
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u032",
+  "tz": "America/Los_Angeles",
+  "state": "CA",
+  "phone": "+14155559591",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": false,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": "2026-03-09T14:33:24.860Z",
+  "quiet": null
+ },
+ {
+  "id": "u033",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+13125559304",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u034",
+  "tz": "Pacific/Honolulu",
+  "state": "HI",
+  "phone": "+18085556447",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u035",
+  "tz": "America/New_York",
+  "state": "FL",
+  "phone": "+13055554109",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ },
+ {
+  "id": "u036",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+14105556226",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u037",
+  "tz": "Europe/Berlin",
+  "state": null,
+  "phone": "+4955745647",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": false,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u038",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+14055553780",
+  "consent": {
+   "push": true,
+   "email": false,
+   "sms": true,
+   "chat": false
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "22:00",
+   "end": "07:00"
+  }
+ },
+ {
+  "id": "u039",
+  "tz": "America/Chicago",
+  "state": "OK",
+  "phone": "+13125559342",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": null
+ },
+ {
+  "id": "u040",
+  "tz": "America/New_York",
+  "state": "MD",
+  "phone": "+12025554121",
+  "consent": {
+   "push": true,
+   "email": true,
+   "sms": true,
+   "chat": true
+  },
+  "optedOut": false,
+  "snoozedUntil": null,
+  "quiet": {
+   "start": "23:30",
+   "end": "06:30"
+  }
+ }
+]

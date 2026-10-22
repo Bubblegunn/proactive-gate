@@ -1,0 +1,8 @@
+{
+ "name": "reminder-service",
+ "private": true,
+ "type": "module",
+ "engines": {
+  "node": ">=22"
+ }
+}
