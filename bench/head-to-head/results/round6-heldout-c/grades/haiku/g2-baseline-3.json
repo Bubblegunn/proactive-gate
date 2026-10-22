@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g2",
+ "arm": "baseline",
+ "rep": 3,
+ "name": "baseline-g2-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 quiet window that wraps past midnight holds marketing push",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 fourth marketing push on the same day is held",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 pushes held by quiet hours do not use up the daily allowance",
+   "pass": false,
+   "why": "FAIL [[false,false,false],false]",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 transactional pushes are never held by the cap and do not count towards it",
+   "pass": false,
+   "why": "FAIL [[true,true,true,true,true],[false,false,false,false],true]",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 the daily allowance restarts at the customer's local midnight",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 each held push names a rule, and cap and quiet hours are told apart",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}

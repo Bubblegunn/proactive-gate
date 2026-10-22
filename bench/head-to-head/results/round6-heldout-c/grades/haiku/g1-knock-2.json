@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g1",
+ "arm": "knock",
+ "rep": 2,
+ "name": "knock-g1-2",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 text at night local time is held back",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 text at midday local time is allowed",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 window edges 07:59 held, 08:01 ok, 20:59 ok, 21:01 held",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 daylight saving change days use the real offset",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 nextAllowedAt is the next 08:00 local, not earlier",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 unknown or missing time zone is not texted",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

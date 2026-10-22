@@ -120,6 +120,7 @@ def run_lines(model, kind, data):
         verdicts.append(res)
         out.append(f"- {t} (max {tmax[t]}): ours {f2(o)}; " + "; ".join(parts) + f" => Rule B {'PASS' if res else 'FAIL' if res is False else 'n/a'}")
 
+    rule_a = None
     out += ["", "Rule A: ours lost points = total max - total of means. Best other arm = the other arm with the highest total of means.",
             "Pass when ours lost <= 0.8 x best other lost.", ""]
     lost = {a: (grand - total[a] if total[a] is not None else None) for a in arms}
@@ -133,10 +134,33 @@ def run_lines(model, kind, data):
         best = max(complete_others, key=lambda a: (total[a], -others.index(a)))
         limit = Fraction(4, 5) * lost[best]
         ok = lost["ours"] <= limit
+        rule_a = ok
         verdicts.append(ok)
         out.append(f"- best other arm: {best} (total {f2(total[best])}, lost {f2(lost[best])}); 0.8 x {f2(lost[best])} = {f2(limit)}; "
                    f"ours lost {f2(lost['ours'])} <= {f2(limit)} is {'true' if ok else 'false'} => Rule A {'PASS' if ok else 'FAIL'}")
 
+    out += ["", "Rule B-prime (frozen in docs/HEAD-TO-HEAD.md, section Round 6; EVIDENCE-SPEC Win rule): ours is strictly higher than every other arm on every task,",
+            "or at the ceiling together with the best arm, except on at most one task; on that one task the deficit to the best other arm is at most 0.34.", ""]
+    exceptions, bprime_unknown = [], False
+    for t in tasks:
+        if m[(t, "ours")] is None:
+            bprime_unknown = True
+            continue
+        o = m[(t, "ours")]
+        xs = [m[(t, a)] for a in others if m[(t, a)] is not None]
+        if len(xs) < len(others):
+            bprime_unknown = True
+        best_x = max(xs) if xs else None
+        if best_x is not None and not (o > best_x or (o == tmax[t] and best_x == tmax[t])):
+            exceptions.append((t, best_x - o if best_x > o else Fraction(0)))
+    if bprime_unknown:
+        out.append("- Rule B-prime: n/a (a cell is missing)")
+        bprime = None
+    else:
+        for t, d in exceptions:
+            out.append(f"- exception task {t}: deficit to the best other arm {f2(d)}")
+        bprime = len(exceptions) == 0 or (len(exceptions) == 1 and exceptions[0][1] <= Fraction(34, 100))
+        out.append(f"- exception tasks: {len(exceptions)}; => Rule B-prime {'PASS' if bprime else 'FAIL'}")
     out += ["", "Ceiling rule: on a task where another arm's mean equals the task maximum, ours must equal the maximum as well; it is applied inside Rule B above.", ""]
     out.append("Cost rule: mean cost per run of ours must not be above the mean cost per run of the baseline arm (same environment).")
     if cost_of.get("ours") is None or base is None:
@@ -149,6 +173,10 @@ def run_lines(model, kind, data):
 
     gate = "FAIL" if any(v is False for v in verdicts) else ("n/a" if any(v is None for v in verdicts) else "PASS")
     out += ["", f"GATE {model} ({SET_TITLE.get(kind, kind)}): {gate} (PASS only when Rule A, Rule B on every task and the cost rule all pass)", ""]
+    cost_v = verdicts[-1]
+    gate2_parts = [v for v in (bprime, cost_v)]
+    out += [f"GATE-B-PRIME {model} ({SET_TITLE.get(kind, kind)}): see Rule B-prime above; with Rule A and the cost rule: " +
+            ("n/a" if None in gate2_parts or rule_a is None else ("PASS" if (rule_a and bprime and cost_v) else "FAIL")), ""]
     return out
 
 

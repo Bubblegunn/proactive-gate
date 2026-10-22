@@ -1,0 +1,9 @@
+We are building the notification service for a food-delivery mobile app. A single Node 22 process runs the service, and a marketing job and an order-tracking job both want to send push notifications to our customers. Please write bot.mjs, an ES module that exports one function, decide(candidate, now), which the jobs call right before they would hand a push to the push provider. The module keeps whatever state it needs in memory; a restart may forget everything.
+
+candidate is an object { userId: string, category: "marketing" | "transactional", timezone: string, quietStart: string, quietEnd: string }. timezone is the customer's IANA time zone name, and quietStart and quietEnd are the customer's own do-not-disturb window as 24-hour "HH:MM" strings in that customer's local time, for example "22:00" and "07:30". The window may run past midnight. Transactional pushes are things like "your courier is outside" or a security code; marketing pushes are offers and reminders. now is a Date for the current instant, passed by the caller (the server clock is UTC and must not be assumed to match any customer).
+
+The product team has decided that no customer should get more than 3 marketing pushes in one calendar day, where the day is the customer's own local day. We want to protect people from being flooded, but a customer who is waiting for a courier must still hear about the courier.
+
+decide returns { send: boolean, rule: string | null }. When decide says send: true it counts as sent, and the module should remember it; the caller will send it right away. When send is false, rule is a short stable identifier of the single rule that stopped the push (for example something like "daily-cap"), so that when someone asks "why did this customer not get it" our logs can answer. When send is true, rule is null.
+
+Do not actually send anything. Check that it works before you finish.

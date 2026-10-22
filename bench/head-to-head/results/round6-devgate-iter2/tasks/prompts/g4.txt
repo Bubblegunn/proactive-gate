@@ -1,0 +1,11 @@
+We built a sales assistant that proactively sends follow-up texts to our customers' leads on WhatsApp and SMS. About a dozen worker processes on one machine run the agent, and several of them can decide to message the same lead at nearly the same moment. Leads who get bombarded block us and report us, which hurts our sender reputation, so we need a shared rate limiter that every worker asks before sending. All workers share the directory named by the environment variable STATE_DIR; you may create it if it does not exist. The history must live there so that it survives a worker restart and is seen by every worker.
+
+Please write bot.mjs (ES module, Node 22, no dependencies) exporting two functions. Each may return a promise or a plain value; callers will await them.
+
+`reserve(request, now)` claims a send slot for one lead. `request` is { userId: "lead_204", maxPerWindow: 3, windowHours: 24, minGapMinutes: 90 }: those limits come from our campaign settings and may differ per call. `now` is a Date from the caller's clock. It returns { allowed: boolean, reason: string | null, reservationId: string | null }. If allowed is true, the caller will go on to send the message and reservationId identifies this slot. If allowed is false, reservationId is null and reason is a short snake_case code naming the limit that stopped it, with a different code for each different limit.
+
+`release(reservationId)` is called when the provider rejects the message after all, so the lead never received it. It gives the slot back. A reservation id is only ever released from the process that holds it or from a different worker; do not assume the same process that reserved will release it.
+
+Choose sensible behaviour for what counts toward the limits and for how the window moves, based on what a recipient actually experiences.
+
+Do not actually send anything. Check that it works before you finish.

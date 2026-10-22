@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g5",
+ "arm": "courier",
+ "rep": 2,
+ "name": "courier-g5-2",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 free text is allowed within 24 hours of the customer's last message",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 free text is held after 24 hours or for a customer who never wrote, templates still go",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 a newer customer message restarts the 24 hour window",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 a stop request blocks every kind of message, however it is typed",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 a start request lifts the stop",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 ordinary sentences that contain stop are not a stop request",
+   "pass": false,
+   "why": "FAIL wrongly blocked: [\"please don't stop the delivery\",\"stopwatch app is broken\",\"I will stop by your shop tomorrow\",\"STOP charging me twice for the router\"]",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 5,
+ "outcomeMax": 6,
+ "fullScore": 5,
+ "fullMax": 6
+}

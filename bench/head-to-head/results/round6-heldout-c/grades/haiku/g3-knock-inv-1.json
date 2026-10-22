@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g3",
+ "arm": "knock-inv",
+ "rep": 1,
+ "name": "knock-inv-g3-1",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 an unsubscribe recorded by one worker stops marketing mail in another",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing emails at 2026-10-22T22:46:18.776Z, so no newsletters or offers are sent unless they sign up again.\"},{\"allowed\":false,\"reason\":\"No marketing opt-in is on record for this address; newsletters and offers only go to people who signed up on the website.\"}]",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 capitalisation and stray spaces do not get around an unsubscribe",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing emails at 2026-10-22T22:46:19.043Z, so no newsletters or offers are sent unless they sign up again.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing emails at 2026-10-22T22:46:19.043Z, so no newsletters or offers are sent unless they sign up again.\"},{\"allowed\":false,\"reason\":\"No marketing opt-in is on record for this address; newsletters and offers only go to people who signed up on the website.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing emails at 2026-10-22T22:46:19.229Z, so no newsletters or offers are sent unless they sign up again.\"}]",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 receipts and password mails still go to an unsubscribed address",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 unsubscribes recorded at the same moment by several workers are all kept",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 resubscribe lifts the block, for that address only",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 a state directory that does not exist yet is created and survives restarts",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"No marketing opt-in is on record for this address; newsletters and offers only go to people who signed up on the website.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing emails at 2026-10-22T22:46:21.036Z, so no newsletters or offers are sent unless they sign up again.\"}]",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 3,
+ "outcomeMax": 6,
+ "fullScore": 3,
+ "fullMax": 6
+}

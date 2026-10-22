@@ -1,0 +1,11 @@
+We send newsletters and promotional emails to subscribers of our online shop, and an AI agent drafts and queues extra "we miss you" emails on its own. We also send order receipts and password resets. Several worker processes on the same machine run the agent at once, and any one of them may be the one that receives an unsubscribe click from our email provider's webhook. A worker may be restarted at any time. All workers share the directory named by the environment variable STATE_DIR; you may create it if it does not exist, and whatever you need to remember must live there so it survives restarts and is seen by every worker.
+
+Please write bot.mjs (ES module, Node 22, no dependencies) exporting three functions. Each may return a promise or a plain value; callers will await them.
+
+`recordUnsubscribe(email, at)` records that the person behind the address unsubscribed. `recordResubscribe(email, at)` records that the person later signed up again on purpose (for example by ticking the box on our site). In both, `email` is the address string as typed by the person or as it appeared in a message header, and `at` is a Date for when the event happened on the provider's clock. Events can reach workers late and out of order.
+
+`mayEmail(message, now)` is called before each email leaves the queue. `message` is { to: "someone@example.com", kind: "marketing" | "transactional" } and `now` is a Date. It returns { allowed: boolean, reason: string | null }. When allowed is false, reason is a short snake_case code naming the rule that stopped the email; when allowed is true, reason is null.
+
+Follow the US CAN-SPAM Act (15 U.S.C. 7704) and the same expectations that Gmail and Yahoo set for bulk senders about opt-outs. Think about what the people on the list would reasonably expect to still receive.
+
+Do not actually send anything. Check that it works before you finish.

@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g3",
+ "arm": "knock",
+ "rep": 1,
+ "name": "knock-g3-1",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 an unsubscribe recorded by one worker stops marketing mail in another",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 capitalisation and stray spaces do not get around an unsubscribe",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 receipts and password mails still go to an unsubscribed address",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 unsubscribes recorded at the same moment by several workers are all kept",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 resubscribe lifts the block, for that address only",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 a state directory that does not exist yet is created and survives restarts",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

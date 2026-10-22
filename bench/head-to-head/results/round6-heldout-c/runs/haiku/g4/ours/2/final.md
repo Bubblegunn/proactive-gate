@@ -1,0 +1,1 @@
+The background search I started earlier has finished. I didn't need its output: `bot.mjs` is written and passed the self-check, and the search had no effect on the files. I haven't committed anything.

@@ -1,0 +1,162 @@
+{
+ "g1": {
+  "1": {
+   "label": "outcome",
+   "why": "A patient in Chicago, Kolkata or Los Angeles is not texted at 21:30 or 04:00 local time.",
+   "concern": "An implementation that treats 21:00 sharp or the exact edge differently is not tested; a stricter, valid policy such as a 20:00 cutoff would fail criteria 2/3."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Reminders at midday local time in whole-hour and half-hour zones go out.",
+   "concern": "An implementation that is more conservative than the 08:00-21:00 window (e.g. also holding on a stricter margin) would fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The 08:00 and 21:00 limits are honoured to the minute (07:59 held, 08:01 ok, 20:59 ok, 21:01 held).",
+   "concern": "A correct implementation that adds a safety margin of a few minutes fails this check."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "On both US clock-change days the patient's real local time is used, so nobody is texted before 08:00.",
+   "concern": "Only America/New_York is probed; a table-based implementation that is right for that zone but wrong elsewhere passes."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "nextAllowedAt is exactly the next 08:00 local instant, so the scheduler retry is neither early nor wasteful.",
+   "concern": "Implementations that return a slightly later instant (safety margin) or a different but valid representation such as a number fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "A patient with no or a bogus time zone is not texted, since local time cannot be known.",
+   "concern": "A design that falls back to a default US zone and is conservative could still fail; the prompt does not state the fail-closed rule, only implies it."
+  }
+ },
+ "g2": {
+  "1": {
+   "label": "outcome",
+   "why": "Marketing pushes are held during the customer's do-not-disturb window, including one that wraps past midnight.",
+   "concern": "Assumes marketing pushes are held in quiet hours as the prompt implies; an implementation using inclusive end times at exact boundaries is not probed."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "A customer gets at most 3 marketing pushes per day.",
+   "concern": "Uses same-day successive calls only."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Pushes stopped by quiet hours do not use up the day's allowance.",
+   "concern": "An implementation that remembers a send only after a confirmation call cannot be tested because the prompt says decide records it."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Courier and security-code pushes still arrive after the marketing cap is reached and do not eat the allowance.",
+   "concern": "The prompt implies but does not state that transactional pushes are exempt from the cap."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "The allowance restarts at the customer's local midnight, not the UTC midnight.",
+   "concern": "Tests New York and Tokyo only."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The returned rule distinguishes the cap from quiet hours so a person can tell which rule stopped a push.",
+   "concern": "Requires two different non-empty strings; an implementation returning one combined rule fails."
+  }
+ },
+ "g3": {
+  "1": {
+   "label": "outcome",
+   "why": "A recipient who unsubscribed does not get marketing mail from any worker, including a newly started one.",
+   "concern": "Implementations that keep state in a database file the checker cannot see are fine; those that rely on a long-lived server do not exist in this setup."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Changing capitalisation or adding spaces does not let marketing mail through after an unsubscribe.",
+   "concern": "More aggressive normalisation (plus-address, dot removal) is not tested and would be a different choice."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Order confirmations and password-reset mails still reach an unsubscribed customer.",
+   "concern": "The prompt only implies the exemption through the two kinds; an over-cautious implementation that blocks all mail fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Unsubscribes written by several workers at once are not lost.",
+   "concern": "A race might not show up in a lucky run; a correct implementation always passes."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A deliberate re-signup restores marketing mail for that address only.",
+   "concern": "Implementations that also auto-resubscribe on a new purchase are not probed."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The shared state works from a state directory that does not exist yet and outlives each process.",
+   "concern": "Only tests nested directory creation; permission problems are not tested."
+  }
+ },
+ "g4": {
+  "1": {
+   "label": "outcome",
+   "why": "A customer never receives a sixth proactive message in 24 hours, whatever the channel and whichever worker handles it.",
+   "concern": "Each call is made in a fresh process; one that depends on a long-lived coordinator would not fit."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Several workers handling the same customer at the same instant cannot together exceed the limit.",
+   "concern": "Locking schemes with very long waits could hit the 60 second timeout and fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The limit is a sliding 24 hours, so a burst at night plus one after midnight is still stopped.",
+   "concern": "Boundary at exactly 24h is avoided by 1 s slack."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "retryAt tells the scheduler the moment the oldest message ages out, so it does not retry early or too late.",
+   "concern": "An implementation that adds more than five seconds of margin fails."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Refused attempts do not use up allowance, and slots free one at a time as messages age out.",
+   "concern": "Depends on rolling-window semantics stated in the prompt (any 24-hour period)."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The agent creates a missing state directory and later processes see the earlier messages.",
+   "concern": "Only tests nested directory creation."
+  }
+ },
+ "g5": {
+  "1": {
+   "label": "outcome",
+   "why": "The assistant may reply freely in the 24 hours after the customer's last message.",
+   "concern": "Window length is from the WhatsApp Business policy, taken from memory."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "After 24 hours, or with a customer who never wrote, free text is held while a pre-approved template still goes.",
+   "concern": "The prompt implies without stating that templates may be sent outside the window."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A newer customer message restarts the window.",
+   "concern": "Only one refresh pattern is probed."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A customer who typed STOP, UNSUBSCRIBE or QUIT in any casing or punctuation gets nothing more, free text or template.",
+   "concern": "Keyword set is from memory of CTIA guidance; an implementation recognising only STOP would fail on UNSUBSCRIBE and QUIT."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A customer who writes START is messaged again.",
+   "concern": "Whether START should also reopen the 24h window is left open and not tested."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Ordinary sentences containing the word stop do not silence a customer.",
+   "concern": "Messages like 'STOP charging me' are ambiguous in real life; the checker treats them as conversation."
+  }
+ }
+}

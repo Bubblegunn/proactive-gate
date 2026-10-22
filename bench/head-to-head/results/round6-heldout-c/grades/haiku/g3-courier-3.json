@@ -1,0 +1,57 @@
+{
+ "model": "haiku",
+ "set": "heldout",
+ "task": "g3",
+ "arm": "courier",
+ "rep": 3,
+ "name": "courier-g3-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 an unsubscribe recorded by one worker stops marketing mail in another",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing email on 2026-10-22.\"},{\"allowed\":false,\"reason\":\"There is no marketing opt-in on record for this address.\"}]",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 capitalisation and stray spaces do not get around an unsubscribe",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing email on 2026-10-22.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing email on 2026-10-22.\"},{\"allowed\":false,\"reason\":\"There is no marketing opt-in on record for this address.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing email on 2026-10-22.\"}]",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 receipts and password mails still go to an unsubscribed address",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 unsubscribes recorded at the same moment by several workers are all kept",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 resubscribe lifts the block, for that address only",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 a state directory that does not exist yet is created and survives restarts",
+   "pass": false,
+   "why": "FAIL [{\"allowed\":false,\"reason\":\"There is no marketing opt-in on record for this address.\"},{\"allowed\":false,\"reason\":\"This address unsubscribed from marketing email on 2026-10-22.\"}]",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 3,
+ "outcomeMax": 6,
+ "fullScore": 3,
+ "fullMax": 6
+}
