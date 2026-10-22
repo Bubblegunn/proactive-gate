@@ -827,3 +827,58 @@ Development gate (ours x3 on the seen round-5 set): iteration 1 (`62c1340`) Haik
 Post-hoc (not a rule): in the failing g3 cell, ours returned sentence refusals although the task asks for snake_case codes (skill rule 8 conflicts with a requested return shape)
 and invented an "EU opt-in" block (rule 2(d) default). Candidate general fixes for a next round: the requested return shape beats rule 8; a promotion default may not cite a law the request does not name.
 Claim scope: no claim of "first" or "best". On this one set and one model ours has the highest total, ahead of baseline by 1.00, and loses one task.
+
+## Round 7 (frozen 2026-10-23, owner decision, before any round-7 code change and before any round-7 scoring run)
+
+Written and committed before the product change and before any scoring run; not edited after results are seen. Later facts go into a new section.
+Evidence folders: `bench/head-to-head/results/round7-*/`. Analysis behind these decisions: `docs/BEST-RIVAL-round7.md` (commit `14b6c20`).
+
+### Rulings (general classes only; criteria, checkers, tasks and the win rule do not change)
+
+- **G3 class, "a block for a signal the interface cannot carry".** Evidence (round 6, held-out c, Haiku): in 1 of 3 ours cells and in the 3-score cells of knock, knock-inv, courier and
+  courier-inv, `mayEmail` held marketing for every address "with no opt-in on record" although the request's functions (`unsubscribe`, `resubscribe`, `mayEmail`) can record only opt-outs and
+  re-sign-ups; so every new address was held and the checker's criteria 1, 2 and 6 failed. The baseline (3 of 3 at 6/6) allowed marketing when no opt-out was recorded and
+  wrote the EU gap in its answer. Rule written into the skill (rule 2, with the matching clause in rule 11): when the request's functions record only opt-outs and give no way to record
+  an opt-in, a missing opt-in is not a block: allow when no opt-out is recorded, and write "not enforced: opt-in (the interface cannot record one)" in the answer. Data or a function
+  that does carry opt-ins keeps rules 2(a) to (d) unchanged.
+- Rule 8 is not changed. The round-6 post-hoc note in `results/round6-heldout-c/SUMMARY.md` (a conflict between rule 8 and a snake_case return shape on g3) does not apply to g3: its prompt asks for
+  "a short sentence" in `reason`. The note stays in that folder as written; this section corrects it.
+- Cost class and the `description` line are unchanged; the skill must not grow beyond its round-6 byte size plus 400 bytes.
+
+### Development gate (BEST-RIVAL-SPEC item 6; separate section of the evidence folder, never in a score table)
+
+After the product change, tests and review: ours x3, SDK path, both models (`claude-haiku-5-5`, `claude-sonnet-5-5`), scored by the task checkers, on (i) the round-5 held-out set
+(`results/round5-heldout/tasks`) and (ii) the round-6 held-out set c (`results/round6-heldout-c/tasks`). Both sets are seen and no longer count for scoring. Reference scores, from published results:
+(i) Haiku g1 3.00, g2 to g5 6.00; Sonnet g1 5.00, g2 to g5 6.00 (round 5). (ii) Haiku g1 5.67, g2 5.67, g3 6.00, g4 6.00, g5 6.00 (round 6 best other arm per task). No rival result exists for set c on
+Sonnet; there, ours must be at the task maximum (6.00) on every task, because no lower reference exists. Pass: on every task of every set and model, ours is strictly above the reference or at the ceiling together
+with it. If not: analyse, make a general fix, test and review, rerun. At most 3 iterations, each recorded with its cost. Set (i) is rerun in an iteration only if the code change since the previous run can touch it
+(any change to the skill); in practice every iteration reruns both sets.
+
+### New held-out set (d)
+
+A fresh Sonnet agent (clean configuration directory, folder outside the repository) writes 5 tasks from the README user-problem sentence and the task-template format only (same `WRITER-SPEC.md` as set c).
+It is not shown the product code, this file, the research or best-rival reports, any earlier held-out set or any loss class. Local branch `heldout-2026-10-d`, never pushed.
+The controller does not read the task prompts or criteria before the gate; it runs the checkers on the writer's references and prints scores only.
+
+### Protocol
+
+1. Dev gate passes on both models for both sets (or the 3 iterations are used up and the result is reported as it stands).
+2. Held-out d: all six arms (ours, baseline, knock, knock-inv, courier, courier-inv; pins Knock `cc99682`, Courier `18c7bcb`), 3 runs each, on Haiku and on Sonnet separately, SDK path
+   (`~/claude-kredi-runs/sdk-shim/claude` through `H2H_CLAUDE_BIN`), parallelism 3, hash guard before and after every cell. No cell is reused from any earlier round. Haiku first, then Sonnet.
+3. Scoring: the outcome criteria are decided by the task checkers; one `score.mjs` call scores every cell of every arm together (no model grader, so no votes or order).
+4. Rules, stated together and reported side by side: Rule A (our lost points at most 80 percent of the best other arm's lost points), Rule B (ours strictly above every other arm on every task; at the maximum if another
+   arm is), and **Rule B-prime**, verbatim from `EVIDENCE-SPEC.md` "Win rule": "In each set (public and held-out, separately), ours is strictly higher than every other arm on every task, or at the ceiling together
+   with the best arm, except on at most one task. On that one task our deficit to the best other arm is at most 0.34 points (one criterion in one of three runs on a 5-point task)." Applied to 6-point tasks as the
+   absolute 0.34 points (as in round 6; the owner has not changed it). Plus the cost rule (ours not above the baseline of the same environment). Rule A, the cost rule and Rule B-prime must pass; Rule B is reported.
+   Each model is judged on its own.
+5. Public set Z1 to Z6, all six arms, 3 runs, both models, SDK path, no reuse. It starts only if the spent amount plus its estimate (from the measured cost of the previous batch) fits the budget; if it does not,
+   it is not started and the report says so.
+6. F9 (Haiku and Opus, one run per task for ours, the best rival per task, and the baseline) and F6 (10 percent of cells re-run and scored independently by an agent that has not seen the code) run only if held-out d
+   and the public set both pass Rule A and Rule B-prime on both models.
+7. Measurement path: every `claude -p` call goes through the Agent SDK shim. Known differences between the SDK path and the old CLI path: the desktop app's `Artifact` tool and the `artifact-diagramming` skill do not exist
+   on the SDK path; CLI-path cells also saw the machine owner's user-level skills (for example `caveman`, `impeccable`; 44 skills against 18 in the round-5 diagnosis; 24 tools against 17, three built-in plugins, a 1,000,000
+   token window). CLI-era cost and behaviour figures are therefore not comparable with SDK-path figures. No cell from an earlier round is reused in any gate table of this round.
+8. Spending: every headless run's `total_cost_usd` goes to `~/claude-kredi-runs/2026-10-22/proactive-gate-r7-cost.tsv`; total at most 22 USD; the controller has a hard 7 USD limit, and round 6 showed that this meter
+   also counts the benchmark runs. A batch does not start when the amount spent plus the batch estimate would pass either limit. A step whose estimate does not fit is not started; the evidence up to that point is written.
+   A 429, an authentication error or the shim's "credit guard" refusal (exit 3) stops everything and is reported. A cell lost to a rate limit or API error is deleted and run again, never graded.
+9. Claim scope: only the arms, tasks, models and date that were run. "First" is claimed only when the full gate passed, with its scope. Evidence folder per `EVIDENCE-SPEC.md` (11 items); development gate in its own section.
