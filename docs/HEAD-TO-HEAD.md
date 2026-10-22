@@ -365,6 +365,91 @@ the last allowed; this one was run once and stops here.
 4. Re-score with the Y1 criterion 3 ambiguity resolved in the prompt for all arms, in a new task version, not by editing
    this one.
 
+## Results, round 3
+
+Date 2026-10-22. Build under test: commit `30fdfae` (branch `plugin-leadership`), packed as `0.10.0-h2h.0`; the probe
+passed. Tasks Z1 to Z6. Arms: ours, Claude with no plugin (baseline), Knock skills (`knock`) and Knock skills named in
+the prompt (`knock-inv`); Vaara is not run. Models `claude-sonnet-5-5` and `claude-haiku-5-5`, 3 runs per task and arm,
+n = 18 runs per arm and model, 144 runs in all, parallelism 2. All criteria are labelled "outcome", so the outcome-only
+and full tables are identical. Tables: `bench/head-to-head/results/round3-sonnet/` and `round3-haiku/`. Transcripts and
+produced code are not committed.
+
+Run in a Linux cloud container. The runner's fixed `PATH` does not contain the folder of the `claude` binary there, so
+`claude` was linked into `/usr/local/bin`; the harness was not changed. The headless runs inherit the cloud session's
+environment, the same for every arm; turn counts are lower than in round 2 (baseline 3.7 turns on Sonnet against 13.1),
+so absolute numbers are not comparable with the earlier rounds. A container restart interrupted two Sonnet runs
+(`knock-z3-2`, `ours-z3-2`); their partial folders were deleted and they were run again from scratch. No run failed for
+an account limit.
+
+### Skill firing, measured before the scoring runs
+
+`bench/head-to-head/trigger/measure.mjs` on the 35-line skill: Sonnet invoked it on 10 of 10 natural prompts and 0 of 20
+unrelated ones; Haiku on 9 of 10 and 0 of 20. Requirement (at least 9 of 10) met on both models.
+
+### Sonnet (`claude-sonnet-5-5`), outcome criteria
+
+| task (max) | baseline | knock-inv | knock | ours |
+|---|---|---|---|---|
+| z1 (6) | 6.00 [6, 6, 6] (6-6, n=3) | 6.00 [6, 6, 6] (6-6, n=3) | 6.00 [6, 6, 6] (6-6, n=3) | 5.00 [5, 5, 5] (5-5, n=3) |
+| z2 (6) | 4.00 [5, 3, 4] (3-5, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 4.67 [4, 4, 6] (4-6, n=3) | 4.00 [4, 4, 4] (4-4, n=3) |
+| z3 (6) | 3.00 [4, 5, 0] (0-5, n=3) | 3.00 [0, 4, 5] (0-5, n=3) | 4.33 [4, 6, 3] (3-6, n=3) | 3.00 [3, 3, 3] (3-3, n=3) |
+| z4 (6) | 2.00 [2, 2, 2] (2-2, n=3) | 2.00 [2, 2, 2] (2-2, n=3) | 2.67 [4, 2, 2] (2-4, n=3) | 0.00 [0, 0, 0] (0-0, n=3) |
+| z5 (6) | 4.00 [4, 4, 4] (4-4, n=3) | 3.00 [3, 3, 3] (3-3, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 5.33 [5, 5, 6] (5-6, n=3) |
+| z6 (6) | 5.00 [5, 5, 5] (5-5, n=3) | 5.00 [5, 5, 5] (5-5, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 5.00 [5, 5, 5] (5-5, n=3) |
+| total of means (36) | 24.00 | 23.00 | 25.67 | 22.33 |
+
+| measure | baseline | knock-inv | knock | ours |
+|---|---|---|---|---|
+| mean cost USD per run | 0.140 | 0.188 | 0.140 | 0.272 |
+| mean wall time per run, seconds | 146 | 332 | 90 | 238 |
+| mean turns per run | 3.7 | 4.8 | 3.8 | 11.8 |
+| mean lines of code written (source files) | 161 | 149 | 160 | 249 |
+| runs whose solution mentions proactive-gate | 0/18 | 0/18 | 0/18 | 18/18 |
+| Skill tool calls (sum) | 0 | 18 | 0 | 18 |
+
+### Haiku (`claude-haiku-5-5`), outcome criteria
+
+| task (max) | baseline | knock-inv | knock | ours |
+|---|---|---|---|---|
+| z1 (6) | 5.67 [6, 6, 5] (5-6, n=3) | 4.00 [6, 0, 6] (0-6, n=3) | 5.67 [5, 6, 6] (5-6, n=3) | 4.67 [5, 5, 4] (4-5, n=3) |
+| z2 (6) | 4.00 [4, 4, 4] (4-4, n=3) | 4.67 [5, 4, 5] (4-5, n=3) | 4.67 [5, 5, 4] (4-5, n=3) | 2.67 [1, 4, 3] (1-4, n=3) |
+| z3 (6) | 4.00 [4, 4, 4] (4-4, n=3) | 5.00 [5, 6, 4] (4-6, n=3) | 3.67 [5, 3, 3] (3-5, n=3) | 2.00 [1, 1, 4] (1-4, n=3) |
+| z4 (6) | 3.33 [4, 2, 4] (2-4, n=3) | 2.67 [2, 2, 4] (2-4, n=3) | 2.00 [2, 2, 2] (2-2, n=3) | 4.33 [4, 5, 4] (4-5, n=3) |
+| z5 (6) | 4.00 [4, 4, 4] (4-4, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 4.00 [4, 4, 4] (4-4, n=3) |
+| z6 (6) | 4.33 [4, 4, 5] (4-5, n=3) | 4.00 [4, 4, 4] (4-4, n=3) | 4.33 [4, 4, 5] (4-5, n=3) | 5.00 [5, 5, 5] (5-5, n=3) |
+| total of means (36) | 25.33 | 24.33 | 24.33 | 22.67 |
+
+| measure | baseline | knock-inv | knock | ours |
+|---|---|---|---|---|
+| mean cost USD per run | 0.020 | 0.020 | 0.019 | 0.025 |
+| mean wall time per run, seconds | 104 | 96 | 98 | 108 |
+| mean turns per run | 7.5 | 9.4 | 7.1 | 14.1 |
+| mean lines of code written (source files) | 188 | 176 | 205 | 127 |
+| runs whose solution mentions proactive-gate | 0/18 | 0/18 | 0/18 | 15/18 |
+| Skill tool calls (sum) | 0 | 18 | 0 | 16 |
+
+### Reading the results
+
+- The tasks discriminate now: no arm is at the ceiling on most tasks, unlike rounds 1 and 2.
+- Where we lead: Z5 on Sonnet (5.33 against 4.00), Z4 and Z6 on Haiku (4.33 against 3.33, 5.00 against 4.33).
+- Sonnet Z4 is 0 in all three of our runs for one reason: each solution reads `STATE_DIR` at import and throws when it is
+  not set. The checker imports `bot.mjs` before it sets `STATE_DIR` per case, so every case fails at load. The baseline
+  solutions read it lazily. The prompt does not say when `STATE_DIR` is set; the checker is frozen and was not changed.
+- Sonnet Z1: one criterion (opt-out survives a new process) failed in all three of our runs; a second process allowed
+  the opted-out user.
+- The library was used in 18 of 18 Sonnet and 15 of 18 Haiku solutions. It cut code on Haiku (127 lines against 188) but
+  not on Sonnet (249 against 161).
+- Cost: our arm costs 1.94 times the baseline on Sonnet and 1.27 times on Haiku, and takes about twice the turns.
+
+### Gate
+
+Not passed on either model.
+- Rule B (strictly above every other arm on each task): Sonnet only Z5; Haiku only Z4 and Z6.
+- Rule A (lost points at most 80 percent of the best other arm's): Sonnet 13.67 against 10.33 (knock), Haiku 13.33
+  against 10.67 (baseline); fails on both.
+- Ceiling rule: Sonnet Z1 (other arms at 6.00, ours 5.00) fails.
+- Cost rule (mean cost per run not above the baseline's): fails on both models.
+
 ## Rulings
 
 - 2026-10-21, Vaara is not run. It is listed as "not run: rewrites the global Claude Code config, unsafe to execute
@@ -381,6 +466,13 @@ the last allowed; this one was run once and stops here.
   every run and stops if either changed.
 
 ## Resume (state at 2026-10-22, for whoever continues round 3, for example a Linux cloud agent)
+
+Update 2026-10-22: steps 1 to 4 below are done; see "Results, round 3". The gate is not passed on either model. By the
+spec, a third improvement round is the last allowed, so whether a round 4 runs is the owner's decision. If it
+does, candidates from the transcripts: the skill and `scaffold nudge` should read `STATE_DIR` lazily (at first use, not
+at import), opt-out must be read from the shared store in every process, and the skill path must cost no more than
+hand-writing. Tasks Z1 to Z6 would need new frozen variants, not edits. In a cloud container, link `claude` into
+`/usr/local/bin` first, because the runner's `PATH` is fixed.
 
 Round 3 is implemented and frozen; the scoring runs have not started. Work on branch `plugin-leadership`. Frozen before
 code changes: tasks Z1 to Z6 (`prompts/z1.txt` to `z6.txt`, criteria and sources in `tasks/Z.md`), with relaxations

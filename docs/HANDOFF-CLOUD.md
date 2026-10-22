@@ -68,7 +68,7 @@ Read `docs/HEAD-TO-HEAD.md` in each repository: tasks, rulings, results per roun
 | surviving-lines | 49.00 vs 41.33 of 51; rule A passes; rule B fails only T3 | round 4: T3 writes the `.mailmap` as proposals and hedges; re-run T3 for all arms plus ours on all tasks; then the final gate |
 | product-engineer | core 23.00 vs 21.33 (lost 7.00, needs at most 6.93); fails T2, T3, T4, H4, H5 | round 3 (see Resume): act-and-unstage rule for H5, release notes without code identifiers, verdict-only answers, replace T3, fixed H4 answer shape |
 | ai-slop-linter | 54.33 vs 56.33 of 60 (blader humanizer, invoked): behind | round 2: `--compare` flags first-person words and new claims, a prompt hook, an agent-checked catalog for tells a regex cannot catch (MIT sources, attribution kept) |
-| proactive-gate | Sonnet and Haiku write simple gates correctly without the library | round 3: tasks Z1 to Z6 (under-specified product prompts with public sources), `assistantNudge` preset, `scaffold nudge`, synchronous evaluate, explain; extra rule: our cost per run is not above the baseline's |
+| proactive-gate | round 3 (Z1 to Z6) not passed: Sonnet 22.33 vs 25.67 (knock) of 36, Haiku 22.67 vs 25.33 (baseline); cost 1.94x / 1.27x the baseline | owner's decision on a round 4 (see Resume): read `STATE_DIR` lazily, opt-out from the shared store, cut the skill path's cost; new frozen task variants |
 
 Held-out tasks for the other four repositories are on a separate branch, `heldout-2026-10`, in each
 repository. They were written by agents that never saw our code. Only the final-gate step may fetch that branch:
