@@ -39,7 +39,7 @@ const HELP = `usage: proactive-gate simulate [events.jsonl] [--policy <file>]...
        proactive-gate replay <events.jsonl> [--policy <file>] [--json] [--commit]
        proactive-gate replay --fixtures <dir> [--skip <file>]
        proactive-gate hook --policy <file> [--tool <name>]
-       proactive-gate scaffold nudge [--out DIR] [--daily N] [--force]
+       proactive-gate scaffold nudge [--out DIR] [--daily N] [--legal us] [--force]
        proactive-gate schema
        proactive-gate mcp [--policy <file>]
 
@@ -98,7 +98,7 @@ of the process. Register it with a client, for Claude Code:
   claude mcp add proactive-gate -- npx proactive-gate mcp --policy policy.json
 
 scaffold nudge writes an assistant's notification gate into DIR (default the current folder): a policy
-with the assistantNudge preset and a daily limit (--daily, default 3), notify.mjs, and notify.test.mjs,
+with the assistantNudge preset and a daily limit (--daily, default 3; --legal us adds the US 08:00 to 21:00 calling hours for texts and calls), notify.mjs, and notify.test.mjs,
 which runs with node --test. notify.mjs maps the app's data in toInput(), and exports decide (send,
 reason, reasonCode, surfaces), deliver (push, inApp, reason, resumeAt), recordDismissal, recordAct, optOut
 (a type or a channel), handleInbound, whyNotReceived (one user's log over a time range), dryRun (last
@@ -354,7 +354,7 @@ async function main(argv: string[]) {
   }
   if (command === "scaffold") {
     if (file !== "nudge") {
-      console.error("usage: proactive-gate scaffold nudge [--out DIR] [--daily N] [--force]");
+      console.error("usage: proactive-gate scaffold nudge [--out DIR] [--daily N] [--legal us] [--force]");
       process.exit(2);
     }
     const daily = Number(argValue(argv, "--daily") ?? 3);
@@ -363,7 +363,12 @@ async function main(argv: string[]) {
       process.exit(2);
     }
     const dir = resolve(argValue(argv, "--out") ?? ".");
-    const files = nudgeFiles(daily);
+    const legal = argValue(argv, "--legal");
+    if (legal !== undefined && legal !== "us") {
+      console.error("--legal takes us (the 08:00 to 21:00 calling hours of 47 CFR 64.1200)");
+      process.exit(2);
+    }
+    const files = nudgeFiles(daily, legal === "us");
     const clash = Object.keys(files).filter((name) => existsSync(join(dir, name)));
     if (clash.length && !argv.includes("--force")) {
       console.error(`${clash.join(", ")} already exist in ${dir}; pass --force to overwrite them`);

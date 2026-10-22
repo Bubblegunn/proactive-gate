@@ -19,10 +19,11 @@ Run `node -v`. It must print 22 or newer. npm on an older Node installs proactiv
 
 ## Step 2: scaffold the gate
 
-Run `npx proactive-gate scaffold nudge --out .`. It writes `proactive-gate.policy.json`, `notify.mjs` and `notify.test.mjs`. Keep these three rules:
+Run `npx proactive-gate scaffold nudge --out .` (add `--legal` with the value us for texts or calls to people in the US: it adds the 08:00 to 21:00 local calling hours). It writes `proactive-gate.policy.json`, `notify.mjs` and `notify.test.mjs`. Keep these rules:
 
 - Call `gate.record` on every "acted" and every "dismissed" event, so the cooldown and the hour counts learn.
 - Mark a candidate `requested`, `transactional`, or `kind` "commitment" when it is one. Never mark a promotion that way.
+- Pass the app's own per-call limit as config.dailyNudgeCap to the notify.mjs functions, and set the STATE_DIR environment variable for state that outlives the process; it is read at first use.
 - Never leave the time zone empty. Pass `deviceTimezone` as well when the device reports one, because it is read first.
 
 ## Step 3: adapt and test

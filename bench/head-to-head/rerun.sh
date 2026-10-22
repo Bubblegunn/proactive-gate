@@ -69,6 +69,13 @@ if [ "$dry" = 1 ]; then echo "dry run: stopping after the probe (out: $out)"; ex
 clone() { [ -d "$2/.git" ] || git clone --quiet "$1" "$2"; git -C "$2" checkout --quiet "$3"; }
 clone https://github.com/knocklabs/skills "$work/knock" cc99682ed74ee34198602c7d28569bd1c5f309d3
 export H2H_KNOCK_DIR="$work/knock"
+# Courier skills (round 4), pinned and used as text only: the skill folder goes into a generated local plugin with a minimal
+# manifest. Its MCP server is not copied, and the runner passes --strict-mcp-config. No COURIER_API_KEY is set.
+clone https://github.com/trycourier/courier-skills "$work/courier-src" 18c7bcbeee6d5deb58a0d9dfec9ded4f960b2132
+courier="$work/courier"; rm -rf "$courier"; mkdir -p "$courier/.claude-plugin" "$courier/skills"
+printf '%s\n' '{"name":"courier","version":"1.8.1","description":"Courier skills (pinned, skill text only)","license":"MIT"}' > "$courier/.claude-plugin/plugin.json"
+git -C "$work/courier-src" archive 18c7bcbeee6d5deb58a0d9dfec9ded4f960b2132 skills/courier LICENSE | tar -x -C "$courier"
+export H2H_COURIER_DIR="$courier"
 
 # 3. run and score
 extra=()

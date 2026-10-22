@@ -36,11 +36,14 @@ const pluginDir = {
   baseline: join(here, "arms/baseline"),
   knock: () => need("H2H_KNOCK_DIR"),
   "knock-inv": () => need("H2H_KNOCK_DIR"),
+  courier: () => need("H2H_COURIER_DIR"),
+  "courier-inv": () => need("H2H_COURIER_DIR"),
 };
 // The "invoked" arms start the prompt with a sentence that names the competitor's skill or plugin the way its README
 // does, so each competitor is also measured at its best. Every other arm gets the task text alone.
 const invocation = {
   "knock-inv": "Use the knock-notification-best-practices skill from the Knock skills plugin for this. ",
+  "courier-inv": "Use the courier skill from the Courier skills plugin for this. ",
 };
 const dirFor = (arm) => (typeof pluginDir[arm] === "function" ? pluginDir[arm]() : pluginDir[arm]);
 

@@ -6,8 +6,8 @@
  * the built library, so a change to the mapping is checked as it is made. The library never reads these files.
  */
 
-const POLICY = (dailyLimit: number) =>
-  `${JSON.stringify({ specVersion: "1.0.0", checks: [{ preset: "assistantNudge", dailyLimit }, { id: "freshness", maxAgeSeconds: 86400 }] }, null, 2)}\n`;
+const POLICY = (dailyLimit: number, legalUs: boolean) =>
+  `${JSON.stringify({ specVersion: "1.0.0", checks: [{ preset: "assistantNudge", dailyLimit }, ...(legalUs ? [{ preset: "usTcpa" }] : []), { id: "freshness", maxAgeSeconds: 86400 }] }, null, 2)}\n`;
 
 const NOTIFY = `// Written by proactive-gate scaffold nudge. Edit toInput() to match your app's data, then run:
 //   node --test notify.test.mjs
@@ -28,6 +28,10 @@ const current = () => {
 };
 const store = { get: (...a) => current().get(...a), set: (...a) => current().set(...a), incr: (...a) => current().incr(...a), incrBy: (...a) => current().incrBy(...a), del: (...a) => current().del(...a) };
 export const gate = createGate({ policy, store, inboundConsent: true });
+// A call may carry its own daily limit (config.dailyNudgeCap); the gate for that number shares the store.
+const gates = new Map();
+const withCap = (cap) => ({ ...policy, checks: policy.checks.map((c) => (c.preset ? { ...c, dailyLimit: cap } : c)) });
+const gateFor = (cap) => (Number.isInteger(cap) && cap >= 0 ? (gates.get(cap) ?? gates.set(cap, createGate({ policy: withCap(cap), store, inboundConsent: true })).get(cap)) : gate);
 // Every code decide() and deliver() can return: each check the policy can stop with, and the few this module adds.
 export const REASON_CODES = [...new Set([...gate.checks.map((c) => c.id), "surface", "commit", "transport", "optOut", "permission", "category"])];
 // Used when the app has no quiet-hours window (the preset has none, SPEC 9.14). LOST is the commit race's reason.
@@ -97,14 +101,15 @@ async function admit(args) {
   const { user, candidate } = input;
   if (candidate.channel && (await store.get(optOutKey(user.id, candidate.channel)))) return { sent: false, code: "optOut", reason: "the user turned " + candidate.channel + " messages off" };
   if (await store.get(optOutKey(user.id, candidate.type))) user.mutedTypes = [...(user.mutedTypes ?? []), candidate.type];
-  const decision = await gate.evaluate(input);
+  const g = gateFor(args.config?.dailyNudgeCap);
+  const decision = await g.evaluate(input);
   const availableAt = decision.nextAllowedAt?.toISOString() ?? null;
   if (!decision.allowed || !decision.surfaces.length) {
     const code = decision.rejectedBy ?? decision.deferredBy ?? pushOff?.code ?? "surface";
     return { sent: false, code, reason: pushOff && code === pushOff.code ? pushOff.reason : explain(decision, { user, now: input.now }).summary, availableAt };
   }
-  if (!(await gate.commit(decision, input))) return { sent: false, code: "commit", reason: LOST, availableAt };
-  return { sent: true, decision, input, surfaces: decision.surfaces };
+  if (!(await g.commit(decision, input))) return { sent: false, code: "commit", reason: LOST, availableAt };
+  return { sent: true, decision, input, surfaces: decision.surfaces, gate: g };
 }
 // One line per decision, the log whyNotReceived() reads. Lines stay well under 4 KB.
 function record(args, delivered, code, text, availableAt = null) {
@@ -121,8 +126,8 @@ export async function decide(args) {
   record(args, v.sent, v.code ?? null, v.sent ? "delivered" : v.reason, v.availableAt);
   return v.sent ? { send: true, reason: null, reasonCode: null, surfaces: v.surfaces } : { send: false, reason: v.reason, reasonCode: v.code, surfaces: [] };
 }
-// decide(), then the app's transport: push(user, candidate) and inApp(user, candidate). A unit is given back only
-// when nothing was delivered. Returns { push, inApp, reason, resumeAt }; resumeAt is the ISO time it can go out.
+// decide(), then the app's transport: push(user, candidate) and inApp(user, candidate). A unit is given back when the
+// push was refused or nothing was delivered. Returns { push, inApp, reason, resumeAt }; resumeAt is the ISO time it can go out.
 export async function deliver(args) {
   args = call(args);
   const user = await withStoredConsent(args.user, args.consentStore);
@@ -139,10 +144,11 @@ export async function deliver(args) {
     if (v.surfaces.includes("push")) push = Boolean(await args.transport.push(args.user, v.input.candidate));
     if (v.surfaces.includes("feed")) inApp = Boolean(await args.transport.inApp(args.user, v.input.candidate));
   } catch (error) {
-    if (!push && !inApp) await gate.release(v.decision, v.input);
+    if (!push && !inApp) await v.gate.release(v.decision, v.input);
     throw error;
   }
-  if (!push && !inApp) await gate.release(v.decision, v.input);
+  // A unit is spent only on a confirmed send: a push the phone refused gives it back, even if the in-app item was stored.
+  if (!push && (!inApp || v.surfaces.includes("push"))) await v.gate.release(v.decision, v.input);
   const delivered = push || inApp;
   const reason = delivered ? (push ? null : "the phone did not accept the push, so only the in-app item was stored") : "nothing was delivered, so the budget unit was given back";
   record(args, delivered, delivered ? null : "transport", reason ?? "delivered", delivered ? null : snoozeAt);
@@ -162,7 +168,7 @@ export function whyNotReceived({ userId, from, to }) {
 // Last week's events under another policy (quietHours {start, end} or null, dailyCap a number or null). Its own
 // store and no log, so nothing real changes.
 export async function dryRun({ events, policy: rules = {} }) {
-  const trial = createGate({ policy: { ...policy, checks: policy.checks.map((c) => (c.preset ? { ...c, dailyLimit: rules.dailyCap ?? c.dailyLimit } : c)) }, store: new MemoryStore(), inboundConsent: true });
+  const trial = createGate({ policy: rules.dailyCap === undefined ? policy : withCap(rules.dailyCap), store: new MemoryStore(), inboundConsent: true });
   let delivered = 0;
   let blocked = 0;
   for (const e of [...events].sort((a, b) => new Date(a.at) - new Date(b.at))) {
@@ -249,11 +255,11 @@ test("a push the phone rejects gives the unit back when nothing else delivered",
   assert.match((await deliver({ user, candidate: nudge({ origin: "requested", surfaces: ["push"] }), now: NOW, transport: ok })).reason, /budget/);
 });
 
-test("an in-app item that was stored keeps its unit, even when the push failed", async () => {
+test("a push the phone refused gives its unit back, even when the in-app item was stored", async () => {
   const user = who();
   const half = { push: async () => false, inApp: async () => true };
-  for (let i = 0; i < DAILY; i++) assert.equal((await deliver({ user, candidate: nudge({ origin: "requested", surfaces: ["push", "feed"] }), now: NOW, transport: half })).inApp, true);
-  assert.equal(coded(await ask(user, nudge({ origin: "requested" }))), "dailyBudget");
+  for (let i = 0; i < DAILY + 1; i++) assert.equal((await deliver({ user, candidate: nudge({ origin: "requested", surfaces: ["push", "feed"] }), now: NOW, transport: half })).inApp, true);
+  assert.equal((await ask(user, nudge({ origin: "requested" }))).send, true, "nothing was spent, so the next message still goes");
 });
 
 test("a transport that throws gives its unit back and passes the error on", async () => {
@@ -403,6 +409,6 @@ test("the codes are a closed list that includes the module's own", () => {
 `;
 
 /** The files `scaffold nudge` writes, by name. */
-export function nudgeFiles(dailyLimit: number): Record<string, string> {
-  return { "proactive-gate.policy.json": POLICY(dailyLimit), "notify.mjs": NOTIFY, "notify.test.mjs": NOTIFY_TEST };
+export function nudgeFiles(dailyLimit: number, legalUs = false): Record<string, string> {
+  return { "proactive-gate.policy.json": POLICY(dailyLimit, legalUs), "notify.mjs": NOTIFY, "notify.test.mjs": NOTIFY_TEST };
 }
