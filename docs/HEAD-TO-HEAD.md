@@ -882,3 +882,20 @@ The controller does not read the task prompts or criteria before the gate; it ru
    also counts the benchmark runs. A batch does not start when the amount spent plus the batch estimate would pass either limit. A step whose estimate does not fit is not started; the evidence up to that point is written.
    A 429, an authentication error or the shim's "credit guard" refusal (exit 3) stops everything and is reported. A cell lost to a rate limit or API error is deleted and run again, never graded.
 9. Claim scope: only the arms, tasks, models and date that were run. "First" is claimed only when the full gate passed, with its scope. Evidence folder per `EVIDENCE-SPEC.md` (11 items); development gate in its own section.
+
+### Round 7, development-gate iteration 1 and the iteration-2 rulings (frozen 2026-10-23, before the iteration-2 code change and run)
+
+Iteration 1 (build `78506d4`, cost from `costUsd` of the cells: see `results/round7-devgate-iter1-*`): did not pass. Ours totals of means (30 max): round-5 set Haiku 29.33, Sonnet 28.00;
+held-out c Haiku 28.33, Sonnet 26.67. The g3 loss of round 6 is gone (g3 6.00 on both models and both sets). The failing cells, by general class:
+
+- **Transactional held by quiet hours** (c g2: Haiku 3 runs of 3 lose one or two criteria, Sonnet 3 of 3). The request says "a customer who is waiting for a courier must still hear about the courier"; the
+  agent applied the customer's quiet window to transactional pushes too. Skill rule 9 ("Opt-out, quiet hours and legal hours still apply to it") is written for a message the user asked to be told at a time,
+  and an agent reads it as covering transactional messages. Ruling: a message the request says must still reach the person (receipt, security code, courier arrival) is not held by quiet hours or by a
+  marketing cap and does not count toward the cap; its own channel's opt-out and legal hours still apply. A message held for any reason spends no budget.
+- **A self-chosen window narrower than the law** (c g1, Sonnet 2 of 3: window 09:00 to 20:00 "because of the complaint"; edge, DST and `nextAllowedAt` criteria fail). The request asks for care about when to text
+  and states no hours. Ruling (extension of the round-6 rule 11): when the request asks for care about contact hours and states none, use the legal window of the recipient's region (US: 08:00 to before 21:00 recipient-local);
+  a narrower window only when the request states it.
+- Not addressed (no general cause found in the transcripts): round-5 g4 Sonnet run 3 scored 0 (all criteria failed in one run of three); round-5 g2 Haiku run 2 and c g5 stop-word false positives
+  (one run each on Haiku and Sonnet) are single-run variance; the skill already states rule 7 (STOP as the whole message).
+- Size: the round-7 cap in the first Round 7 section (round-6 size plus 400 bytes) is raised to round-6 size plus 900 bytes (7663 bytes) because two rulings are added; no other cap changes.
+- Iteration 2 reruns both sets on both models, ours x3, same checkers, same references. Iteration 3 only if iteration 2 fails and the budget fits (protocol item 8).
