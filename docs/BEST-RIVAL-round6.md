@@ -48,7 +48,7 @@ require it on every marketing text" and also admits "CTIA recommends opt-out wor
 Criteria 2, 3, 4 fail, all with `{"allowed":false,"reason":"missing_opt_out_notice"}` on a valid daytime text. Courier (runs 2 and 3, 6 of 6): no body check; the
 answer says "The function doesn't read the body. Nothing checks that ... marketing texts ... say 'Reply STOP'. If you want that enforced, it needs a new
 rule" (`runs/sonnet/g1/courier/2/final.md`). Courier run 1 (3 of 6) and baseline run 1 (3 of 6) added `missing_opt_out_instructions` and fail the same three.
-So the same defect occurs in the rival arms (11 of 18 Sonnet cells over all six arms; 15 of 18 on Haiku). Courier's passing runs did not follow a rule: its SMS
+So the same defect occurs in the rival arms (12 of 18 Sonnet g1 cells over all six arms; 17 of 18 on Haiku). Courier's passing runs did not follow a rule: its SMS
 text puts the opt-out in message copy (`sms.md:124-135`), and the request cited the CTIA principles, so each agent decided on its own whether to enforce it.
 No courier or knock line says "do not block a text for something the request does not state". Our skill had no such line either, and its rule 7 ("opt-out ...
 beats every other rule") pushes toward more blocking.
@@ -69,7 +69,7 @@ criteria 2 and 3 (cap reset at local midnight, DST) in 2 of 3, 1 of 3 and 3 of 3
 | Mirror provider STOP into a preference (Courier `sms.md:293`) | yes, rule 7 and `handleInbound` | general | MIT | already covered |
 | Topic default holds until the user changes it (Courier `preferences.md:9`) | yes, round-5 rule 2 | general | MIT | already covered |
 | Ask when the request is ambiguous (Courier `SKILL.md:15`) | no | general, but headless runs cannot ask | MIT | reject: our tasks are headless; use "record the assumption in the answer" |
-| Skill does not fire on non-API requests, so the answer is plain Claude's (courier, skillCalls 0) | n/a | n/a | n/a | not copied; our skill fires (Sonnet 4 of 5 g-cells) and costs one extra turn |
+| Skill does not fire on non-API requests, so the answer is plain Claude's (courier, skillCalls 0) | n/a | n/a | n/a | not copied; our skill fires (g1 to g4 in 3 of 3 runs, g5 in 0 of 3, both models) and costs one extra turn |
 | Stay with what the request states, report a gap as a note (visible in courier g1 answers, not written in its text) | no | general | n/a | **adopt as our rule 11** |
 
 Nothing is copied from either rival; no text or code is taken, so `THIRD-PARTY-NOTICES.md` does not change.
