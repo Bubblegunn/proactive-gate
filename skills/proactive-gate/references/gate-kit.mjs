@@ -244,6 +244,12 @@ function gkIsStart(text) {
   return normalized === "start" || normalized === "unstop";
 }
 
+// Returns true when the whole normalized message is help or info.
+function gkIsHelp(text) {
+  const normalized = gkNormalize(text);
+  return normalized === "help" || normalized === "info";
+}
+
 // Returns the path of the state file for key with the given suffix; creates nothing.
 function gkPathFor(dir, key, suffix) {
   gkRequireKey(key);

@@ -483,7 +483,7 @@ const kitNames = new Set([...kitSource.matchAll(/^(?:async )?function (gk\w+)/gm
 /** The checks of the round-8 skill text, as a list of problems for any skill text. */
 function round8Problems(text) {
   const bad = [];
-  if (Buffer.byteLength(text) > 9700) bad.push("the skill is over the 9,700 byte cap");
+  if (Buffer.byteLength(text) > 10300) bad.push("the skill is over the 10,300 byte cap");
   const cited = new Set([...text.matchAll(/\b(gk[A-Z]\w*)\(/g)].map((m) => m[1]));
   if (cited.size < 8) bad.push("the skill cites fewer than eight kit functions");
   for (const name of cited) if (!kitNames.has(name)) bad.push(`the kit has no function ${name}`);
@@ -492,6 +492,10 @@ function round8Problems(text) {
   if (!/local clock time with the zone name/.test(text)) bad.push("rule 8 does not ask for local clock time with the zone name");
   if (!/interrupting surface/.test(text)) bad.push("rule 6 lost the per-surface hold");
   if (!/until the end of the recipient's local day/.test(text)) bad.push("rule 5 lost the local-day suppression");
+  if (!text.includes("INFO as the whole message (`gkIsHelp(text)`)")) bad.push("rule 7 lost the HELP keyword");
+  if (!/neither the data nor the functions/.test(text)) bad.push("rule 2 lost the consent-carrier exception");
+  if (!/security alert or code/.test(text)) bad.push("rule 9 lost the security-alert sentence");
+  if (!/report a silent in-app item every time/.test(text)) bad.push("rule 5 lost the repeat answer for the in-app item");
   return bad;
 }
 
@@ -502,13 +506,17 @@ test("the round-8 skill: size cap, every kit function it cites exists, the appen
 
 test("the round-8 checks reject a skill that regresses each point", () => {
   for (const [broken, expected] of [
-    [skill + "x".repeat(9700), /9,700 byte cap/],
+    [skill + "x".repeat(10300), /10,300 byte cap/],
     [skill.replaceAll("gkNextOpen(", "gkNextOpened("), /no function gkNextOpened/],
     [skill.replace('cat "${CLAUDE_SKILL_DIR}/references/gate-kit.mjs" >>', "cat gate-kit.mjs >>"), /append command/],
     [skill.replace("never narrow it", "use the legal window of the recipient's region"), /legal-window default/],
     [skill.replace("local clock time with the zone name", "UTC"), /local clock time/],
     [skill.replace("interrupting surface", "surface"), /per-surface/],
     [skill.replace("until the end of the recipient's local day", "forever"), /local-day suppression/],
+    [skill.replace("INFO as the whole message (`gkIsHelp(text)`)", "INFO"), /HELP keyword/],
+    [skill.replace("neither the data nor the functions", "the functions"), /consent-carrier/],
+    [skill.replace("security alert or code", "code"), /security-alert/],
+    [skill.replace("report a silent in-app item every time", "report it"), /repeat answer/],
   ]) assert.match(round8Problems(broken).join("\n"), expected);
 });
 

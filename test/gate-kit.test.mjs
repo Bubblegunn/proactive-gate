@@ -235,6 +235,15 @@ function runChecks(env, t) {
     }
   });
 
+  t.test("gkIsHelp matches help and info only as the whole message", () => {
+    for (const text of ["help", "Help", "INFO", "  Help! ", "info.", "INFO."]) {
+      assert.equal(kit.gkIsHelp(text), true, JSON.stringify(text));
+    }
+    for (const text of ["help me stop", "helpful", "information", "stop", "", "need help"]) {
+      assert.equal(kit.gkIsHelp(text), false, JSON.stringify(text));
+    }
+  });
+
   t.test("state: read, write, claim, unclaim, count and refund in one directory", () => {
     const dir = join(scratch, `state-${loads}-${Math.random().toString(36).slice(2)}`);
     assert.equal(kit.gkRead(dir, "a"), null, "missing key reads null");
@@ -499,6 +508,16 @@ const MUTANTS = [
     name: "gkIsStop matches substrings",
     from: "return words.has(gkNormalize(text));",
     to: "return [...words].some((w) => gkNormalize(text).includes(w));",
+  },
+  {
+    name: "gkIsHelp matches substrings",
+    from: "return normalized === \"help\" || normalized === \"info\";",
+    to: "return [\"help\", \"info\"].some((w) => normalized.includes(w));",
+  },
+  {
+    name: "gkIsHelp drops info",
+    from: "|| normalized === \"info\";",
+    to: ";",
   },
   {
     name: "gkClaim is not exclusive",
