@@ -899,3 +899,17 @@ held-out c Haiku 28.33, Sonnet 26.67. The g3 loss of round 6 is gone (g3 6.00 on
   (one run each on Haiku and Sonnet) are single-run variance; the skill already states rule 7 (STOP as the whole message).
 - Size: the round-7 cap in the first Round 7 section (round-6 size plus 400 bytes) is raised to round-6 size plus 900 bytes (7663 bytes) because two rulings are added; no other cap changes.
 - Iteration 2 reruns both sets on both models, ours x3, same checkers, same references. Iteration 3 only if iteration 2 fails and the budget fits (protocol item 8).
+
+### Round 7, development-gate iteration 2 result and the iteration-3 ruling (frozen 2026-10-23, before the iteration-3 code change and run)
+
+Iteration 2 (build `044544c`, cell cost 3.22 USD, `results/round7-devgate-iter2-*`): did not pass. Totals of means (30 max): round-5 set Haiku 29.00, Sonnet 29.00; held-out c Haiku 25.67, Sonnet 28.00.
+
+- **Regression caused by the iteration-2 wording (general class: a legal-hours default applied to a message the law does not limit).** Round-5 g1 criterion 6 ("transactional text is allowed at night") fails in 6 of 6 cells (reason
+  `outside_legal_hours`, Haiku and Sonnet); in iteration 1 it passed. The rule-6 sentence "use the legal window of the recipient's region" was read as covering every text. Ruling: the legal-window default applies to
+  unsolicited and promotional messages only; a transactional message (the request's own words for a message that must still reach the person) is not held by it. This replaces the iteration-2 rule-6 sentence; rule 9 is unchanged.
+- **Checker nondeterminism, not a product defect (report to the owner; the checker is not changed).** Held-out c g2 criterion 4 failed in 5 of 6 cells in iteration 2 and 5 of 6 in iteration 1. The code of cell `ours-g2-2` (Sonnet) is correct on reading
+  (transactional returns `send: true` before any counting). Running the unchanged checker six times on that same folder gave 5, 4, 5, 5, 4, 4 of 6. Cause: `checkers/lib.mjs` loads the module with `import(url + "?v=" + Date.now())`; two criteria that load within the
+  same millisecond share one module instance, so the state of the previous criterion (user `u` already at the cap on 2026-06-02) leaks into criterion 4. Every arm is exposed to it; the earlier round-6 Haiku 6/6 on g2 had no collision. The criteria, checkers and win rule stay as frozen;
+  the effect is reported next to every held-out c number it touches, and the iteration-3 pass test uses g2 as measured.
+- c Haiku g3 opt-in block returned in 2 of 3 cells and g5 stop-word false positives in 3 of 3 cells (Haiku): no new rule; both are existing rules (2 exemption, 7) that the Haiku cells did not apply. Not changed.
+- Iteration 3 is the last allowed iteration of this round. If it fails, the round stops: held-out d is not written or run, and the report states the dev-gate result as it stands.
