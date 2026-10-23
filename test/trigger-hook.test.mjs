@@ -9,7 +9,7 @@ const read = (p) => readFileSync(join(root, p), "utf8");
 const pkg = JSON.parse(read("package.json"));
 const hooks = JSON.parse(read("hooks/hooks.json"));
 const script = join(root, "hooks/trigger.sh");
-const LINE = "This request is about an agent or job sending messages with limits, quiet hours, consent or legal windows: use the proactive-gate skill (Skill tool, name proactive-gate) and its library instead of hand-written rules.";
+const LINE = "This request is about an agent or job sending messages with limits, quiet hours, consent or legal windows: use the proactive-gate skill (Skill tool, name proactive-gate); its default is one inline gate file with a tested helper kit.";
 
 // Written here, not imported from the measurement kit, so the test does not depend on bench/.
 const TRIGGERS = [

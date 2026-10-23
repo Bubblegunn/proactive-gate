@@ -30,7 +30,7 @@ s/^/ /
 s/$/ /
 /[^[:alpha:]]'"$sending"'(s|es)?[^[:alpha:]]/!d
 /[^[:alpha:]]'"$rules"'(s|es)?[^[:alpha:]]/!d
-s/.*/This request is about an agent or job sending messages with limits, quiet hours, consent or legal windows: use the proactive-gate skill (Skill tool, name proactive-gate) and its library instead of hand-written rules./
+s/.*/This request is about an agent or job sending messages with limits, quiet hours, consent or legal windows: use the proactive-gate skill (Skill tool, name proactive-gate); its default is one inline gate file with a tested helper kit./
 '
 printf '%s' "$input" | sed -E "$script"
 exit 0
