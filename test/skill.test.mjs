@@ -483,7 +483,7 @@ const kitNames = new Set([...kitSource.matchAll(/^(?:async )?function (gk\w+)/gm
 /** The checks of the round-8 skill text, as a list of problems for any skill text. */
 function round8Problems(text) {
   const bad = [];
-  if (Buffer.byteLength(text) > 9000) bad.push("the skill is over the 9,000 byte cap");
+  if (Buffer.byteLength(text) > 9700) bad.push("the skill is over the 9,700 byte cap");
   const cited = new Set([...text.matchAll(/\b(gk[A-Z]\w*)\(/g)].map((m) => m[1]));
   if (cited.size < 8) bad.push("the skill cites fewer than eight kit functions");
   for (const name of cited) if (!kitNames.has(name)) bad.push(`the kit has no function ${name}`);
@@ -502,7 +502,7 @@ test("the round-8 skill: size cap, every kit function it cites exists, the appen
 
 test("the round-8 checks reject a skill that regresses each point", () => {
   for (const [broken, expected] of [
-    [skill + "x".repeat(9000), /9,000 byte cap/],
+    [skill + "x".repeat(9700), /9,700 byte cap/],
     [skill.replaceAll("gkNextOpen(", "gkNextOpened("), /no function gkNextOpened/],
     [skill.replace('cat "${CLAUDE_SKILL_DIR}/references/gate-kit.mjs" >>', "cat gate-kit.mjs >>"), /append command/],
     [skill.replace("never narrow it", "use the legal window of the recipient's region"), /legal-window default/],
@@ -516,7 +516,7 @@ test("the append command in the skill produces a working file: the kit appended 
   const dir = mkdtempSync(join(tmpdir(), "skill-kit-"));
   try {
     const skillDir = fileURLToPath(new URL("../skills/proactive-gate", import.meta.url));
-    const command = /`(cat "\$\{CLAUDE_SKILL_DIR\}\/references\/gate-kit\.mjs" >> bot\.mjs)`/.exec(skill)?.[1];
+    const command = /`(printf '\\n' >> bot\.mjs; cat "\$\{CLAUDE_SKILL_DIR\}\/references\/gate-kit\.mjs" >> bot\.mjs)`/.exec(skill)?.[1];
     assert.ok(command, "the skill shows the append command");
     writeFileSync(join(dir, "bot.mjs"), 'export function check(ms) { return gkNextOpen(ms, "America/New_York", "08:00", "21:00"); }\nconsole.log(check(Date.UTC(2026, 2, 8, 6, 0)));\n');
     const run = spawnSync("sh", ["-c", `${command.replace("${CLAUDE_SKILL_DIR}", skillDir)} && node bot.mjs`], { cwd: dir, encoding: "utf8" });

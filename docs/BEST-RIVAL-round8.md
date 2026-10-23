@@ -118,6 +118,8 @@ Rulings (each is general; none edits a task, criterion, checker or the win rule)
   (`crypto.randomUUID()` in the cache-busting query), so the race found in r7 does not touch it. The old checkers are untouched (owner decision pending).
 - R8-9. Every new test has a mutation check (a mutant of the kit that must make it fail, applied in memory by the test itself).
 
+- R8-6b (2026-10-23, after the Sonnet review of the skill text and before any run). Cap raised from 9,000 to 9,700 bytes and the front page from 40 to 46 lines: the review found that the compression had dropped three conditions of the rule-2 exception and that rules 5, 6, 8 and 9 could be over-read; the clarifying clauses and the kit paragraph cost 690 bytes (about 0.0002 USD of cached input per turn). Changes made from that review: rule 2 exception restored with its conditions; rule 5 says a message id's claim never expires; rule 6 per-surface hold only when the task defines a silent surface; rule 8 puts the instant in the task's result shape; rules 9 and 11 point to rule 6 for hours; the append command gets a newline guard and a fallback path.
+
 ## 7. Implementation plan
 
 Method: superpowers subagent-driven-development; Haiku 5.5 implementers one at a time, Sonnet 5.5 reviewers; tests, mutation checks, `npm run lint`, `npm test`, `claude plugin validate . --strict` (profile directory); one commit per task; push to `origin plugin-leadership` after each reviewed task.
