@@ -130,6 +130,10 @@ function runJob(job) {
         console.error(`STOP: ${job.name} produced no result message (the claude call failed before the task ran: ${text.slice(0, 200).replace(/\s+/g, " ")}). Nothing else is run; delete runs/${job.name}.* and run again.`);
         process.exit(4);
       }
+      if (/"api_error_status":\s*(429|401|403)|usage_limit_reached|You've hit your (session )?limit/.test(text)) {
+        console.error(`STOP: ${job.name} failed because of a usage limit or authentication error (HTTP 429/401/403), not because of the task. Nothing else is run; delete runs/${job.name}.* and work/${job.name} and run again. Never grade it.`);
+        process.exit(4);
+      }
       if (/You've hit your limit|"is_error":\s*true,\s*"duration_ms":\s*\d+,\s*"duration_api_ms":\s*0\b/.test(text)) {
         console.error(`STOP: ${job.name} failed because of an account limit or API error, not because of the task. Nothing else is run; delete runs/${job.name}.jsonl and run again.`);
         process.exit(4);
