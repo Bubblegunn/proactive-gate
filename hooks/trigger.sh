@@ -12,8 +12,8 @@ while IFS= read -r line || [ -n "$line" ]; do
   input="$input$line"
 done
 
-sending='(message|messages|messaging|notification|notify|reminder|remind|nudge|alert|sms|text users|texting|push|email|emails|digest|newsletter|whatsapp|telegram|slack bot)'
-rules='(quiet hours|night|nighttime|at night|limit|cap|per day|daily|weekly|rate limit|throttle|consent|opt-out|opt out|unsubscribe|stop keyword|tcpa|legal|window|snooze|do not disturb|mute|frequency|too many|spam|fatigue|replay|last week)'
+sending='(message|messages|messaging|notification|notify|reminder|remind|nudge|alert|sms|text users|texting|push|email|emails|digest|newsletter|whatsapp|telegram|slack bot|text|promotional|promo|offers)'
+rules='(quiet hours|night|nighttime|at night|limit|cap|per day|daily|weekly|rate limit|throttle|consent|opt-out|opt out|unsubscribe|stop keyword|tcpa|legal|window|snooze|do not disturb|mute|frequency|too many|spam|fatigue|replay|last week|telemarketing|fcc|cfr|calling hours|contact hours|quiet ?hours)'
 
 # One sed run does the whole check. It takes the value of the "prompt" key (lines without that key are
 # dropped), turns each backslash escape into a space, lower-cases, pads both ends with a space so every

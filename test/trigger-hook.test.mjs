@@ -25,6 +25,8 @@ const TRIGGERS = [
   "Replay last week's notifications under a new policy and show how many would be blocked.",
   "Why did this user get no email during their snooze?",
   "Add snooze support so a user can pause the newsletter for a week.",
+  "Write decide(user, now) for one promotional text under the FCC telemarketing rules.",
+  "The app sends a push and an inbox item; honour the user's quietHours in their time zone.",
 ];
 
 const UNRELATED = [
@@ -40,6 +42,8 @@ const UNRELATED = [
   "Set up Postgres indexes for the orders table.",
   "Show the error message from the failed build in a readable table.",
   "Limit the number of rows returned by this SQL query to 50.",
+  "Convert the text field in the form to a textarea and keep its time zone label.",
+  "Why is the promotional banner image blurry on the checkout page?",
 ];
 
 const runHook = (prompt, shell = "sh") =>
