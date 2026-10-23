@@ -1,0 +1,9 @@
+| arm | total of means (max 30) | cost per run USD | turns per run | cells |
+|---|---|---|---|---|
+| baseline | 25.33 | 0.014 | 7.1 | 15 |
+| courier | 23.33 | 0.013 | 7.0 | 15 |
+| courier-inv | 24.33 | 0.015 | 8.9 | 15 |
+| ours | 28.33 | 0.015 | 7.0 | 15 |
+
+ours minus best other (baseline by point estimate): 3.00, 95% bootstrap interval [1.00, 4.33], 10000 resamples, seed 7
+{"ours": 28.333333333333336, "best_other": "baseline", "best_other_total": 25.333333333333332, "diff": 3.0000000000000036, "lo": 1.0000000000000036, "hi": 4.333333333333336, "ours_cost": 0.014677987333333333, "baseline_cost": 0.014343688666666667}

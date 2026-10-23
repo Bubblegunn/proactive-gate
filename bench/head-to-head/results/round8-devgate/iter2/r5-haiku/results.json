@@ -1,0 +1,872 @@
+[
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 1,
+  "name": "ours-g1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g1-1",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.014147739999999999,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 80,
+  "locAll": 80,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 2,
+  "name": "ours-g1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g1-2",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.009823000000000002,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 392,
+  "locAll": 392,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": false,
+    "why": "FAIL 2026-01-15T14:00:00Z -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": false,
+    "why": "FAIL America/New_York -> {\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"},{\"allowed\":false,\"reason\":\"outside_calling_hours\"},{\"allowed\":false,\"reason\":\"outside_calling_hours\"},{\"allowed\":false,\"reason\":\"missing_opt_out_instructions\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 3,
+  "name": "ours-g1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g1-3",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.00965576,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 397,
+  "locAll": 397,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 1,
+  "name": "ours-g2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g2-1",
+  "code": 0,
+  "seconds": 67,
+  "costUsd": 0.015328920000000001,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 421,
+  "locAll": 421,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 2,
+  "name": "ours-g2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g2-2",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.01305177,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 3,
+  "name": "ours-g2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g2-3",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.013251659999999998,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 409,
+  "locAll": 409,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 1,
+  "name": "ours-g3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g3-1",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.01296408,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 98,
+  "locAll": 98,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 2,
+  "name": "ours-g3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g3-2",
+  "code": 0,
+  "seconds": 69,
+  "costUsd": 0.01267408,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 3,
+  "name": "ours-g3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g3-3",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.01366219,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 102,
+  "locAll": 102,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 1,
+  "name": "ours-g4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g4-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.01225202,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 140,
+  "locAll": 140,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 2,
+  "name": "ours-g4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g4-2",
+  "code": 0,
+  "seconds": 95,
+  "costUsd": 0.018463,
+  "turns": 12,
+  "skillCalls": 1,
+  "loc": 138,
+  "locAll": 138,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 3,
+  "name": "ours-g4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g4-3",
+  "code": 0,
+  "seconds": 68,
+  "costUsd": 0.013222620000000001,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 137,
+  "locAll": 137,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 1,
+  "name": "ours-g5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g5-1",
+  "code": 0,
+  "seconds": 29,
+  "costUsd": 0.00662523,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 46,
+  "locAll": 46,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 2,
+  "name": "ours-g5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g5-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.00695536,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 45,
+  "locAll": 45,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 3,
+  "name": "ours-g5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter2/r5-haiku/work/ours-g5-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.007275,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 51,
+  "locAll": 51,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]
