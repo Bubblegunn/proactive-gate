@@ -928,3 +928,18 @@ Evidence: `bench/head-to-head/results/round7-devgate/` (`python3 score.py --chec
 What changed: the g3 loss class of round 6 is fixed (c g3 6.00 on both models in iteration 1; it recurs in single runs of iterations 2 and 3, 4 of the 24 g3 cells of iterations 2 and 3 (both sets, both models) scored 2 or 3). A legal-window default added in iteration 2 produced extra blocks
 (transactional text at night in iteration 2, email and g5 texts held for legal hours in iteration 3) and should be removed. Held-out c g2 criterion 4 is hit by a checker race (see `NOTES.md`). Per the frozen rule the round stops after three iterations:
 no new held-out set (d) was written, no Sonnet or public measurement was run, and no claim of "first" or "best" is made. Total cell cost of the gate 9.60 USD.
+
+## Round 8 (frozen 2026-10-23, research and development only; no measurement in this round)
+
+Written and committed before any round-8 code change. Analysis, evidence and the technique map: `docs/BEST-RIVAL-round8.md`. Criteria, checkers, tasks and the win rule do not change.
+
+Rulings (details and evidence in the analysis, section 6):
+
+- R8-1. Rule 6 loses the legal-window default sentence added in round 7 iteration 2 (measured regression in iterations 2 and 3).
+- R8-2. A tested helper file `skills/proactive-gate/references/gate-kit.mjs` (local time, DST, next open time, day and week keys, STOP parsing, atomic claim and counter), appended to the agent's file by one shell command.
+- R8-3. A refusal sentence names the retry time as local clock time and zone name; the instant is a separate field.
+- R8-4. A hold applies to the interrupting surface; a silent in-app item stays.
+- R8-5. A suppression lasts to the end of the recipient's local day unless the request says longer.
+- R8-6. Skill size cap 8,000 bytes. R8-7. The hook line no longer points at the library. R8-8. New development set k, committed before any run, with a collision-free checker loader. R8-9. Every new test has a mutation check.
+
+The launch claim under the owner decisions of 2026-10-23 is "first in total" (interval of ours minus the best other arm's total above zero). On a saturated set (best rival at 29 of 30) that interval cannot exclude zero; the development gate therefore includes the discriminative set k.
