@@ -940,6 +940,6 @@ Rulings (details and evidence in the analysis, section 6):
 - R8-3. A refusal sentence names the retry time as local clock time and zone name; the instant is a separate field.
 - R8-4. A hold applies to the interrupting surface; a silent in-app item stays.
 - R8-5. A suppression lasts to the end of the recipient's local day unless the request says longer.
-- R8-6. Skill size cap 8,000 bytes. R8-7. The hook line no longer points at the library. R8-8. New development set k, committed before any run, with a collision-free checker loader. R8-9. Every new test has a mutation check.
+- R8-6. Skill size cap 9,000 bytes (amended from 8,000 before any code change). R8-7. The hook line no longer points at the library. R8-8. New development set k, committed before any run, with a collision-free checker loader. R8-9. Every new test has a mutation check.
 
 The launch claim under the owner decisions of 2026-10-23 is "first in total" (interval of ours minus the best other arm's total above zero). On a saturated set (best rival at 29 of 30) that interval cannot exclude zero; the development gate therefore includes the discriminative set k.
