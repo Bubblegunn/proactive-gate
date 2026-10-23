@@ -925,6 +925,6 @@ Evidence: `bench/head-to-head/results/round7-devgate/` (`python3 score.py --chec
 | 2 | `044544c` | 29.00 | 29.00 | 25.67 | 28.00 | FAIL | 3.22 |
 | 3 | `6bdfc6c` | 28.67 | 30.00 | 26.33 | 27.00 | FAIL | 3.26 |
 
-What changed: the g3 loss class of round 6 is fixed (c g3 6.00 on both models in iteration 1; it recurs in single runs of iterations 2 and 3, 3 of the 24 g3 cells over iterations 2 and 3 on c and r5 sets scored 2 or 3). A legal-window default added in iteration 2 produced extra blocks
+What changed: the g3 loss class of round 6 is fixed (c g3 6.00 on both models in iteration 1; it recurs in single runs of iterations 2 and 3, 4 of the 24 g3 cells of iterations 2 and 3 (both sets, both models) scored 2 or 3). A legal-window default added in iteration 2 produced extra blocks
 (transactional text at night in iteration 2, email and g5 texts held for legal hours in iteration 3) and should be removed. Held-out c g2 criterion 4 is hit by a checker race (see `NOTES.md`). Per the frozen rule the round stops after three iterations:
 no new held-out set (d) was written, no Sonnet or public measurement was run, and no claim of "first" or "best" is made. Total cell cost of the gate 9.60 USD.
