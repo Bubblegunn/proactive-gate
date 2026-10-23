@@ -1,0 +1,872 @@
+[
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 1,
+  "name": "ours-g1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g1-1",
+  "code": 0,
+  "seconds": 40,
+  "costUsd": 0.10250770000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 58,
+  "locAll": 58,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 2,
+  "name": "ours-g1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g1-2",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.10542270000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 55,
+  "locAll": 55,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 3,
+  "name": "ours-g1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g1-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.09886869999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 54,
+  "locAll": 54,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 1,
+  "name": "ours-g2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g2-1",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.08034830000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 58,
+  "locAll": 58,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 2,
+  "name": "ours-g2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g2-2",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.09134600000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 79,
+  "locAll": 79,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 3,
+  "name": "ours-g2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g2-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.0994145,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 62,
+  "locAll": 62,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 1,
+  "name": "ours-g3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g3-1",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.0969816,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 73,
+  "locAll": 73,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 2,
+  "name": "ours-g3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g3-2",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0963505,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 73,
+  "locAll": 73,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 3,
+  "name": "ours-g3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g3-3",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0953496,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 65,
+  "locAll": 65,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 1,
+  "name": "ours-g4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g4-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.09089619999999998,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 98,
+  "locAll": 98,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 2,
+  "name": "ours-g4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g4-2",
+  "code": 0,
+  "seconds": 40,
+  "costUsd": 0.10332809999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 97,
+  "locAll": 97,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 3,
+  "name": "ours-g4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g4-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.1094473,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 125,
+  "locAll": 125,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": false,
+    "why": "FAIL allowed lead_1=20 lead_2=20, expected 3 and 3"
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": false,
+    "why": "FAIL step 2: {\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.53967f8f-14a3-43c0-9b0d-a2965c0a42de\"}"
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": false,
+    "why": "FAIL step 1: {\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.206eae33-1816-4fb8-acca-1e9f54c7d156\"}"
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": false,
+    "why": "FAIL gap: [{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.3c19d4e7-9785-42b8-9bfb-cfcd637c22c4\"},{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.506c023b-d0a2-465b-ba17-8182e3553beb\"},{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.bfac2ecc-4e68-41a3-b5ae-4cf83aaff792\"}]"
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.0b762adf-864d-4cae-80e7-4c1ddeccd2a6\"},{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.db1014d0-a227-47b1-897a-cba49455bb6b\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.38104a08-87dc-4201-8c95-2df29f3ddddd\"},{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.f492b576-cdfe-4e3b-8ae2-d4a65fb67c53\"},{\"allowed\":true,\"reason\":null,\"reservationId\":\"acac86c0e609ca906f632b0e2dacccb2b77d22b0621f20ebece1a4835b93f6f0.c4056261-ac4a-4041-aaf2-3b8fec64e06e\"}]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 1,
+  "name": "ours-g5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g5-1",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.0658163,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 34,
+  "locAll": 34,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 2,
+  "name": "ours-g5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g5-2",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.0667468,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 3,
+  "name": "ours-g5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter1-r5-sonnet/work/ours-g5-3",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.0697144,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 35,
+  "locAll": 35,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

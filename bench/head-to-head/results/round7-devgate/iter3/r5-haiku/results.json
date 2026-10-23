@@ -1,0 +1,872 @@
+[
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 1,
+  "name": "ours-g1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g1-1",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.010369640000000001,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 51,
+  "locAll": 51,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 2,
+  "name": "ours-g1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g1-2",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.011808054999999998,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 55,
+  "locAll": 55,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g1",
+  "rep": 3,
+  "name": "ours-g1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g1-3",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.010812200000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text at night is blocked with a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 daytime allowed, window is 08:00 up to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's own time zone, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 follows daylight saving changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no consent or STOP blocks marketing, with a code different from quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional text is allowed at night",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 1,
+  "name": "ours-g2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g2-1",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.011420409999999999,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 87,
+  "locAll": 87,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 2,
+  "name": "ours-g2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g2-2",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.010532265,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 75,
+  "locAll": 75,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g2",
+  "rep": 3,
+  "name": "ours-g2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g2-3",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.00855545,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 72,
+  "locAll": 72,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 the daily cap stops the push after dailyCap sends",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the cap resets at the user's local midnight, not at UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the local day follows daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 quiet hours that run past midnight block, edges are 22:00 in and 07:00 out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a blocked attempt does not use up the daily cap, and cap and quiet codes differ",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 users and gates are independent",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 1,
+  "name": "ours-g3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g3-1",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.01162683,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 128,
+  "locAll": 128,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 2,
+  "name": "ours-g3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g3-2",
+  "code": 0,
+  "seconds": 93,
+  "costUsd": 0.01566498,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 115,
+  "locAll": 115,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"opted_out\"},{\"allowed\":false,\"reason\":\"timezone_unknown\"}]"
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"opted_out\"},{\"allowed\":false,\"reason\":\"opted_out\"},{\"allowed\":false,\"reason\":\"timezone_unknown\"}]"
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"timezone_unknown\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": false,
+    "why": "FAIL [{\"allowed\":false,\"reason\":\"opted_out\"},{\"allowed\":false,\"reason\":\"timezone_unknown\"}]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g3",
+  "rep": 3,
+  "name": "ours-g3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g3-3",
+  "code": 0,
+  "seconds": 234,
+  "costUsd": 0.016540209999999996,
+  "turns": 1,
+  "skillCalls": 1,
+  "loc": 107,
+  "locAll": 107,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 an unsubscribe seen by one process blocks marketing in another process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the same person is matched regardless of letter case and surrounding spaces",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 order receipts and resets (transactional) still go to unsubscribed people",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribes recorded at the same moment by several processes are all kept",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a later resubscribe lifts the block for that person only",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 a resubscribe event that is older than the unsubscribe does not lift the block",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 1,
+  "name": "ours-g4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g4-1",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.011271275,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 172,
+  "locAll": 172,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 2,
+  "name": "ours-g4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g4-2",
+  "code": 0,
+  "seconds": 67,
+  "costUsd": 0.011457189999999999,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 117,
+  "locAll": 117,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g4",
+  "rep": 3,
+  "name": "ours-g4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g4-3",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.010886469999999999,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 119,
+  "locAll": 119,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 simultaneous reservations from several processes never exceed the cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the window slides with each message instead of resetting at a fixed time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the minimum gap between messages is enforced and ends on time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a refused attempt is not counted and does not restart the gap or window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 history survives restarts and is shared: a new process sees earlier sends, other state dirs are separate",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 release from another process gives the slot back, once",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 1,
+  "name": "ours-g5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g5-1",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.006689135000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 59,
+  "locAll": 59,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 2,
+  "name": "ours-g5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g5-2",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.007160505,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "g5",
+  "rep": 3,
+  "name": "ours-g5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/HOME/Desktop/Open-Source/projelerim/proactive-gate/bench/head-to-head/results/round7-devgate-iter3-r5-haiku/work/ours-g5-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.008803085,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 64,
+  "locAll": 64,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free text is allowed when the patient wrote within the last 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 free text is blocked once the patient's last message is older than 24 hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an approved template is allowed outside the 24-hour window",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a patient who has not opted in gets nothing, not even a template or an in-window text",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 free text to a patient who never wrote to us is blocked",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 different rules give different reason codes",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

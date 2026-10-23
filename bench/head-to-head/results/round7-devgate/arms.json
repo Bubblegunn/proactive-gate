@@ -1,0 +1,1 @@
+{"ours":{"source":"https://github.com/Bubblegunn/proactive-gate","licence":"MIT","commits":["78506d4","044544c","6bdfc6c"],"install":"git archive of the commit, packed with npm, loaded as a plugin by bench/head-to-head/rerun.sh","prompt":"natural (task prompt only; the skill loads on its own)"},"others":"not run in the development gate (spec: ours only)"}

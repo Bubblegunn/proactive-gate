@@ -913,3 +913,18 @@ Iteration 2 (build `044544c`, cell cost 3.22 USD, `results/round7-devgate-iter2-
   the effect is reported next to every held-out c number it touches, and the iteration-3 pass test uses g2 as measured.
 - c Haiku g3 opt-in block returned in 2 of 3 cells and g5 stop-word false positives in 3 of 3 cells (Haiku): no new rule; both are existing rules (2 exemption, 7) that the Haiku cells did not apply. Not changed.
 - Iteration 3 is the last allowed iteration of this round. If it fails, the round stops: held-out d is not written or run, and the report states the dev-gate result as it stands.
+
+## Results, round 7 (development gate only; held-out d, public set, F9 and F6 not run)
+
+Date 2026-10-23. Rulings frozen before each code change (`231c4cf`, `7994a27`, `c3a119a`); best-rival analysis `14b6c20`. Ours x3, SDK path, Haiku and Sonnet, on the seen round-5 set and the seen held-out set c, same checkers, references as frozen.
+Evidence: `bench/head-to-head/results/round7-devgate/` (`python3 score.py --check SUMMARY.md` passes; `SHA256SUMS` verifies; departures in `NOTES.md`).
+
+| iteration | build | r5 Haiku | r5 Sonnet | c Haiku | c Sonnet | gate | cell cost USD |
+|---|---|---|---|---|---|---|---|
+| 1 | `78506d4` | 29.33 | 28.00 | 28.33 | 26.67 | FAIL | 3.12 |
+| 2 | `044544c` | 29.00 | 29.00 | 25.67 | 28.00 | FAIL | 3.22 |
+| 3 | `6bdfc6c` | 28.67 | 30.00 | 26.33 | 27.00 | FAIL | 3.26 |
+
+What changed: the g3 loss class of round 6 is fixed (c g3 6.00 on both models in iteration 1; it recurs in single runs of iterations 2 and 3, 3 of the 24 g3 cells over iterations 2 and 3 on c and r5 sets scored 2 or 3). A legal-window default added in iteration 2 produced extra blocks
+(transactional text at night in iteration 2, email and g5 texts held for legal hours in iteration 3) and should be removed. Held-out c g2 criterion 4 is hit by a checker race (see `NOTES.md`). Per the frozen rule the round stops after three iterations:
+no new held-out set (d) was written, no Sonnet or public measurement was run, and no claim of "first" or "best" is made. Total cell cost of the gate 9.60 USD.
