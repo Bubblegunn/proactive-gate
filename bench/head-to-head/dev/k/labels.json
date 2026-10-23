@@ -1,0 +1,162 @@
+{
+ "k1": {
+  "1": {
+   "label": "outcome",
+   "why": "A text is held before 08:00 and from 21:00 at the customer, and sent in between (07:59, 08:00, 20:59, 21:01 in Chicago).",
+   "concern": "An implementation that treats exactly 21:00 as open or closed is not tested; a reading that uses 09:00 pm inclusive differently would only differ at that minute."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The customer's own zone decides, not the server's zone; same instant gives different answers for Tokyo, Chicago, Los Angeles, Honolulu.",
+   "concern": "The checker sets TZ to Pacific/Auckland; an implementation that reads a different field name for the zone than the prompt gives would fail for the wrong reason."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A refusal carries the exact next 08:00 local instant, same day before 08:00, next day after 21:00, across month and year ends.",
+   "concern": "Requires an ISO string in UTC; an offset-bearing ISO string with the same instant passes, a non-ISO string does not."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "On the 23-hour spring-forward day in New York the retry time is 12:00Z, not 13:00Z, and 08:00 EDT is open.",
+   "concern": "The skipped hour 02:00-03:00 is never queried directly, so an implementation with a wrong gap rule could still pass."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "On the 25-hour fall-back day the retry time is 08:00 EST (13:00Z), including during the repeated hour.",
+   "concern": "The repeated hour uses instants not wall-clock text, so a correct implementation cannot be confused; an implementation that keys on local text only would fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Customers in half-hour and 45-minute zones (Kolkata, Kathmandu) are cut off at their own 21:00 and opened at 08:00.",
+   "concern": "Only two such zones are tested; Lord Howe's 30-minute daylight saving shift is not."
+  }
+ },
+ "k2": {
+  "1": {
+   "label": "outcome",
+   "why": "The fourth push of a day to one person is refused with a readable reason, the first three are allowed.",
+   "concern": "Assumes the limit is exactly three as the prompt says; checks sequential calls only."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The daily count resets at the member's local midnight, not at UTC midnight and not 24 hours after the first push.",
+   "concern": "The prompt does not use the words local day; a reader could take a rolling 24 hours as the intended meaning, which is why the checker uses the member's calendar day."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The 25-hour and 23-hour days on the New York clock-change dates count correctly.",
+   "concern": "Depends on the reading of a day as the calendar day in the member's zone."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Four worker processes calling at once never let more than three pushes through for one member.",
+   "concern": "Timing based: a racy implementation might pass by luck on a quiet machine; the check runs 40 calls to make this unlikely."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "The same messageId delivered again, including to another worker process, is not counted twice and gets the same answer.",
+   "concern": "Expects the repeat of an allowed id to return allowed true, and the repeat of a refused id to return false."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The count survives a restart (new process) and each member has an independent count.",
+   "concern": "Only restarts between whole processes are tested, not a crash in the middle of a write."
+  }
+ },
+ "k3": {
+  "1": {
+   "label": "outcome",
+   "why": "STOP, STOPALL, UNSUBSCRIBE, CANCEL, END and QUIT in any case with surrounding spaces stop SMS and are answered with a confirmation text.",
+   "concern": "Punctuation such as 'STOP.' and the keyword 'REVOKE' are not tested; carriers differ on them."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Sentences that merely contain stop, end, start or quit do not remove a person's consent.",
+   "concern": "A product that wants fuzzy matching of 'please stop' would fail on purpose; the prompt names the CTIA keyword rules."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "An SMS stop does not touch email, an email unsubscribe does not touch SMS, other people are untouched.",
+   "concern": "Assumes the reply channel is the channel being withdrawn; a product that wants a global stop is not served by this check."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A stop handled by one worker is honored by a different worker process started later.",
+   "concern": "Needs state in STATE_DIR; an implementation that finds shared state some other way would still pass."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "START and UNSTOP resubscribe; HELP gets a reply and changes no consent state.",
+   "concern": "Does not require START to produce a reply."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "When messages are handled out of order, the message the person sent last decides; a late START cannot undo a later STOP and a late STOP cannot undo a later START.",
+   "concern": "Equal timestamps are not tested."
+  }
+ },
+ "k4": {
+  "1": {
+   "label": "outcome",
+   "why": "Quiet hours that cross midnight (22:00-07:00) and ones that do not (13:00-15:00) hold the push in the person's zone.",
+   "concern": "Assumes quiet hours apply to promo messages, which is the category used."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "22:00 is quiet and 07:00 is not; a person with no quiet hours is not held at 03:00.",
+   "concern": "Reading the end as inclusive would fail on purpose."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Quiet hours follow the person's wall clock across Berlin and New York clock changes.",
+   "concern": "Uses only two zones."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Whenever the push is dropped (quiet, push off, no token) the inbox item is still created, and each drop has a different reason.",
+   "concern": "Requires three pairwise different reasons; one reason that includes details could still count as different."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A security alert is pushed in quiet hours but never to a person with push off or no token, and the inbox item remains; a promo is held.",
+   "concern": "A product might also exempt appointment reminders; that is not tested."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "A pushed message is never pushed twice, but a message held at night is pushed on a later call and then only once.",
+   "concern": "Single-process memory is enough; restart is not tested."
+  }
+ },
+ "k5": {
+  "1": {
+   "label": "outcome",
+   "why": "An unsubscribed or complaining person gets no digest.",
+   "concern": "Control case needs the plain user to be allowed."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "A hard-bounced address is suppressed.",
+   "concern": "Does not test how long a hard bounce lasts."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A soft bounce alone does not block the digest (the prompt does not say to block it).",
+   "concern": "Some mail providers advise a pause after repeated soft bounces; the prompt gives one field only."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A digest sent one hour ago blocks the next, one sent eight days ago does not.",
+   "concern": "The boundary between 6 and 7 days is deliberately not tested because week could mean a calendar week."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "No invented quiet hours or weekend block for email: Sunday 03:00, Saturday night, Christmas and 03:00 in Tokyo are all allowed.",
+   "concern": "A team that wants business-hours email would fail this on purpose; the prompt and CAN-SPAM do not set a contact window."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Accounts with missing or null optional fields (including timeZone) are allowed and the function never throws.",
+   "concern": "Does not test garbage strings in date fields."
+  }
+ }
+}
