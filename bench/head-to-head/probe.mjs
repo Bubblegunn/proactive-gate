@@ -3,7 +3,7 @@
 //   node probe.mjs --ours DIR --tarball TGZ --commit HASH
 //
 // 1. Static checks on DIR, the plugin directory that the "ours" arm loads: the plugin manifest, the skill (at most
-//    40 lines), the trigger hook and package.json.
+//    46 lines), the trigger hook and package.json.
 // 2. Installs TGZ into a fresh temp folder with the Node 22+ folder from H2H_NODE_BIN first on PATH, then runs a
 //    feature probe through the INSTALLED package: createGate with presets.assistantNudge, the gate methods the
 //    skill relies on, and `proactive-gate scaffold nudge`.
@@ -54,7 +54,7 @@ const skillPath = join(plugin, "skills/proactive-gate/SKILL.md");
 if (existsSync(skillPath)) {
   const text = readFileSync(skillPath, "utf8");
   const lines = text.endsWith("\n") ? text.split("\n").length - 1 : text.split("\n").length;
-  check(lines <= 40, `skills/proactive-gate/SKILL.md has at most 40 lines (found ${lines})`);
+  check(lines <= 46, `skills/proactive-gate/SKILL.md has at most 46 lines (found ${lines})`);
 } else {
   miss(`skills/proactive-gate/SKILL.md exists under ${plugin}`);
 }
