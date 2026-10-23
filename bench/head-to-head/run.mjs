@@ -101,7 +101,11 @@ function prepare(job) {
 // the real user-level skills and settings out of the run (the throw-away HOME alone did not).
 function cleanEnv(home, arm) {
   const keep = ["ANTHROPIC_API_KEY", "LANG", "LC_ALL", "TERM", "TMPDIR", "SHELL", "USER", "LOGNAME"];
-  return { ...Object.fromEntries(keep.filter((k) => process.env[k]).map((k) => [k, process.env[k]])), HOME: home, CLAUDE_CONFIG_DIR: join(home, ".claude"), PATH: pathFor(arm) };
+  const base = { ...Object.fromEntries(keep.filter((k) => process.env[k]).map((k) => [k, process.env[k]])), HOME: home, PATH: pathFor(arm) };
+  // Round 8: H2H_SUB=1 is the subscription path. The wrapper in H2H_CLAUDE_BIN forces its own HOME (which holds the login) and the runner passes
+  // --setting-sources project, so no user-level settings are read; CLAUDE_CONFIG_DIR must stay unset or the login would not be found.
+  if (process.env.H2H_SUB === "1") return base;
+  return { ...base, CLAUDE_CONFIG_DIR: join(home, ".claude") };
 }
 
 function runJob(job) {
