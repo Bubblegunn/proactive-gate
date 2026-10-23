@@ -1,0 +1,3482 @@
+[
+ {
+  "arm": "baseline",
+  "task": "p1",
+  "rep": 1,
+  "name": "baseline-p1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p1-1",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.11400669999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 71,
+  "locAll": 71,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": false,
+    "why": "FAIL 08:01 local blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": false,
+    "why": "FAIL 20:59 local blocked"
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": false,
+    "why": "FAIL 08:30 EDT expected true; 08:30 EST expected true; 08:30 HST expected true"
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": false,
+    "why": "FAIL 03:00 code blocked; 21:30 update blocked; transactional blocked without marketing consent"
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": false,
+    "why": "FAIL consented midday blocked"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": false,
+    "why": "FAIL late: null; early: null; dst: null; allowed result carries blockedBy/nextAllowedAt"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p1",
+  "rep": 2,
+  "name": "baseline-p1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p1-2",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.12845190000000004,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 88,
+  "locAll": 88,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": false,
+    "why": "FAIL 08:01 local blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": false,
+    "why": "FAIL 20:59 local blocked"
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": false,
+    "why": "FAIL 08:30 EDT expected true; 08:30 EST expected true; 08:30 HST expected true"
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": false,
+    "why": "FAIL 03:00 code blocked; 21:30 update blocked; transactional blocked without marketing consent"
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": false,
+    "why": "FAIL consented midday blocked"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": false,
+    "why": "FAIL late: null; early: null; dst: null; allowed result carries blockedBy/nextAllowedAt"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p1",
+  "rep": 3,
+  "name": "baseline-p1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p1-3",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1088161,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 72,
+  "locAll": 72,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p2",
+  "rep": 1,
+  "name": "baseline-p2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p2-1",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.116355,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 122,
+  "locAll": 122,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p2",
+  "rep": 2,
+  "name": "baseline-p2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p2-2",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.14003339999999997,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 69,
+  "locAll": 69,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p2",
+  "rep": 3,
+  "name": "baseline-p2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p2-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.1092959,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 190,
+  "locAll": 190,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p3",
+  "rep": 1,
+  "name": "baseline-p3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p3-1",
+  "code": 0,
+  "seconds": 56,
+  "costUsd": 0.1331909,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 192,
+  "locAll": 192,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": false,
+    "why": "FAIL security blocked at 03:00 with all opt-ins off"
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p3",
+  "rep": 2,
+  "name": "baseline-p3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p3-2",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1196616,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 177,
+  "locAll": 177,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": false,
+    "why": "FAIL security blocked at 03:00 with all opt-ins off"
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [true,false,false,false,true,false,true] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p3",
+  "rep": 3,
+  "name": "baseline-p3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p3-3",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.13465149999999998,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 169,
+  "locAll": 169,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": false,
+    "why": "FAIL security blocked at 03:00 with all opt-ins off"
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p4",
+  "rep": 1,
+  "name": "baseline-p4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p4-1",
+  "code": 0,
+  "seconds": 72,
+  "costUsd": 0.1465428,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 160,
+  "locAll": 160,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p4",
+  "rep": 2,
+  "name": "baseline-p4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p4-2",
+  "code": 0,
+  "seconds": 65,
+  "costUsd": 0.15162170000000003,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 159,
+  "locAll": 159,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p4",
+  "rep": 3,
+  "name": "baseline-p4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p4-3",
+  "code": 0,
+  "seconds": 69,
+  "costUsd": 0.1366121,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 142,
+  "locAll": 142,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p5",
+  "rep": 1,
+  "name": "baseline-p5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p5-1",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0818337,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 75,
+  "locAll": 75,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p5",
+  "rep": 2,
+  "name": "baseline-p5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p5-2",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.09062490000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 83,
+  "locAll": 83,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "p5",
+  "rep": 3,
+  "name": "baseline-p5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/baseline-p5-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0939209,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p1",
+  "rep": 1,
+  "name": "courier-inv-p1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p1-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.13342869999999998,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 65,
+  "locAll": 65,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p1",
+  "rep": 2,
+  "name": "courier-inv-p1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p1-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.1569856,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 75,
+  "locAll": 75,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p1",
+  "rep": 3,
+  "name": "courier-inv-p1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p1-3",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.14157899999999998,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 55,
+  "locAll": 55,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p2",
+  "rep": 1,
+  "name": "courier-inv-p2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p2-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1498049,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p2",
+  "rep": 2,
+  "name": "courier-inv-p2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p2-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.14005520000000002,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 115,
+  "locAll": 115,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p2",
+  "rep": 3,
+  "name": "courier-inv-p2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p2-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.1549225,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 127,
+  "locAll": 127,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p3",
+  "rep": 1,
+  "name": "courier-inv-p3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p3-1",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.13727140000000002,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 161,
+  "locAll": 161,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p3",
+  "rep": 2,
+  "name": "courier-inv-p3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p3-2",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.13597939999999997,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 145,
+  "locAll": 145,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [true,false,false,false,true,false,true] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p3",
+  "rep": 3,
+  "name": "courier-inv-p3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p3-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.15808609999999998,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 162,
+  "locAll": 162,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [true,false,false,false,true,false,true] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p4",
+  "rep": 1,
+  "name": "courier-inv-p4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p4-1",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.14190470000000002,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p4",
+  "rep": 2,
+  "name": "courier-inv-p4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p4-2",
+  "code": 0,
+  "seconds": 71,
+  "costUsd": 0.16698979999999997,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 172,
+  "locAll": 172,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p4",
+  "rep": 3,
+  "name": "courier-inv-p4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p4-3",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.1513652,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 151,
+  "locAll": 151,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p5",
+  "rep": 1,
+  "name": "courier-inv-p5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p5-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.118444,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 124,
+  "locAll": 124,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p5",
+  "rep": 2,
+  "name": "courier-inv-p5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p5-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.124208,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 118,
+  "locAll": 118,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "p5",
+  "rep": 3,
+  "name": "courier-inv-p5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-inv-p5-3",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.114002,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 68,
+  "locAll": 68,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p1",
+  "rep": 1,
+  "name": "courier-p1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p1-1",
+  "code": 0,
+  "seconds": 58,
+  "costUsd": 0.14258449999999998,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 118,
+  "locAll": 118,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": false,
+    "why": "FAIL 08:01 local blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": false,
+    "why": "FAIL 20:59 local blocked"
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": false,
+    "why": "FAIL 08:30 EDT expected true; 08:30 EST expected true; 08:30 HST expected true"
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": false,
+    "why": "FAIL 03:00 code blocked; 21:30 update blocked; transactional blocked without marketing consent"
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": false,
+    "why": "FAIL consented midday blocked"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": false,
+    "why": "FAIL late: null; early: null; dst: null; allowed result carries blockedBy/nextAllowedAt"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p1",
+  "rep": 2,
+  "name": "courier-p1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p1-2",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.11227249999999998,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 66,
+  "locAll": 66,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": false,
+    "why": "FAIL 08:01 local blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": false,
+    "why": "FAIL 20:59 local blocked"
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": false,
+    "why": "FAIL 08:30 EDT expected true; 08:30 EST expected true; 08:30 HST expected true"
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": false,
+    "why": "FAIL 03:00 code blocked; 21:30 update blocked; transactional blocked without marketing consent"
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": false,
+    "why": "FAIL consented midday blocked"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": false,
+    "why": "FAIL late: null; early: null; dst: null; allowed result carries blockedBy/nextAllowedAt"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p1",
+  "rep": 3,
+  "name": "courier-p1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p1-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.11981520000000001,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 93,
+  "locAll": 93,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": false,
+    "why": "FAIL 08:01 local blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": false,
+    "why": "FAIL 20:59 local blocked"
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": false,
+    "why": "FAIL 08:30 EDT expected true; 08:30 EST expected true; 08:30 HST expected true"
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": false,
+    "why": "FAIL 03:00 code blocked; 21:30 update blocked; transactional blocked without marketing consent"
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": false,
+    "why": "FAIL consented midday blocked"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": false,
+    "why": "FAIL late: null; early: null; dst: null; allowed result carries blockedBy/nextAllowedAt"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p2",
+  "rep": 1,
+  "name": "courier-p2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p2-1",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0956469,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p2",
+  "rep": 2,
+  "name": "courier-p2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p2-2",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1160085,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 115,
+  "locAll": 115,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p2",
+  "rep": 3,
+  "name": "courier-p2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p2-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.0939017,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 75,
+  "locAll": 75,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p3",
+  "rep": 1,
+  "name": "courier-p3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p3-1",
+  "code": 0,
+  "seconds": 63,
+  "costUsd": 0.11923620000000001,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 142,
+  "locAll": 142,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [true,false,false,false,true,false,true] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p3",
+  "rep": 2,
+  "name": "courier-p3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p3-2",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1159543,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 165,
+  "locAll": 165,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [true,false,false,false,true,false,true] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p3",
+  "rep": 3,
+  "name": "courier-p3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p3-3",
+  "code": 0,
+  "seconds": 44,
+  "costUsd": 0.1143703,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 151,
+  "locAll": 151,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": false,
+    "why": "FAIL security blocked at 03:00 with all opt-ins off"
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p4",
+  "rep": 1,
+  "name": "courier-p4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p4-1",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.1344194,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 97,
+  "locAll": 97,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p4",
+  "rep": 2,
+  "name": "courier-p4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p4-2",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.127386,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 134,
+  "locAll": 134,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p4",
+  "rep": 3,
+  "name": "courier-p4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p4-3",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.1202768,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 91,
+  "locAll": 91,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p5",
+  "rep": 1,
+  "name": "courier-p5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p5-1",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1130375,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 160,
+  "locAll": 160,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p5",
+  "rep": 2,
+  "name": "courier-p5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p5-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0834616,
+  "turns": 2,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "p5",
+  "rep": 3,
+  "name": "courier-p5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/courier-p5-3",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.0861136,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 118,
+  "locAll": 118,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p1",
+  "rep": 1,
+  "name": "ours-p1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p1-1",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0910083,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 395,
+  "locAll": 395,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p1",
+  "rep": 2,
+  "name": "ours-p1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p1-2",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.0988454,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 390,
+  "locAll": 390,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p1",
+  "rep": 3,
+  "name": "ours-p1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p1-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.0984279,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 393,
+  "locAll": 393,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 no marketing text before 08:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 no marketing text after 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 recipient zone and daylight saving time respected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 transactional text is not held back at night",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 marketing without consent is blocked even at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy named and nextAllowedAt is next 08:00 local",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p2",
+  "rep": 1,
+  "name": "ours-p2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p2-1",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0939086,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 398,
+  "locAll": 398,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p2",
+  "rep": 2,
+  "name": "ours-p2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p2-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0962797,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 395,
+  "locAll": 395,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p2",
+  "rep": 3,
+  "name": "ours-p2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p2-3",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0923632,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 390,
+  "locAll": 390,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 fourth marketing email on one local day is refused",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 allowance resets at the recipient's midnight, not UTC midnight",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 two worker processes at once cannot exceed the daily cap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 count survives a restart (new process sees earlier sends)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional email is neither blocked nor counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each person has their own allowance and refusals are named",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p3",
+  "rep": 1,
+  "name": "ours-p3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p3-1",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.1077755,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 419,
+  "locAll": 419,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": false,
+    "why": "FAIL reminder blocked although opted in; opted-in marketing blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": false,
+    "why": "FAIL 21:59 expected true; 07:00 expected true; 12:00 expected true; custom window 12:00 expected true; custom window 15:00 expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [false,false,false,false,false,false,false] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": false,
+    "why": "FAIL not distinct [\"not-opted-in\",\"invalid-time-zone\",\"invalid-time-zone\"]; allowed result has blockedBy"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p3",
+  "rep": 2,
+  "name": "ours-p3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p3-2",
+  "code": 0,
+  "seconds": 30,
+  "costUsd": 0.0927873,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 401,
+  "locAll": 401,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": false,
+    "why": "FAIL reminder blocked although opted in; opted-in marketing blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": false,
+    "why": "FAIL 21:59 expected true; 07:00 expected true; 12:00 expected true; custom window 12:00 expected true; custom window 15:00 expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [false,false,false,false,false,false,false] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": false,
+    "why": "FAIL not distinct [\"opt_out\",\"invalid_timezone\",\"invalid_timezone\"]; allowed result has blockedBy"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p3",
+  "rep": 3,
+  "name": "ours-p3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p3-3",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.136762,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 417,
+  "locAll": 417,
+  "full": 1,
+  "outcome": 1,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 category opt-in is enforced per category",
+    "pass": false,
+    "why": "FAIL reminder blocked although opted in; opted-in marketing blocked"
+   },
+   {
+    "n": "2",
+    "name": "2 overnight quiet window: start inclusive, end exclusive, wraps midnight",
+    "pass": false,
+    "why": "FAIL 21:59 expected true; 07:00 expected true; 12:00 expected true; custom window 12:00 expected true; custom window 15:00 expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours use the user's own zone, including daylight saving",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 security alerts go out even in quiet hours or without opt-in",
+    "pass": false,
+    "why": "FAIL security blocked at 03:00 with all opt-ins off"
+   },
+   {
+    "n": "5",
+    "name": "5 same notification is not repeated within 24 hours; blocked ones are not recorded",
+    "pass": false,
+    "why": "FAIL [false,false,false,false,false,false,false] expected [true,false,false,true,true,false,true]"
+   },
+   {
+    "n": "6",
+    "name": "6 blockedBy tells the three stopping rules apart and is empty when allowed",
+    "pass": false,
+    "why": "FAIL not distinct [\"no_opt_in\",\"unknown_time_zone\",\"unknown_time_zone\"]; allowed result has blockedBy"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p4",
+  "rep": 1,
+  "name": "ours-p4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p4-1",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.10548280000000002,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 102,
+  "locAll": 102,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p4",
+  "rep": 2,
+  "name": "ours-p4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p4-2",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.1081329,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 95,
+  "locAll": 95,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p4",
+  "rep": 3,
+  "name": "ours-p4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p4-3",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.1080313,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 402,
+  "locAll": 402,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two-hour gap enforced; refused attempts do not extend it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 fifth contact in a rolling seven days refused, then allowed once the oldest ages out; limit is named",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 retryAt after a gap refusal is the first moment a request passes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 retryAt after a weekly-cap refusal (also when the gap applies too) satisfies both limits",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 workers asking at the same moment cannot both get the slot",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 earlier sends from other (restarted) processes are remembered",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p5",
+  "rep": 1,
+  "name": "ours-p5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p5-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.1028734,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 412,
+  "locAll": 412,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p5",
+  "rep": 2,
+  "name": "ours-p5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p5-2",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.09166379999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 63,
+  "locAll": 63,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "p5",
+  "rep": 3,
+  "name": "ours-p5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/TMP/pg-r9/iter1/p-sonnet/work/ours-p5-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.10903759999999998,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 426,
+  "locAll": 426,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed address gets no marketing email; others unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 capitals and stray spaces do not defeat an unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 transactional email still allowed after unsubscribe",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 hard bounce stops all mail to the address, soft bounce stops none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 suppressions written in one process are seen by another and after restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous unsubscribes from two workers are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]
