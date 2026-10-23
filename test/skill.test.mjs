@@ -435,9 +435,9 @@ test("init --minimal writes the same checks, in the same order, as the skill's f
 
 // ---- the front page and its references (round 3, L5) --------------------------------------------
 
-test("SKILL.md is a front page of at most 40 lines, front matter included", () => {
+test("SKILL.md is a front page of at most 46 lines, front matter included", () => {
   const lines = skill.replace(/\n$/, "").split("\n");
-  assert.ok(lines.length <= 40, `SKILL.md has ${lines.length} lines`);
+  assert.ok(lines.length <= 46, `SKILL.md has ${lines.length} lines`); // 40 until round 8, which added the kit section
 });
 
 test("SKILL.md points to both reference files, and both exist", () => {
@@ -473,4 +473,56 @@ test("references/checks.md names the gate functions and the preset the catalogue
 test("the package ships the references, through the skills entry in files", () => {
   const shipped = pkg.files.some((entry) => "skills/proactive-gate/references/checks.md".startsWith(entry.endsWith("/") ? entry : `${entry}/`));
   assert.ok(shipped, "skills/proactive-gate/references/ is inside a files entry");
+});
+
+// ---- round 8: the kit, the size cap, the rules that must not come back --------------------------
+
+const kitSource = read("skills/proactive-gate/references/gate-kit.mjs");
+const kitNames = new Set([...kitSource.matchAll(/^(?:async )?function (gk\w+)/gm)].map((m) => m[1]));
+
+/** The checks of the round-8 skill text, as a list of problems for any skill text. */
+function round8Problems(text) {
+  const bad = [];
+  if (Buffer.byteLength(text) > 9000) bad.push("the skill is over the 9,000 byte cap");
+  const cited = new Set([...text.matchAll(/\b(gk[A-Z]\w*)\(/g)].map((m) => m[1]));
+  if (cited.size < 8) bad.push("the skill cites fewer than eight kit functions");
+  for (const name of cited) if (!kitNames.has(name)) bad.push(`the kit has no function ${name}`);
+  if (!text.includes('cat "${CLAUDE_SKILL_DIR}/references/gate-kit.mjs" >>')) bad.push("the skill does not give the append command");
+  if (/use the legal window of the recipient's region/.test(text)) bad.push("the legal-window default is back in rule 6");
+  if (!/local clock time with the zone name/.test(text)) bad.push("rule 8 does not ask for local clock time with the zone name");
+  if (!/interrupting surface/.test(text)) bad.push("rule 6 lost the per-surface hold");
+  if (!/until the end of the recipient's local day/.test(text)) bad.push("rule 5 lost the local-day suppression");
+  return bad;
+}
+
+test("the round-8 skill: size cap, every kit function it cites exists, the append command, and the rule sentences of round 8", () => {
+  assert.deepEqual(round8Problems(skill), []);
+  assert.ok(kitNames.size >= 16, "the kit defines its functions");
+});
+
+test("the round-8 checks reject a skill that regresses each point", () => {
+  for (const [broken, expected] of [
+    [skill + "x".repeat(9000), /9,000 byte cap/],
+    [skill.replaceAll("gkNextOpen(", "gkNextOpened("), /no function gkNextOpened/],
+    [skill.replace('cat "${CLAUDE_SKILL_DIR}/references/gate-kit.mjs" >>', "cat gate-kit.mjs >>"), /append command/],
+    [skill.replace("never narrow it", "use the legal window of the recipient's region"), /legal-window default/],
+    [skill.replace("local clock time with the zone name", "UTC"), /local clock time/],
+    [skill.replace("interrupting surface", "surface"), /per-surface/],
+    [skill.replace("until the end of the recipient's local day", "forever"), /local-day suppression/],
+  ]) assert.match(round8Problems(broken).join("\n"), expected);
+});
+
+test("the append command in the skill produces a working file: the kit appended to a bot.mjs runs and answers", () => {
+  const dir = mkdtempSync(join(tmpdir(), "skill-kit-"));
+  try {
+    const skillDir = fileURLToPath(new URL("../skills/proactive-gate", import.meta.url));
+    const command = /`(cat "\$\{CLAUDE_SKILL_DIR\}\/references\/gate-kit\.mjs" >> bot\.mjs)`/.exec(skill)?.[1];
+    assert.ok(command, "the skill shows the append command");
+    writeFileSync(join(dir, "bot.mjs"), 'export function check(ms) { return gkNextOpen(ms, "America/New_York", "08:00", "21:00"); }\nconsole.log(check(Date.UTC(2026, 2, 8, 6, 0)));\n');
+    const run = spawnSync("sh", ["-c", `${command.replace("${CLAUDE_SKILL_DIR}", skillDir)} && node bot.mjs`], { cwd: dir, encoding: "utf8" });
+    assert.equal(run.status, 0, run.stderr);
+    assert.equal(run.stdout.trim(), String(Date.UTC(2026, 2, 8, 12, 0)), "08:00 EDT on the spring-forward day is 12:00Z");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
