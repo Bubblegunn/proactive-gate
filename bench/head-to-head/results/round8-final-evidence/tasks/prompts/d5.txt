@@ -1,0 +1,9 @@
+Our habit-tracking app has an AI assistant that decides on its own which in-app and push messages to send. Each time it wakes up it has a list of candidate messages and I want one pure function that picks what may go out now. Please write bot.mjs (Node 22, ES module) exporting `planSends({ user, candidates, history, now })`. It must not read the system clock or any file, and it must not change its arguments.
+
+`user` is `{ timeZone: string, promoOptIn: boolean, quietHours: { start: "HH:MM", end: "HH:MM" } | null }`. `timeZone` is an IANA name such as "America/Chicago". `quietHours` is the window the customer chose in our settings screen, in their own local time, and may be null. `candidates` is an array of `{ id: string, category: "promo" | "reminder" | "critical", priority: number, dedupeKey: string }`; a higher `priority` number matters more. `history` is an array of what we already sent this customer, `{ sentAt: string, category: string, dedupeKey: string }`, where `sentAt` is an ISO 8601 UTC timestamp. `now` is a JavaScript Date.
+
+Product policy: reminders and promos together may not exceed 3 per customer in any rolling 24 hours, and the same `dedupeKey` must not go to a customer again within 7 days. Critical messages are things like fraud and account-security alerts. We ship on iOS under Apple's App Store Review Guidelines.
+
+The function returns `{ send: string[], dropped: { id: string, rule: string }[] }`. `send` holds the ids of the candidates that may go out now, best first. Every other candidate appears once in `dropped` with a short `rule` identifier of your choosing that names why it was held (for example "quiet-hours"), so that I can answer "which rule stopped this message". Use a different identifier for each different reason.
+
+Do not actually send anything. Check that it works before you finish.

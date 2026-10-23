@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z5",
+ "arm": "knock",
+ "rep": 3,
+ "name": "knock-z5-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 thin data: a 1 to 2 day account with fewer than 5 data points gets nothing, a mature account gets a message",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 focus and confidence: focusMode true with confidence 0.42 gets nothing, a focus-free account with confidence 0.9 gets a message",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 same key: the same insight key twice on one local day is shown once, the next local day may show it again",
+   "pass": false,
+   "why": "FAIL k-same on the next local day: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user already saw this finding recently.\"}, want send true",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 crisis: while context.crisis is true none of ten strong candidates is shown, and two normal candidates are shown after it clears",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 reasons: every silence has a non-empty reason that does not say error, a shown message has reason null or absent",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 hour history: at 14:00 local a mostly dismissed hour excludes push but keeps inApp, at 09:00 local a mostly acted hour includes push",
+   "pass": false,
+   "why": "FAIL 14:00 local: got {\"send\":false,\"surfaces\":[],\"reason\":\"The user mostly dismisses messages at this hour.\"}, want send true",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}

@@ -1,0 +1,9 @@
+I run a small subscription-box shop. We text customers about sales and also about their orders, and before my job sends any SMS I want one function that says whether that text may go out right now. Customers are mostly in the US, with a few in India and Japan. Please write bot.mjs (Node 22, ES module) exporting `async function checkSend({ user, message, now })`. `now` is a JavaScript Date that I pass in, so do not read the system clock. Our servers run in UTC, our customers do not.
+
+`user` looks like `{ id: string, timeZone: string | null, sms: { optedIn: boolean, optedOutAt: string | null } }`. `timeZone` is an IANA name such as "America/Chicago" taken from the customer's profile and may be missing or wrong. `optedOutAt` is an ISO 8601 timestamp that we fill in when the customer replies STOP. `message` looks like `{ kind: "marketing" | "transactional", text: string }`. Transactional means something the customer asked for or an update on an order they placed, for example a login code or a shipping notice. Marketing means everything else.
+
+The function returns `{ allowed: boolean, rule: string }`. When `allowed` is false, `rule` is a short identifier of your choosing (for example "no-consent") naming the rule that held the text, so that our support staff can see why it was held. Use a different identifier for each different reason and the same identifier every time for the same reason. When `allowed` is true, `rule` is the empty string. The function must never throw on odd input. Nothing is stored between calls.
+
+We are a US business and want to stay inside the FCC's telemarketing rules (47 CFR 64.1200) and the CTIA Messaging Principles and Best Practices for texts that sell something.
+
+Do not actually send anything. Check that it works before you finish.

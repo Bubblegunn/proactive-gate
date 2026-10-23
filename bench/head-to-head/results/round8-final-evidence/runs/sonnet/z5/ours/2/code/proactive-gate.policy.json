@@ -1,0 +1,13 @@
+{
+  "specVersion": "1.0.0",
+  "checks": [
+    {
+      "preset": "assistantNudge",
+      "dailyLimit": 3
+    },
+    {
+      "id": "freshness",
+      "maxAgeSeconds": 86400
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z3",
+ "arm": "baseline",
+ "rep": 3,
+ "name": "baseline-z3-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 dismissals: five dismissals of suggestion do not stop the briefing",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 categories: missing means no push but in-app; briefing true pushes; briefing false does not push",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 budget: two refused pushes do not spend the day, the third pushes, a fourth the same day does not",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 consent store: a throwing store means no push but the in-app item is still produced",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 permission: Android with notifications not permitted gives no push and a reason naming the permission or its setting",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 snooze: snoozedUntil holds the push until its instant (exclusive), resumeAt is the snooze end",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

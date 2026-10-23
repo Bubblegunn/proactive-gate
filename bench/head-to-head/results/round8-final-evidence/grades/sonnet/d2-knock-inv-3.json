@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "heldout",
+ "task": "d2",
+ "arm": "knock-inv",
+ "rep": 3,
+ "name": "knock-inv-d2-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 a customer gets three promos a day, the fourth is held, other customers are unaffected",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 two promos need two hours between them, blocked attempts do not move the gap",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 the day is the customer's local day, not the UTC day",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 a cancelled (failed) send gives back its place in the cap and the gap",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 security alerts are never limited and use no allowance",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 daily cap and gap are reported as different non-empty rules",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

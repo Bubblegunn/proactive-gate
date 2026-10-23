@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "heldout",
+ "task": "d5",
+ "arm": "courier-inv",
+ "rep": 1,
+ "name": "courier-inv-d5-1",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 promos need the customer's opt-in, reminders and critical messages do not",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 quiet hours follow the customer's own window and zone, critical messages ignore them",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 at most three non-critical messages in any rolling 24 hours, critical ones neither count nor wait",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 when the cap leaves fewer slots than candidates, higher priority goes first, in that order",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 the same dedupe key is not repeated within seven days or twice in one batch",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 every candidate is sent or dropped exactly once, and each reason has its own non-empty rule",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

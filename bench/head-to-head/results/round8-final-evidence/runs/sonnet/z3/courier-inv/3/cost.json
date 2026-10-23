@@ -1,0 +1,18 @@
+{
+ "model": "sonnet",
+ "modelId": "claude-sonnet-5-5",
+ "set": "public",
+ "task": "z3",
+ "arm": "courier-inv",
+ "rep": 3,
+ "costUsd": 0.2814806,
+ "turns": 9,
+ "seconds": 110,
+ "skillCalls": 1,
+ "exitCode": 0,
+ "sessionId": "46204cae-f084-4caf-8563-25b7382334fc",
+ "startedAt": "2026-10-23T12:41:08.084Z",
+ "finishedAt": "2026-10-23T12:42:51.385Z",
+ "codeFiles": 2,
+ "codeSkipped": []
+}

@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z1",
+ "arm": "ours",
+ "rep": 2,
+ "name": "ours-z1-2",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 marketing: a check-in is sent only when consents.marketing is true",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 opt-out: after optOut the next decision is refused, others are not, and it survives a new process",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 zone: a missing or UTC timezone uses deviceTimezone, and no usable zone means not sent",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 cap: one check-in per user per local day, counted on the local day, exactly one under 2 processes x 12 calls",
+   "pass": false,
+   "why": "FAIL repeat 1: 24 sends across 2 processes x 12 calls, want 1; repeat 2: 24 sends across 2 processes x 12 calls, want 1; repeat 3: 24 sends across 2 processes x 12 calls, want 1",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 dismissals: three dismissals of checkin stop the check-in, not a tip, and a user without dismissals still gets it",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 kill switch: proactiveEnabled false stops sending at once, true resumes in the same process",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 5,
+ "outcomeMax": 6,
+ "fullScore": 5,
+ "fullMax": 6
+}

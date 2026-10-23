@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z4",
+ "arm": "ours",
+ "rep": 3,
+ "name": "ours-z4-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 new account: a suggestion is held for a 2-day account even when its profile is new, and allowed for a 30-day account",
+   "pass": false,
+   "why": "FAIL 30-day account, inferred, profile created now: got {\"send\":false,\"reasonCode\":\"new_user_grace\"}, want send true",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 new account: a requested notice passes the new-account hold",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 quiet hours: a requested notice at 03:00 local is held, and the same user at 12:00 local is sent",
+   "pass": false,
+   "why": "FAIL 2-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":\"requested_ready\"}, want send false; 30-day account, requested at 03:00 local: got {\"send\":true,\"reasonCode\":\"requested_ready\"}, want send false",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 cap: the nudge cap bounds suggestions per local day for cap 2 and cap 3, and resets on the next local day",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 reminders: twenty reminders neither fail nor use the cap, and a full cap still allows reminders",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 reason codes: every refusal has a string reasonCode listed in REASON_CODES, and no code says error",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}

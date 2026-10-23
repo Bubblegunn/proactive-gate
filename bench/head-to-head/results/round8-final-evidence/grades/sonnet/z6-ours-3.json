@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z6",
+ "arm": "ours",
+ "rep": 3,
+ "name": "ours-z6-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+   "pass": false,
+   "why": "FAIL n4 text lacks local decision time 15:00: It was not delivered because you had already received the limit of 3 notifications that local day. It could have been delivered from 08:00 on 5 Sep (Europe/Istanbul).; n6 text lacks local decision time 12:00: It was not delivered because you have not agreed to receive notifications.; n5 text lacks local decision time 22:30: It was not delivered because it arrived during quiet hours (22:00 to 08:00 your local time). It could have been delivered from 08:00 on 5 Sep (Europe/Istanbul).; n4 text lacks 15:00: It was not delivered because you had already received the limit of 3 notifications that local day. It could have been delivered from 08:00 on 5 Sep (Europe/Istanbul).; n5 text lacks 22:30: It was not delivered because it arrived during quiet hours (22:00 to 08:00 your local time). It could have been delivered from 08:00 on 5 Sep (Europe/Istanbul).; n6 text lacks 12:00: It was not delivered because you have not agreed to receive notifications.",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 5,
+ "outcomeMax": 6,
+ "fullScore": 5,
+ "fullMax": 6
+}

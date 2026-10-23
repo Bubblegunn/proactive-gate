@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z2",
+ "arm": "courier",
+ "rep": 3,
+ "name": "courier-z2-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+   "pass": false,
+   "why": "FAIL America/New_York 2026-06-16T00:59:00Z: sent false, want true; America/Phoenix 2026-06-16T03:59:00Z: sent false, want true",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+   "pass": false,
+   "why": "FAIL \"please stop by tomorrow\" revoked the digest (false); \"I will not stop by\" revoked the digest (false)",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}

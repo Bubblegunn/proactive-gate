@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "heldout",
+ "task": "d4",
+ "arm": "knock-inv",
+ "rep": 1,
+ "name": "knock-inv-d4-1",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 marketing stops after an unsubscribe or a spam complaint, other addresses are unaffected",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 receipts and other transactional mail still go to someone who unsubscribed or complained",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 a hard bounce stops all mail to that address, marketing and transactional",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 the same address in other capitals or with spaces is the same recipient",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 a suppression recorded in one process is seen by a later process",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 events recorded at the same moment by three processes are all kept",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

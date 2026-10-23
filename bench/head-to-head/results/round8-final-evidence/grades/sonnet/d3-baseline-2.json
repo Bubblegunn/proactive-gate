@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "heldout",
+ "task": "d3",
+ "arm": "baseline",
+ "rep": 2,
+ "name": "baseline-d3-2",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 a customer gets two marketing messages a day, the third is held with a rule",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 the count survives a restart (new process sees earlier messages)",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 eight simultaneous requests in one process admit exactly two",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 requests from four processes at once admit exactly two per customer",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 channels count together, customers count separately",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 the day is the customer's local day and resets after midnight there",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 6,
+ "outcomeMax": 6,
+ "fullScore": 6,
+ "fullMax": 6
+}

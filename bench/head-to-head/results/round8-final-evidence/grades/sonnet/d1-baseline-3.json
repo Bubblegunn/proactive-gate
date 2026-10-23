@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "heldout",
+ "task": "d1",
+ "arm": "baseline",
+ "rep": 3,
+ "name": "baseline-d1-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 marketing text to a customer whose time zone is unknown is held",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 marketing allowed only 08:00 to 20:59 in the customer's own time zone",
+   "pass": false,
+   "why": "FAIL America/New_York 2026-06-10T12:00:00Z want true got {\"allowed\":false,\"rule\":\"no-opt-out-notice\"}",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 daylight saving changes are followed",
+   "pass": false,
+   "why": "FAIL 2026-03-08T12:30:00Z want true got {\"allowed\":false,\"rule\":\"no-opt-out-notice\"}",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 no consent or a STOP reply blocks marketing at midday",
+   "pass": false,
+   "why": "FAIL control (opted in) was not allowed",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 transactional texts are not held by quiet hours",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 blocked results name a distinct rule per reason, allowed results an empty rule",
+   "pass": false,
+   "why": "FAIL allowed rule not empty string",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 2,
+ "outcomeMax": 6,
+ "fullScore": 2,
+ "fullMax": 6
+}

@@ -1,0 +1,8 @@
+{
+  "name": "notification-gate-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "bot.mjs",
+  "engines": { "node": ">=22" }
+}

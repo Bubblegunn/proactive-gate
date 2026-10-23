@@ -1,0 +1,162 @@
+{
+ "d1": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks: A customer whose time zone is unknown or invalid is not texted marketing, and the call does not throw.",
+   "concern": "An implementation may fall back to a default zone and judge daytime there; the prompt does not state that unknown means hold."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks: Marketing goes out only from 08:00 to 20:59 in the customer's own zone (New York, Tokyo, Kolkata with a half-hour offset), with boundary minutes.",
+   "concern": "A stricter state-law window (for example 8 to 8) is also defensible but fails the 20:59 and 08:00 boundaries only if it cuts at other minutes; a window that blocks 20:30 would fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks: Daylight saving transitions in New York (March and November 2026) are followed.",
+   "concern": "None beyond the checker assuming the 2026 US transition dates."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks: A customer without consent or who replied STOP gets no marketing text at midday.",
+   "concern": "An implementation that reads optedOutAt as 'opted out again later' and lets a later re-subscription win would differ; the data has no re-subscribe field."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks: Order and login texts are not held by quiet hours, while marketing at the same instant is.",
+   "concern": "An implementation that also blocks transactional texts for customers with no consent would pass here, since the checker uses opted-in customers."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks: Held texts carry a non-empty rule that differs between quiet hours and no consent and is stable for one reason; allowed texts carry an empty string.",
+   "concern": "Only cases with a single violation are tested. Precedence when two rules apply is not checked."
+  }
+ },
+ "d2": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks: A customer gets 3 promos in a day, the 4th is refused, and another customer is not affected.",
+   "concern": "None; a counter shared between customers would be caught."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks: Two promos need 2 hours between them (exactly 2 hours is allowed), and refused attempts do not push the gap forward.",
+   "concern": "An implementation that measures the gap from the last attempt rather than the last send would fail, correctly."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks: The day is the customer's local calendar day (Los Angeles evening crossing UTC midnight).",
+   "concern": "A rolling 24-hour reading of 'per day' would fail; the prompt says midnight to midnight."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks: A cancelled send gives back its place in the day's cap and in the gap.",
+   "concern": "The prompt only implies this with 'never left our system'; an implementation that treats cancel as a no-op fails."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks: Security alerts are always allowed and use none of the promo allowance.",
+   "concern": "None beyond the checker's fixed categories."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks: Daily-cap refusals and gap refusals carry different non-empty rule strings; allowed requests have an empty rule.",
+   "concern": "The case with both rules violated at once is not tested, so a correct choice of precedence passes."
+  }
+ },
+ "d3": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks: The third marketing message to a customer in a day is refused with a rule string.",
+   "concern": "The wrong shape of the result (for example only a boolean) fails even if the counting is right."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks: The count survives a process restart.",
+   "concern": "An implementation that keeps the count in a file under STATE_DIR passes; one that ignores STATE_DIR fails."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks: Eight simultaneous calls inside one process admit exactly two.",
+   "concern": "A correct design that serialises calls with a lock may be slow, but the checker allows 60 seconds."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks: Four processes calling at once for three customers admit exactly two per customer.",
+   "concern": "Lock-file schemes with long stale-lock timeouts can exceed the time limit under contention."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks: SMS, email and push count together for one customer; a second customer is independent.",
+   "concern": "Per-channel limits are a possible reading; the prompt says whatever the channel."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks: The day is the customer's local day in Tokyo and resets after local midnight, across restarts.",
+   "concern": "None beyond the checker assuming the zone database knows Asia/Tokyo."
+  }
+ },
+ "d4": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks: Marketing is refused after an unsubscribe or a spam complaint, other addresses are unaffected, and the refusal has a rule string.",
+   "concern": "A design that treats a spam complaint as a softer signal would fail."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks: Transactional mail still goes to an address that unsubscribed or complained.",
+   "concern": "A cautious implementation that blocks everything after any suppression event fails; CAN-SPAM allows transactional mail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks: A hard bounce blocks both marketing and transactional mail to that address.",
+   "concern": "None."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks: The same address written with other capitals or surrounding spaces is treated as one recipient.",
+   "concern": "Treating Gmail dots or plus tags as equal is not required or tested."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks: A suppression recorded in one process is seen by a later process.",
+   "concern": "None beyond requiring files in STATE_DIR."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks: Eighteen events recorded concurrently by three processes are all kept.",
+   "concern": "Slow lock schemes may exceed the time limit."
+  }
+ },
+ "d5": {
+  "1": {
+   "label": "outcome",
+   "why": "Checks: Promos are dropped without opt-in, while reminders and critical messages are still sent; an opted-in promo is sent.",
+   "concern": "The App Store rule is read here as applying to promos only; a stricter reading that also asks opt-in for reminders would fail."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Checks: Quiet hours use the customer's window and zone, including a window that crosses midnight, a daytime window, and null; critical messages ignore them.",
+   "concern": "Treating start and end as both inclusive would fail the 07:00 and 22:00 boundary checks."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Checks: At most 3 non-critical messages in a rolling 24 hours (23h59m counts, 24h01m does not), critical history is not counted and critical messages are not held.",
+   "concern": "Counting calendar days instead of a rolling window fails by design."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Checks: When slots are fewer than candidates, the highest priority ones go first, ties in input order.",
+   "concern": "Ties broken in a different stable order would fail."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Checks: The same dedupe key is not sent again within 7 days, is sent after 8 days, and only once inside one batch.",
+   "concern": "An implementation that applies dedupe to critical messages is not tested."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Checks: Each candidate is in send or dropped exactly once, and reasons for opt-in, quiet hours, cap and duplicate use four different non-empty rule strings.",
+   "concern": "Only single-reason cases are tested."
+  }
+ }
+}

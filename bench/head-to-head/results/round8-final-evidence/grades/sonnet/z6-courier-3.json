@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z6",
+ "arm": "courier",
+ "rep": 3,
+ "name": "courier-z6-3",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 entries: whyNotReceived lists every considered notification in order, with blocked ruleCodes, and from is inclusive and to exclusive",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 availableAt: a cap block is available at the next local midnight or at the end of quiet hours that follows it, a quiet-hours block at the end of quiet hours, consent and delivered entries carry none",
+   "pass": false,
+   "why": "FAIL n1 delivered but availableAt 2026-09-04T09:00:00.000Z; n2 delivered but availableAt 2026-09-04T10:00:00.000Z; n3 delivered but availableAt 2026-09-04T11:00:00.000Z",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 text: every entry is a sentence without an ISO date-time or UTC/GMT, and blocked entries give the local HH:MM of the decision and of availableAt",
+   "pass": false,
+   "why": "FAIL n4 text lacks local decision time 15:00: We did not send this notification because you had already received the maximum of 3 notifications on 2026-09-04 in your time zone (Europe/Istanbul). It could have been delivered from 08:00 on 2026-09-05 (Europe/Istanbul time).; n4 text lacks 15:00: We did not send this notification because you had already received the maximum of 3 notifications on 2026-09-04 in your time zone (Europe/Istanbul). It could have been delivered from 08:00 on 2026-09-05 (Europe/Istanbul time).",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 dryRun: counts the proposed policy on last week's events, and leaves the live counters untouched",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 equality: dryRun with the live policy matches the live outcomes of the same events, and repeats identically",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 durability: the log written by one process is read by later processes, and 24 concurrent decisions over two processes log 24 entries with exactly 3 delivered",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}

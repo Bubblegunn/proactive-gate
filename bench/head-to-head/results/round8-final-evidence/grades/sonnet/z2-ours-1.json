@@ -1,0 +1,57 @@
+{
+ "model": "sonnet",
+ "set": "public",
+ "task": "z2",
+ "arm": "ours",
+ "rep": 1,
+ "name": "ours-z2-1",
+ "checkerDetail": "ok",
+ "criteria": [
+  {
+   "n": "1",
+   "name": "1 window: no digest outside 08:00 to 21:00 recipient-local, across DST and in Phoenix",
+   "pass": false,
+   "why": "FAIL America/New_York 2026-06-15T11:59:00Z: sent true, want false; America/New_York 2026-06-16T01:00:00Z: sent true, want false; America/New_York 2026-03-08T11:59:00Z: sent true, want false; America/New_York 2026-11-01T12:59:00Z: sent true, want false; America/Phoenix 2026-06-15T14:59:00Z: sent true, want false; America/Phoenix 2026-06-16T04:00:00Z: sent true, want false",
+   "label": "outcome"
+  },
+  {
+   "n": "2",
+   "name": "2 keywords: STOP words in any case or with punctuation revoke, ordinary words do not",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "3",
+   "name": "3 revocation: a STOP is seen by a second process and still holds after a restart",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "4",
+   "name": "4 optOut route: optOut(userId, sms) refuses the next trySend, leaves others alone, survives a new process",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "5",
+   "name": "5 dedupe: the same message id from 10 processes at once, and again after a restart, is sent once (3 repetitions, each with fresh state and a fresh message id)",
+   "pass": true,
+   "why": "",
+   "label": "outcome"
+  },
+  {
+   "n": "6",
+   "name": "6 staleness: a digest created three days ago is dropped, one created 10 minutes ago is sent",
+   "pass": false,
+   "why": "FAIL three-day-old digest: {\"sent\":true,\"reason\":\"Allowed: digest text the customer signed up for, no opt-out recorded.\"}",
+   "label": "outcome"
+  }
+ ],
+ "outcomeScore": 4,
+ "outcomeMax": 6,
+ "fullScore": 4,
+ "fullMax": 6
+}
