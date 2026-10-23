@@ -1,0 +1,25 @@
+Commit under test: 71fdf2501f8b3dce6d868cfdf5cfbee97a9d9ac2
+
+### All criteria
+
+Each cell: mean [score of each run] (min-max, n runs).
+
+| task (max) | ours |
+|---|---|
+| g1 (6) | 6.00 [6, 6, 6] (6-6, n=3) |
+| g2 (6) | 6.00 [6, 6, 6] (6-6, n=3) |
+| g3 (6) | 6.00 [6, 6, 6] (6-6, n=3) |
+| g4 (6) | 6.00 [6, 6, 6] (6-6, n=3) |
+| g5 (6) | 6.00 [6, 6, 6] (6-6, n=3) |
+| total of means (30) | 30.00 |
+
+| measure | ours |
+|---|---|
+| mean cost USD per run | 0.109 |
+| cost vs baseline | n/a |
+| mean wall time per run, seconds | 37 |
+| mean turns per run | 5.3 |
+| mean lines of code written (source files) | 222 |
+| mean lines written (all text files) | 222 |
+| runs whose solution mentions proactive-gate | 0/15 |
+| Skill tool calls (sum) | 12 |

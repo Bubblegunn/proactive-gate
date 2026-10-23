@@ -1,0 +1,26 @@
+commit under test: 71fdf2501f8b3dce6d868cfdf5cfbee97a9d9ac2
+tarball: /REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/_setup/proactive-gate-0.10.0-h2h.0.tgz
+tarball sha256: 464c868ed24c3207dba8ed5916a84a7d272b6bf162ec437ae72e4478441fc5ed
+ok    plugin manifest is readable JSON: /REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/_setup/src/.claude-plugin/plugin.json
+ok    skills/proactive-gate/SKILL.md has at most 46 lines (found 44)
+ok    hooks/trigger.sh exists
+ok    package.json name is proactive-gate
+ok    package.json version is set (0.10.0-h2h.0)
+ok    node on the probe PATH is 22 or newer (v24.13.0)
+ok    npm install of the tarball succeeds
+ok    the installed package has a package.json
+ok    installed version 0.10.0-h2h.0 equals the version in DIR 0.10.0-h2h.0
+ok    createGate is exported from the installed package
+ok    presets.assistantNudge is exported
+ok    createGate({ checks: presets.assistantNudge(), store }) builds
+ok    gate.release is a function
+ok    gate.evaluateSync is a function
+ok    gate.whenAllowed is a function
+ok    gate.inbound is an object
+ok    evaluateSync returns a decision with boolean allowed (got boolean)
+info  evaluateSync on a consenting insight candidate at 2026-10-22T12:00:00Z: (allowed)
+ok    proactive-gate scaffold nudge exits 0
+ok    scaffold writes notify.mjs
+ok    scaffold writes proactive-gate.policy.json
+ok    scaffold writes notify.test.mjs
+PROBE PASSED

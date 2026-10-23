@@ -1,0 +1,3482 @@
+[
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 1,
+  "name": "baseline-k1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k1-1",
+  "code": 0,
+  "seconds": 74,
+  "costUsd": 0.015559820000000002,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 101,
+  "locAll": 101,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 2,
+  "name": "baseline-k1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k1-2",
+  "code": 0,
+  "seconds": 82,
+  "costUsd": 0.01502841,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 3,
+  "name": "baseline-k1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k1-3",
+  "code": 0,
+  "seconds": 93,
+  "costUsd": 0.01701126,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 215,
+  "locAll": 215,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 1,
+  "name": "baseline-k2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k2-1",
+  "code": 0,
+  "seconds": 114,
+  "costUsd": 0.020833150000000005,
+  "turns": 10,
+  "skillCalls": 0,
+  "loc": 123,
+  "locAll": 123,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 2,
+  "name": "baseline-k2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k2-2",
+  "code": 0,
+  "seconds": 110,
+  "costUsd": 0.019157370000000003,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 120,
+  "locAll": 120,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": false,
+    "why": "FAIL 1 calls threw"
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 3,
+  "name": "baseline-k2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k2-3",
+  "code": 0,
+  "seconds": 83,
+  "costUsd": 0.014301210000000002,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 145,
+  "locAll": 145,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 1,
+  "name": "baseline-k3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k3-1",
+  "code": 0,
+  "seconds": 79,
+  "costUsd": 0.014128749999999999,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 137,
+  "locAll": 137,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL START did not resubscribe; UNSTOP did not resubscribe"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": false,
+    "why": "FAIL got [false,false], want [false,true]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 2,
+  "name": "baseline-k3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k3-2",
+  "code": 0,
+  "seconds": 128,
+  "costUsd": 0.021765610000000005,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 177,
+  "locAll": 177,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 3,
+  "name": "baseline-k3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k3-3",
+  "code": 0,
+  "seconds": 112,
+  "costUsd": 0.020991379999999997,
+  "turns": 10,
+  "skillCalls": 0,
+  "loc": 182,
+  "locAll": 182,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 1,
+  "name": "baseline-k4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k4-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.01012389,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 76,
+  "locAll": 76,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": false,
+    "why": "FAIL security alert held at night"
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 2,
+  "name": "baseline-k4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k4-2",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.010371930000000001,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 175,
+  "locAll": 175,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 3,
+  "name": "baseline-k4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k4-3",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.010732030000000002,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 101,
+  "locAll": 101,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 1,
+  "name": "baseline-k5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k5-1",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.00929276,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 99,
+  "locAll": 99,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the address had a temporary (soft) bounce in the last 7 days."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Held: the local hour is 3; digests go out between 8:00 and 20:00 local time.; Saturday 23:30 New York blocked: Held: the local hour is 23; digests go out between 8:00 and 20:00 local time.; 03:00 in Tokyo blocked: Held: the local hour is 3; digests go out between 8:00 and 20:00 local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Held: the time zone is missing or unknown, so the local send hour cannot be checked.; null timeZone blocked: Held: the time zone is missing or unknown, so the local send hour cannot be checked.; undefined fields blocked: Held: the time zone is missing or unknown, so the local send hour cannot be checked."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 2,
+  "name": "baseline-k5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k5-2",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.00944952,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 60,
+  "locAll": 60,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Blocked: the address had a soft bounce within the last seven days, so we wait."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 3,
+  "name": "baseline-k5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/baseline-k5-3",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.006408239999999999,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 78,
+  "locAll": 78,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: The address had a soft bounce in the last 7 days, so the digest is held."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 1,
+  "name": "courier-inv-k1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k1-1",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.01682289,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 112,
+  "locAll": 112,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 2,
+  "name": "courier-inv-k1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k1-2",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.01213034,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 104,
+  "locAll": 104,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 3,
+  "name": "courier-inv-k1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k1-3",
+  "code": 0,
+  "seconds": 91,
+  "costUsd": 0.014883970000000002,
+  "turns": 12,
+  "skillCalls": 1,
+  "loc": 97,
+  "locAll": 97,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 1,
+  "name": "courier-inv-k2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k2-1",
+  "code": 0,
+  "seconds": 127,
+  "costUsd": 0.025704799999999996,
+  "turns": 14,
+  "skillCalls": 1,
+  "loc": 136,
+  "locAll": 136,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 2,
+  "name": "courier-inv-k2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k2-2",
+  "code": 0,
+  "seconds": 108,
+  "costUsd": 0.024393400000000003,
+  "turns": 14,
+  "skillCalls": 1,
+  "loc": 260,
+  "locAll": 260,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 3,
+  "name": "courier-inv-k2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k2-3",
+  "code": 0,
+  "seconds": 78,
+  "costUsd": 0.01454109,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 162,
+  "locAll": 162,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 1,
+  "name": "courier-inv-k3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k3-1",
+  "code": 0,
+  "seconds": 85,
+  "costUsd": 0.01789756,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 158,
+  "locAll": 158,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 2,
+  "name": "courier-inv-k3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k3-2",
+  "code": 0,
+  "seconds": 98,
+  "costUsd": 0.02055506,
+  "turns": 11,
+  "skillCalls": 1,
+  "loc": 201,
+  "locAll": 201,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 3,
+  "name": "courier-inv-k3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k3-3",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.014497349999999999,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 227,
+  "locAll": 227,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": false,
+    "why": "FAIL \"please don't stop the order updates\" opted the person out; \"I can't stop laughing at this\" opted the person out; \"what does END mean\" opted the person out"
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL START did not resubscribe; UNSTOP did not resubscribe"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": false,
+    "why": "FAIL got [false,false], want [false,true]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 1,
+  "name": "courier-inv-k4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k4-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.01259059,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 2,
+  "name": "courier-inv-k4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k4-2",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.011883759999999998,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 200,
+  "locAll": 200,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 3,
+  "name": "courier-inv-k4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k4-3",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.013155020000000002,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 255,
+  "locAll": 255,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T17:00:00Z: send false, want true; America/Chicago 2026-06-10T21:00:00Z: send false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-10T11:00:00Z: send false, want true; America/New_York 2026-06-10T07:00:00Z: send false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": false,
+    "why": "FAIL Europe/Berlin 2026-03-29T05:30:00Z: send false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL held message never went out after quiet hours"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 1,
+  "name": "courier-inv-k5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k5-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.014346200000000002,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 103,
+  "locAll": 103,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: The address had a temporary bounce under 7 days ago, so the digest waits."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: It is 3:00 in America/New_York, outside the 8:00-20:00 sending window.; Saturday 23:30 New York blocked: It is 23:00 in America/New_York, outside the 8:00-20:00 sending window.; 03:00 in Tokyo blocked: It is 3:00 in Asia/Tokyo, outside the 8:00-20:00 sending window."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 2,
+  "name": "courier-inv-k5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k5-2",
+  "code": 0,
+  "seconds": 29,
+  "costUsd": 0.007299260000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: The address had a recent soft bounce, so this digest waits."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: It is outside the 08:00-20:00 local send window for this user.; Saturday 23:30 New York blocked: It is outside the 08:00-20:00 local send window for this user.; 03:00 in Tokyo blocked: It is outside the 08:00-20:00 local send window for this user."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 3,
+  "name": "courier-inv-k5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-inv-k5-3",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.00760915,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 79,
+  "locAll": 79,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: A soft bounce in the last 7 days; the mailbox is held for a week."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: It is outside the 8:00-20:00 local send window for this user.; Saturday 23:30 New York blocked: It is outside the 8:00-20:00 local send window for this user.; 03:00 in Tokyo blocked: It is outside the 8:00-20:00 local send window for this user."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: The time zone is unknown, so the local send window cannot be checked.; null timeZone blocked: The time zone is unknown, so the local send window cannot be checked.; undefined fields blocked: The time zone is unknown, so the local send window cannot be checked."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 1,
+  "name": "courier-k1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k1-1",
+  "code": 0,
+  "seconds": 77,
+  "costUsd": 0.01553206,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 2,
+  "name": "courier-k1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k1-2",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.011076270000000001,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 180,
+  "locAll": 180,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 3,
+  "name": "courier-k1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k1-3",
+  "code": 0,
+  "seconds": 75,
+  "costUsd": 0.015469789999999999,
+  "turns": 12,
+  "skillCalls": 0,
+  "loc": 106,
+  "locAll": 106,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 1,
+  "name": "courier-k2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k2-1",
+  "code": 0,
+  "seconds": 83,
+  "costUsd": 0.014478729999999999,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 149,
+  "locAll": 149,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 2,
+  "name": "courier-k2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k2-2",
+  "code": 0,
+  "seconds": 87,
+  "costUsd": 0.01681177,
+  "turns": 12,
+  "skillCalls": 0,
+  "loc": 294,
+  "locAll": 294,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 3,
+  "name": "courier-k2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k2-3",
+  "code": 0,
+  "seconds": 67,
+  "costUsd": 0.012484740000000001,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 152,
+  "locAll": 152,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 1,
+  "name": "courier-k3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k3-1",
+  "code": 0,
+  "seconds": 110,
+  "costUsd": 0.020697870000000004,
+  "turns": 10,
+  "skillCalls": 0,
+  "loc": 137,
+  "locAll": 137,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply; START did not resubscribe; UNSTOP did not resubscribe"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": false,
+    "why": "FAIL got [false,false], want [false,true]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 2,
+  "name": "courier-k3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k3-2",
+  "code": 0,
+  "seconds": 111,
+  "costUsd": 0.01926249,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 122,
+  "locAll": 122,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL START did not resubscribe; UNSTOP did not resubscribe"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": false,
+    "why": "FAIL got [false,false], want [false,true]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 3,
+  "name": "courier-k3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k3-3",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.01261126,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 102,
+  "locAll": 102,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL START did not resubscribe; UNSTOP did not resubscribe"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": false,
+    "why": "FAIL got [false,false], want [false,true]"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 1,
+  "name": "courier-k4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k4-1",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.01039154,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 113,
+  "locAll": 113,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 2,
+  "name": "courier-k4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k4-2",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.010801020000000001,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 96,
+  "locAll": 96,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 3,
+  "name": "courier-k4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k4-3",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.011858609999999999,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 84,
+  "locAll": 84,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T17:00:00Z: send false, want true; America/Chicago 2026-06-10T21:00:00Z: send false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-10T11:00:00Z: send false, want true; America/New_York 2026-06-10T07:00:00Z: send false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": false,
+    "why": "FAIL Europe/Berlin 2026-03-29T05:30:00Z: send false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry; held message never went out after quiet hours"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 1,
+  "name": "courier-k5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k5-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.00658905,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 88,
+  "locAll": 88,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: The address soft-bounced within the last 3 days, so the send waits."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: It is outside the 08:00-20:00 local send window, so the send waits.; Saturday 23:30 New York blocked: It is outside the 08:00-20:00 local send window, so the send waits.; 03:00 in Tokyo blocked: It is outside the 08:00-20:00 local send window, so the send waits."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 2,
+  "name": "courier-k5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k5-2",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0066398099999999995,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 83,
+  "locAll": 83,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: The address had a soft bounce in the last 72 hours, so the send is held."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: It is outside the 8:00-20:00 local send window for the user, so the send waits.; Saturday 23:30 New York blocked: It is outside the 8:00-20:00 local send window for the user, so the send waits.; 03:00 in Tokyo blocked: It is outside the 8:00-20:00 local send window for the user, so the send waits."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 3,
+  "name": "courier-k5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/courier-k5-3",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.0064239499999999995,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 86,
+  "locAll": 86,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the address had a recent soft bounce, so we wait 72 hours."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: it is outside the local send window (9:00-18:00) for the user's time zone.; Saturday 23:30 New York blocked: Not sent: it is outside the local send window (9:00-18:00) for the user's time zone.; 03:00 in Tokyo blocked: Not sent: it is outside the local send window (9:00-18:00) for the user's time zone."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Not sent: the account has no time zone, so no local send hour can be chosen.; null timeZone blocked: Not sent: the account has no time zone, so no local send hour can be chosen.; undefined fields blocked: Not sent: the account has no time zone, so no local send hour can be chosen."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 1,
+  "name": "ours-k1-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k1-1",
+  "code": 0,
+  "seconds": 74,
+  "costUsd": 0.01468548,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 84,
+  "locAll": 84,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/Chicago 2026-06-11T01:59:00Z: allowed false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/New_York 2026-06-10T13:00:00Z: allowed false, want true; Europe/London 2026-06-10T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T10:30:00Z: next null, want 2026-06-10T13:00:00Z; America/Chicago 2026-06-11T03:00:00Z: next null, want 2026-06-11T13:00:00Z; Asia/Tokyo 2026-06-10T13:00:00Z: next null, want 2026-06-10T23:00:00Z; America/Chicago 2026-06-11T06:00:00Z: next null, want 2026-06-11T13:00:00Z; America/Chicago 2026-07-01T03:00:00Z: next null, want 2026-07-01T13:00:00Z; America/Los_Angeles 2027-01-01T06:00:00Z: next null, want 2027-01-01T16:00:00Z"
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-03-08T03:00:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T05:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T07:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T11:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T12:00:00Z: allowed false, want true; America/New_York 2026-03-08T12:30:00Z: allowed false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-11-01T02:00:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T05:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T06:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T12:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": false,
+    "why": "FAIL Asia/Kolkata 2026-06-10T15:15:00Z: allowed false, want true; Asia/Kolkata 2026-06-10T15:45:00Z: next null, want 2026-06-11T02:30:00Z; Asia/Kathmandu 2026-06-10T02:10:00Z: next null, want 2026-06-10T02:15:00Z; Asia/Kathmandu 2026-06-10T02:20:00Z: allowed false, want true; Asia/Kathmandu 2026-06-10T15:20:00Z: next null, want 2026-06-11T02:15:00Z"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 2,
+  "name": "ours-k1-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k1-2",
+  "code": 0,
+  "seconds": 58,
+  "costUsd": 0.01117007,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 109,
+  "locAll": 109,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/Chicago 2026-06-11T01:59:00Z: allowed false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/New_York 2026-06-10T13:00:00Z: allowed false, want true; Europe/London 2026-06-10T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T10:30:00Z: next null, want 2026-06-10T13:00:00Z; America/Chicago 2026-06-11T03:00:00Z: next null, want 2026-06-11T13:00:00Z; Asia/Tokyo 2026-06-10T13:00:00Z: next null, want 2026-06-10T23:00:00Z; America/Chicago 2026-06-11T06:00:00Z: next null, want 2026-06-11T13:00:00Z; America/Chicago 2026-07-01T03:00:00Z: next null, want 2026-07-01T13:00:00Z; America/Los_Angeles 2027-01-01T06:00:00Z: next null, want 2027-01-01T16:00:00Z"
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-03-08T03:00:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T05:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T07:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T11:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T12:00:00Z: allowed false, want true; America/New_York 2026-03-08T12:30:00Z: allowed false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-11-01T02:00:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T05:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T06:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T12:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": false,
+    "why": "FAIL Asia/Kolkata 2026-06-10T15:15:00Z: allowed false, want true; Asia/Kolkata 2026-06-10T15:45:00Z: next null, want 2026-06-11T02:30:00Z; Asia/Kathmandu 2026-06-10T02:10:00Z: next null, want 2026-06-10T02:15:00Z; Asia/Kathmandu 2026-06-10T02:20:00Z: allowed false, want true; Asia/Kathmandu 2026-06-10T15:20:00Z: next null, want 2026-06-11T02:15:00Z"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 3,
+  "name": "ours-k1-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k1-3",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.010074310000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 95,
+  "locAll": 95,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/Chicago 2026-06-11T01:59:00Z: allowed false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T13:00:00Z: allowed false, want true; America/New_York 2026-06-10T13:00:00Z: allowed false, want true; Europe/London 2026-06-10T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T10:30:00Z: next null, want 2026-06-10T13:00:00Z; America/Chicago 2026-06-11T03:00:00Z: next null, want 2026-06-11T13:00:00Z; Asia/Tokyo 2026-06-10T13:00:00Z: next null, want 2026-06-10T23:00:00Z; America/Chicago 2026-06-11T06:00:00Z: next null, want 2026-06-11T13:00:00Z; America/Chicago 2026-07-01T03:00:00Z: next null, want 2026-07-01T13:00:00Z; America/Los_Angeles 2027-01-01T06:00:00Z: next null, want 2027-01-01T16:00:00Z"
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-03-08T03:00:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T05:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T07:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T11:30:00Z: next null, want 2026-03-08T12:00:00Z; America/New_York 2026-03-08T12:00:00Z: allowed false, want true; America/New_York 2026-03-08T12:30:00Z: allowed false, want true"
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-11-01T02:00:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T05:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T06:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T12:30:00Z: next null, want 2026-11-01T13:00:00Z; America/New_York 2026-11-01T13:00:00Z: allowed false, want true"
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": false,
+    "why": "FAIL Asia/Kolkata 2026-06-10T15:15:00Z: allowed false, want true; Asia/Kolkata 2026-06-10T15:45:00Z: next null, want 2026-06-11T02:30:00Z; Asia/Kathmandu 2026-06-10T02:10:00Z: next null, want 2026-06-10T02:15:00Z; Asia/Kathmandu 2026-06-10T02:20:00Z: allowed false, want true; Asia/Kathmandu 2026-06-10T15:20:00Z: next null, want 2026-06-11T02:15:00Z"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 1,
+  "name": "ours-k2-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k2-1",
+  "code": 0,
+  "seconds": 91,
+  "costUsd": 0.01901879,
+  "turns": 11,
+  "skillCalls": 1,
+  "loc": 432,
+  "locAll": 432,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 2,
+  "name": "ours-k2-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k2-2",
+  "code": 0,
+  "seconds": 75,
+  "costUsd": 0.01501916,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 402,
+  "locAll": 402,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 3,
+  "name": "ours-k2-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k2-3",
+  "code": 0,
+  "seconds": 87,
+  "costUsd": 0.01737787,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 430,
+  "locAll": 430,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 1,
+  "name": "ours-k3-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k3-1",
+  "code": 0,
+  "seconds": 78,
+  "costUsd": 0.015038200000000002,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 446,
+  "locAll": 446,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 2,
+  "name": "ours-k3-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k3-2",
+  "code": 0,
+  "seconds": 103,
+  "costUsd": 0.019016869999999998,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 493,
+  "locAll": 493,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 3,
+  "name": "ours-k3-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k3-3",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.01341552,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 459,
+  "locAll": 459,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 1,
+  "name": "ours-k4-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k4-1",
+  "code": 0,
+  "seconds": 86,
+  "costUsd": 0.016163240000000002,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 428,
+  "locAll": 428,
+  "full": 0,
+  "outcome": 0,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-10T16:00:00Z: send false, want true; America/Chicago 2026-06-10T17:00:00Z: send false, want true; America/Chicago 2026-06-10T21:00:00Z: send false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-11T01:59:00Z: send false, want true; America/New_York 2026-06-10T11:00:00Z: send false, want true; America/New_York 2026-06-10T07:00:00Z: send false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": false,
+    "why": "FAIL Europe/Berlin 2026-03-29T19:30:00Z: send false, want true; Europe/Berlin 2026-03-29T05:30:00Z: send false, want true; America/New_York 2026-11-01T12:30:00Z: send false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": false,
+    "why": "FAIL inApp not true (send=false); inApp not true (send=false); inApp not true (send=false); inApp not true (send=false); three drops need three different non-empty reasons: [\"promotions are held: the user record carries no opt-in for them\",\"promotions are held: the user record carries no opt-in for them\",\"promotions are held: the user record carries no opt-in for them\",\"promotions are held: the user record carries no opt-in for them\"]"
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": false,
+    "why": "FAIL security alert held at night"
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL sent twice or never: first false, retry false; inbox item lost on retry; held message never went out after quiet hours"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 2,
+  "name": "ours-k4-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k4-2",
+  "code": 0,
+  "seconds": 63,
+  "costUsd": 0.01262123,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 423,
+  "locAll": 423,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL sent twice or never: first true, retry true; pushed twice after the hold"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 3,
+  "name": "ours-k4-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k4-3",
+  "code": 0,
+  "seconds": 80,
+  "costUsd": 0.01415426,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 441,
+  "locAll": 441,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": false,
+    "why": "FAIL security alert held at night"
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 1,
+  "name": "ours-k5-1",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k5-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.00898846,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 62,
+  "locAll": 62,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Held: a soft bounce was recorded less than 7 days ago."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 2,
+  "name": "ours-k5-2",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k5-2",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.00807803,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 76,
+  "locAll": 76,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Held: the address soft-bounced within the last 7 days."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 3,
+  "name": "ours-k5-3",
+  "model": "claude-haiku-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-haiku/work/ours-k5-3",
+  "code": 0,
+  "seconds": 77,
+  "costUsd": 0.01411004,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 107,
+  "locAll": 107,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Held: a temporary bounce was recent; next send allowed Tue, Jun 16, 11:00 AM EDT."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Held: it is outside the 08:00 to 20:00 send hours; next send allowed Sun, Jun 14, 8:00 AM EDT.; Saturday 23:30 New York blocked: Held: it is outside the 08:00 to 20:00 send hours; next send allowed Sun, Jun 21, 8:00 AM EDT.; 03:00 in Tokyo blocked: Held: it is outside the 08:00 to 20:00 send hours; next send allowed Wed, Jun 10, 8:00 AM GMT+9."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Held: no valid time zone on file, so the send time cannot be set.; null timeZone blocked: Held: no valid time zone on file, so the send time cannot be set.; undefined fields blocked: Held: no valid time zone on file, so the send time cannot be set."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

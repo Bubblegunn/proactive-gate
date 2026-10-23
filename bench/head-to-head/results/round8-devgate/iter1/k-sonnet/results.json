@@ -1,0 +1,3482 @@
+[
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 1,
+  "name": "baseline-k1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k1-1",
+  "code": 0,
+  "seconds": 72,
+  "costUsd": 0.18763699999999997,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 102,
+  "locAll": 102,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 2,
+  "name": "baseline-k1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k1-2",
+  "code": 0,
+  "seconds": 86,
+  "costUsd": 0.18613870000000002,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 173,
+  "locAll": 173,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k1",
+  "rep": 3,
+  "name": "baseline-k1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k1-3",
+  "code": 0,
+  "seconds": 632,
+  "costUsd": 0.33678050000000004,
+  "turns": 2,
+  "skillCalls": 0,
+  "loc": 126,
+  "locAll": 126,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 1,
+  "name": "baseline-k2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k2-1",
+  "code": 0,
+  "seconds": 101,
+  "costUsd": 0.1800078,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 139,
+  "locAll": 139,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 2,
+  "name": "baseline-k2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k2-2",
+  "code": 0,
+  "seconds": 96,
+  "costUsd": 0.19406899999999996,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 157,
+  "locAll": 157,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k2",
+  "rep": 3,
+  "name": "baseline-k2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k2-3",
+  "code": 0,
+  "seconds": 71,
+  "costUsd": 0.15299020000000002,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 93,
+  "locAll": 93,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 1,
+  "name": "baseline-k3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k3-1",
+  "code": 0,
+  "seconds": 108,
+  "costUsd": 0.23638109999999998,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 184,
+  "locAll": 184,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 2,
+  "name": "baseline-k3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k3-2",
+  "code": 0,
+  "seconds": 138,
+  "costUsd": 0.2568855,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 289,
+  "locAll": 289,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k3",
+  "rep": 3,
+  "name": "baseline-k3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k3-3",
+  "code": 0,
+  "seconds": 259,
+  "costUsd": 0.1949679,
+  "turns": 9,
+  "skillCalls": 0,
+  "loc": 145,
+  "locAll": 145,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 1,
+  "name": "baseline-k4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k4-1",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.1412174,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 197,
+  "locAll": 197,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": false,
+    "why": "FAIL America/Chicago 2026-06-10T17:00:00Z: send false, want true; America/Chicago 2026-06-10T21:00:00Z: send false, want true"
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": false,
+    "why": "FAIL America/New_York 2026-06-11T01:59:00Z: send false, want true; America/New_York 2026-06-10T11:00:00Z: send false, want true; America/New_York 2026-06-10T07:00:00Z: send false, want true"
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": false,
+    "why": "FAIL Europe/Berlin 2026-03-29T19:30:00Z: send false, want true; Europe/Berlin 2026-03-29T05:30:00Z: send false, want true; America/New_York 2026-11-01T12:30:00Z: send false, want true"
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry; held message never went out after quiet hours"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 2,
+  "name": "baseline-k4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k4-2",
+  "code": 0,
+  "seconds": 41,
+  "costUsd": 0.1011494,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 76,
+  "locAll": 76,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k4",
+  "rep": 3,
+  "name": "baseline-k4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k4-3",
+  "code": 0,
+  "seconds": 63,
+  "costUsd": 0.1158891,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 97,
+  "locAll": 97,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 1,
+  "name": "baseline-k5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k5-1",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.1255938,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 95,
+  "locAll": 95,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the address soft-bounced less than 3 days ago."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: it is outside 09:00-17:00 in the person's local time.; Saturday 23:30 New York blocked: Not sent: it is outside 09:00-17:00 in the person's local time.; 03:00 in Tokyo blocked: Not sent: it is outside 09:00-17:00 in the person's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Not sent: the time zone is unknown and it is outside the safe US daytime window (12:00-17:00 New York).; null timeZone blocked: Not sent: the time zone is unknown and it is outside the safe US daytime window (12:00-17:00 New York).; undefined fields blocked: Not sent: the time zone is unknown and it is outside the safe US daytime window (12:00-17:00 New York)."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 2,
+  "name": "baseline-k5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k5-2",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.12961530000000002,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 103,
+  "locAll": 103,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the address soft-bounced less than 3 days ago."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: it is outside 09:00-18:00 in the user's local time.; Saturday 23:30 New York blocked: Not sent: it is outside 09:00-18:00 in the user's local time.; 03:00 in Tokyo blocked: Not sent: it is outside 09:00-18:00 in the user's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Not sent: the time zone is unknown and it is outside the 17:00-21:00 UTC fallback window.; null timeZone blocked: Not sent: the time zone is unknown and it is outside the 17:00-21:00 UTC fallback window.; undefined fields blocked: Not sent: the time zone is unknown and it is outside the 17:00-21:00 UTC fallback window."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "k5",
+  "rep": 3,
+  "name": "baseline-k5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/baseline-k5-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.1065776,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 90,
+  "locAll": 90,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: a soft bounce happened in the last 3 days."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: it is outside 08:00-20:00 in the person's local time.; Saturday 23:30 New York blocked: Not sent: it is outside 08:00-20:00 in the person's local time.; 03:00 in Tokyo blocked: Not sent: it is outside 08:00-20:00 in the person's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Not sent: the time zone is unknown, so local send time cannot be checked.; null timeZone blocked: Not sent: the time zone is unknown, so local send time cannot be checked.; undefined fields blocked: Not sent: the time zone is unknown, so local send time cannot be checked."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 1,
+  "name": "courier-inv-k1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k1-1",
+  "code": 0,
+  "seconds": 82,
+  "costUsd": 0.22028200000000003,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 101,
+  "locAll": 101,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 2,
+  "name": "courier-inv-k1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k1-2",
+  "code": 0,
+  "seconds": 251,
+  "costUsd": 0.21662380000000003,
+  "turns": 1,
+  "skillCalls": 1,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k1",
+  "rep": 3,
+  "name": "courier-inv-k1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k1-3",
+  "code": 0,
+  "seconds": 646,
+  "costUsd": 0.2014116,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 117,
+  "locAll": 117,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 1,
+  "name": "courier-inv-k2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k2-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.18940379999999998,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 110,
+  "locAll": 110,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 2,
+  "name": "courier-inv-k2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k2-2",
+  "code": 0,
+  "seconds": 69,
+  "costUsd": 0.1773215,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 118,
+  "locAll": 118,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k2",
+  "rep": 3,
+  "name": "courier-inv-k2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k2-3",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.1412449,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 126,
+  "locAll": 126,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 1,
+  "name": "courier-inv-k3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k3-1",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.20625749999999998,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 133,
+  "locAll": 133,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 2,
+  "name": "courier-inv-k3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k3-2",
+  "code": 0,
+  "seconds": 115,
+  "costUsd": 0.2801502,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 198,
+  "locAll": 198,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k3",
+  "rep": 3,
+  "name": "courier-inv-k3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k3-3",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.1784831,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 139,
+  "locAll": 139,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 1,
+  "name": "courier-inv-k4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k4-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.2187592,
+  "turns": 11,
+  "skillCalls": 1,
+  "loc": 112,
+  "locAll": 112,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 2,
+  "name": "courier-inv-k4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k4-2",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.17795019999999998,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 141,
+  "locAll": 141,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k4",
+  "rep": 3,
+  "name": "courier-inv-k4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k4-3",
+  "code": 0,
+  "seconds": 44,
+  "costUsd": 0.13837460000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 1,
+  "name": "courier-inv-k5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k5-1",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.15829290000000001,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 77,
+  "locAll": 77,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Blocked: a soft bounce happened less than 3 days ago (or its time is unreadable); waiting before retrying."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Blocked: it is 3:xx local time; digests go out between 8:00 and 20:00 local.; Saturday 23:30 New York blocked: Blocked: it is 23:xx local time; digests go out between 8:00 and 20:00 local.; 03:00 in Tokyo blocked: Blocked: it is 3:xx local time; digests go out between 8:00 and 20:00 local."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Blocked: the user's time zone is unknown, so the local send window cannot be checked.; null timeZone blocked: Blocked: the user's time zone is unknown, so the local send window cannot be checked.; undefined fields blocked: Blocked: the user's time zone is unknown, so the local send window cannot be checked."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 2,
+  "name": "courier-inv-k5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k5-2",
+  "code": 0,
+  "seconds": 86,
+  "costUsd": 0.30569080000000004,
+  "turns": 12,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Blocked: it is outside 8:00-20:00 in the person's local time.; Saturday 23:30 New York blocked: Blocked: it is outside 8:00-20:00 in the person's local time.; 03:00 in Tokyo blocked: Blocked: it is outside 8:00-20:00 in the person's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "k5",
+  "rep": 3,
+  "name": "courier-inv-k5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-inv-k5-3",
+  "code": 0,
+  "seconds": 72,
+  "costUsd": 0.2089194,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 148,
+  "locAll": 148,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Blocked: it is outside 8:00-20:00 in the person's local time.; Saturday 23:30 New York blocked: Blocked: it is outside 8:00-20:00 in the person's local time.; 03:00 in Tokyo blocked: Blocked: it is outside 8:00-20:00 in the person's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 1,
+  "name": "courier-k1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k1-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.1603223,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 76,
+  "locAll": 76,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 2,
+  "name": "courier-k1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k1-2",
+  "code": 0,
+  "seconds": 417,
+  "costUsd": 0.1607418,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 95,
+  "locAll": 95,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k1",
+  "rep": 3,
+  "name": "courier-k1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k1-3",
+  "code": 0,
+  "seconds": 125,
+  "costUsd": 0.19674679999999997,
+  "turns": 11,
+  "skillCalls": 0,
+  "loc": 100,
+  "locAll": 100,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 1,
+  "name": "courier-k2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k2-1",
+  "code": 0,
+  "seconds": 81,
+  "costUsd": 0.15619300000000003,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 110,
+  "locAll": 110,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 2,
+  "name": "courier-k2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k2-2",
+  "code": 0,
+  "seconds": 121,
+  "costUsd": 0.2386531,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 190,
+  "locAll": 190,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": false,
+    "why": "FAIL got [true,false,true,true,false,false]"
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k2",
+  "rep": 3,
+  "name": "courier-k2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k2-3",
+  "code": 0,
+  "seconds": 77,
+  "costUsd": 0.1397376,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 137,
+  "locAll": 137,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": false,
+    "why": "FAIL allowed ny=8 la=6, want 3 and 3"
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 1,
+  "name": "courier-k3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k3-1",
+  "code": 0,
+  "seconds": 143,
+  "costUsd": 0.25503509999999996,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 212,
+  "locAll": 212,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 2,
+  "name": "courier-k3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k3-2",
+  "code": 0,
+  "seconds": 156,
+  "costUsd": 0.3081582,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 200,
+  "locAll": 200,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k3",
+  "rep": 3,
+  "name": "courier-k3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k3-3",
+  "code": 0,
+  "seconds": 182,
+  "costUsd": 0.2122662,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 190,
+  "locAll": 190,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 1,
+  "name": "courier-k4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k4-1",
+  "code": 0,
+  "seconds": 57,
+  "costUsd": 0.146811,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 199,
+  "locAll": 199,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 2,
+  "name": "courier-k4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k4-2",
+  "code": 0,
+  "seconds": 48,
+  "costUsd": 0.0957834,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 122,
+  "locAll": 122,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k4",
+  "rep": 3,
+  "name": "courier-k4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k4-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.0863979,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 77,
+  "locAll": 77,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 1,
+  "name": "courier-k5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k5-1",
+  "code": 0,
+  "seconds": 63,
+  "costUsd": 0.1466815,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 89,
+  "locAll": 89,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the last soft bounce was less than 3 days ago, so we wait before retrying."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: the local hour for the user is 3, outside the 08:00-20:00 local send window.; Saturday 23:30 New York blocked: Not sent: the local hour for the user is 23, outside the 08:00-20:00 local send window.; 03:00 in Tokyo blocked: Not sent: the local hour for the user is 3, outside the 08:00-20:00 local send window."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 2,
+  "name": "courier-k5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k5-2",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.1234522,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 89,
+  "locAll": 89,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Denied: the last email soft-bounced less than 3 days ago, so we wait before retrying."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Denied: it is outside 08:00-19:59 in the recipient's local time.; Saturday 23:30 New York blocked: Denied: it is outside 08:00-19:59 in the recipient's local time.; 03:00 in Tokyo blocked: Denied: it is outside 08:00-19:59 in the recipient's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Denied: the time zone is unknown or invalid, so we cannot tell the local time.; null timeZone blocked: Denied: the time zone is unknown or invalid, so we cannot tell the local time.; undefined fields blocked: Denied: the time zone is unknown or invalid, so we cannot tell the local time."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "k5",
+  "rep": 3,
+  "name": "courier-k5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/courier-k5-3",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.10014019999999998,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 127,
+  "locAll": 127,
+  "full": 3,
+  "outcome": 3,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": false,
+    "why": "FAIL soft bounce blocked: Not sent: the address had a temporary bounce in the last 3 days."
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": false,
+    "why": "FAIL Sunday 03:00 New York blocked: Not sent: it is outside 08:00-20:00 in the user's local time.; Saturday 23:30 New York blocked: Not sent: it is outside 08:00-20:00 in the user's local time.; 03:00 in Tokyo blocked: Not sent: it is outside 08:00-20:00 in the user's local time."
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": false,
+    "why": "FAIL no timeZone key blocked: Not sent: the time zone is unknown, so local send hours cannot be checked.; null timeZone blocked: Not sent: the time zone is unknown, so local send hours cannot be checked.; undefined fields blocked: Not sent: the time zone is unknown, so local send hours cannot be checked."
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 1,
+  "name": "ours-k1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k1-1",
+  "code": 0,
+  "seconds": 29,
+  "costUsd": 0.1266169,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 389,
+  "locAll": 389,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 2,
+  "name": "ours-k1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k1-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.08802950000000001,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 387,
+  "locAll": 387,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k1",
+  "rep": 3,
+  "name": "ours-k1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k1-3",
+  "code": 0,
+  "seconds": 41,
+  "costUsd": 0.12347020000000002,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 385,
+  "locAll": 385,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 window edges at the recipient (07:59, 08:00, 20:59, 21:01)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the recipient's zone is used, not the server's",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 refusal carries the next 08:00 local (same day, next day, month and year rollover)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 spring-forward day (New York 8 March 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 fall-back day (New York 1 November 2026)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 zones with a half-hour or 45-minute offset (India, Nepal)",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 1,
+  "name": "ours-k2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k2-1",
+  "code": 0,
+  "seconds": 58,
+  "costUsd": 0.1697031,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 405,
+  "locAll": 405,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 2,
+  "name": "ours-k2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k2-2",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.09377170000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 402,
+  "locAll": 402,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k2",
+  "rep": 3,
+  "name": "ours-k2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k2-3",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.119095,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 420,
+  "locAll": 420,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most three per day, refusals carry a reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the day ends at the member's local midnight (not UTC, not 24h rolling)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 days on the clock-change dates last 25 and 23 hours (New York)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 four workers at the same moment never exceed three",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a redelivered messageId (even in another worker) is not counted twice",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the count survives a restart and each member has their own",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 1,
+  "name": "ours-k3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k3-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.1350552,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 439,
+  "locAll": 439,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 2,
+  "name": "ours-k3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k3-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1312983,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 424,
+  "locAll": 424,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k3",
+  "rep": 3,
+  "name": "ours-k3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k3-3",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1318339,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 448,
+  "locAll": 448,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP keywords opt out of SMS, in any case and with spaces, and get a confirmation",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary messages containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 opt-out is per channel and per person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 an opt-out handled by one worker process is seen by another, after a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START resubscribes; HELP answers and changes nothing",
+    "pass": false,
+    "why": "FAIL HELP got no reply; HELP after STOP got no reply"
+   },
+   {
+    "n": "6",
+    "name": "6 messages handled out of order: the one the person sent last decides",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 1,
+  "name": "ours-k4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k4-1",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.1192472,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 399,
+  "locAll": 399,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 2,
+  "name": "ours-k4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k4-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.1136451,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 424,
+  "locAll": 424,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": false,
+    "why": "FAIL inbox item lost on retry"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k4",
+  "rep": 3,
+  "name": "ours-k4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k4-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.1052617,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 410,
+  "locAll": 410,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours that cross midnight, and ones that do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 edges: start is quiet, end is not; no quiet hours set means none",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 quiet hours follow the person's wall clock through clock changes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 every dropped push still leaves the in-app item, each drop with its own reason",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts go out during quiet hours, promos do not; push off still wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the same message is never pushed twice, but a held message goes out on retry",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 1,
+  "name": "ours-k5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k5-1",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.09992960000000001,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 27,
+  "locAll": 27,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 2,
+  "name": "ours-k5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k5-2",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.0930778,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 33,
+  "locAll": 33,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "k5",
+  "rep": 3,
+  "name": "ours-k5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/REPO/bench/head-to-head/results/round8-devgate/iter1/k-sonnet/work/ours-k5-3",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.1049445,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 46,
+  "locAll": 46,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 unsubscribed people get nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a hard-bounced address is suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a soft bounce alone does not block the digest",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a digest sent an hour ago blocks, one sent 8 days ago does not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no invented time-of-day or day-of-week block (email has no contact window)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 missing or unknown optional fields do not block and do not throw",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]
