@@ -1,0 +1,162 @@
+{
+ "p1": {
+  "1": {
+   "label": "outcome",
+   "why": "Recipient does not get a marketing text before 08:00 in their own zone; 08:01 is accepted.",
+   "concern": "An implementation that blocks a wider early window (for example until 09:00) would fail the 08:01 probe although it is arguably safer."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Recipient does not get a marketing text after 21:00 local; 20:59 is accepted.",
+   "concern": "Stricter evening cut-offs (20:00) fail the 20:59 probe; the checker avoids the exact 21:00 instant because 'after 9 p.m.' is ambiguous at the boundary."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The recipient's zone and its daylight saving rules decide, not the server zone (New York summer and winter, Honolulu).",
+   "concern": "A correct implementation using a fixed table of zones instead of Intl could differ for zones outside those probed."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Transactional texts (login codes, delivery updates) are delivered at night and without marketing consent.",
+   "concern": "Some teams would also hold non-urgent transactional texts at night; the prompt defines transactional as requested by the person, so the checker treats blocking as a failure."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A recipient without marketing consent receives no marketing text even at midday; consent does not block transactional.",
+   "concern": "None known beyond field naming: the check reads only marketingConsent."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "blockedBy names the stopping check, and nextAllowedAt is the next 08:00 local instant, correct across a daylight saving switch; allowed results carry null.",
+   "concern": "An implementation returning nextAllowedAt as the first allowed minute after some other rounding (e.g. 08:00:01) would fail; a Date object instead of an ISO string fails too."
+  }
+ },
+ "p2": {
+  "1": {
+   "label": "outcome",
+   "why": "The recipient cannot receive a fourth marketing email on one local day (and a fifth).",
+   "concern": "None known: three is stated in the prompt."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The daily count resets at the recipient's local midnight, so a user in Los Angeles is not mailed a fourth time at 23:30 local just because UTC rolled over.",
+   "concern": "A rolling 24-hour window fails this probe; the prompt says calendar day, so that is intended."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Two worker processes calling at once cannot push a user past three emails.",
+   "concern": "A correct implementation that returns an error (not a result object) under lock contention would be counted as not allowed and could be miscounted as too few, failing the exact-3 check."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A second process started later still sees the earlier sends, so a restart does not give the recipient a fresh allowance.",
+   "concern": "An implementation keeping the state in a different file layout is fine; one that reads STATE_DIR only at import time is also fine because the checker sets it before loading."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Password resets and receipts are never refused and never use up the marketing allowance.",
+   "concern": "None known."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "One recipient's allowance does not affect another recipient, and a refusal carries a non-empty blockedBy while an allowance carries none.",
+   "concern": "An implementation that returns a descriptive object instead of a string for blockedBy would fail."
+  }
+ },
+ "p3": {
+  "1": {
+   "label": "outcome",
+   "why": "A person who switched a category off in the app settings receives nothing in that category, while other categories they switched on still arrive.",
+   "concern": "An implementation that treats a missing optIn key as allowed would pass this probe because the checker always supplies explicit booleans."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Notifications are held during the user's overnight quiet window (22:00 to 07:00 local, start inclusive, end exclusive) and a daytime custom window works as well.",
+   "concern": "Inclusive-end implementations fail the 07:00 probe; the prompt gives no wording about the end instant, so this is a judgement from the usual 'until 07:00' meaning."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Quiet hours follow the user's own zone, including summer time, not the server's UTC clock.",
+   "concern": "None known for correct code; a bug that hard-codes one zone's offset is exactly what this probes."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Security alerts about sign-ins and account changes still reach the user at night and when other opt-ins are off.",
+   "concern": "A team could decide security alerts also need opt-in; the prompt gives the category a distinct meaning and the product need (account safety) implies delivery."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "The same notification (same user and key) is not delivered twice within 24 hours, yet a notification that was held back by quiet hours is still deliverable later.",
+   "concern": "A design that counts a held-back notification as sent would fail; one that dedupes forever rather than 24 hours fails the 24h plus one minute probe."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "The answer names which rule stopped the notification, with a different name for opt-out, quiet hours and duplicate, and no name when allowed.",
+   "concern": "An implementation that reports several matching rules as a list would fail the string check; the prompt says one identifier."
+  }
+ },
+ "p4": {
+  "1": {
+   "label": "outcome",
+   "why": "The customer is not contacted twice within two hours, and refused attempts do not push the next allowed time further out.",
+   "concern": "The exact two-hour boundary is not probed; probes are at 119 and 121 minutes."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The customer is not contacted a fifth time within a rolling seven days, is contactable again after the oldest contact has aged out, and the answer names the weekly limit differently from the gap limit.",
+   "concern": "An implementation using a calendar week instead of a rolling window fails by design."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "retryAt after a two-hour-gap refusal is the first moment a new request would pass (one minute after it passes, one minute before it fails).",
+   "concern": "A retryAt rounded up by more than a minute would fail."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "retryAt after a weekly-cap refusal, including when the gap is also not yet satisfied, is a moment at which both limits are satisfied.",
+   "concern": "As above; tolerance is one minute either way."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Several workers asking at the same moment for the same person cannot all receive the single slot (exactly one send per person).",
+   "concern": "Implementations that surface lock contention as thrown errors may undercount allowed results and fail the exactly-one check."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Sends recorded by earlier, since-ended processes still count, so a restart does not reset a customer's limits.",
+   "concern": "None known."
+  }
+ },
+ "p5": {
+  "1": {
+   "label": "outcome",
+   "why": "An address that unsubscribed receives no marketing email, and other addresses are unaffected.",
+   "concern": "None known."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Capital letters and surrounding spaces do not let an unsubscribed or hard-bounced address slip through.",
+   "concern": "Implementations that also strip plus-tags or dots (provider-specific) would still pass, but could wrongly merge distinct people; not probed."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A person who unsubscribed from marketing still receives receipts and password resets.",
+   "concern": "Under a stricter reading of consent some teams suppress everything; the prompt defines transactional separately."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A hard bounce stops all mail to the address, while a soft bounce stops nothing.",
+   "concern": "Teams that suppress after N soft bounces would pass here because only a single soft bounce is probed."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Unsubscribes and hard bounces written by one worker are seen by another process started later.",
+   "concern": "None known."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Thirty unsubscribes written at the same time by two workers are all kept (no lost updates), while an untouched address is still allowed.",
+   "concern": "An implementation that errors under contention rather than waiting would lose entries and fail."
+  }
+ }
+}

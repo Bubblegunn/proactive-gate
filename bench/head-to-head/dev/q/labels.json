@@ -1,0 +1,162 @@
+{
+ "q1": {
+  "1": {
+   "label": "outcome",
+   "why": "A consenting customer is texted at midday in New York, Kolkata and Honolulu, with reason ok and no next time.",
+   "concern": "An implementation that is stricter than the law (for example a 9:00 start) still passes; a different success reason string than ok fails."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Window edges in New York summer: 07:59 blocked, 08:00 allowed, 20:59 allowed, 21:01 blocked, 03:00 blocked (47 CFR 64.1200(c)(1): not before 8 a.m. or after 9 p.m. local).",
+   "concern": "A correct implementation that applies a stricter state rule (for example 8 p.m. end, as in Florida) fails the 20:59 check even though it is lawful."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The customer's own zone decides, not the server zone: Tokyo vs Chicago at the same instants and Asia/Kolkata (UTC+5:30) edges.",
+   "concern": "A correct implementation that uses the phone number's area code instead of timeZone could fail, though the prompt names timeZone as the source."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Both US daylight saving changes in New York give the right local hour (a standard-time offset used in summer would text at 07:30 or 21:30).",
+   "concern": "Only New York is tested; an implementation with a hand-made offset table could pass here and fail in another zone."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "nextAllowedAt is exactly the next 08:00 local instant, including over the spring and autumn clock changes and for Sydney.",
+   "concern": "An implementation that returns a later but safe time, such as 09:00, fails although nobody is harmed."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "A customer without consent, or with a missing or invalid zone, is never texted, nothing throws, and the three causes carry distinct reasons.",
+   "concern": "An implementation that chooses a default zone for a missing timeZone and texts in a conservative window would fail while arguably being safe."
+  }
+ },
+ "q2": {
+  "1": {
+   "label": "outcome",
+   "why": "Users receive at most 3 marketing pushes per day; each user has their own count.",
+   "concern": "An implementation that counts per rolling 24 hours rather than per day passes here and is caught only by criterion 3."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Transactional pushes (receipts, security alerts) always go out, also at night, also at cap, and do not use up the marketing quota.",
+   "concern": "An implementation that blocks transactional pushes at night for users who gave no opt-in is arguably cautious but fails."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "The daily limit resets at the user's local midnight, not at UTC midnight and not 24 hours after the first push.",
+   "concern": "A correct implementation that resets at a local hour other than midnight (for example 04:00) could fail."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "A user without marketing permission receives no marketing push (App Store 4.5.4, Google Play policy), and refused tries do not use quota.",
+   "concern": "None found for the permission itself; the quota part fails an implementation that records attempts instead of sends, which the prompt forbids."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "No marketing push at 02:00 to 05:00 local time, in the user's zone, and night refusals do not use quota.",
+   "concern": "The checker only tests deep-night hours, so implementations with any reasonable quiet hours pass; a window that only starts at 04:00 would fail."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Support can tell which rule stopped a push: night, no permission and cap give three different non-empty reasons, allowed gives ok.",
+   "concern": "A correct implementation that returns an extra field instead of distinct reason strings fails."
+  }
+ },
+ "q3": {
+  "1": {
+   "label": "outcome",
+   "why": "Eight simultaneous requests for one user in one process result in exactly 2 marketing emails, so the user is not mailed 8 times.",
+   "concern": "An implementation that serialises with an in-process queue passes; one that holds a file lock longer than 60 seconds could time out."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The limit is shared between processes and survives a restart: a fresh process refuses the third email.",
+   "concern": "None known beyond filesystem differences."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Four processes racing for two users together allow exactly 2 emails per user.",
+   "concern": "A correct file-lock implementation on a slow disk could exceed the 60 second limit of the process helper."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "After one process records an unsubscribe, every process refuses marketing mail to that user permanently (CAN-SPAM 7704(a)(4)), while invoices and security mail still go out and other users are unaffected.",
+   "concern": "An implementation that also blocks transactional mail to unsubscribed users is arguably cautious but fails the check."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "The 24-hour limit is a rolling window: one slot frees when the oldest email is over 24 hours old, and refused tries are not recorded.",
+   "concern": "An implementation that keeps the oldest-email boundary inclusive (24 h exactly) is not tested at the boundary and passes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "User ids such as a/b, ../escape, A and a, very long and non-ASCII ids are separate users, cause no error and write nothing outside STATE_DIR.",
+   "concern": "A correct implementation that rejects invalid ids with an error fails, though the prompt says ids are arbitrary strings."
+  }
+ },
+ "q4": {
+  "1": {
+   "label": "outcome",
+   "why": "STOP, STOPALL, UNSUBSCRIBE, CANCEL, END and QUIT in any case and with whitespace opt the customer out, a confirmation reply is returned and further texts are blocked (CTIA, TCPA revocation).",
+   "concern": "A reply that is non-empty but does not actually confirm the opt-out passes."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Sentences that merely contain stop words (for example Please don't stop the reminders) do not remove a customer from the list.",
+   "concern": "An implementation that treats a clear sentence such as stop texting me as an opt-out is safer in law and is not tested here."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "An opt-out recorded by one worker is respected by other workers and after a restart, and other numbers are not affected.",
+   "concern": "None known."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "The same North American number written in seven formats is one person, so a STOP reaches all spellings, while a neighbouring number and the same digits with another area code are unaffected.",
+   "concern": "Numbers outside North America are not tested."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "START re-subscribes, a later STOP opts out again, and HELP replies without changing the opt-out status of anyone.",
+   "concern": "Only START is tested for re-subscribe; accepting other words is allowed."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "24 opt-outs written at the same moment by four processes are all kept, so nobody who said STOP is texted again.",
+   "concern": "A correct locking scheme that is slow could time out under the 60 second helper limit."
+  }
+ },
+ "q5": {
+  "1": {
+   "label": "outcome",
+   "why": "The assistant does not start a second conversation within 4 hours, and retryAt names the exact instant it may.",
+   "concern": "An implementation that returns a later safe retryAt passes the allowed-at-retry check but fails the exact time check."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "After 3 nudges without a reply the user is left alone for 7 days counted from the third nudge, and retryAt shows when it ends.",
+   "concern": "Counting the 7 days from the first blocked request instead of from the third nudge would fail, though a reader might choose it."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A reply from the user restarts the count, so the next 3 nudges are allowed and only the fourth unanswered one is blocked.",
+   "concern": "An implementation that allows more than 3 after a reply, or restarts differently, fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "If the user writes during the silent week, the silence ends and the assistant may nudge again after the normal gap.",
+   "concern": "An implementation that keeps the silence until the user answers a specific nudge fails, though the prompt does not say how replies count."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Asking the gate has no side effects: many checks, also while blocked, neither use up allowance nor extend the silence.",
+   "concern": "An implementation that logs or caches in a way that does not change answers passes."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "No nudge at 03:00 in the user's own zone while another zone at the same instant is allowed, with a consistent retryAt and three distinct reason codes.",
+   "concern": "The checker uses deep-night hours only; the exact start and end of quiet hours are left to the implementation."
+  }
+ }
+}

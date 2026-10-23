@@ -1,0 +1,162 @@
+{
+ "r1": {
+  "1": {
+   "label": "outcome",
+   "why": "Customer is not texted before 8:00 or after 21:00 local time (07:59:59 held, 08:00 and 20:59:59 allowed, 21:30 and 02:00 held).",
+   "concern": "An implementation could treat 21:00:00 to 21:00:59 differently; the check avoids that second. A strict reading with a wider safety margin (for example stop at 20:30) would fail."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Local time is the customer's own zone, not the server zone or UTC, tested with New York, Tokyo, Los Angeles and Sydney; the process zone is set to Pacific/Auckland.",
+   "concern": "An implementation that maps zones through its own table and lacks a zone used here would fail."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Offsets follow daylight saving changes on the transition days (New York 8 March 2026, Los Angeles 1 November 2026).",
+   "concern": "None known for any library that reads the IANA database. Only a fixed-offset table fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Opt-out after consent blocks, a later re-consent allows, missing consent blocks.",
+   "concern": "An implementation that treats an opt-out and a consent at the same instant differently is not tested. One that blocks a re-consented customer until some waiting period would fail."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "A null, empty, invalid or non-string time zone leads to a held message, not an exception and not a send.",
+   "concern": "An implementation that falls back to a default zone such as the company's own and allows would fail; the checker treats that as unsafe."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Each of five different outcomes returns its own non-empty rule name.",
+   "concern": "An implementation that merges two reasons under one name (for example opt-out and no consent) fails although it may be reasonable."
+  }
+ },
+ "r2": {
+  "1": {
+   "label": "outcome",
+   "why": "No more than 3 promotional pushes per user per day are allowed, further ones are refused with a rule name.",
+   "concern": "None known; the limit is stated in the prompt."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "The day is the user's calendar day in their IANA zone, tested in Tokyo and Los Angeles against a UTC-day implementation.",
+   "concern": "An implementation using a rolling 24 hours window instead of a calendar day fails, though the prompt says per day."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "Three processes call at once for one user and exactly 3 pushes are allowed in total.",
+   "concern": "A slow implementation (for example a lock with long back-off) could pass the logic but time out at 60 seconds."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Counts written by one process are seen after it exits.",
+   "concern": "An implementation that only reads STATE_DIR from a different variable name would fail; the prompt names it."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Transactional pushes are allowed even when the cap is reached and do not use up the cap.",
+   "concern": "An implementation that lets transactional pushes through but counts them fails."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Counts are kept per user.",
+   "concern": "An implementation keyed by device or by user and zone together would fail."
+  }
+ },
+ "r3": {
+  "1": {
+   "label": "outcome",
+   "why": "A marketing email without a List-Unsubscribe header is refused.",
+   "concern": "An implementation that accepts a mailto-only header would pass this check but may not satisfy the 2024 sender rules; not tested."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "A marketing email without the List-Unsubscribe-Post one-click header is refused.",
+   "concern": "An implementation that requires the header but not its exact value passes; the check only tests absence and empty value."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A marketing email without a postal address (null, empty, spaces) is refused.",
+   "concern": "An implementation that refuses a postal address that is too short is not tested."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "Unsubscribed, complained and hard-bounced recipients are suppressed; soft-bounced ones are not.",
+   "concern": "An implementation that suppresses after one soft bounce fails, though it is conservative."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "EU, EEA and UK recipients need recorded consent; US recipients with no recorded answer may be mailed.",
+   "concern": "An implementation that requires consent in the US as well fails; the prompt says the business wants to mail them where the law permits. Countries beyond DE, FR, GB, IE, US are not tested."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "Transactional email is allowed without unsubscribe headers or address, and even to an unsubscribed or non-consenting recipient.",
+   "concern": "An implementation that also checks suppression for transactional mail fails; arguably over-cautious for hard bounces, but the test uses only unsubscribed and missing consent."
+  }
+ },
+ "r4": {
+  "1": {
+   "label": "outcome",
+   "why": "Free-form messages are allowed within 24 hours of the last inbound message and refused after (23:59 allowed, 24:01 refused).",
+   "concern": "The exact 24:00:00 instant is not tested."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Template messages are allowed after the window for an opted-in customer; free-form is refused for an opted-in customer who never wrote.",
+   "concern": "An implementation that requires a prior inbound message even for templates fails."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "A later inbound message extends the window, and a late-arriving older event does not shorten it.",
+   "concern": "An implementation that keeps the full history and takes the maximum passes; one that trusts arrival order fails."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "State written in one process is used by another process and a new one.",
+   "concern": "A very slow lock could time out."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "After an opt-out, neither kind is allowed.",
+   "concern": "The checker does not test what happens when the customer writes again later; policy is debatable there."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "A customer with no opt-in on record, or only an inbound message, gets no template.",
+   "concern": "An implementation that treats an inbound message as opt-in fails the second part; WhatsApp policy asks for explicit opt-in."
+  }
+ },
+ "r5": {
+  "1": {
+   "label": "outcome",
+   "why": "Standard keywords (STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT) in any case and with surrounding spaces opt the number out.",
+   "concern": "An implementation that also needs a trailing full stop to be ignored is not tested."
+  },
+  "2": {
+   "label": "outcome",
+   "why": "Sentences that contain a keyword do not opt the customer out.",
+   "concern": "An implementation that opts out on the keyword followed by punctuation (STOP.) is not tested."
+  },
+  "3": {
+   "label": "outcome",
+   "why": "STOP and HELP get an automatic reply, they differ, and HELP does not opt out.",
+   "concern": "The content of the reply (for example contact data) is not checked."
+  },
+  "4": {
+   "label": "outcome",
+   "why": "START and UNSTOP restore sending after STOP.",
+   "concern": "YES is deliberately not tested."
+  },
+  "5": {
+   "label": "outcome",
+   "why": "Opt-out matches the same number in E.164 and common US formats, and does not touch a different number.",
+   "concern": "Non-US numbers are out of scope and not tested."
+  },
+  "6": {
+   "label": "outcome",
+   "why": "An opt-out given to one programme number does not stop the other programme and does not stop other customers.",
+   "concern": "An implementation that treats a STOP as stopping every programme fails, though it is conservative for the customer. The prompt describes two separate programmes."
+  }
+ }
+}

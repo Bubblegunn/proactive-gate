@@ -1,0 +1,7 @@
+We have a consumer fitness app on iOS and Android with an AI coach that decides on its own when to push a notification to a user. I need the gate that runs right before each push. Write bot.mjs (ES module, Node 22, no npm packages) that exports decidePush(msg, now), synchronous, returning { allowed: boolean, reason: string }. now is a Date supplied by the caller. msg is { userId: string, timeZone: string (IANA name of the user's home zone, always valid), category: "marketing" | "transactional", marketingOptIn: boolean }.
+
+"Transactional" means things the user asked for or must know about (a booked class, a payment receipt, a security alert). "Marketing" means anything the coach starts on its own to bring the user back: promos, streak nudges, "we miss you". When decidePush returns allowed true, the push counts as sent from that moment, so the function records it itself; when it returns false, nothing is recorded. The app runs as one long-lived Node process and keeps this state in memory.
+
+Product wants at most 3 marketing pushes per user per day. Users keep complaining that the coach buzzes them at night, and App Store Review Guideline 4.5.4 and Google Play's notification policy both say that promotional pushes need the user's permission. When a user is annoyed, support has to be able to tell which rule stopped or allowed a push, so reason must be a short lowercase code that is different for each different cause, and "ok" when allowed.
+
+Do not actually send anything. Check that it works before you finish.
