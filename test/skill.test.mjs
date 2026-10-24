@@ -494,7 +494,8 @@ function round8Problems(text) {
   if (!/until the end of the recipient's local day/.test(text)) bad.push("rule 5 lost the local-day suppression");
   if (!/any field where the person chose what to receive/.test(text)) bad.push("rule 2 lost the settings-field-is-consent sentence");
   if (!/every repeat of that id gets "not sent: already delivered"/.test(text)) bad.push("rule 5 lost the repeat-never-sends-twice sentence");
-  if (!/a saved zone of "UTC"/.test(text)) bad.push("rule 6 lost the UTC placeholder sentence");
+  if (!/a saved zone is used as stored, "UTC" included/.test(text)) bad.push("rule 6 lost the UTC placeholder sentence");
+  if (/a saved zone of "UTC" or an empty one is unknown/.test(text)) bad.push("rule 6 treats every UTC zone as a placeholder again");
   if (!text.includes("INFO as the whole message (`gkIsHelp(text)`)")) bad.push("rule 7 lost the HELP keyword");
   if (!/neither the data nor the functions/.test(text)) bad.push("rule 2 lost the consent-carrier exception");
   if (!/security alert or code/.test(text)) bad.push("rule 9 lost the security-alert sentence");
@@ -521,7 +522,8 @@ test("the round-8 checks reject a skill that regresses each point", () => {
     [skill.replace("security alert or code", "code"), /security-alert/],
     [skill.replace("any field where the person chose what to receive", "a consent field"), /settings-field/],
     [skill.replace("every repeat of that id gets \"not sent: already delivered\"", "the same answer"), /repeat-never-sends/],
-    [skill.replace("a saved zone of \"UTC\"", "a zone"), /UTC placeholder/],
+    [skill.replace("a saved zone is used as stored, \"UTC\" included", "a zone"), /UTC placeholder/],
+    [skill.replace("a saved zone is used as stored, \"UTC\" included", "a saved zone of \"UTC\" or an empty one is unknown"), /UTC placeholder|every UTC zone/],
     [skill.replace("report a silent in-app item every time", "report it"), /repeat answer/],
   ]) assert.match(round8Problems(broken).join("\n"), expected);
 });
