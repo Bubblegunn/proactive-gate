@@ -1,0 +1,3482 @@
+[
+ {
+  "arm": "baseline",
+  "task": "r1",
+  "rep": 1,
+  "name": "baseline-r1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r1-1",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.11461879999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 74,
+  "locAll": 74,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r1",
+  "rep": 2,
+  "name": "baseline-r1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r1-2",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.1456786,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 63,
+  "locAll": 63,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r1",
+  "rep": 3,
+  "name": "baseline-r1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r1-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.12773599999999996,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 58,
+  "locAll": 58,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r2",
+  "rep": 1,
+  "name": "baseline-r2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r2-1",
+  "code": 0,
+  "seconds": 30,
+  "costUsd": 0.0807263,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 68,
+  "locAll": 68,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r2",
+  "rep": 2,
+  "name": "baseline-r2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r2-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0847993,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r2",
+  "rep": 3,
+  "name": "baseline-r2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r2-3",
+  "code": 0,
+  "seconds": 30,
+  "costUsd": 0.0838212,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r3",
+  "rep": 1,
+  "name": "baseline-r3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r3-1",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.0872739,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r3",
+  "rep": 2,
+  "name": "baseline-r3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r3-2",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.09470799999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 75,
+  "locAll": 75,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r3",
+  "rep": 3,
+  "name": "baseline-r3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r3-3",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.09230799999999999,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 69,
+  "locAll": 69,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r4",
+  "rep": 1,
+  "name": "baseline-r4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r4-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.097441,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r4",
+  "rep": 2,
+  "name": "baseline-r4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r4-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.09114799999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 68,
+  "locAll": 68,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r4",
+  "rep": 3,
+  "name": "baseline-r4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r4-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.0888101,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 81,
+  "locAll": 81,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r5",
+  "rep": 1,
+  "name": "baseline-r5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r5-1",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.1372197,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 105,
+  "locAll": 105,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r5",
+  "rep": 2,
+  "name": "baseline-r5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r5-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1089406,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 104,
+  "locAll": 104,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "r5",
+  "rep": 3,
+  "name": "baseline-r5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/baseline-r5-3",
+  "code": 0,
+  "seconds": 66,
+  "costUsd": 0.16080969999999997,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 113,
+  "locAll": 113,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r1",
+  "rep": 1,
+  "name": "courier-inv-r1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r1-1",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.1616065,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 58,
+  "locAll": 58,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r1",
+  "rep": 2,
+  "name": "courier-inv-r1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r1-2",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.18728519999999999,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 103,
+  "locAll": 103,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r1",
+  "rep": 3,
+  "name": "courier-inv-r1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r1-3",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1696233,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 70,
+  "locAll": 70,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r2",
+  "rep": 1,
+  "name": "courier-inv-r2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r2-1",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.1248628,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 66,
+  "locAll": 66,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r2",
+  "rep": 2,
+  "name": "courier-inv-r2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r2-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.1132612,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 118,
+  "locAll": 118,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r2",
+  "rep": 3,
+  "name": "courier-inv-r2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r2-3",
+  "code": 0,
+  "seconds": 25,
+  "costUsd": 0.1024754,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 84,
+  "locAll": 84,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r3",
+  "rep": 1,
+  "name": "courier-inv-r3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r3-1",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.12488059999999998,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 113,
+  "locAll": 113,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r3",
+  "rep": 2,
+  "name": "courier-inv-r3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r3-2",
+  "code": 0,
+  "seconds": 40,
+  "costUsd": 0.1431879,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 80,
+  "locAll": 80,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r3",
+  "rep": 3,
+  "name": "courier-inv-r3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r3-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.12627069999999999,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 58,
+  "locAll": 58,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r4",
+  "rep": 1,
+  "name": "courier-inv-r4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r4-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.13562059999999998,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 72,
+  "locAll": 72,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r4",
+  "rep": 2,
+  "name": "courier-inv-r4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r4-2",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.1423403,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 74,
+  "locAll": 74,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r4",
+  "rep": 3,
+  "name": "courier-inv-r4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r4-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.160675,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r5",
+  "rep": 1,
+  "name": "courier-inv-r5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r5-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1743954,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 108,
+  "locAll": 108,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r5",
+  "rep": 2,
+  "name": "courier-inv-r5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r5-2",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1748219,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 107,
+  "locAll": 107,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "r5",
+  "rep": 3,
+  "name": "courier-inv-r5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-inv-r5-3",
+  "code": 0,
+  "seconds": 61,
+  "costUsd": 0.1960255,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 121,
+  "locAll": 121,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r1",
+  "rep": 1,
+  "name": "courier-r1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r1-1",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.1039341,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 102,
+  "locAll": 102,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r1",
+  "rep": 2,
+  "name": "courier-r1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r1-2",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1281465,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 126,
+  "locAll": 126,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r1",
+  "rep": 3,
+  "name": "courier-r1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r1-3",
+  "code": 0,
+  "seconds": 43,
+  "costUsd": 0.1073774,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r2",
+  "rep": 1,
+  "name": "courier-r2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r2-1",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.10660460000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 123,
+  "locAll": 123,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r2",
+  "rep": 2,
+  "name": "courier-r2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r2-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0808081,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 66,
+  "locAll": 66,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r2",
+  "rep": 3,
+  "name": "courier-r2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r2-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.09145930000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 69,
+  "locAll": 69,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r3",
+  "rep": 1,
+  "name": "courier-r3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r3-1",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.0934067,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 79,
+  "locAll": 79,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r3",
+  "rep": 2,
+  "name": "courier-r3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r3-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.0947347,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 105,
+  "locAll": 105,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r3",
+  "rep": 3,
+  "name": "courier-r3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r3-3",
+  "code": 0,
+  "seconds": 39,
+  "costUsd": 0.10562469999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 136,
+  "locAll": 136,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r4",
+  "rep": 1,
+  "name": "courier-r4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r4-1",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.0894426,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 83,
+  "locAll": 83,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r4",
+  "rep": 2,
+  "name": "courier-r4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r4-2",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.09798290000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 78,
+  "locAll": 78,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r4",
+  "rep": 3,
+  "name": "courier-r4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r4-3",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.12537579999999998,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 87,
+  "locAll": 87,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r5",
+  "rep": 1,
+  "name": "courier-r5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r5-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.12067539999999999,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 108,
+  "locAll": 108,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r5",
+  "rep": 2,
+  "name": "courier-r5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r5-2",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1252654,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 104,
+  "locAll": 104,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": false,
+    "why": "FAIL opted out by \"stop by tomorrow?\""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "r5",
+  "rep": 3,
+  "name": "courier-r5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/courier-r5-3",
+  "code": 0,
+  "seconds": 52,
+  "costUsd": 0.1202991,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 95,
+  "locAll": 95,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r1",
+  "rep": 1,
+  "name": "ours-r1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r1-1",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.0906354,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 399,
+  "locAll": 399,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r1",
+  "rep": 2,
+  "name": "ours-r1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r1-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.10266139999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 52,
+  "locAll": 52,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r1",
+  "rep": 3,
+  "name": "ours-r1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r1-3",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.0989496,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 400,
+  "locAll": 400,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 quiet hours 8:00 to 21:00 local",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 uses the recipient's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving transitions",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 consent and opt-out: the latest event wins",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 unknown time zone is held back without crashing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own rule name",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r2",
+  "rep": 1,
+  "name": "ours-r2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r2-1",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.08941299999999999,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 384,
+  "locAll": 384,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r2",
+  "rep": 2,
+  "name": "ours-r2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r2-2",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.0947809,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 385,
+  "locAll": 385,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": true,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r2",
+  "rep": 3,
+  "name": "ours-r2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r2-3",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.0878657,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 383,
+  "locAll": 383,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 promotional pushes per user per day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 a day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 concurrent workers never exceed the limit",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the count survives a process restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional pushes are never refused and never counted",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each user has their own count",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r3",
+  "rep": 1,
+  "name": "ours-r3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r3-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.10161749999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 74,
+  "locAll": 74,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r3",
+  "rep": 2,
+  "name": "ours-r3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r3-2",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.10234300000000002,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 57,
+  "locAll": 57,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": false,
+    "why": "FAIL false,false,false soft=false"
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r3",
+  "rep": 3,
+  "name": "ours-r3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r3-3",
+  "code": 0,
+  "seconds": 36,
+  "costUsd": 0.1089106,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 48,
+  "locAll": 48,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing needs a List-Unsubscribe header",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing needs the one-click header (RFC 8058)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 marketing needs a postal address",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribed, complained and hard-bounced addresses are suppressed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 EU and UK recipients need recorded consent; US recipients with no answer may be mailed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 transactional email is not held back by marketing rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r4",
+  "rep": 1,
+  "name": "ours-r4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r4-1",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.094462,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 56,
+  "locAll": 56,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": false,
+    "why": "FAIL false,false,true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r4",
+  "rep": 2,
+  "name": "ours-r4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r4-2",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.099194,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 78,
+  "locAll": 78,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": false,
+    "why": "FAIL false,false,true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r4",
+  "rep": 3,
+  "name": "ours-r4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r4-3",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.1017425,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 58,
+  "locAll": 58,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 free-form text only inside 24 hours of the customer's last message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 approved templates work outside the window; free-form never works without a message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a newer message extends the window and an older late webhook cannot shorten it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 state is shared between worker processes and survives restarts",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 an opt-out stops every kind of message",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 nothing is sent to a customer who never opted in",
+    "pass": false,
+    "why": "FAIL false,false,true"
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r5",
+  "rep": 1,
+  "name": "ours-r5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r5-1",
+  "code": 0,
+  "seconds": 62,
+  "costUsd": 0.1549834,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 92,
+  "locAll": 92,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r5",
+  "rep": 2,
+  "name": "ours-r5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r5-2",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.1045435,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 69,
+  "locAll": 69,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "r5",
+  "rep": 3,
+  "name": "ours-r5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/r-sonnet/work/ours-r5-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.1019953,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 71,
+  "locAll": 71,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 STOP and its standard synonyms opt the customer out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing a keyword do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 STOP and HELP get a reply; HELP does not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 START and UNSTOP resubscribe after STOP",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 phone numbers match across formats",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 an opt-out applies to the programme that received it",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

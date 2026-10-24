@@ -1,0 +1,3482 @@
+[
+ {
+  "arm": "baseline",
+  "task": "q1",
+  "rep": 1,
+  "name": "baseline-q1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q1-1",
+  "code": 0,
+  "seconds": 55,
+  "costUsd": 0.1316625,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 96,
+  "locAll": 96,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q1",
+  "rep": 2,
+  "name": "baseline-q1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q1-2",
+  "code": 0,
+  "seconds": 72,
+  "costUsd": 0.1514685,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 112,
+  "locAll": 112,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q1",
+  "rep": 3,
+  "name": "baseline-q1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q1-3",
+  "code": 0,
+  "seconds": 76,
+  "costUsd": 0.1424605,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 100,
+  "locAll": 100,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": false,
+    "why": "FAIL 2026-07-15T12:00:00Z expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": false,
+    "why": "FAIL Kolkata 08:00 blocked"
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": false,
+    "why": "FAIL 2026-03-08T12:30:00Z expected true"
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": false,
+    "why": "FAIL 2026-07-15T07:00:00Z next=2026-07-15T13:00:00.000Z want 2026-07-15T12:00:00Z"
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q2",
+  "rep": 1,
+  "name": "baseline-q2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q2-1",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.0796114,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 47,
+  "locAll": 47,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q2",
+  "rep": 2,
+  "name": "baseline-q2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q2-2",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.080166,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 53,
+  "locAll": 53,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q2",
+  "rep": 3,
+  "name": "baseline-q2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q2-3",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.0719001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 49,
+  "locAll": 49,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q3",
+  "rep": 1,
+  "name": "baseline-q3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q3-1",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.1255578,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 177,
+  "locAll": 177,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q3",
+  "rep": 2,
+  "name": "baseline-q3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q3-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1149498,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 146,
+  "locAll": 146,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q3",
+  "rep": 3,
+  "name": "baseline-q3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q3-3",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1298382,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 156,
+  "locAll": 156,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q4",
+  "rep": 1,
+  "name": "baseline-q4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q4-1",
+  "code": 0,
+  "seconds": 188,
+  "costUsd": 0.3607807,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 221,
+  "locAll": 221,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"keyword\",\"reply\":\"Your salon: You are subscribed to appointment reminders and occasional offers. Msg freq varies. Msg&data rates may apply. Reply HELP for help, STOP to cancel.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q4",
+  "rep": 2,
+  "name": "baseline-q4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q4-2",
+  "code": 0,
+  "seconds": 228,
+  "costUsd": 0.4382087,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 310,
+  "locAll": 310,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"start_keyword\",\"reply\":\"Your salon: You are subscribed to appointment reminders and occasional offers. Msg frequency varies. Msg&data rates may apply. Reply HELP for help, STOP to cancel.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q4",
+  "rep": 3,
+  "name": "baseline-q4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q4-3",
+  "code": 0,
+  "seconds": 151,
+  "costUsd": 0.3119058,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 269,
+  "locAll": 269,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"resubscribed\",\"reply\":\"Your salon: You are subscribed to appointment reminders and offers. Msg freq varies. Msg&data rates may apply. Reply HELP for help, STOP to cancel.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q5",
+  "rep": 1,
+  "name": "baseline-q5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q5-1",
+  "code": 0,
+  "seconds": 69,
+  "costUsd": 0.1734392,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 105,
+  "locAll": 105,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q5",
+  "rep": 2,
+  "name": "baseline-q5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q5-2",
+  "code": 0,
+  "seconds": 59,
+  "costUsd": 0.1519478,
+  "turns": 8,
+  "skillCalls": 0,
+  "loc": 97,
+  "locAll": 97,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "baseline",
+  "task": "q5",
+  "rep": 3,
+  "name": "baseline-q5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/baseline-q5-3",
+  "code": 0,
+  "seconds": 63,
+  "costUsd": 0.17355049999999997,
+  "turns": 7,
+  "skillCalls": 0,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q1",
+  "rep": 1,
+  "name": "courier-inv-q1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q1-1",
+  "code": 0,
+  "seconds": 51,
+  "costUsd": 0.1546667,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 102,
+  "locAll": 102,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": false,
+    "why": "FAIL 2026-07-16T00:59:00Z expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": false,
+    "why": "FAIL 2026-11-02T01:30:00Z expected true"
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q1",
+  "rep": 2,
+  "name": "courier-inv-q1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q1-2",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1518571,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 101,
+  "locAll": 101,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q1",
+  "rep": 3,
+  "name": "courier-inv-q1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q1-3",
+  "code": 0,
+  "seconds": 65,
+  "costUsd": 0.1894033,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 96,
+  "locAll": 96,
+  "full": 2,
+  "outcome": 2,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": false,
+    "why": "FAIL 2026-07-15T12:00:00Z expected true"
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": false,
+    "why": "FAIL Kolkata 08:00 blocked"
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": false,
+    "why": "FAIL 2026-03-08T12:30:00Z expected true"
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": false,
+    "why": "FAIL 2026-07-15T07:00:00Z next=2026-07-15T13:00:00.000Z want 2026-07-15T12:00:00Z"
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q2",
+  "rep": 1,
+  "name": "courier-inv-q2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q2-1",
+  "code": 0,
+  "seconds": 22,
+  "costUsd": 0.0944508,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 51,
+  "locAll": 51,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q2",
+  "rep": 2,
+  "name": "courier-inv-q2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q2-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.120825,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 48,
+  "locAll": 48,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q2",
+  "rep": 3,
+  "name": "courier-inv-q2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q2-3",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.106299,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 79,
+  "locAll": 79,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q3",
+  "rep": 1,
+  "name": "courier-inv-q3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q3-1",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.127886,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 173,
+  "locAll": 173,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q3",
+  "rep": 2,
+  "name": "courier-inv-q3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q3-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.1206942,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 126,
+  "locAll": 126,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q3",
+  "rep": 3,
+  "name": "courier-inv-q3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q3-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.15609769999999998,
+  "turns": 8,
+  "skillCalls": 1,
+  "loc": 141,
+  "locAll": 141,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q4",
+  "rep": 1,
+  "name": "courier-inv-q4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q4-1",
+  "code": 0,
+  "seconds": 153,
+  "costUsd": 0.3652396,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 250,
+  "locAll": 250,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"keyword:start\",\"reply\":null},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q4",
+  "rep": 2,
+  "name": "courier-inv-q4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q4-2",
+  "code": 0,
+  "seconds": 86,
+  "costUsd": 0.23551830000000004,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 165,
+  "locAll": 165,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"start_keyword\",\"reply\":null},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q4",
+  "rep": 3,
+  "name": "courier-inv-q4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q4-3",
+  "code": 0,
+  "seconds": 178,
+  "costUsd": 0.40419869999999997,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 228,
+  "locAll": 228,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"keyword\",\"reply\":\"Salon Texts: You are resubscribed to appointment reminders and offers. Msg freq varies. Msg&data rates may apply. Reply STOP to cancel, HELP for help.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q5",
+  "rep": 1,
+  "name": "courier-inv-q5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q5-1",
+  "code": 0,
+  "seconds": 54,
+  "costUsd": 0.1770424,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 143,
+  "locAll": 143,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q5",
+  "rep": 2,
+  "name": "courier-inv-q5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q5-2",
+  "code": 0,
+  "seconds": 53,
+  "costUsd": 0.1654545,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 157,
+  "locAll": 157,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier-inv",
+  "task": "q5",
+  "rep": 3,
+  "name": "courier-inv-q5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-inv-q5-3",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.1805969,
+  "turns": 9,
+  "skillCalls": 1,
+  "loc": 159,
+  "locAll": 159,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q1",
+  "rep": 1,
+  "name": "courier-q1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q1-1",
+  "code": 0,
+  "seconds": 73,
+  "costUsd": 0.13544130000000001,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 140,
+  "locAll": 140,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q1",
+  "rep": 2,
+  "name": "courier-q1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q1-2",
+  "code": 0,
+  "seconds": 58,
+  "costUsd": 0.1318614,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 143,
+  "locAll": 143,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q1",
+  "rep": 3,
+  "name": "courier-q1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q1-3",
+  "code": 0,
+  "seconds": 49,
+  "costUsd": 0.11933539999999998,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 77,
+  "locAll": 77,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q2",
+  "rep": 1,
+  "name": "courier-q2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q2-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.0905253,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 54,
+  "locAll": 54,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q2",
+  "rep": 2,
+  "name": "courier-q2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q2-2",
+  "code": 0,
+  "seconds": 22,
+  "costUsd": 0.0700047,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 80,
+  "locAll": 80,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q2",
+  "rep": 3,
+  "name": "courier-q2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q2-3",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.0763907,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 54,
+  "locAll": 54,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q3",
+  "rep": 1,
+  "name": "courier-q3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q3-1",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1126104,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 156,
+  "locAll": 156,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q3",
+  "rep": 2,
+  "name": "courier-q3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q3-2",
+  "code": 0,
+  "seconds": 44,
+  "costUsd": 0.11083589999999999,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 143,
+  "locAll": 143,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q3",
+  "rep": 3,
+  "name": "courier-q3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q3-3",
+  "code": 0,
+  "seconds": 45,
+  "costUsd": 0.11342849999999999,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 189,
+  "locAll": 189,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q4",
+  "rep": 1,
+  "name": "courier-q4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q4-1",
+  "code": 0,
+  "seconds": 100,
+  "costUsd": 0.20500500000000002,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 164,
+  "locAll": 164,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": false,
+    "why": "FAIL opted out on \"Please don't stop the reminders\""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q4",
+  "rep": 2,
+  "name": "courier-q4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q4-2",
+  "code": 0,
+  "seconds": 212,
+  "costUsd": 0.41379209999999994,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 292,
+  "locAll": 292,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"start_keyword\",\"reply\":null},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q4",
+  "rep": 3,
+  "name": "courier-q4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q4-3",
+  "code": 0,
+  "seconds": 179,
+  "costUsd": 0.3501426,
+  "turns": 3,
+  "skillCalls": 0,
+  "loc": 254,
+  "locAll": 254,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"superseded_by_later_stop\",\"reply\":null},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q5",
+  "rep": 1,
+  "name": "courier-q5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q5-1",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.119253,
+  "turns": 4,
+  "skillCalls": 0,
+  "loc": 159,
+  "locAll": 159,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q5",
+  "rep": 2,
+  "name": "courier-q5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q5-2",
+  "code": 0,
+  "seconds": 60,
+  "costUsd": 0.1673707,
+  "turns": 6,
+  "skillCalls": 0,
+  "loc": 90,
+  "locAll": 90,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "courier",
+  "task": "q5",
+  "rep": 3,
+  "name": "courier-q5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/courier-q5-3",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.12415999999999999,
+  "turns": 5,
+  "skillCalls": 0,
+  "loc": 93,
+  "locAll": 93,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q1",
+  "rep": 1,
+  "name": "ours-q1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q1-1",
+  "code": 0,
+  "seconds": 69,
+  "costUsd": 0.1776687,
+  "turns": 10,
+  "skillCalls": 1,
+  "loc": 112,
+  "locAll": 112,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q1",
+  "rep": 2,
+  "name": "ours-q1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q1-2",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.09008269999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 393,
+  "locAll": 393,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q1",
+  "rep": 3,
+  "name": "ours-q1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q1-3",
+  "code": 0,
+  "seconds": 50,
+  "costUsd": 0.13240180000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 92,
+  "locAll": 92,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 allowed mid-day in several zones, reason ok, no next time",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 window edges in New York summer: 07:59 no, 08:00 yes, 20:59 yes, 21:01 no",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 uses the customer's zone, including a half-hour zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 daylight saving: both transitions in New York",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 nextAllowedAt is the next 08:00 local, across night, evening and DST",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no consent, missing or garbage zone: blocked, no throw, distinct reasons",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q2",
+  "rep": 1,
+  "name": "ours-q2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q2-1",
+  "code": 0,
+  "seconds": 24,
+  "costUsd": 0.0797676,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 38,
+  "locAll": 38,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q2",
+  "rep": 2,
+  "name": "ours-q2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q2-2",
+  "code": 0,
+  "seconds": 23,
+  "costUsd": 0.08127300000000001,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 41,
+  "locAll": 41,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q2",
+  "rep": 3,
+  "name": "ours-q2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q2-3",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.0885562,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 42,
+  "locAll": 42,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 at most 3 marketing pushes in a day, users counted separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 transactional pushes are never blocked and never use up the marketing quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the user's local calendar day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no marketing opt-in: blocked, and the blocked tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 no marketing at night local time, and blocked night tries do not use quota",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 each cause has its own non-empty reason code, ok when allowed",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q3",
+  "rep": 1,
+  "name": "ours-q3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q3-1",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.0988792,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 94,
+  "locAll": 94,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q3",
+  "rep": 2,
+  "name": "ours-q3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q3-2",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.1024755,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 98,
+  "locAll": 98,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q3",
+  "rep": 3,
+  "name": "ours-q3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q3-3",
+  "code": 0,
+  "seconds": 32,
+  "costUsd": 0.1096636,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 418,
+  "locAll": 418,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 concurrent requests inside one process cannot exceed 2 marketing emails",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 state is shared between processes and survives a restart",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 four processes at the same time still allow exactly 2 per user",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 unsubscribe in one process stops marketing in another, forever, but not transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the 24-hour window rolls: expiry frees one slot at a time, blocked tries record nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 odd user ids neither collide, fail, nor write outside STATE_DIR",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q4",
+  "rep": 1,
+  "name": "ours-q4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q4-1",
+  "code": 0,
+  "seconds": 97,
+  "costUsd": 0.23397270000000003,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 499,
+  "locAll": 499,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q4",
+  "rep": 2,
+  "name": "ours-q4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q4-2",
+  "code": 0,
+  "seconds": 118,
+  "costUsd": 0.2616054,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 521,
+  "locAll": 521,
+  "full": 5,
+  "outcome": 5,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"start_keyword\",\"reply\":\"You're subscribed to appointment reminders and offers from us. Msg frequency varies. Msg&data rates may apply. Reply HELP for help, STOP to cancel.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q4",
+  "rep": 3,
+  "name": "ours-q4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q4-3",
+  "code": 0,
+  "seconds": 103,
+  "costUsd": 0.23528860000000001,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 478,
+  "locAll": 478,
+  "full": 4,
+  "outcome": 4,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 every standard stop word opts the sender out and gets a reply",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 ordinary sentences containing those words do not opt out",
+    "pass": false,
+    "why": "FAIL opted out on \"Please don't stop the reminders\""
+   },
+   {
+    "n": "3",
+    "name": "3 an opt-out in one process is seen by other and later processes",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same number in any North American format is the same person",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 START re-subscribes, a later STOP stops again, HELP changes nothing",
+    "pass": false,
+    "why": "FAIL START did not re-subscribe [{\"action\":\"opt_in\",\"reason\":\"start_keyword\",\"reply\":\"You are resubscribed to text messages from us. Msg frequency varies. Msg&data rates may apply. Reply HELP for help, STOP to cancel.\"},{\"allowed\":false,\"reason\":\"opted_out\"}]"
+   },
+   {
+    "n": "6",
+    "name": "6 simultaneous opt-outs from several processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q5",
+  "rep": 1,
+  "name": "ours-q5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q5-1",
+  "code": 0,
+  "seconds": 38,
+  "costUsd": 0.1070216,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 55,
+  "locAll": 55,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q5",
+  "rep": 2,
+  "name": "ours-q5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q5-2",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.093204,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 407,
+  "locAll": 407,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "q5",
+  "rep": 3,
+  "name": "ours-q5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/q-sonnet/work/ours-q5-3",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.103951,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 403,
+  "locAll": 403,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 two nudges less than 4 hours apart are blocked, retryAt is right",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 after 3 unanswered nudges: silent for 7 days from the third",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a reply restarts the count of unanswered nudges",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a reply during the silent week ends it",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 canNudge changes nothing, however often it is called",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 no nudges at night in the user's own zone; reasons differ",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]

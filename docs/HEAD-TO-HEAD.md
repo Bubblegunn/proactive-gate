@@ -994,9 +994,27 @@ How to resume a run: `bash bench/head-to-head/dev/run-devgate.sh --set <p|q|r|k|
 Running processes: none of mine (all stopped). One slip to report: I ended my runs with `pkill -f sub-shim/claude`, which matches every wrapper process on the machine whose command line contains that path, so wrapper calls of other repositories' runs started at that moment may have been cut; those controllers should check their last cells for a missing result file.
 Not done: F9, F6-runs, Haiku gate, the Novu test-suite sweep, state-law windows (see the sweep note).
 
-## Resume (state at 2026-10-24, paused on the owner's order: at most two benchmarks at once under the usage limit; supersedes the 2026-10-23 Resume above)
+## Results, round 9 development gate, iteration 2 (build `e9ebdca`, Sonnet, all cells under /private/tmp/pg-r9/iter2; gate NOT passed)
 
-Done and pushed: ruling R9-4 (replaces R9-2; section "Round 9, iteration-2 ruling") was written and committed before the code; the skill change (`skills/proactive-gate/SKILL.md`, 10,540 bytes, cap 10,600) and its test with mutation check are in build `e9ebdca`. `test/skill.test.mjs`: 30 of 30 pass. Full `npm test` was not run.
-Gate iteration 2 (build `e9ebdca`, Sonnet, protocol `docs/DEV-GATE-round9.md` unchanged): started with `/private/tmp/pg-r9/iter2-driver.sh` (set p, then q, r with four arms, then k, r5, c, d with ours only) and stopped by killing its own process group. State: `/private/tmp/pg-r9/iter2/p-sonnet/runs/` holds the 90 reused iteration-1 rival cells (baseline, courier, courier-inv; copied, their work dirs stay under `/private/tmp/pg-r9/iter1/p-sonnet/work`) and 6 finished ours cells (`ours-*.meta.json`; some other ours cells may have a `.jsonl` without a `.meta.json` and are run again, never graded). Nothing is scored. Sets q and r have no iteration-2 cells; k, r5, c, d not started. No result for iteration 2 exists yet. Not claimed: whether R9-4 repaired p3.
-To resume: check `pgrep -fl 'claude -p'` and `grep -c vaara ~/.claude/settings.json ~/.claude.json` (0), then run `/private/tmp/pg-r9/iter2-driver.sh` (copy from the log of this section if /private/tmp was cleaned: loop `bash bench/head-to-head/dev/run-devgate.sh --set <s> --iter 2 --commit e9ebdca --model claude-sonnet-5-5 --arms ours,baseline,courier,courier-inv` for p q r, then `--arms ours` for k r5 c d). Cells with a meta file are skipped. Kill only the driver's own process group (pid in `/private/tmp/pg-r9/iter2-driver.pid`), never `pkill -f sub-shim/claude`.
-Sealed set e: `~/claude-kredi-runs/sealed/proactive-gate-heldout-e`, unread, hash `4d7b17a9e6ae5d1016e86e85302239d5dccda9b0e6641da5f6deae04a4a18573`; verify at the final measurement only.
+Tables and the bootstrap output: `bench/head-to-head/results/round9-devgate/iter2/`. Script scoring only. Rival and baseline cells on p were reused from iteration 1 (protocol); q and r were run fresh for all four arms. No transcript contains `caveman` (G6 holds).
+
+| set | ours | courier-inv | courier | baseline |
+|---|---|---|---|---|
+| p (iter 1 ours 25.67) | 28.67 | 29.33 | 23.00 | 24.67 |
+| q | 29.00 | 27.00 | 29.00 | 27.67 |
+| r | 28.33 | 28.33 | 28.33 | 28.67 |
+| pooled (max 90) | 86.00 | 84.67 | 80.33 | 81.00 |
+
+Regression sets, ours only: k 28.00 (floor 26.33), r5 30.00 (floor 29.00), c 30.00 (28.00), d 30.00 (27.33).
+- G1: ours minus best other (courier-inv) = +1.33, 95 percent bootstrap interval [-1.00, 3.67] (10,000 resamples, seed 7): FAILS (lower bound not above zero).
+- G2: p is -0.67 against courier-inv (q +0.00 against courier, r -0.33 against baseline): FAILS on p and r.
+- G3: p3 (ours 4.67, courier-inv 5.33, deficit 0.66) and r4 (ours 5.00, others 6.00, deficit 1.00) exceed the 0.34 allowance, one per set at most: FAILS.
+- G4 holds. G5 holds (ours 0.112 USD per run against the baseline's 0.134; turns 4.8 against 4.7). G6 holds.
+R9-4 did what it was meant to: p3 went from 1.67 to 4.67 and p from 25.67 to 28.67. This is iteration 2 of at most three. The result is a statistical tie with the best rival on tasks nobody on this project wrote, not a lead. Causes of the remaining p3 and r4 deficits are not yet diagnosed.
+
+## Resume (state at 2026-10-25, paused on the owner's order to restart in 4 hours; supersedes earlier Resume sections)
+
+Done and pushed: R9-4 and build `e9ebdca`; the full iteration-2 gate (all 105 + 60 cells run, scored, G1 to G6 applied, see the results section above). No process of mine is running and no `claude -p` call is pending. Full `npm test` passed before the run (894 pass, 0 fail).
+Gate state: NOT passed (G1, G2, G3 fail; G4, G5, G6 hold); iteration 2 of 3 is spent. Raw cells: `/private/tmp/pg-r9/iter2/<set>-sonnet/` (runs, work, results.json); copies of the tables and `bootstrap.txt` are committed under `bench/head-to-head/results/round9-devgate/iter2/`.
+Next (local work first, no model calls): read the transcripts and checker output of ours on p3 (`ours-p3-*`) and r4 (`ours-r4-*`) and of the winning arms, name the general class behind each deficit, write ruling R9-5 and commit it before any code, make the fix with a test and mutation check, keep the skill under 10,600 bytes (raise only with a ruling), then iteration 3: p, q, r (ours fresh; rival and baseline cells of q and r reusable from iter2 inside this gate) and k, r5, c, d ours only: `bash bench/head-to-head/dev/run-devgate.sh --set <s> --iter 3 --commit <sha> --model claude-sonnet-5-5 --arms ours` (add `,baseline,courier,courier-inv` only for a set whose rival cells are not seeded; seed by copying their `runs/*.jsonl` and `.meta.json` into the new out dir). If iteration 3 fails G1 to G6 the gate protocol ends without a final measurement and the result is reported as is.
+Rules unchanged: own process group only (never `pkill -f sub-shim/claude`), work under /private/tmp, at most two benchmarks at once, no release, merge or publish. Sealed set e: `~/claude-kredi-runs/sealed/proactive-gate-heldout-e`, unread, hash `4d7b17a9e6ae5d1016e86e85302239d5dccda9b0e6641da5f6deae04a4a18573`; verify only at the final measurement.

@@ -1,0 +1,872 @@
+[
+ {
+  "arm": "ours",
+  "task": "d1",
+  "rep": 1,
+  "name": "ours-d1-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d1-1",
+  "code": 0,
+  "seconds": 34,
+  "costUsd": 0.1023832,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 395,
+  "locAll": 395,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text to a customer whose time zone is unknown is held",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing allowed only 08:00 to 20:59 in the customer's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving changes are followed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no consent or a STOP reply blocks marketing at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional texts are not held by quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blocked results name a distinct rule per reason, allowed results an empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d1",
+  "rep": 2,
+  "name": "ours-d1-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d1-2",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.10394400000000001,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 394,
+  "locAll": 394,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text to a customer whose time zone is unknown is held",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing allowed only 08:00 to 20:59 in the customer's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving changes are followed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no consent or a STOP reply blocks marketing at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional texts are not held by quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blocked results name a distinct rule per reason, allowed results an empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d1",
+  "rep": 3,
+  "name": "ours-d1-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d1-3",
+  "code": 0,
+  "seconds": 37,
+  "costUsd": 0.103823,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 390,
+  "locAll": 390,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing text to a customer whose time zone is unknown is held",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 marketing allowed only 08:00 to 20:59 in the customer's own time zone",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 daylight saving changes are followed",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 no consent or a STOP reply blocks marketing at midday",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 transactional texts are not held by quiet hours",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 blocked results name a distinct rule per reason, allowed results an empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d2",
+  "rep": 1,
+  "name": "ours-d2-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d2-1",
+  "code": 0,
+  "seconds": 28,
+  "costUsd": 0.09046660000000001,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 65,
+  "locAll": 65,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets three promos a day, the fourth is held, other customers are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 two promos need two hours between them, blocked attempts do not move the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the customer's local day, not the UTC day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a cancelled (failed) send gives back its place in the cap and the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts are never limited and use no allowance",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 daily cap and gap are reported as different non-empty rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d2",
+  "rep": 2,
+  "name": "ours-d2-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d2-2",
+  "code": 0,
+  "seconds": 25,
+  "costUsd": 0.0799504,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 407,
+  "locAll": 407,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets three promos a day, the fourth is held, other customers are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 two promos need two hours between them, blocked attempts do not move the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the customer's local day, not the UTC day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a cancelled (failed) send gives back its place in the cap and the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts are never limited and use no allowance",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 daily cap and gap are reported as different non-empty rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d2",
+  "rep": 3,
+  "name": "ours-d2-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d2-3",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.12877049999999998,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 67,
+  "locAll": 67,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets three promos a day, the fourth is held, other customers are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 two promos need two hours between them, blocked attempts do not move the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 the day is the customer's local day, not the UTC day",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 a cancelled (failed) send gives back its place in the cap and the gap",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 security alerts are never limited and use no allowance",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 daily cap and gap are reported as different non-empty rules",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d3",
+  "rep": 1,
+  "name": "ours-d3-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d3-1",
+  "code": 0,
+  "seconds": 23,
+  "costUsd": 0.090125,
+  "turns": 6,
+  "skillCalls": 1,
+  "loc": 385,
+  "locAll": 385,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets two marketing messages a day, the third is held with a rule",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the count survives a restart (new process sees earlier messages)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 eight simultaneous requests in one process admit exactly two",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 requests from four processes at once admit exactly two per customer",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 channels count together, customers count separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the day is the customer's local day and resets after midnight there",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d3",
+  "rep": 2,
+  "name": "ours-d3-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d3-2",
+  "code": 0,
+  "seconds": 26,
+  "costUsd": 0.08409359999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 397,
+  "locAll": 397,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets two marketing messages a day, the third is held with a rule",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the count survives a restart (new process sees earlier messages)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 eight simultaneous requests in one process admit exactly two",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 requests from four processes at once admit exactly two per customer",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 channels count together, customers count separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the day is the customer's local day and resets after midnight there",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d3",
+  "rep": 3,
+  "name": "ours-d3-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d3-3",
+  "code": 0,
+  "seconds": 27,
+  "costUsd": 0.089474,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 383,
+  "locAll": 383,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 a customer gets two marketing messages a day, the third is held with a rule",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 the count survives a restart (new process sees earlier messages)",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 eight simultaneous requests in one process admit exactly two",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 requests from four processes at once admit exactly two per customer",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 channels count together, customers count separately",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 the day is the customer's local day and resets after midnight there",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d4",
+  "rep": 1,
+  "name": "ours-d4-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d4-1",
+  "code": 0,
+  "seconds": 33,
+  "costUsd": 0.10199249999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 88,
+  "locAll": 88,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing stops after an unsubscribe or a spam complaint, other addresses are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 receipts and other transactional mail still go to someone who unsubscribed or complained",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a hard bounce stops all mail to that address, marketing and transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same address in other capitals or with spaces is the same recipient",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a suppression recorded in one process is seen by a later process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 events recorded at the same moment by three processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d4",
+  "rep": 2,
+  "name": "ours-d4-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d4-2",
+  "code": 0,
+  "seconds": 35,
+  "costUsd": 0.1082458,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 424,
+  "locAll": 424,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing stops after an unsubscribe or a spam complaint, other addresses are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 receipts and other transactional mail still go to someone who unsubscribed or complained",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a hard bounce stops all mail to that address, marketing and transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same address in other capitals or with spaces is the same recipient",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a suppression recorded in one process is seen by a later process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 events recorded at the same moment by three processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d4",
+  "rep": 3,
+  "name": "ours-d4-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d4-3",
+  "code": 0,
+  "seconds": 31,
+  "costUsd": 0.0951778,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 64,
+  "locAll": 64,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 marketing stops after an unsubscribe or a spam complaint, other addresses are unaffected",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 receipts and other transactional mail still go to someone who unsubscribed or complained",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 a hard bounce stops all mail to that address, marketing and transactional",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 the same address in other capitals or with spaces is the same recipient",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 a suppression recorded in one process is seen by a later process",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 events recorded at the same moment by three processes are all kept",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d5",
+  "rep": 1,
+  "name": "ours-d5-1",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d5-1",
+  "code": 0,
+  "seconds": 47,
+  "costUsd": 0.1341293,
+  "turns": 5,
+  "skillCalls": 1,
+  "loc": 78,
+  "locAll": 78,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 promos need the customer's opt-in, reminders and critical messages do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 quiet hours follow the customer's own window and zone, critical messages ignore them",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 at most three non-critical messages in any rolling 24 hours, critical ones neither count nor wait",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 when the cap leaves fewer slots than candidates, higher priority goes first, in that order",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the same dedupe key is not repeated within seven days or twice in one batch",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 every candidate is sent or dropped exactly once, and each reason has its own non-empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d5",
+  "rep": 2,
+  "name": "ours-d5-2",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d5-2",
+  "code": 0,
+  "seconds": 42,
+  "costUsd": 0.11748019999999999,
+  "turns": 4,
+  "skillCalls": 1,
+  "loc": 75,
+  "locAll": 75,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 promos need the customer's opt-in, reminders and critical messages do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 quiet hours follow the customer's own window and zone, critical messages ignore them",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 at most three non-critical messages in any rolling 24 hours, critical ones neither count nor wait",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 when the cap leaves fewer slots than candidates, higher priority goes first, in that order",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the same dedupe key is not repeated within seven days or twice in one batch",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 every candidate is sent or dropped exactly once, and each reason has its own non-empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ },
+ {
+  "arm": "ours",
+  "task": "d5",
+  "rep": 3,
+  "name": "ours-d5-3",
+  "model": "claude-sonnet-5-5",
+  "work": "/private/tmp/pg-r9/iter2/d-sonnet/work/ours-d5-3",
+  "code": 0,
+  "seconds": 46,
+  "costUsd": 0.1304458,
+  "turns": 7,
+  "skillCalls": 1,
+  "loc": 85,
+  "locAll": 85,
+  "full": 6,
+  "outcome": 6,
+  "outcomeMax": 6,
+  "criteria": [
+   {
+    "n": "1",
+    "name": "1 promos need the customer's opt-in, reminders and critical messages do not",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "2",
+    "name": "2 quiet hours follow the customer's own window and zone, critical messages ignore them",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "3",
+    "name": "3 at most three non-critical messages in any rolling 24 hours, critical ones neither count nor wait",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "4",
+    "name": "4 when the cap leaves fewer slots than candidates, higher priority goes first, in that order",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "5",
+    "name": "5 the same dedupe key is not repeated within seven days or twice in one batch",
+    "pass": true,
+    "why": ""
+   },
+   {
+    "n": "6",
+    "name": "6 every candidate is sent or dropped exactly once, and each reason has its own non-empty rule",
+    "pass": true,
+    "why": ""
+   }
+  ],
+  "usesLibrary": false,
+  "detail": "ok"
+ }
+]
